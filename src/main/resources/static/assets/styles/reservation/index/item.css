@@ -1,0 +1,86 @@
+#item {
+    overflow: hidden auto;
+    width: 50%;
+    max-height: 40rem;
+    scrollbar-width: none;
+    border-right: 1px solid #eaeaea;
+}
+#item h1::after {
+    content: "(중복선택가능)";
+    font-size: 0.8rem;
+    vertical-align: 0.4rem;
+    color: #a0a0a0;
+    padding-left: 0.5rem;
+}
+/* 기존 :has() 선택자 대신 이 코드를 사용하세요 */
+#item > .container > #form > input[type="checkbox"]:checked + .label  {
+    background-color: #a0a0a040;
+}
+
+/* input은 숨깁니다 */
+#item > .container > #form > input[type="checkbox"] {
+    display: none;
+}
+
+#item > .container > #form > .label {
+    cursor: pointer;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    flex-grow:1;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+#item > .container > #form > .label  > .image-wrapper{
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 10rem;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 1rem;
+    z-index: 999;
+}
+#item > .container > #form > .label  > .image-wrapper > img {
+    width: 8rem;
+    aspect-ratio: 1 / 1;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+#item > .container > #form > .label  > .text-wrapper {
+    flex-direction: column;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#item > .container > #form > .label  > .text-wrapper >.title {
+    font-weight: 600;
+    font-size: 1rem;
+    padding-left: 0.3rem;
+}
+
+#item > .container > #form > .label  > .text-wrapper >.price {
+    font-size: 0.8rem;
+    padding-left: 0.3rem;
+
+}
+
+#item > .container > #form > .label  > .text-wrapper >.shop {
+    font-size: 0.7rem;
+    border: 1px solid #eaeaea;
+    text-align: center;
+    padding: 0.0925rem;
+    border-radius: 0.5rem;
+    color: #a0a0a0;
+    width: 3.5rem;
+    position: relative;
+}
+
+
+

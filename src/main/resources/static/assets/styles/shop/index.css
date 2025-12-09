@@ -1,0 +1,18 @@
+@import "../MAINPAGE/index/header.css";
+@import "common.css";
+@import "index/main.css";
+@import "index/shop-header.css";
+@import "index/quick.css";
+@import "index/category.css";
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+body > .box {
+    width: 71.25rem;
+}

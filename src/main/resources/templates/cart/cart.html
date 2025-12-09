@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KREAM 장바구니</title>
+  <link rel="stylesheet" href="./assets/styles/common.css">
+  <link rel="stylesheet" href="./assets/styles/cart.css">
+  <script defer src="assets/scripts/index.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>장바구니</h1>
+
+  <div class="cart-header">
+    <span>상품</span>
+    <span>가격</span>
+  </div>
+
+  <div class="select-all">
+    <input type="checkbox" id="selectAll">
+    <label for="selectAll">전체 선택</label>
+
+    <button class="delete">삭제</button>
+  </div>
+
+
+  <div class="cart-item">
+    <input type="checkbox" class="item-checkbox">
+    <img src="./assets/images/productImage.png" alt="New Balance 509 Black Gray">
+    <div class="item-info">
+      <h2>New Balance 509 Black Gray</h2>
+      <p>뉴발란스 509 블랙 그레이</p>
+      <p>사이즈: 255 / 빠른배송</p>
+    </div>
+    <div class="item-actions">
+      <button class="reserve-btn">예약</button>
+      <button class="ship-btn">픽업</button>
+    </div>
+
+    <div class="item-price">₩159,000</div>
+  </div>
+
+
+  <div class="cart-item">
+    <input type="checkbox" class="item-checkbox">
+    <img src="./assets/images/productImage.png" alt="New Balance 530 White">
+    <div class="item-info">
+      <h2>New Balance 530 White</h2>
+      <p>뉴발란스 530 화이트</p>
+      <p>사이즈: 260 / 빠른배송</p>
+    </div>
+    <div class="item-actions">
+      <button class="reserve-btn">예약</button>
+      <button class="ship-btn">픽업</button>
+    </div>
+    <div class="item-price">₩149,000</div>
+  </div>
+
+
+  <div class="summary">
+    <div class="summary-row">
+      <span>상품금액</span>
+      <span>₩308,000</span>
+    </div>
+    <div class="summary-row">
+      <span>배송비</span>
+      <span>₩5,000</span>
+    </div>
+    <div class="summary-row total">
+      <span>총 결제금액</span>
+      <span>₩313,000</span>
+    </div>
+    <button class="order-btn">바로 결제</button>
+  </div>
+</div>
+</body>
+</html>

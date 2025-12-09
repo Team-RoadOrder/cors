@@ -1,0 +1,17 @@
+@import "./index/header.css";
+@import "./index/nav.css";
+@import "./index/main.css";
+@import "sections/item-info.css";
+@import "sections/item-images.css";
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+body > .box {
+    width: 42.25rem;
+}

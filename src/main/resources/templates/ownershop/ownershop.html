@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>판매자 상품등록 </title>
+    <link href="../LOGIN/img/favicon.png" rel="icon"  >
+    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="./styles/common.css">
+    <script src="./scripts/toggle.js" defer></script>
+    <script src="./scripts/category.js" defer></script>
+</head>
+<body>
+<header id="header">
+    <a href="#">   <img src="./images/logo2.png" alt="" class="logo"></a>
+    <ul class="header-list">
+        <li class="service">서비스/도구</li> <li class="shop">매장관리</li>
+    </ul>
+    <ul class="tools"> <li class="notice">공지사항</li> <li>고객센터</li> <li>로그아웃</li></ul>
+</header>
+<main id="main">
+    <button id="toggleNav" class="toggle-btn **nav-open**">
+        <img src="./images/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
+    <nav id="nav">
+        <div class="info">매장관리 페이지</div>
+        <div class="profile">
+            <img src="./images/brand.jpeg" alt="" class="profile-img">
+            <div class="message">클릭시 변경 가능합니다.</div>
+            <div class="title">waviness</div>
+        </div>
+        <ul class="nav-list">
+            <li class="dashboard">
+                <a href="../OWNERMAIN/ownermain.html">대시보드</a>
+            </li>
+            <li class="register-form">
+                <a href="#">상품등록</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="sections">
+        <div class="header">
+        <span class="title">📍상품등록</span>
+        <span class="description">상품에 카테고리가 없다면 추천이 누락될 수 있습니다.</span>
+        </div>
+        <section id="item-images">
+            <div class="title">
+                <span class="caption">
+                    상품이미지
+                </span>
+                <span class="count">
+                    (2/5)
+                </span>
+            </div>
+            <div class="main-image-wrapper">
+                    <img class="img" src="./images/camera.png" alt="카메라">
+                    <span class="caption">이미지 등록</span>
+            </div>
+            <div class="sub-image-wrapper">
+                    <img class="img" src="../SHOP/images/quick/2.webp" alt="카메라">
+                    <span class="close">x</span>
+            </div>
+        </section>
+        <section id="item-info">
+            <div class="item-list">
+                <h2 class="form-title">상품 정보</h2>
+                <div class="list">
+                    <div class="input-group">
+                        <label class="label" for="name">상품이름</label>
+                        <input class="input" type="text" id="name" placeholder="상품이름을 입력해주세요">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="label" for="color">색상</label>
+                        <input class="input" type="text" id="color" placeholder="색상을 입력해주세요">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="label" for="size">사이즈</label>
+                        <input class="input" type="text" id="size" placeholder="사이즈를 입력해주세요">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="label" for="price">가격</label>
+                        <div class="price-input-wrapper">
+                            <input class="input" type="number" id="price" placeholder="가격을 입력해주세요">
+                            <span class="currency">원</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="category">
+               <div class="category-box">
+                   <ul class="list" id="type">
+                       <li class="item" data-target="man">남성의류</li>
+                       <li class="item" data-target="woman">여성의류</li>
+                       <li class="item" data-target="shoe">신발</li>
+                   </ul>
+               </div>
+                <div class="category-box " id="detail">
+                    <div class="message">대분류를 먼저 선택해주세요</div>
+                    <ul class="list man-detail">
+                        <li class="item" data-target="outer">아우터</li>
+                        <li class="item" data-target="top">상의</li>
+                        <li class="item" data-target="pants">바지</li>
+                    </ul>
+                    <ul class="list woman-detail">
+                        <li class="item" data-target="outer">아우터</li>
+                        <li class="item" data-target="top">상의</li>
+                        <li class="item" data-target="pants">바지</li>
+                    </ul>
+                    <ul class="list shoe-detail">
+                        <li class="item">스니커즈</li>
+                        <li class="item">구두류</li>
+                    </ul>
+                </div>
+                <div class="category-box" id="sub-detail">
+                    <div class="message">중분류를 먼저 선택해주세요</div>
+                    <ul class="list man-sub-detail-outer">
+                        <li class="item">패딩</li>
+                        <li class="item">자켓</li>
+                        <li class="item">가디건</li>
+                        <li class="item">코트</li>
+                    </ul>
+                    <ul class="list man-sub-detail-top">
+                        <li class="item">후드티 / 후드집업</li>
+                        <li class="item">맨투맨</li>
+                        <li class="item">니트 / 스웨터</li>
+                        <li class="item">셔츠</li>
+                        <li class="item">반팔티</li>
+                        <li class="item">긴팔티</li>
+                    </ul>
+                    <ul class="list man-sub-detail-pants">
+                        <li class="item">데님 / 청바지</li>
+                        <li class="item">면바지</li>
+                        <li class="item">슬랙스</li>
+                        <li class="item">트레이닝/조거팬츠</li>
+                        <li class="item">반바지</li>
+                        <li class="item">기타</li>
+                    </ul>
+                    <ul class="list woman-sub-detail-outer">
+                        <li class="item">패딩</li>
+                        <li class="item">자켓</li>
+                        <li class="item">가디건</li>
+                        <li class="item">코트</li>
+                    </ul>
+                    <ul class="list woman-sub-detail-top">
+                        <li class="item">니트 / 스웨터</li>
+                        <li class="item">후드티 / 후드집업</li>
+                        <li class="item">맨투맨</li>
+                        <li class="item">블라우스</li>
+                        <li class="item">셔츠</li>
+                        <li class="item">반팔티</li>
+                        <li class="item">긴팔티</li>
+                        <li class="item">슬리브리스</li>
+                    </ul>
+                    <ul class="list woman-sub-detail-pants">
+                        <li class="item">데님 / 청바지</li>
+                        <li class="item">면바지</li>
+                        <li class="item">슬랙스</li>
+                        <li class="item">셔츠</li>
+                        <li class="item">트레이닝/조거팬츠</li>
+                        <li class="item">반바지</li>
+                        <li class="item">레깅스</li>
+                        <li class="item">기타</li>
+                    </ul>
+                    <ul class="list sub-detail-shoe">
+                        <li class="item">샌들 / 슬리퍼</li>
+                        <li class="item">구두 / 워커부츠</li>
+                        <li class="item">기타</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <div class="buttons">
+            <button class="okay">등록하기</button>
+            <button class="cancel"><a href="../OWNERMAIN/ownermain.html">취소하기</a></button>
+        </div>
+    </div>
+</main>
+
+<footer id="footer">
+
+</footer>
+
+
+</body>
+</html>

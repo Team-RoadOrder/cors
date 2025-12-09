@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+    <title>NearByShop</title>
+    <link rel="stylesheet" href="./styles/index.css" class="href">
+    <link rel="stylesheet" href="./styles/common.css" class="href">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+    <link href="../LOGIN/img/favicon.png" rel="icon"  >
+</head>
+<body>
+<!-- 헤더부분 , 로고와 네비바가 들어감 -->
+<header class="box" id="header">
+    <div class="left">
+        <a href="../index.html" class="box" id="logo">
+            <img src="../MAINPAGE/images/img.png" alt="" class="logo">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+        <ul class="nav">
+            <li class="item selected"><a href="../index.html">HOME</a></li>
+            <li class="item shop">
+                <a href="#">SHOP</a>
+                <div class="sub-menu">
+                    <ul class="shop-menu">
+                        <li class="item">
+                            <a href="../SHOPLIST/shoplist.html" class="link">
+                                Popular Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../NEARBYSHOP/nearbyshop.html" class="link">
+                                Nearby Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../RECOMMENDEDSHOP/recommendedshop.html" class="link">
+                                recommended shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../Reservation/reservation.html" class="link">
+                                Reservation
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../MY/my.html" class="link">
+                                My Page
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="item"><a href="../INFO/info.html">INFO</a></li>
+            <li class="item"><a href="../Reservation/reservation.html">RESERVATION</a></li>
+            <li class="item"><a href="../ITEMLIST/itemlist.html">PRODUCT</a></li>
+            <li class="item"><a href="../MY/my.html">MY PAGE</a></li>
+        </ul>
+
+    </div>
+    <div class="spring"> </div>
+    <ul class="icon-menu">
+        <li class="item">
+            <form action="../SEARCHRESULT/searchresult.html" method="get" >
+                <button class="glass" aria-label="검색창 열기" type="button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="25" viewBox="0 0 48 48">
+                        <path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"></path>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" class="search-box" aria-label="검색창">
+            </form>
+        </li>
+        <li class="item">
+            <a class="cart" href="../CART/cart.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="30" height="25" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"></path>
+                </svg>
+            </a>
+        </li>
+        <li class="item">
+            <a class="login" href="../LOGIN/Login.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg"  fill="#000000" version="1.1" id="Capa_1" width="30" height="25" viewBox="0 0 45.916 45.916" xml:space="preserve"><g><g><path d="M30.061,18.237c2.127-1.916,3.476-4.683,3.476-7.772C33.536,4.684,28.85,0,23.07,0C17.29,0,12.604,4.685,12.604,10.465    c0,3.085,1.343,5.85,3.467,7.766c-5.441,0.422-9.74,4.928-9.779,10.477L6.224,40.154c-0.01,1.525,0.59,2.99,1.665,4.072    c1.075,1.08,2.537,1.689,4.062,1.689h10.151h11.794c3.15,0,5.709-2.543,5.729-5.693l0.068-11.361    c0.021-2.826-1.089-5.538-3.083-7.544C34.851,19.543,32.526,18.465,30.061,18.237z"/></g></g></svg>
+            </a>
+        </li>
+
+    </ul>
+    <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
+</header>
+<!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
+<!--헤더에 호버하면 나타나는 메뉴 -->
+<!-- 헤더 렌더링 하는법 몰라서 일단 복붙함 뒤에 배경넣고-->
+<main id="main" >
+    <img src="../MY/images/waviness.png" class="image" alt="메인이미지">
+</main> <!-- 헤더뒤에 배경 -->
+<div id="map-wrapper">
+<ul id="map">
+    <li class="shop-detail">
+        <a href="../SHOP/shop.html">
+            <div class="store-info">
+                <div class="firstLine">
+                    <span class="name">waviness</span>
+                    <span class="km">0.67km</span>
+                </div>
+                <div class="address">Yongsan District, seoul</div>
+                <div class="time">영업중 10:00~22:00</div>
+                <div class="tag-area">
+                    <span class="tag">예약 가능</span>
+                    <span class="tag">픽업 가능</span>
+                </div>
+            </div>
+        </a>
+    </li>
+    <li class="shop-detail">
+        <a href="../SHOP/shop.html">
+            <div class="store-info">
+                <div class="firstLine">
+                    <span class="name">waviness</span>
+                    <span class="km">0.67km</span>
+                </div>
+                <div class="address">Yongsan District, seoul</div>
+                <div class="time">영업중 10:00~22:00</div>
+                <div class="tag-area">
+                    <span class="tag">예약 가능</span>
+                    <span class="tag">픽업 가능</span>
+                </div>
+            </div>
+        </a>
+    </li>
+    <li class="shop-detail">
+        <a href="../SHOP/shop.html">
+            <div class="store-info">
+                <div class="firstLine">
+                    <span class="name">waviness</span>
+                    <span class="km">0.67km</span>
+                </div>
+                <div class="address">Yongsan District, seoul</div>
+                <div class="time">영업중 10:00~22:00</div>
+                <div class="tag-area">
+                    <span class="tag">예약 가능</span>
+                    <span class="tag">픽업 가능</span>
+                </div>
+            </div>
+        </a>
+    </li>
+    <li class="shop-detail">
+        <a href="../SHOP/shop.html">
+            <div class="store-info">
+                <div class="firstLine">
+                    <span class="name">waviness</span>
+                    <span class="km">0.67km</span>
+                </div>
+                <div class="address">Yongsan District, seoul</div>
+                <div class="time">영업중 10:00~22:00</div>
+                <div class="tag-area">
+                    <span class="tag">예약 가능</span>
+                    <span class="tag">픽업 가능</span>
+                </div>
+            </div>
+        </a>
+    </li>
+    <li class="shop-detail">
+        <a href="../SHOP/shop.html">
+            <div class="store-info">
+                <div class="firstLine">
+                    <span class="name">waviness</span>
+                    <span class="km">0.67km</span>
+                </div>
+                <div class="address">Yongsan District, seoul</div>
+                <div class="time">영업중 10:00~22:00</div>
+                <div class="tag-area">
+                    <span class="tag">예약 가능</span>
+                    <span class="tag">픽업 가능</span>
+                </div>
+            </div>
+        </a>
+    </li>
+
+</ul>
+</div>
+<button id="shop-header"><a href="../SHOPLIST/shoplist.html">매장 목록 보기</a></button>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dbcb22a9911b142fc070c041189c30b6&libraries=services,clusterer,drawing"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        // 1. 지도를 표시할 div와 지도 옵션 설정
+        var mapContainer = document.getElementById('map'),
+            mapOption = {
+                center: new kakao.maps.LatLng( 37.541814343510836 , 127.00460531687455 ), // 초기 중심 좌표
+                level: 4// 지도의 확대 레벨
+            };
+
+        // 2. 지도 생성
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 3. 여러 마커의 위치와 정보를 담은 배열
+        var positions = [
+            {
+                title: 'waviness',
+                latlng: new kakao.maps.LatLng(37.543643, 127.002840)
+            },
+            {
+                title: 'Shop 2',
+                latlng: new kakao.maps.LatLng(37.544600, 127.005800)
+            },
+            {
+                title: 'Shop 3',
+                latlng: new kakao.maps.LatLng(37.541699, 127.001950)
+            },
+            {
+                title: 'Shop 4',
+                latlng: new kakao.maps.LatLng(37.542888, 127.006999)
+            }
+        ];
+
+        // 4. 반복문을 사용하여 여러 개의 커스텀 오버레이를 생성하고 지도에 표시
+        positions.forEach(function(pos) {
+            // 내부의 .marker-text div를 제거하고 더 간단하게 만듭니다.
+            // .substring()을 제거하여 전체 이름이 표시되도록 합니다.
+            var content = '<div class="custom-marker-style">' + pos.title + '</div>';
+
+            // 커스텀 오버레이를 생성하는 나머지 코드는 동일합니다.
+            var customOverlay = new kakao.maps.CustomOverlay({
+                map: map,
+                position: pos.latlng,
+                content: content,
+                yAnchor: 1
+            });
+        });
+
+        // 지도의 중심을 첫 번째 마커 위치로 부드럽게 이동시킬 수도 있습니다.
+        map.panTo(positions[0].latlng);
+    };
+</script>
+<script>
+    document.addEventListener('scroll', function() {
+        const header = document.getElementById('header');
+        if (window.scrollY > 0) {
+            header.classList.add('scroll-active');
+        } else {
+            header.classList.remove('scroll-active');
+        }
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', function(e) {
+            // 모든 점의 'checked' 클래스 제거
+            dots.forEach(d => d.classList.remove('checked'));
+
+            // 현재 클릭된 점에 'checked' 클래스 추가
+            this.classList.add('checked');
+        });
+    });
+    // 검색창에 있는 헤더를 위한
+    const searchIcon = document.querySelector('.glass');
+    const searchInput = document.getElementById('searchInput');
+
+    // 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
+    searchIcon.addEventListener('click', (event) => {
+
+
+        // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
+        searchInput.classList.toggle('show');
+
+        // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
+        if (searchInput.classList.contains('show')) {
+            searchInput.focus();
+        }
+    });
+</script>
+</body>
+</html>

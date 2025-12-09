@@ -1,0 +1,21 @@
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+h1 {
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+input[type="checkbox"] {
+  accent-color: black;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
+}

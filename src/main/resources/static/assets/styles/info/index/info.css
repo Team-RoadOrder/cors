@@ -1,0 +1,92 @@
+/* ./style/info-page.css */
+
+/* 페이지 전체 너비 제어 및 중앙 정렬 */
+/* .box 클래스가 없는 .title, .description에도 일관된 너비 적용 */
+.title,
+body > .description {
+    width: 81rem;
+    max-width: 90%; /* 화면이 81rem보다 작을 경우 대비 */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box; /* 패딩을 포함하여 너비 계산 */
+}
+
+/* 메인 타이틀 */
+.title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 3rem; /* main 이미지와의 간격 */
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+}
+
+/* 메인 설명 (타이틀 바로 아래) */
+body > .description {
+    font-size: 1.1rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 4rem; /* 프로젝트 목록과의 큰 간격 */
+    line-height: 1.6;
+}
+
+/* 프로젝트 설명 목록 컨테이너 (.box 클래스) */
+.project.box {
+    margin-bottom: 5rem; /* 페이지 하단 여백 */
+}
+
+/* 프로젝트 각 항목 (카드 스타일) */
+.project li {
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px; /* 좀 더 부드러운 곡선 */
+    padding: 2rem 2.5rem; /* 좌우 패딩을 좀 더 넉넉하게 */
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* 은은한 그림자 */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.project li:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    transform: translateY(-4px); /* 살짝 떠오르는 효과 */
+}
+
+/* 각 항목의 제목 (예: "1. 프로젝트 개요") */
+.project .index {
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #222;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0; /* 제목과 내용 구분선 */
+}
+
+/* 각 항목의 설명 텍스트 */
+.project .description {
+    font-size: 1rem;
+    line-height: 1.75; /* 가독성을 위한 줄 간격 */
+    color: #444;
+    /* <br> 태그가 여러 개 사용되었으므로, 문단 간격은 <br>로 조절 */
+}
+
+/* 설명 텍스트 내의 소제목 */
+.project .sub-title {
+    display: block; /* div이므로 블록 요소 확인 */
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111;
+    margin-top: 2.2rem; /* 이전 내용과 간격 띄우기 */
+    margin-bottom: 0.75rem;
+}
+
+/* 첫 번째 소제목은 위쪽 마진을 조금 줄임 */
+.project .description .sub-title:first-of-type {
+    margin-top: 1.5rem;
+}
+
+/* <br> 태그 뒤에 오는 텍스트의 가독성을 위해 */
+.project .description br {
+    content: "";
+    display: block;
+    margin-bottom: 0.5rem; /* <br> 태그를 문단 구분처럼 사용 */
+}

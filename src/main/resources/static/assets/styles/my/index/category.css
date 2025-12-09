@@ -1,0 +1,68 @@
+#category {
+    width: 200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    margin-top: 3.5rem;
+}
+#category .container >.my {
+    font-size: 24px;
+    padding-bottom: 50px;
+    display: block;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#category .container .nav {
+    gap : 5rem;
+    display: flex;
+    flex-direction: column;
+
+}
+#category .container .nav .list {
+    gap : 12px;
+    display: flex;
+    flex-direction: column;
+
+}
+#category .container .nav .list .menu {
+    gap : 12px;
+    display: flex;
+    flex-direction: column;
+}
+#category .container .nav .title {
+    font-size: 22px;
+}
+#category .container .nav .item {
+    font-size: 16px;
+}
+#category input[type="radio"]{
+    display: none;
+}
+#category .container .nav .list .menu .item {
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    color:#a0a0a0;
+
+}
+#category .container .nav .list .menu .item:hover {
+    color: #528dd8;
+    transition: 175ms;
+    transition-property: color;
+}
+
+#tab1:checked ~ #category label[for="tab1"] .caption,
+#tab2:checked ~ #category label[for="tab2"] .caption,
+#tab3:checked ~ #category label[for="tab3"] .caption,
+#tab4:checked ~ #category label[for="tab4"] .caption,
+#tab5:checked ~ #category label[for="tab5"] .caption,
+#tab6:checked ~ #category label[for="tab6"] .caption,
+#tab7:checked ~ #category label[for="tab7"] .caption
+    /* ... */ {
+    color: #528dd8; /* 강조 색상 */
+    font-weight: bold;
+}

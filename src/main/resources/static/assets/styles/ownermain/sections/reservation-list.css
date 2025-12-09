@@ -1,0 +1,128 @@
+.res-list {
+    background: #FFFFFF;
+    border-radius: 1rem;
+}
+.res-list .spring {
+    color: #212121;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.res-list .product {
+    position: relative;
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 12px; /* 이미지와 텍스트 사이 간격 */
+    justify-content: space-between; /* 전체 공간 활용 */
+    padding: 3rem 1.5rem 1.5rem 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+}
+.res-list .user-info {
+    width: 100%;
+    position: absolute;
+    top:0;
+    color: #f4f3e8;
+    font-weight: 700;
+    font-size: 0.7rem;
+    background-color: #010852;
+    left: 0;
+    padding: 0.8rem 0;
+}
+.res-list .user-info .date {
+    position: absolute;
+    left: 1rem;
+}
+.res-list .user-info .user{
+    position: absolute;
+    right: 2rem;
+    top: 0.4rem;
+}
+.res-list .user-info .tel {
+    position: absolute;
+    right: 2rem;
+    top: 1.3rem;
+}
+
+/* 이미지 wrapper (크기 및 배경 유지) */
+.res-list .image-wrapper {
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 80px; /* 고정 너비 설정 */
+    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.res-list .image {
+    width: 100%; /* wrapper 크기에 맞춤 */
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
+.res-list .product .itemTitle {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+}
+
+/* 상품명 스타일 */
+.res-list .product .itemTitle .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+/* 사이즈 스타일 */
+.res-list .product .itemTitle .description {
+    font-size: 13px;
+    color: #666;
+}
+
+.res-list .product .itemStatus {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex-shrink: 0;
+    font-size: 13px;
+    text-align: right;
+}
+
+
+.res-list .product .itemStatus > .fix-btn {
+    text-decoration: none;
+    padding: 0.3rem;
+    background: #585FDB;
+    color: #f0f0f0;
+    margin-top: 0.3rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 400;
+}
+.res-list .product .itemStatus > .fix-btn:hover {
+    color: #FFFFFF;
+    background: #4249A6;
+}
+.res-list .product .itemStatus > .res-btn {
+    text-decoration: none;
+    padding: 0.3rem;
+    background: #DB844B;
+    color: #eaeaea;
+    margin-top: 0.3rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 400;
+}
+.res-list .product .itemStatus > .res-btn:hover {
+    color: #f5f5f5;
+    background: #BA703F;
+}

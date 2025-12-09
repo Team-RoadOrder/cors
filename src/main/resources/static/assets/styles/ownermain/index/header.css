@@ -1,0 +1,56 @@
+#header {
+    padding: 2rem;
+    width: 100%;
+    background: #010852;
+    color: #FFFFFF;
+    border-bottom: 1px solid #eaeaea;
+   position: fixed;
+    font-weight: 300;
+    z-index: 101;
+}
+#header .logo {
+    width: 10rem;
+    top: -3rem;
+    left: 3rem;
+    aspect-ratio: 1/1;
+    position: absolute;
+    filter: invert(100%) brightness(150%);
+}
+#header > .tools {
+    position: absolute;
+    right: 6rem;
+    top: 1.3rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    cursor: pointer;
+}
+#header > .header-list {
+    cursor: pointer;
+}
+#header > .tools > .notice::after {
+    content: '';
+     display: block;
+    background-image: url("../../images/icon2.png");
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 0;
+    left: 3.5rem;
+
+}
+
+#header > .header-list {
+    position: absolute;
+    left: 20rem;
+    top: 1.3rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+#header > .header-list > .service:hover,
+#header > .header-list > .shop:hover {
+    color: #a9a9a9;
+}

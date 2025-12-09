@@ -1,0 +1,102 @@
+@import "../../MAINPAGE/index/header.css";
+@import "index/main.css";
+@import "index/content.css";
+@import "index/category.css";
+@import "index/tab_purchase.css";
+@import "index/tab_reservation.css";
+@import "index/tab_likeShop.css";
+@import "index/tab_likeProduct.css";
+@import "index/tab_profile.css";
+@import "index/tab_delivery.css";
+
+
+
+@import "common.css";
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+body > .box {
+    width: 81rem;
+}
+
+/* #MY: category와 content를 가로로 배치 (Flexbox 레이아웃) */
+#MY {
+    display: flex;
+
+}
+
+/* 1. 탭 콘텐츠 영역의 기본 설정 */
+#tab-content-area {
+    /* 기본적으로 숨겨야 합니다. */
+    display: none;
+    flex-grow: 1;
+    flex-direction: column; /* 탭 콘텐츠 내부 레이아웃을 위해 */
+}
+
+/* 2. 모든 개별 탭 콘텐츠를 숨깁니다. */
+.tab-content {
+    display: none;
+}
+/* 3. 탭 전환 로직 (핵심!) */
+/* --- 탭이 선택되지 않았을 때 (기본 홈 화면) --- */
+/* tab0이 checked 상태일 때: #content는 보이고, #tab-content-area는 숨깁니다. */
+#tab0:checked ~ #content {
+    display: flex; /* content.css의 display 속성을 override */
+}
+#tab0:checked ~ #tab-content-area {
+    display: none;
+}
+
+/* --- 탭이 선택되었을 때 (탭 화면) --- */
+
+/* tab1~7 중 하나라도 checked 상태일 때: #content는 숨깁니다. */
+/* #content는 tab0의 바로 다음에 오므로 ~ 선택자를 사용합니다. */
+#tab1:checked ~ #content,
+#tab2:checked ~ #content,
+#tab3:checked ~ #content,
+#tab4:checked ~ #content,
+#tab5:checked ~ #content,
+#tab6:checked ~ #content,
+#tab7:checked ~ #content {
+    display: none;
+}
+
+/* tab1~7 중 하나라도 checked 상태일 때: #tab-content-area를 보입니다. */
+#tab1:checked ~ #tab-content-area,
+#tab2:checked ~ #tab-content-area,
+#tab3:checked ~ #tab-content-area,
+#tab4:checked ~ #tab-content-area,
+#tab5:checked ~ #tab-content-area,
+#tab6:checked ~ #tab-content-area,
+#tab7:checked ~ #tab-content-area {
+    display: flex;
+}
+
+/* 4. 특정 탭이 선택되었을 때 해당 콘텐츠만 보이게 함 */
+#tab1:checked ~ #tab-content-area #content-tab-1,
+#tab2:checked ~ #tab-content-area #content-tab-2,
+#tab3:checked ~ #tab-content-area #content-tab-3,
+#tab4:checked ~ #tab-content-area #content-tab-4,
+#tab5:checked ~ #tab-content-area #content-tab-5,
+#tab6:checked ~ #tab-content-area #content-tab-6,
+#tab7:checked ~ #tab-content-area #content-tab-7{
+    display: flex;
+}
+body >.background{
+    background-color: rgb(155, 197, 250);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+}

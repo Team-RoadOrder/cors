@@ -1,0 +1,88 @@
+#item {
+    width: 95%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    border-radius: 5px;
+    position: relative;
+    /*  border: 1px solid #eaeaea;*/
+}
+
+/*매장 이미지 및 옆에 들어가는 설명부분 2열로 정렬 */
+#item .image {
+    width: 7rem;
+    aspect-ratio: 1/1;
+    border-radius: 5px;
+}
+#item .item-list {
+    padding: 1.5rem 1.4rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+#item .option-list {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0 2rem 2rem 1rem;
+}
+#item .option-list .item{
+    border: #eaeaea solid 1px;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+}
+#item .item-container {
+    display: grid; /* flex를 grid로 변경 */
+    grid-template-columns: 1fr 1fr; /* 1:1 비율의 2개 열 생성 */
+    gap: 1rem; /* 아이템 사이의 간격 */
+    padding: 0 1rem;
+}
+#item .list a {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+
+}
+#item .item-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2rem;
+
+}
+#item .item-info .firstLine{
+    margin-bottom: 0.5rem;
+}
+#item .item-info .firstLine .name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+#item .item-info .firstLine .km {
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#item .item-info .address{
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#item .item-info .time {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#item .item-info .tag-area{
+    display: flex;
+    font-size: 0.7rem;
+    font-weight: 400;
+    padding-top: 0.4rem;
+    padding-left: 0.1rem;
+    gap: 0.4rem;
+}
+#item .item-info .tag{
+    border-radius: 3px;
+    padding: 0.2rem;
+    background-color: #eaeaea;
+}

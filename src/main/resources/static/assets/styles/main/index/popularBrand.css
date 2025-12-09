@@ -1,0 +1,416 @@
+#popularBrand {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    justify-content: flex-start;
+     margin-bottom: 5rem;
+    position: relative;
+}
+#popularBrand > .title {
+    top:0;
+    font-size: 1.6rem;
+    font-weight: 700;
+
+}
+#popularBrand > .more {
+    top: 0;
+    right: 0;
+    color: rgb(145,145,145);
+    font-size: 1.0rem;
+    font-weight: 400;
+    position: absolute;
+}
+
+#popularBrand > .form-container {
+    top:0;
+    left:0;
+    padding: 2rem 0;
+}
+#popularBrand > .form-container >.selection{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: absolute;
+    gap: 1rem;
+}
+#popularBrand > .form-container >.selection >.item >.label {
+    border: rgb(242,242,242) solid 1px;
+    padding: 6px 12px;
+    border-radius: 1.8rem;
+    color: #000000;
+    font-weight: 500;
+    font-size: 13px;
+}
+#popularBrand > .form-container >.selection >.item >.label:has(>.radio:checked){
+    background-color: black;
+    color: #ffffff;
+    border:none;
+}
+
+
+#popularBrand > .form-container >.selection >.item >.label >.radio {
+    display: none;
+}
+
+#popularBrand > .grid {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    gap: 1rem;
+
+}
+
+#popularBrand > .grid > .box {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+}
+
+#popularBrand > .grid > .box > .image {
+    width: 164px;
+    aspect-ratio: 1/1;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+#popularBrand > .grid > .box > .text-container {
+     align-items: stretch;
+     display: flex;
+     flex-direction: column;
+     gap: 0.05rem;
+     justify-content: flex-start;
+
+ }
+
+
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.one .image {
+    background-image: url("/assets/images/main/popularBrand/one-1.webp");
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.one .title::after {
+    content:"랩 마이크로라이트 알파인 자켓 블랙";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.one .price::after {
+    content:"18,6000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.two .image {
+    background-image: url("/assets/images/main/popularBrand/one-2.webp");
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.two .title::after {
+    content:"[재입고] 랩 마이크로라이트 알파인 자켓 벨루가";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.two .price::after {
+    content:"190,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.three .image {
+    background-image: url("/assets/images/main/popularBrand/one-3.webp");
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.three .title::after {
+    content:"마이크로라이트 알파인 자켓 벨루가";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.three .price::after {
+    content:"190,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid> .box.four .image {
+    background-image: url("/assets/images/main/popularBrand/one-4.webp");
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.four .title::after {
+    content:"랩 보리얼리스 후디 벨루가";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.four .price::after {
+    content:"150,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid> .box.five .image {
+    background-image: url("/assets/images/main/popularBrand/one-5.webp");
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.five .title::after {
+    content:"랩 로고 비니 라이트 카키/사하라";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.five .price::after {
+    content:"30,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid> .box.six .image {
+    background-image: url("/assets/images/main/popularBrand/one-6.webp");
+}
+
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.six .title::after {
+    content:"랩 보리얼리스 후디 라이트 징크";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="1"]:checked) + .grid > .box.six .price::after {
+    content:"150,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+
+
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.one .image {
+    background-image: url("/assets/images/main/popularBrand/two-1.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.one .title::after {
+    content:"노스페이스 써밋 마테호른 RDS 다운 자켓 블랙";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.one .price::after {
+    content:"349,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.two .image {
+    background-image: url("/assets/images/main/popularBrand/two-2.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.two .title::after {
+    content:"노스페이스 벤투스 온 자켓 블랙 - 25FW";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.two .price::after {
+    content:"389,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.three .image {
+    background-image: url("/assets/images/main/popularBrand/two-3.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.three .title::after {
+    content:"노스페이스 벤투스 온 자켓 라이트 카키 - 25FW";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.three .price::after {
+    content:"319,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.four .image {
+    background-image: url("/assets/images/main/popularBrand/two-4.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.four .title::after {
+    content:"노스페이스 벤투스 온 자켓 라이트 카키 - 25FW";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.four .price::after {
+    content:"319,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.five .image {
+    background-image: url("/assets/images/main/popularBrand/two-5.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.five .title::after {
+    content:"노스페이스 써밋 마테호른 RDS 다운 자켓 블랙";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.five .price::after {
+    content:"330,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.six .image {
+    background-image: url("/assets/images/main/popularBrand/two-6.webp");
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.six .title::after {
+    content:"노스페이스 써밋 마테호른 RDS 다운 자켓 블랙";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="2"]:checked) + .grid > .box.six .price::after {
+    content:"330,000원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.one .image {
+    background-image: url("/assets/images/main/popularBrand/three-1.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.one .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.one .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.two .image {
+    background-image: url("/assets/images/main/popularBrand/three-2.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.two .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.two .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.three .image {
+    background-image: url("/assets/images/main/popularBrand/three-3.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.three .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.three .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.four .image {
+    background-image: url("/assets/images/main/popularBrand/three-4.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.four .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.four .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.five .image {
+    background-image: url("/assets/images/main/popularBrand/three-5.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.five .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.five .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.six .image {
+    background-image: url("/assets/images/main/popularBrand/three-6.webp");
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.six .title::after {
+    content:"논노드 스쿠바 집 후디 그레이";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: rgb(116,116,116);
+
+}
+#popularBrand > .form-container:has(.radio[value="3"]:checked) + .grid > .box.six .price::after {
+    content:"175,700원";
+    font-size: 0.8rem;
+    font-weight: 700;
+    position: relative;
+
+}
+
+
+
+
+

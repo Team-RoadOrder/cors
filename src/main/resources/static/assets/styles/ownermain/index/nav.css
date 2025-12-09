@@ -1,0 +1,146 @@
+#nav {
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    background: #FFFFFF;
+    border-left: 1px solid #eaeaea ;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 100;
+    width: 274.2px;
+}
+/* #nav.open 일 때의 스타일은 그대로 유지 */
+#nav.open {
+    transform: translateX(0);
+}
+
+#nav .info {
+    width: 274.2px;
+
+    text-align: center;
+    position: fixed;
+    left: 0;
+    top: 2rem;
+    padding-bottom: 1rem;
+    font-weight: 700;
+    border-bottom:1px solid #eaeaea ;
+}
+#nav > .profile >.profile-img {
+    width: 8rem;
+    position: fixed;
+    border-radius: 30%;
+    top: 5rem;
+    left: 5.5rem;
+}
+#nav > .profile >.message {
+    display: none;
+    top: 11rem;
+    left: 5.7rem;
+    position: fixed;
+    background: #4f4f4fa0;
+    border-radius: 0.6rem;
+    padding: 0.12rem 0.5rem;
+    color: #fff;;
+    font-size: 0.8rem;
+    z-index: 9
+}
+#nav > .profile >.profile-img:hover + .message{
+  display: revert;
+}
+#nav > .profile >.title {
+    width: 274.2px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    top: 14rem;
+    padding-bottom: 2rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom:1px solid #eaeaea ;
+}
+#nav > .profile >.title::after {
+    content: '';
+    display: block;
+    background-image: url("../../images/checkicon.png");
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 0.48rem;
+    left: 13.2rem;
+}
+#nav > .nav-list {
+    width: 274.2px;
+    display: flex;
+    flex-direction: column;
+    top: 17.8rem;
+    position: fixed;
+
+
+}
+#nav > .nav-list > .dashboard {
+    padding: 2rem 5rem;
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border-bottom: 1px solid #eaeaeaa0;
+    background-color: #e0f2f7; /* 반투명한 파란색 배경 (더 밝은 파란색 계열) */
+    color: #2196f3; /* 파란색 글씨 */
+}
+#nav > .nav-list > .dashboard::before {
+    content: '';
+    display: block;
+    background-image: url("../../images/dashboard-blue.png");
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 1.8rem;
+    left: 2.5rem;
+}
+#nav > .nav-list > .register-form {
+    padding: 2rem 5rem;
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border-bottom: 1px solid #eaeaeaa0;
+    color: #5C5C5C;
+}
+#nav > .nav-list > .register-form::before {
+    content: '';
+    display: block;
+    background-image: url("../../images/shopping.png");
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 1.8rem;
+    left: 2.45rem;
+}
+
+/* #toggleNav 스타일 수정 */
+#toggleNav {
+    position: fixed;
+    top: 5rem;
+    z-index: 101;
+    transition: left 0.3s ease; /* 버튼도 움직임 효과를 다시 추가 */
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+#toggleNav:not(.nav-open) { /* 'nav-open' 클래스가 없을 때 */
+    position: fixed;
+    top: 5rem;
+    z-index: 101;
+    transition: left 0.3s ease; /* 버튼도 움직임 효과를 다시 추가 */
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}

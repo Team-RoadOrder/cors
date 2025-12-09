@@ -1,0 +1,79 @@
+
+#dialog {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    perspective: 30cm;
+    background-color: #212121a0;
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: 175ms;
+    transition-property: opacity;
+    position: fixed;
+    z-index: 1000;
+
+    &.visible {
+        opacity: 1;
+        pointer-events: auto;
+
+        > .modal {
+
+        }
+    }
+    > .modal {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        top: calc(50% + 0.25rem);
+        opacity: 0;
+        left: 50%;
+        min-width: 20rem;
+        background-color: #FFFFFF;
+        border-radius: 0.5rem;
+        position: absolute;
+        pointer-events: auto;
+        transform: translate(-50%, -50%);
+        transition-duration: 175ms;
+        transition-property: top, opacity, filter, transform;
+        overflow: hidden;
+
+        &.visible {
+            top: 50%;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .title {
+            background-color: #212121;
+            color: #FFFFFF;
+            padding: 0.75rem;
+        }
+
+        > .content {
+            line-height: 1.375rem;
+            padding: 0.75rem;
+        }
+
+        > .button-container {
+            background-color: #FFFFFF;
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 1fr;
+            border-top: 0.0625rem solid #eaeaea;
+
+            > .button {
+                padding: 0.625rem;
+                cursor: pointer;
+
+                + .button {
+                    border-left: 0.0625rem solid #eaeaea;
+                }
+
+                &:focus,
+                &:hover {
+                    color: #3498db;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,192 @@
+#content-tab-3   {
+    width: 1000px;
+}
+#content-tab-3 .tab_title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#content-tab-3 .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+#content-tab-3 .grid .box {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 5rem;
+}
+#content-tab-3 .grid .box >.image-wrapper {
+    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#content-tab-3 .grid > .box .image {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-position: center;
+    background-size: 300%;  /*이미지 너무 작은것도 많아서 이상해보여서 3배 확대함 */
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+#content-tab-3 .grid > .box .text-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-left: 0.2rem;
+}
+#content-tab-3 .grid > .box .text-container .price {
+    padding-top: 0.5rem;
+
+}
+#content-tab-3 .grid > .box.one .image {
+    background-image: url("/MY/images/shop/shop1.webp");
+}
+
+#content-tab-3 .grid > .box.one >.text-container >.title::after {
+    content:"FOGSY 포그씨";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.one >.text-container >.address::after {
+    content:"Achasna-ro 5-gil, 24-11";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.two .image {
+    background-image: url("/MY/images/shop/shop2.webp");
+}
+#content-tab-3 .grid > .box.two >.text-container >.title::after {
+    content:"수아레 성수 플래그십 스토어";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.two >.text-container >.address:after {
+    content:"Seongdong-gu, seoul";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.three .image {
+    background-image: url("/MY/images/shop/shop3.png");
+}
+#content-tab-3 .grid > .box.three >.text-container >.title::after {
+    content:"Waviness";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.three >.text-container >.address:after {
+    content:"Yonsan District, Seoul";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.four .image {
+    background-image: url("/MY/images/shop/shop4.webp");
+}
+#content-tab-3 .grid > .box.four >.text-container >.title::after {
+    content:"Tonywack 한남";
+    font-size: 1em;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.four >.text-container >.address:after {
+    content:"Yongsan Distric,Seoul";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.five .image {
+    background-image: url("/MY/images/shop/shop5.webp");
+}
+
+#content-tab-3 .grid > .box.five >.text-container >.title::after {
+    content:"우알롱 플래그쉽 스토어";
+    font-size: 1em;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.five >.text-container >.address:after {
+    content:"Yeonmujang 7 ga-gil";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.six .image {
+    background-image: url("/MY/images/shop/shop6.webp");
+}
+
+#content-tab-3 .grid > .box.six >.text-container >.title::after {
+    content:"RECTO";
+    font-size: 1em;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.six >.text-container >.address:after {
+    content:"Yongsan Distric,Seoul";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.seven .image {
+    background-image: url("/MY/images/shop/shop7.jpg");
+}
+
+#content-tab-3 .grid > .box.seven >.text-container >.title::after {
+    content:"VASKA 스토어";
+    font-size: 1em;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.seven >.text-container >.address:after {
+    content:"Gongpyeun-ro, 13";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3 .grid > .box.eight .image {
+    background-image: url("/MY/images/shop/shop8.webp");
+}
+
+#content-tab-3 .grid > .box.eight >.text-container >.title::after {
+    content:"BPLS";
+    font-size: 1em;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-3  .grid > .box.eight >.text-container >.address:after {
+    content:"Samdeok-dong 1-ga";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}

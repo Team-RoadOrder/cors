@@ -1,0 +1,433 @@
+#content {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 3.5rem;
+}
+/*유저 프로필 */
+#content .user_membership {
+    width: 905px;
+    height: 110px;
+}
+
+#content .user_detail{
+    padding: 24px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    border: 1px #e6e6e6 solid;
+    border-radius: 15px;
+
+}
+/* 기존 .thumb에 적용된 스타일 중 일부를 .user_thumb으로 이동 */
+#content .user_detail .user_thumb {
+    width: 60px; /* 이미지의 너비와 높이를 부모 컨테이너에 적용 */
+    height: 60px;
+    border: 1px solid #e6e6e6; /* 테두리 적용 */
+    border-radius: 50%; /* ✨ 원형으로 만드는 핵심 속성 ✨ */
+    overflow: hidden; /* ✨ 원형 테두리 밖으로 이미지가 넘어가지 않도록 함 ✨ */
+    display: flex; /* 내부 이미지를 중앙 정렬하고 싶다면 추가 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 이제 .thumb 이미지 자체는 부모에 꽉 차도록 설정 */
+#content .user_detail .thumb {
+    width: 100%;  /* 부모 .user_thumb의 너비에 꽉 차도록 */
+    height: 100%; /* 부모 .user_thumb의 높이에 꽉 차도록 */
+    object-fit: cover; /* 이미지가 잘리더라도 비율을 유지하면서 꽉 채우도록 */
+    /* 기존 border는 여기서 제거합니다. */
+}
+#content .user_info {
+    padding-left: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+}
+#content .user_info .email {
+    color: #a0a0a0;
+}
+#content .user_detail .info-buttons  {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+#content .user_detail .info-buttons .btn.profile{
+    border: 1px #e6e6e6 solid;
+    padding: 11px 14px;
+    border-radius: 10px;
+}
+#content .user_detail .info-buttons .btn.myStyle {
+    border: 1px #e6e6e6 solid;
+    padding: 11px 14px;
+    border-radius: 10px;
+}
+/* 숏컷 그리드 */
+#content .shortcut-grid {
+    width: 905px;
+    height: 110px;
+}
+
+#content .menu{
+    padding: 24px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    border: 1px #e6e6e6 solid;
+    border-radius: 15px;
+    margin-top: 2rem;
+
+}
+#content .menu .item{
+   display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   font-size: 11px
+}
+#content .menu .image {
+    width: 28px;
+    aspect-ratio: 1/1;
+}
+/*******   유저 구매내역 ********/
+
+#content .my_home_title .title {
+    margin-top: 3rem;
+    font-size: 18px;
+}
+/* 구매내역 구분 네비게이터 */
+#content .recent_purchase {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: rgb(249,249,249);
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 30px 0;
+    border-radius: 10px;
+}
+/* 1. "전체" 항목의 위치 기준 설정 */
+#content .recent_purchase .total {
+    /* 가상 요소의 배치를 위한 기준점 설정 */
+    position: relative;
+    /* 구분선이 너무 붙지 않도록 오른쪽 패딩(간격) 추가 */
+    padding-right: 15px;
+}
+
+/* 2. ::after 가상 요소를 사용하여 구분선 생성 */
+#content .recent_purchase .total::after {
+    /* 가상 요소의 내용(필수) */
+    content: '';
+    /* total 요소를 기준으로 위치 설정 */
+    position: absolute;
+    /* total 영역의 가장 오른쪽 경계선(padding-right 외부)에 위치 */
+    right: -80px;
+    /* 수직 가운데 정렬 */
+    top: 50%;
+    transform: translateY(-50%);
+    /* 구분선의 크기 및 색상 */
+    width: 1px;
+    height: 45px;
+    background-color: #e0e0e0; /* 연한 회색 */
+}
+#content .recent_purchase .total .link {
+       display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#content .recent_purchase .total .link .title {
+    font-size: 13px;
+}
+#content .recent_purchase .total .link .count {
+    font-size: 18px;
+    font-weight: 600;
+    color: red;
+}
+
+#content .recent_purchase .on .link {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#content .recent_purchase .on .link .title {
+    font-size: 13px;
+}
+#content .recent_purchase .on .link .count {
+    font-size: 18px;
+    font-weight: 600;
+
+}
+#content .recent_purchase .ing .link {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#content .recent_purchase .ing .link .title {
+    font-size: 13px;
+}
+#content .recent_purchase .ing .link .count {
+    font-size: 18px;
+    font-weight: 600;
+
+}
+#content .recent_purchase .end .link {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+#content .recent_purchase .end .link .title {
+    font-size: 13px;
+}
+#content .recent_purchase .end .link .count {
+    font-size: 18px;
+    font-weight: 600;
+
+}
+/* 구매내역 아이템들 전체 컨테이너 및 기본 패딩 */
+#content .recent_item .list {
+    display: block;
+    padding: 16px;
+    border-bottom: 1px solid #eee; /* 아이템 구분을 위해 추가 (선택 사항) */
+}
+
+/* 상품 전체를 감싸는 flex 컨테이너 설정 */
+#content .recent_item .list .product {
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 12px; /* 이미지와 텍스트 사이 간격 */
+    justify-content: space-between; /* 전체 공간 활용 */
+}
+
+/* 이미지 wrapper (크기 및 배경 유지) */
+#content .recent_item .image-wrapper {
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 80px; /* 고정 너비 설정 */
+    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#content .recent_item .image {
+    width: 100%; /* wrapper 크기에 맞춤 */
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
+#content .recent_item .list .product .itemTitle {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+}
+
+/* 상품명 스타일 */
+#content .recent_item .list .product .itemTitle .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+/* 사이즈 스타일 */
+#content .recent_item .list .product .itemTitle .description {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 배송 상태 및 날짜 영역 (오른쪽 끝 정렬) */
+#content .recent_item .list .product .itemStatus {
+    display: flex;
+    flex-direction: column; /* 날짜와 상태를 세로로 정렬 */
+    align-items: flex-end; /* 텍스트를 오른쪽 끝으로 정렬 */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    font-size: 13px;
+    color: #999;
+    text-align: right;
+}
+
+/* 날짜 스타일 */
+#content .recent_item .list .product .itemStatus .date {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 2px;
+}
+
+/* 배송완료 / 스타일올리기 텍스트 영역 */
+#content .recent_item .list .product .itemStatus .list-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* 오른쪽 정렬 */
+}
+
+/* '배송완료' 텍스트 스타일 */
+#content .recent_item .list .product .itemStatus .list-column > span:first-child {
+    color: #555; /* 상태 텍스트 색상 */
+    margin-bottom: 2px;
+}
+
+/* '스타일올리기' 텍스트 스타일 */
+#content .recent_item .list .product .itemStatus .list-column > span:last-child {
+    color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
+    text-decoration: none; /* 밑줄 제거 (선택 사항) */
+}
+#content .reservation {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+#content .reservation .title {
+    margin-top: 4rem;
+}
+#content .reservation .more {
+    margin-top: 4rem;
+    top:0;
+    right: 0;
+    position: absolute;
+    color: #a0a0a0;
+}
+
+#content .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+#content .grid .box {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 5rem;
+}
+#content .grid .box >.image-wrapper {
+
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#content .grid > .box .image {
+    width: 165px;
+    aspect-ratio: 1/1;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+#content .grid > .box .text-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-left: 0.2rem;
+}
+#content .grid > .box .text-container .price {
+    padding-top: 0.5rem;
+
+}
+#content .grid > .box.one .image {
+    background-image: url("/SHOP/images/category/one-1.webp");
+}
+#content  .grid > .box.one >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.one >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.two .image {
+    background-image: url("/SHOP/images/category/one-2.webp");
+}
+#content .grid > .box.two >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content  .grid > .box.two >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.three .image {
+    background-image: url("/SHOP/images/category/one-3.webp");
+}
+#content .grid > .box.three >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.three >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.four .image {
+    background-image: url("/SHOP/images/category/one-4.webp");
+}
+#content .grid > .box.four >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content  .grid > .box.four >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.five .image {
+    background-image: url("/SHOP/images/category/one-5.webp");
+}
+#content .grid > .box.five >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content .grid > .box.five >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+
+

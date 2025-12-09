@@ -1,0 +1,76 @@
+#shop-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 2rem 0 2rem 0;
+}
+#shop-header .logo{
+    border-radius: 999rem;
+    height: 110px;
+    width: 110px;
+}
+#shop-header .profile {
+    padding-left: 20px;
+}
+#shop-header .title {
+    margin-top: 0.5rem;
+    font-size: 1.9rem;
+    font-weight: 700;
+
+    /*font-family: "Bitter", serif;*/
+}
+#shop-header .description{
+    margin-top: 2px;
+    font-size: 1.1rem;
+    font-weight:400;
+    color : rgb(155,155,155);
+}
+
+#shop-header .count {
+    margin-top: 0.5rem
+}
+#shop-header .count >.like {
+    font-size: 1.1rem;
+    font-weight:400;
+    color : rgb(155,155,155);
+}
+#shop-header .count >.style{
+    font-size: 1.1rem;
+    font-weight:400;
+    color : rgb(155,155,155);
+}
+#shop-header .count >.num {
+    font-size: 1.1rem;
+    font-weight:600;
+    color : #000000;
+}
+#shop-header .button {
+    margin-top: 0.9rem;
+    display: flex;
+    gap: 1rem;
+}
+#shop-header .button >.like {
+    border: none;
+    border-radius: 1rem;
+    padding: 1rem 3rem;
+    background: #000000;
+    color: #ffffff;
+    font-weight: 600;
+}
+#shop-header .button >.share {
+    padding: 1rem 3rem;
+    border: 1px solid rgb(211, 211, 211);
+    border-radius: 1rem;
+    font-weight: 600;
+    background :#ffffff;
+}
+
+#shop-header> .profile >.count >.style:before {
+    content: '';
+    width: 0.0625rem;
+    height: 1rem;
+    background: #eaeaea;
+    display: inline-block;
+    margin: 0 0.8rem;
+    position: relative;
+}

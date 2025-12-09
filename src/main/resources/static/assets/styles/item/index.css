@@ -1,0 +1,558 @@
+@import "index/header.css";
+@import "index/main.css";
+@import "index/item.css";
+@import "common.css";
+@import "../../MAINPAGE/index/header.css";
+
+
+
+body {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    /*flex-direction: row;*/
+    background-color: #f4f3e8;
+    flex-direction: column;
+
+}
+
+
+body > .container {
+    width: 71.25rem;
+}
+
+body .container {
+    padding: 2rem;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    height: auto;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    overflow-x: hidden;
+    background-color: #f4f3e8;
+    /*border-radius: 0.5rem;*/
+    /*box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.15);*/
+
+}
+
+
+.splash{
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    justify-content: flex-start;
+    position: sticky;
+}
+
+.image-wrapper {
+    width: 35rem;
+    aspect-ratio: 13/14;
+    background-color: #ffffff;
+    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.dot-container {
+    right: 18rem;
+    bottom: 2.5rem;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 0.375rem;
+    justify-content: center;
+    position: relative;
+    transform: translateX(50%);
+}
+.dot-container .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: #212121c0;
+    border-radius: 999rem;
+    cursor: pointer;
+}
+.dot-container > .dot:hover {
+    background-color: #ffffff60;
+}
+
+.image-wrapper > .image {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    object-fit: cover;
+    object-position: center;
+    scroll-snap-align: start;
+    display: block;
+}
+
+.subImage {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px; /* 큰 이미지와의 간격 */
+    flex-direction: row;
+}
+
+.subImage .sub img {
+    width: 60px; /* 썸네일 크기 */
+    height: 60px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    position: relative;
+}
+
+/*
+------------------------------------------------------------------------------------------------------------------*/
+
+#login-wrapper{
+    width: 40%;
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    justify-content: flex-start;
+    position: relative;
+    background-color: #f4f3e8;
+    border-radius: 0.5rem;
+    margin-left: 1.25rem;
+}
+
+.buyText{
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.buyNumber{
+    font-size: 27px;
+}
+
+.koreanProductName{
+    font-size: 14px;
+    color: rgba(34,34,34,.5);
+}
+
+.star, .score{
+    display: inline-block;
+}
+
+.review{
+    text-decoration-line: underline;
+    color: #000000B1;
+}
+
+.star, .score, .review{
+    font-size: 13px;
+}
+
+.optionLink > .option{
+    align-items: center;
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    margin: 10px 0;
+    padding: 11px 8px 11px 10px;
+    box-shadow: black 0 0 0.0625rem;
+}
+
+.selectOption{
+    display: inline-block;
+    width: 95%;
+}
+
+.buying{
+    background-color: rgb(239, 98, 83);
+    color: rgb(255, 255, 255);
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+
+    padding: 11px 8px 11px 10px;
+}
+
+.reservation{
+    background-color: rgb(65, 185, 121);
+    color: rgb(255, 255, 255);
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    padding: 11px 8px 11px 10px;
+}
+.cart_Add {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+.cart_Add .cart{
+    flex: 1;
+    align-items: center;
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    height: 60px;
+    cursor: pointer;
+    color: #333;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    box-shadow: black 0 0 0.0625rem;
+}
+.cart_Add .add {
+    flex: 1;
+    align-items: center;
+    border-radius: 10px;
+    height: 60px;
+    cursor: pointer;
+    color: #f0f0f0;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    background-color: #212121;
+    box-shadow: black 0 0 0.0625rem;
+}
+
+
+.additional{
+    display: flex;
+    justify-content: space-between;
+}
+
+.additional a{
+    color: rgba(34, 34, 34, .5);
+    font-size: 13px;
+    margin: 0 2rem;
+}
+
+.additional p{
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 3rem;
+}
+
+.point{
+    display: flex;
+}
+
+.pointCredit{
+    font-size: 12px;
+    color: rgba(34, 34, 34, 0.5);
+    margin: 0 3rem;
+}
+
+.credit{
+    font-size: 13px;
+    color: rgb(34, 34, 34);
+}
+
+.delivery > .deliveryInformation{
+    font-size: 14px;
+    margin: 0.5rem;
+}
+
+.delivery > .deliveryImage img{
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: 0.5rem;
+}
+
+.deliveryImage{
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.deliveryContainer{
+    margin: 0 1rem;
+}
+
+.deliveryText1{
+    font-size: 13px;
+}
+
+.deliveryText2, .deliveryText3{
+    font-size: 12px;
+    color: rgba(34, 34, 34, .5);
+}
+
+.ad {
+    width: 100%;
+}
+
+.shopName{
+    border-top: 8px solid #f0f0f0;
+    padding: 1rem 0;
+    cursor: pointer;
+    display: flex;
+}
+
+.shopName p{
+    display: inline-block;
+    position: relative;
+    bottom: 1.5rem;
+}
+
+.attractive{
+    margin-left: 3rem;
+    color: #22222280;
+    font-size: 12px;
+}
+
+.shopImage{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999rem;
+    display: inline-block;
+}
+
+/* 숨김 처리된 체크박스 (완전 숨기지 말고 위치만 옮김으로써 선택 가능하게 유지) */
+#bookmark-toggle {
+    position: absolute;
+    left: -9999px;
+}
+
+/* 이미지 기본 스타일 */
+.bookmark {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 컨테이너 */
+.save {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    left: 8rem;
+}
+
+/* label을 block으로 만들기 */
+.bookmark-label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* 기본 이미지 보이기, 검정 이미지 숨기기 */
+.bookmark.default {
+    opacity: 1;
+}
+
+.bookmark.active {
+    opacity: 0;
+}
+
+/* 체크됐을 때 상태 전환 */
+#bookmark-toggle:checked + .bookmark-label .default {
+    opacity: 0;
+}
+
+#bookmark-toggle:checked + .bookmark-label .active {
+    opacity: 1;
+}
+
+.review {
+    margin-top: 30px;
+    text-decoration-line: none;
+}
+
+.review h3 {
+    font-size: 18px;
+}
+
+.review-bar {
+    margin: 10px 0;
+}
+
+.bar {
+    background: #eee;
+    height: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar span {
+    display: block;
+    height: 100%;
+    background: black;
+}
+
+.review ul {
+    /*list-style: none;*/
+    padding: 0;
+    margin: 0;
+}
+
+.review li {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.moreReview{
+    align-items: center;
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    height: 60px;
+    cursor: pointer;
+    color: #333;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    box-shadow: black 0 0 0.0625rem;
+    margin-bottom: 1rem;
+}
+
+.productContainer{
+    width: 100%;
+    height: 100%;
+    top: 50rem;
+    flex-direction: column;
+    display: flex;
+
+}
+
+/*------------------------------------------------------------------------------------*/
+
+.productHead{
+    color: rgba(34, 34, 34, .5);
+    margin: 1rem;
+    padding: 1rem;
+    border-top: 1px solid black;
+    border-bottom: 1px solid #ebebeb;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* 모달 배경 */
+.modal {
+    display: none; /* 기본은 숨김 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+
+     /* 모달 배경 */
+ .modal {
+     display: none; /* 기본은 숨김 */
+     position: fixed;
+     z-index: 1000;
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(0, 0, 0, 0.5);
+     justify-content: center;
+     align-items: center;
+ }
+
+/* 모달 내용 */
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%; /* 화면 크기에 유연하게 */
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+/* 닫기 버튼 (X) */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.close:hover {
+    color: #000;
+}
+
+/* 사이즈 그리드 컨테이너 */
+.size-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2열 그리드 배치 */
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* 사이즈 버튼 */
+.size {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.size:hover {
+    background: #f4f3e8;
+    border-color: #000;
+}
+
+/* 선택된 버튼 스타일 (더미 데이터 방식의 .selected 사용) */
+.size.selected {
+    border: 3px solid #000; /* 선택된 버튼만 두꺼운 검은색 테두리 */
+    font-weight: bold;
+}
+
+/* 확인 버튼 */
+.confirm-size-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 모달 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+

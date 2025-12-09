@@ -1,0 +1,18 @@
+@import "../../MAINPAGE/index/header.css";
+@import "index/shop.css";
+@import "index/main.css";
+@import "common.css";
+
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #D4E8F4;
+}
+
+body > .box {
+    width: 71.25rem;
+}

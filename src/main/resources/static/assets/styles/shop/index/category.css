@@ -1,0 +1,180 @@
+
+#category .selection {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    /* 항상 유지되는 회색 언더라인 (전체 경계선) */
+    border-bottom: rgb(240,240,240) solid 1px;
+    margin-bottom: 4rem;
+}
+
+#category .selection .radio {
+    display: none;
+}
+
+#category .selection .label {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding-bottom: 1rem; /* 검은색 언더라인 공간 확보를 위해 패딩 추가 */
+    position: relative; /* 캡션의 ::after 기준 위치 설정 */
+}
+#category .selection .label > .caption {
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+/* 캡션 자체는 텍스트만 보여주므로 그대로 둡니다. */
+/* 선택된 항목에 대한 검은색 언더라인을 캡션의 ::after로 구현합니다. */
+#category .selection .label > .caption::after {
+    height: 0.125rem;
+    background-color: #000000;
+    content: '';
+    /* 가상 요소의 위치를 부모 레이블의 하단으로 설정 */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* 기본적으로는 보이지 않게 설정 */
+    display: none;
+}
+
+/* radio 버튼이 선택되었을 때, 해당 캡션의 ::after를 보이게 하여 검은색 언더라인 표시 */
+#category .selection .radio:checked + .caption::after {
+    display: block;
+}
+#category .selection .radio:checked + .caption {
+    font-weight: 700;
+}
+
+#category .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+}
+
+#category .grid .box {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 5rem;
+}
+#category .grid .box >.image-wrapper {
+
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#category .grid > .box .image {
+    width: 165px;
+    aspect-ratio: 1/1;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+#category .grid > .box .text-container {
+    align-items: stretch;
+   display: flex;
+   flex-direction: column;
+   gap: 0.05rem;
+   justify-content: flex-start;
+    padding-top: 1rem;
+    padding-left: 0.2rem;
+}
+#category .grid > .box .text-container .price {
+    padding-top: 0.5rem;
+
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.one .image {
+    background-image: url("/SHOP/images/category/one-1.webp");
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.one >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.one >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.two .image {
+    background-image: url("/SHOP/images/category/one-2.webp");
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.two >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.two >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.three .image {
+    background-image: url("/SHOP/images/category/one-3.webp");
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.three >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.three >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.four .image {
+    background-image: url("/SHOP/images/category/one-4.webp");
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.four >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.four >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.five .image {
+    background-image: url("/SHOP/images/category/one-5.webp");
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.five >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#category .form-container:has(.radio[value="1"]:checked) + .grid > .box.five >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+
+

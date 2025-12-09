@@ -1,0 +1,139 @@
+#content-tab-4 {
+    width: 1000px;
+}
+#content-tab-4 .tab_title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#content-tab-4 .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+#content-tab-4 .grid .box {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 5rem;
+}
+#content-tab-4 .grid .box >.image-wrapper {
+
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+#content-tab-4 .grid > .box .image {
+    width: 165px;
+    aspect-ratio: 1/1;
+    background-position: center;
+    background-size: contain;
+    flex-shrink: 0;
+}
+#content-tab-4 .grid > .box .text-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    padding-left: 0.2rem;
+}
+#content-tab-4 .grid > .box .text-container .price {
+    padding-top: 0.5rem;
+
+}
+#content-tab-4 .grid > .box.one .image {
+    background-image: url("/SHOP/images/category/one-1.webp");
+}
+#content-tab-4 .grid > .box.one >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.one >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.two .image {
+    background-image: url("/SHOP/images/category/one-2.webp");
+}
+#content-tab-4 .grid > .box.two >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4  .grid > .box.two >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.three .image {
+    background-image: url("/SHOP/images/category/one-3.webp");
+}
+#content-tab-4 .grid > .box.three >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.three >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.four .image {
+    background-image: url("/SHOP/images/category/one-4.webp");
+}
+#content-tab-4 .grid > .box.four >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4  .grid > .box.four >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.five .image {
+    background-image: url("/SHOP/images/category/one-5.webp");
+}
+#content-tab-4 .grid > .box.five >.text-container >.title::after {
+    content:"Waviness Tide Layer Wool Crop Jacket Black";
+    font-size: 0.8rem;
+    font-weight: 400;
+    position: relative;
+    color: #000000;
+}
+#content-tab-4 .grid > .box.five >.text-container >.price:after {
+    content:"41,2000원";
+    font-size: 1rem;
+    font-weight: 700;
+    position: relative;
+    color: #000000;
+}
+
+

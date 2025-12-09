@@ -1,0 +1,105 @@
+.item-list {
+    background: #FFFFFF;
+    border-radius: 1rem;
+}
+.item-list .spring {
+    color: #212121;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.item-list .product {
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 12px; /* 이미지와 텍스트 사이 간격 */
+    justify-content: space-between; /* 전체 공간 활용 */
+    padding: 1rem;
+    border-bottom: 1px solid #eaeaea;
+}
+
+/* 이미지 wrapper (크기 및 배경 유지) */
+.item-list .image-wrapper {
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 80px; /* 고정 너비 설정 */
+    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.item-list .image {
+    width: 100%; /* wrapper 크기에 맞춤 */
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
+.item-list .product .itemTitle {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+}
+
+/* 상품명 스타일 */
+.item-list .product .itemTitle .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+/* 사이즈 스타일 */
+.item-list .product .itemTitle .description {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 배송 상태 및 날짜 영역 (오른쪽 끝 정렬) */
+.item-list .product .itemStatus {
+    display: flex;
+    flex-direction: column; /* 날짜와 상태를 세로로 정렬 */
+    align-items: flex-end; /* 텍스트를 오른쪽 끝으로 정렬 */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    font-size: 13px;
+    text-align: right;
+}
+
+/* 날짜 스타일 */
+.item-list .product .itemStatus .type {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 2px;
+}
+
+/* 배송완료 / 스타일올리기 텍스트 영역 */
+.item-list .product .itemStatus .list-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    cursor: pointer;
+}
+
+/* '배송완료' 텍스트 스타일 */
+.item-list .product .itemStatus .list-column > .color{
+    color: #555; /* 상태 텍스트 색상 */
+    margin-bottom: 2px;
+}
+
+/* '스타일올리기' 텍스트 스타일 */
+.item-list .product .itemStatus .list-column > .res-btn {
+    text-decoration: none;
+    padding: 0.3rem;
+    background: #212121a0;
+    color: #eaeaea;
+    margin-top: 0.3rem;
+    border-radius: 0.5rem;
+}
+.item-list .product .itemStatus .list-column > .res-btn:hover {
+    color: #f5f5f5;
+    background: #a0a0a0;
+}

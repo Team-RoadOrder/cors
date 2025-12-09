@@ -1,0 +1,55 @@
+#quick{
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    margin-top: 2rem;
+    margin-bottom: 6rem;
+    gap: 3rem;
+    justify-content: center;
+
+}
+
+#quick > .item {
+    width: 100%;
+}
+
+#quick > .item > .link {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+#quick > .item > .link > .icon-wrapper {
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#quick > .item > .link > .icon-wrapper > .icon {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    object-position: center;
+}
+
+#quick > .item > .link > .text {
+    font-weight: 400;
+    font-size: 0.99rem;
+    text-align: center;
+}
+#quick > .item > .link:hover {
+    transform: scale(1.05);
+
+}
+#quick > .item > .link:hover >.icon-wrapper {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05),   /* 가깝고 작은 그림자 */
+    0 8px 16px rgba(0, 0, 0, 0.1);   /* 멀리 퍼지는 넓고 흐린 그림자 */
+}

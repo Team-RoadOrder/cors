@@ -1,0 +1,142 @@
+.container {
+  width: 50%;
+  margin: 50px auto;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 20px 0;
+}
+
+.cart-item img {
+  width: 120px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-info h2 {
+  font-size: 16px;
+  margin: 0 0 5px;
+}
+
+.item-info p {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 5px;
+}
+
+.item-price {
+  font-weight: bold;
+  text-align: right;
+  font-size: 16px;
+  width: 120px;
+}
+
+.summary {
+  border-top: 2px solid #000;
+  padding-top: 20px;
+  margin-top: 30px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.summary-row.total {
+  font-weight: bold;
+  font-size: 17px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.order-btn {
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.order-btn:hover {
+  background-color: #333;
+}
+
+.select-all {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
+  padding: 1rem;
+}
+
+.delete{
+  position: absolute;
+  right: 23rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.delete:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.item-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.item-actions button {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+    transform: translateX(2rem);
+}
+
+.item-actions button:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+

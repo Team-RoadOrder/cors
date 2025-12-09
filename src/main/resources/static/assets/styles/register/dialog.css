@@ -1,0 +1,38 @@
+#dialog {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #212121a0;
+    display:none;
+    position: fixed;
+    z-index: 1;
+}
+
+#dialog.visible {
+    display: revert;
+}
+
+#dialog > .close {
+    top: 1.5rem;
+    right: 1.5rem;
+    position: fixed;
+    z-index: 1;
+}
+
+#dialog > .close > .image {
+    width: 3rem;
+    height: 3rem;
+}
+
+#dialog > .modal {
+    top: 50%;
+    left: 50%;
+    width: 22.5rem;
+    height: 27.5rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    position: fixed;
+    transform: translate(-50%, -50%);
+}

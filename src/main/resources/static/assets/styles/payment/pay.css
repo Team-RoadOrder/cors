@@ -1,0 +1,222 @@
+.container {
+
+  width: 50%;
+}
+
+.section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+h2 span {
+  font-size: 13px;
+  color: #666;
+  margin-left: 5px;
+}
+
+.To, .phone, .adr{
+  display: flex;
+  margin: 0.5rem;
+}
+
+.To > span, .phone > span, .adr > span {
+  width: 6rem;
+  color: #909090;
+}
+
+.name, .phoneNumber, .myAddress{
+  padding: 0;
+  margin: 0;
+}
+
+.please{
+    appearance: none;         /* 표준 */
+    /* 기본 스타일 초기화 */
+    border: 1px solid #eaeaea; /* 원하는 테두리로 설정 (없애려면 none) */
+    background: white;      /* 원하는 배경색으로 설정 (없애려면 none/transparent) */
+    padding: 1rem 1.2rem;      /* 원하는 패딩 설정 */
+    border-radius: 0.5rem;       /* 둥근 모서리 제거 */
+    font-family: inherit;   /* 폰트 상속 */
+    cursor: pointer;        /* 마우스 커서 설정 */
+    width: 100%;
+    margin-bottom: 1.2rem;
+}
+
+.please:focus {
+    outline: 1px solid #eaeaea;
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+.arrowImg {
+    position: absolute;
+    width: 1.3rem;
+    height: 1.3rem;
+    top: 15rem;
+    right: 30rem;
+}
+
+.product > .productImage {
+  background-color: inherit;
+  width: 5rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  margin-right: 15px;
+}
+
+.info {
+  flex: 1;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.desc {
+  font-size: 13px;
+  color: #666;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.delivery, .coupon {
+  margin-top: 15px;
+}
+
+button {
+  border: none;
+  background: #eee;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  color: #aaa;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.total span {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.points-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.points-box input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.use-btn {
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+}
+
+.points-info {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+.payment-option {
+  margin-top: 15px;
+}
+
+.label-purple {
+  color: #6b3dfa;
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+.account-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+}
+
+.account-box select {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.benefit {
+  color: #6b3dfa;
+  font-weight: 500;
+}
+
+.notice {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.method-list h4 {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.method-list ul {
+  margin-top: 5px;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.summary table {
+  width: 100%;
+  font-size: 14px;
+  color: #444;
+}
+
+.summary td {
+  padding: 4px 0;
+}
+
+.summary .total-row td {
+  font-weight: bold;
+  border-top: 1px solid #ddd;
+  padding-top: 8px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #111;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}

@@ -1,0 +1,38 @@
+/* Custom Marker Styles (수정본) */
+.custom-marker-style {
+    padding: 8px 14px;
+    background-color: #8BBDFF;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Gowun Dodum', sans-serif;
+    border: 2px solid #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-marker-style:hover {
+    transform: scale(1.1);
+    background-color:  rgb(82,141,216);
+}
+
+/* 마커 하단 뾰족한 부분 (선택사항) */
+.custom-marker-style::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* 마커 바로 아래에 붙도록 조정 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid  rgb(82,141,216) ; /* 마커 배경색과 동일하게 */
+}
+
+.custom-marker-style:hover::after {
+    border-top-color:  rgb(82,141,216);
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITEM</title>
+    <!--<link href="assets/images/favicon.ico" rel="shortcut icon">-->
+    <!-- 탭창 파비콘 들어가야함-->
+    <link rel="stylesheet" href="./styles/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap"
+          rel="stylesheet">
+    <link href="../LOGIN/img/favicon.png" rel="icon"  >
+</head>
+<body>
+<!-- 헤더부분 , 로고와 네비바가 들어감 -->
+<header class="box" id="header">
+    <div class="left">
+        <a href="../index.html" class="box" id="logo">
+            <img src="../MAINPAGE/images/img.png" alt="" class="logo">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+        <ul class="nav">
+            <li class="item selected"><a href="../index.html">HOME</a></li>
+            <li class="item shop">
+                <a href="#">SHOP</a>
+                <div class="sub-menu">
+                    <ul class="shop-menu">
+                        <li class="item">
+                            <a href="../SHOPLIST/shoplist.html" class="link">
+                                Popular Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../NEARBYSHOP/nearbyshop.html" class="link">
+                                Nearby Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../RECOMMENDEDSHOP/recommendedshop.html" class="link">
+                                recommended shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../Reservation/reservation.html" class="link">
+                                Reservation
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../MY/my.html" class="link">
+                                My Page
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="item"><a href="../INFO/info.html">INFO</a></li>
+            <li class="item"><a href="../Reservation/reservation.html">RESERVATION</a></li>
+            <li class="item"><a href="../ITEMLIST/itemlist.html">PRODUCT</a></li>
+            <li class="item"><a href="../MY/my.html">MY PAGE</a></li>
+        </ul>
+
+    </div>
+    <div class="spring"> </div>
+    <ul class="icon-menu">
+        <li class="item">
+            <form action="../SEARCHRESULT/searchresult.html" method="get" >
+                <button class="glass" aria-label="검색창 열기" type="button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="25" viewBox="0 0 48 48">
+                        <path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"></path>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" class="search-box" aria-label="검색창">
+            </form>
+        </li>
+        <li class="item">
+            <a class="cart" href="../CART/cart.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="30" height="25" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"></path>
+                </svg>
+            </a>
+        </li>
+        <li class="item">
+            <a class="login" href="../LOGIN/Login.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg"  fill="#000000" version="1.1" id="Capa_1" width="30" height="25" viewBox="0 0 45.916 45.916" xml:space="preserve"><g><g><path d="M30.061,18.237c2.127-1.916,3.476-4.683,3.476-7.772C33.536,4.684,28.85,0,23.07,0C17.29,0,12.604,4.685,12.604,10.465    c0,3.085,1.343,5.85,3.467,7.766c-5.441,0.422-9.74,4.928-9.779,10.477L6.224,40.154c-0.01,1.525,0.59,2.99,1.665,4.072    c1.075,1.08,2.537,1.689,4.062,1.689h10.151h11.794c3.15,0,5.709-2.543,5.729-5.693l0.068-11.361    c0.021-2.826-1.089-5.538-3.083-7.544C34.851,19.543,32.526,18.465,30.061,18.237z"/></g></g></svg>
+            </a>
+        </li>
+
+    </ul>
+    <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
+</header>
+<!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
+<!--헤더에 호버하면 나타나는 메뉴 -->
+<main id="main" >
+    <img src="../../Landing/images/waviness.png" class="image" alt="">
+</main> <!-- 헤더뒤에 배경 -->
+
+<!--상품이미지-->
+<div class="background"></div>
+<div class="container">
+    <div class="splash">
+        <div class="image-wrapper">
+            <img class="image" src="./images/front.png" alt="" id="splashOne">
+            <img class="image" src="./images/back.png" alt="" id="splashTwo">
+        </div>
+        <div class="dot-container">
+            <!--도트는 a[href=#id]로 해당 슬라이드로 스냅 이동-->
+            <a class="dot" href="#splashOne"></a>
+            <a class="dot" href="#splashTwo"></a>
+        </div>
+        <div class="subImage">
+            <a class="sub" href="#">
+                <img src="./images/front.png" alt="이미지" class="sub1">
+            </a>
+            <a class="sub" href="#">
+                <img src="./images/frontWhite.png" alt="이미지" class="sub2">
+            </a>
+        </div>
+    </div>
+    <!--상품가격 및 구매-->
+    <div id="login-wrapper">
+        <div class="buy">
+            <p class="buyText">구매가</p>
+            <p class="buyNumber"><b>139,000원</b></p>
+        </div>
+        <div class="product">
+            <p class="productName">Polyteru X LOTTE GIANTS Retro Uniform Black</p>
+            <p class="koreanProductName">폴리테루 X 롯데자이언츠 레트로 유니폼 블랙</p>
+            <p class="star">★</p>
+            <a href="#"><p class="score"><b>4.9</b></p></a>
+            <a class="reviewButton" href="#">
+                <span class="review">리뷰 253</span>
+            </a>
+        </div>
+
+
+        <a class="optionLink" href="#">
+            <div class="option">
+                <div class="selectOption"><b>옵션 선택</b></div>
+                <span class="underIcon">▼</span>
+            </div>
+        </a>
+
+        <a href="#">
+            <div class="buying">구매하기</div>
+        </a>
+
+        <a href="#">
+            <div class="reservation">예약하기</div>
+        </a>
+
+        <div class="cart_Add">
+            <span class="cart">장바구니담기</span>
+            <span class="add">관심상품저장</span>
+        </div>
+
+        <div class="additional">
+            <p>추가 혜택</p>
+            <a href="#">더보기</a>
+        </div>
+
+        <div class="point">
+            <p class="pointCredit">포인트</p>
+            <p class="credit">계좌 간편결제 시 1% 적립</p>
+        </div>
+        <div class="point">
+            <p class="pointCredit">결제</p>
+            <p class="credit">크림카드 최대 15만... 외 10건</p>
+        </div>
+
+        <div class="delivery">
+            <p class="deliveryInformation">배송 정보</p>
+            <div class="deliveryImage">
+                <img src="./images/delivery.png" alt="deliveryIcon">
+                <div class="deliveryContainer">
+                    <p class="deliveryText1"><b>브랜드배송</b> 3,000원</p>
+                    <p class="deliveryText2">입점한 브랜드에서 직접 택배 배송</p>
+                    <p class="deliveryText3">7만원 이상 구매 시 배송비 무료</p>
+                </div>
+            </div>
+
+            <div class="shopName">
+                <a href="#">
+                    <img class="shopImage" src="./images/store.webp" alt="">
+                    <p>Polyteru</p>
+                    <p class="polyteru"> ></p>
+                    <div class="attractive">
+                        <p>폴리테루 </p>
+                        <p> º 관심</p>
+                        <p>2.1만</p>
+                    </div>
+                </a>
+                <div class="save">
+                    <input type="checkbox" id="bookmark-toggle" hidden>
+                    <label for="bookmark-toggle" class="bookmark-label">
+                        <img src="./images/save1.png" class="bookmark default" alt="bookmark">
+                        <img src="./images/save2.png" class="bookmark active" alt="bookmark-black">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!--광고 배너-->
+        <div class="ad">
+            <img src="./images/ad.png" alt="ad" class="ad">
+        </div>
+
+        <!--리뷰-->
+        <div class="review">
+            <h3>리뷰 ★ 4.9 (276)</h3>
+            <div class="review-bar">
+                5<div class="bar"><span style="width:90%"></span></div>
+                4<div class="bar"><span style="width:5%"></span></div>
+                3<div class="bar"><span style="width:3%"></span></div>
+                2<div class="bar"><span style="width:1%"></span></div>
+                1<div class="bar"><span style="width:0"></span></div>
+            </div>
+            <ul>
+                <li>정사이즈예요 — 61%</li>
+                <li>두께감이 좋아요 — 69%</li>
+                <li>퀄리티가 만족스러워요 — 53%</li>
+            </ul>
+            <div class="moreReview">리뷰 더보기</div>
+        </div>
+    </div>
+</div>
+<div class="productContainer">
+    <ul class="productHead">
+        <li class="item"><a href="#">상품 상세정보</a></li>
+        <li class="item"><a href="#">교환 및 반품 안내</a></li>
+        <li class="item"><a href="#">스타일 리뷰14</a></li>
+        <li class="item"><a href="#">추천 상품</a></li>
+    </ul>
+</div>
+
+<!-- 옵션 선택 모달 -->
+<div class="modal" id="optionModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>사이즈 선택</h2>
+
+        <div class="size-options" id="sizeGrid">
+        </div>
+
+        <button class="confirm-size-button" id="confirmSizeButton">선택 완료</button>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('scroll', function() {
+        const header = document.getElementById('header');
+        if (window.scrollY > 0) {
+            header.classList.add('scroll-active');
+        } else {
+            header.classList.remove('scroll-active');
+        }
+    });
+    // 검색창에 있는 헤더를 위한
+    const searchIcon = document.querySelector('.glass');
+    const searchInput = document.getElementById('searchInput');
+
+    // 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
+    searchIcon.addEventListener('click', (event) => {
+
+
+        // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
+        searchInput.classList.toggle('show');
+
+        // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
+        if (searchInput.classList.contains('show')) {
+            searchInput.focus();
+        }
+    });
+    const sizes = [
+        '90(S)',
+        '100(M)',
+        '110(L)',
+        '120(XL)'
+    ];
+
+    const modal = document.getElementById('optionModal');
+    const openBtn = document.querySelector('.optionLink');
+    const closeBtn = document.querySelector('.close');
+    const sizeGrid = document.getElementById('sizeGrid');
+    const confirmButton = document.getElementById('confirmSizeButton');
+    const buyButton = document.getElementById('buyButton');
+
+    // ✅ 옵션링크 내부의 <b> 태그를 참조합니다.
+    const selectOptionText = document.querySelector('.selectOption b');
+
+    // ❌ Uncaught TypeError: Cannot set properties of null 오류를 피하기 위해 주석 처리하거나 제거합니다.
+    // const selectedSizeDisplay = document.querySelector('.selectedSizeDisplay');
+    // const chosenSizeSpan = document.getElementById('chosenSize');
+
+    let currentSelectedSize = null;
+
+    // --- 1. 사이즈 버튼 생성 및 초기화 ---
+    function renderSizeButtons() {
+        sizeGrid.innerHTML = '';
+
+        sizes.forEach(size => {
+            const button = document.createElement('button');
+            button.classList.add('size');
+            button.textContent = size;
+            button.dataset.size = size;
+
+            if (size === currentSelectedSize) {
+                button.classList.add('selected');
+            }
+
+            // 이벤트 리스너 부착
+            button.addEventListener('click', handleSizeSelection);
+            sizeGrid.appendChild(button);
+        });
+    }
+
+    // --- 2. 사이즈 버튼 클릭 핸들러: 선택 상태 토글 및 값만 저장 ---
+    function handleSizeSelection(event) {
+        // 모든 버튼의 'selected' 클래스 제거
+        document.querySelectorAll('.size').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+
+        // 새로 선택된 버튼에 'selected' 클래스 추가
+        event.target.classList.add('selected');
+        currentSelectedSize = event.target.dataset.size; // 값만 저장
+    }
+
+    // --- 3. 모달 열기/닫기 및 값 업데이트 ---
+
+    // 모달 열기
+    openBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        renderSizeButtons();
+        modal.style.display = 'flex';
+    });
+
+    // X 버튼 → 닫기
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // 배경 클릭 시 닫기
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // ✅ "선택 완료" 버튼 클릭 시 로직: 옵션링크 텍스트에 반영 (오류 해결 및 기능 구현)
+    confirmButton.addEventListener('click', () => {
+        if (currentSelectedSize) {
+            selectOptionText.textContent = currentSelectedSize;
+            // 3. 모달 닫기
+            modal.style.display = 'none';
+        } else {
+            alert('사이즈를 선택해주세요.');
+        }
+    });
+
+    // 구매하기 버튼 클릭 시 최종 확인 (기존 로직 유지)
+    buyButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!currentSelectedSize) {
+            alert('구매하시려면 먼저 옵션을 선택해주세요.');
+        } else {
+            alert(`${currentSelectedSize} 사이즈로 구매를 진행합니다.`);
+        }
+    });
+
+    // 초기 버튼 렌더링은 모달 열 때만 하도록 초기 실행 코드는 제거했습니다.
+</script>
+</body>
+</html>

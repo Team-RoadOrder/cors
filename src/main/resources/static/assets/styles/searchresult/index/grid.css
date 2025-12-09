@@ -1,0 +1,33 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    padding: 1rem;
+    align-items: stretch;
+}
+
+.grid .image-wrapper {
+    padding: 1rem;
+
+}
+.grid .image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.grid .image-wrapper img:hover {
+    opacity: 0.8;
+}
+.grid .text-wrapper {
+   text-align: right;
+    display: flex;
+    flex-direction: column;
+    padding-right: 1.5rem;
+}
+.grid .text-wrapper .title{
+    font-size: 0.8rem;
+}
+.grid .text-wrapper .price {
+    font-size: 0.7rem;
+    padding: 0.5rem;
+    color: #2f3438;
+}

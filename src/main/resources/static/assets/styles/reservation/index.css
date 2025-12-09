@@ -1,0 +1,23 @@
+@import "../../MAINPAGE/index/header.css";
+@import "index/main.css";
+@import "index/shop-header.css";
+@import "index/reservation.css";
+@import "index/item.css";
+@import "index/dialog.css";
+
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #FFFFFF;
+}
+
+body > .box {
+    width: 76.25rem;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}

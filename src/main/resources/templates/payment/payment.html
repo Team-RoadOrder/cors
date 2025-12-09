@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>결제 페이지</title>
+  <link rel="stylesheet" href="./assets/styles/pay.css">
+  <link rel="stylesheet" href="./assets/styles/common.css">
+</head>
+<body>
+<div class="container">
+
+  <div class="section">
+    <h2>배송 주소 <button type="button" class="addressButton">주소 변경</button></h2>
+
+    <div class="address">
+      <div class="To">
+        <span>받는 분</span>
+        <p class="name">홍길동</p>
+      </div>
+      <div class="phone">
+        <span>연락처</span>
+        <p class="phoneNumber">010-1234-5678</p>
+      </div>
+      <div class="adr">
+        <span>주소</span>
+        <p class="myAddress">[12345]대구광역시 중구 ...</p>
+      </div>
+      <label for="please">
+      <select class="please" name="please" id="please">
+        <option value="please">요청사항 없음</option>
+        <option value="please">문 앞에 놓아주세요</option>
+        <option value="please">경비실에 맡겨 주세요</option>
+        <option value="please">파손 위험 상품입니다. 배송시 주의해주세요</option>
+        <option value="please">직접입력</option>
+      </select>
+          <img src="./assets/images/arrow.png" alt="화살표" class="arrowImg">
+      </label>
+    </div>
+
+
+  <div class="section">
+    <h2>주문 상품 및 쿠폰 <span>총 1건</span></h2>
+
+    <div class="product">
+      <img class="productImage" src="./assets/images/productImage.png" alt="상품 이미지">
+      <div class="info">
+        <p class="title">New Balance 509 Black Gray</p>
+        <p class="desc">뉴발란스 509 블랙 그레이<br>255 / 빠른배송</p>
+      </div>
+      <div class="price">163,000원</div>
+    </div>
+
+    <div class="delivery">
+      <h3>배송방법</h3>
+      <label><input type="radio" name="delivery" checked> 빠른배송 (내일 도착 예정)</label><br>
+      <label><input type="radio" name="delivery"> 창고보관 (배송 예약)</label>
+    </div>
+
+    <div class="coupon">
+      <h3>할인쿠폰</h3>
+      <button disabled>사용 가능한 쿠폰이 없습니다</button>
+    </div>
+
+    <div class="total">
+      <p>결제금액</p>
+      <span>171,200원</span>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <h2>포인트</h2>
+    <div class="points-box">
+      <input type="number" placeholder="0">
+      <button class="use-btn">최대 사용</button>
+    </div>
+    <p class="points-info">보유 포인트: <strong>5,020P</strong></p>
+  </div>
+
+
+  <div class="section">
+    <h2>결제 방법</h2>
+
+    <div class="payment-option">
+      <label><input type="radio" name="pay" checked> 계좌 간편결제 <span class="label-purple">1% 적립</span></label>
+      <div class="account-box">
+        <select>
+          <option>국민은행 ****45</option>
+        </select>
+        <span class="benefit">1,720P 적립</span>
+      </div>
+    </div>
+
+    <div class="payment-option">
+      <label><input type="radio" name="pay"> 카드 간편결제</label>
+    </div>
+
+    <div class="payment-option">
+      <label><input type="radio" name="pay"> 일반 결제</label>
+    </div>
+
+    <p class="notice">
+      계좌 간편결제는 계좌 등록 후 결제 가능하며, 납부 방식에 따라 일부 결제 수수료가 발생할 수 있습니다.
+    </p>
+
+    <div class="method-list">
+      <h4>결제 혜택</h4>
+      <ul>
+        <li>체크카드: 특정 카드 포인트 적립</li>
+        <li>네이버페이: 최대 2% 적립</li>
+        <li>토스페이: 결제 시 랜덤 혜택</li>
+        <li>삼성페이: 멤버십 포인트 적립</li>
+        <li>카카오페이: 청구할인</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="section summary">
+    <h2>최종 주문정보</h2>
+    <table>
+      <tr><td>구매가</td><td>163,000원</td></tr>
+      <tr><td>배송비</td><td>3,200원</td></tr>
+      <tr><td>포인트 사용</td><td>0원</td></tr>
+      <tr class="total-row"><td>총 결제금액</td><td>171,200원</td></tr>
+    </table>
+  </div>
+
+  <button type="submit" class="submit-btn">결제하기</button>
+
+</div>
+
+</body>
+</html>

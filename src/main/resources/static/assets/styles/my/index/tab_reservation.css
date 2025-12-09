@@ -1,0 +1,171 @@
+
+#content-tab-2 {
+    width: 1000px;
+}
+
+/* 탭 내부의 제목 스타일 */
+#content-tab-2 .tab_title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+#content-tab-2 .radio {
+    display: none;
+}
+#content-tab-2 .selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-bottom: rgb(240,240,240) solid 1px;
+    margin-bottom: 2rem;
+
+}
+#content-tab-2 li {
+    width: 301px;
+
+}
+#content-tab-2 .label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 13px;
+    position: relative;
+
+}
+#content-tab-2 .label >.number {
+    font-size: 20px;
+    font-weight: 700;
+}
+#content-tab-2 .label >.title {
+    font-size: 13px;
+    font-weight: 400;
+    color: #a0a0a0;
+}
+#content-tab-2 .selection .label > .title::after {
+    height: 0.125rem;
+    background-color: #000000;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+}
+
+#content-tab-2 .selection .radio:checked ~ .title::after {
+    display: block;
+}
+#content-tab-2 .selection .radio:checked ~ .title{
+    color: #000000;
+    font-weight:600;
+}
+#content-tab-2 .selection .radio:checked + .number{
+    color: green;
+}
+/* 버튼 클릭시 각 카테고리에 해당하는 품목등장*/
+#content-tab-2 .selection:has( .radio[value='1']:checked) + .item.reservation{
+    display: block;
+}
+#content-tab-2 .selection:has( .radio[value='2']:checked) ~ .item.pickup{
+    display: block;
+}
+#content-tab-2 .selection:has( .radio[value='3']:checked) ~ .item.pickup{
+    display: block;
+}
+#content-tab-2 .item {
+    display: none;
+}
+
+/* 구매내역 아이템들 전체 컨테이너 및 기본 패딩 */
+#content-tab-2 .item .list {
+    display: block;
+    padding: 16px;
+    border-bottom: 1px solid #eee; /* 아이템 구분을 위해 추가 (선택 사항) */
+}
+
+/* 상품 전체를 감싸는 flex 컨테이너 설정 */
+#content-tab-2 .item .list .product {
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 12px; /* 이미지와 텍스트 사이 간격 */
+    justify-content: space-between; /* 전체 공간 활용 */
+}
+
+/* 이미지 wrapper (크기 및 배경 유지) */
+#content-tab-2 .item .image-wrapper {
+    background-color: rgb(243, 244, 247);
+    border-radius: 0.5rem;
+    width: 80px; /* 고정 너비 설정 */
+    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#content-tab-2 .item .image {
+    width: 100%; /* wrapper 크기에 맞춤 */
+    height: 100%;
+    object-fit: contain; /* 이미지 비율 유지 */
+}
+
+/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
+#content-tab-2 .item .list .product .itemTitle {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+}
+
+/* 상품명 스타일 */
+#content-tab-2 .item .list .product .itemTitle .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+/* 사이즈 스타일 */
+#content-tab-2 .item .list .product .itemTitle .description {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 배송 상태 및 날짜 영역 (오른쪽 끝 정렬) */
+#content-tab-2 .item .list .product .itemStatus {
+    display: flex;
+    flex-direction: column; /* 날짜와 상태를 세로로 정렬 */
+    align-items: flex-end; /* 텍스트를 오른쪽 끝으로 정렬 */
+    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    font-size: 13px;
+    color: #999;
+    text-align: right;
+}
+
+/* 날짜 스타일 */
+#content-tab-2 .item .list .product .itemStatus .date {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 2px;
+}
+
+/* 배송완료 / 스타일올리기 텍스트 영역 */
+#content-tab-2 .item .list .product .itemStatus .list-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* 오른쪽 정렬 */
+}
+
+/* '배송완료' 텍스트 스타일 */
+#content-tab-2 .item .list .product .itemStatus .list-column > span:first-child {
+    color: #555; /* 상태 텍스트 색상 */
+    margin-bottom: 2px;
+}
+
+/* '스타일올리기' 텍스트 스타일 */
+#content-tab-2 .item .list .product .itemStatus .list-column > span:last-child {
+    color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
+    text-decoration: none; /* 밑줄 제거 (선택 사항) */
+}

@@ -1,0 +1,21 @@
+*{
+  font-size: 14px;
+}
+
+body {
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+h2 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+input[type="radio"]{
+  accent-color: black;
+}

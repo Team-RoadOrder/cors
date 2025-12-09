@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>info페이지</title>
+    <link rel="stylesheet" href="./style/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+    <link href="../LOGIN/img/favicon.png" rel="icon"  >
+</head>
+<body>
+<!-- 헤더부분 , 로고와 네비바가 들어감 -->
+<header class="box" id="header">
+    <div class="left">
+        <a href="../index.html" class="box" id="logo">
+            <img src="../MAINPAGE/images/img.png" alt="" class="logo">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+        <ul class="nav">
+            <li class="item selected"><a href="../index.html">HOME</a></li>
+            <li class="item shop">
+                <a href="#">SHOP</a>
+                <div class="sub-menu">
+                    <ul class="shop-menu">
+                        <li class="item">
+                            <a href="../SHOPLIST/shoplist.html" class="link">
+                                Popular Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../NEARBYSHOP/nearbyshop.html" class="link">
+                                Nearby Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../RECOMMENDEDSHOP/recommendedshop.html" class="link">
+                                recommended shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../Reservation/reservation.html" class="link">
+                                Reservation
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="../MY/my.html" class="link">
+                                My Page
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="item"><a href="../INFO/info.html">INFO</a></li>
+            <li class="item"><a href="../Reservation/reservation.html">RESERVATION</a></li>
+            <li class="item"><a href="../ITEMLIST/itemlist.html">PRODUCT</a></li>
+            <li class="item"><a href="../MY/my.html">MY PAGE</a></li>
+        </ul>
+
+    </div>
+    <div class="spring"> </div>
+    <ul class="icon-menu">
+        <li class="item">
+            <form action="../SEARCHRESULT/searchresult.html" method="get" >
+                <button class="glass" aria-label="검색창 열기" type="button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="25" viewBox="0 0 48 48">
+                        <path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"></path>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" class="search-box" aria-label="검색창">
+            </form>
+        </li>
+        <li class="item">
+            <a class="cart" href="../CART/cart.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="30" height="25" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"></path>
+                </svg>
+            </a>
+        </li>
+        <li class="item">
+            <a class="login" href="../LOGIN/Login.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg"  fill="#000000" version="1.1" id="Capa_1" width="30" height="25" viewBox="0 0 45.916 45.916" xml:space="preserve"><g><g><path d="M30.061,18.237c2.127-1.916,3.476-4.683,3.476-7.772C33.536,4.684,28.85,0,23.07,0C17.29,0,12.604,4.685,12.604,10.465    c0,3.085,1.343,5.85,3.467,7.766c-5.441,0.422-9.74,4.928-9.779,10.477L6.224,40.154c-0.01,1.525,0.59,2.99,1.665,4.072    c1.075,1.08,2.537,1.689,4.062,1.689h10.151h11.794c3.15,0,5.709-2.543,5.729-5.693l0.068-11.361    c0.021-2.826-1.089-5.538-3.083-7.544C34.851,19.543,32.526,18.465,30.061,18.237z"/></g></g></svg>
+            </a>
+        </li>
+
+    </ul>
+    <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
+</header>
+<!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
+<!--헤더에 호버하면 나타나는 메뉴 -->
+<main id="main" >
+    <img src="../MY/images/waviness.png" class="image" alt="메인이미지">
+</main> <!-- 헤더뒤에 배경 -->
+<div class="title">로드패스오더 (CORS: Connecting style to roadshop)</div>
+<div class="description">"최신 스타일(트렌드)을 대중적인 로드샵 매장과 연결합니다.""트렌디한 감각을 누구나 쉽게 접할 수 있게 합니다."</div>
+<ul class="project box">
+    <li>
+    <div class="index">1. 프로젝트 개요</div>
+        <div class="description">
+            로드패스오더(CORS)는 온라인 스토어 운영에 어려움을 겪는 오프라인 로드샵(Local Roadshop)과 트렌디한 오프라인 쇼핑을 즐기는 고객을 연결하는 **O2O(Online to Offline) 플랫폼**입니다.
+            <br>
+            핵심은 [로드샵 ↔ 고객 연결] + [예약/픽업] + [결제]입니다.
+            <br>
+            타겟 고객:온라인 쇼핑의 편리함과 오프라인 쇼핑의 실제 경험(입어보기, 재질 확인)을 모두 중시하는 고객.
+            <br>
+            기대 효과: 오프라인 로드샵 상권 활성화.
+            <br>
+            수익 모델: 입점 로드샵 대상 월간 구독 이용료.</div>
+    </li>
+    <li>
+    <div class="index">2. 주요 기능</div>
+    <div class="description">
+        <div class="sub-title">
+        [ 판매자 (로드샵) ]
+        </div>
+        상품 등록: 온라인 스토어 없이도 간편하게 물품(의류, 잡화)을 등록합니다.
+        <br>
+        상세 정보 관리: 카테고리별 분류, 상세 사이즈(어깨, 가슴, 총장 등) 등록이 가능합니다.
+        <br>
+        주문 관리: 고객의 픽업 예약 주문을 확인하고 관리합니다.
+        <br>
+        부가 서비스: 수선, 스타일링 상담 등 매장별 특화 서비스를 등록하고 관리합니다.
+        <br>
+        타겟 고객:온라인 쇼핑의 편리함과 오프라인 쇼핑의 실제 경험(입어보기, 재질 확인)을 모두 중시하는 고객.
+        <br>
+        기대 효과: 오프라인 로드샵 상권 활성화.
+        <br>
+        수익 모델: 입점 로드샵 대상 월간 구독 이용료 .</div>
+    </li>
+    <li>
+        <div class="index">3. 핵심 차별점 및 기술 구현 전략</div>
+        <div class="description">
+            <div class="sub-title">
+                1. 오프라인 연동 예약·픽업 시스템
+            </div>
+            일반 쇼핑몰의 '배송' 시스템이 아닌, 오프라인 로드샵과 직접 연결된 예약 및 픽업 시스템을 핵심 기능으로 제공합니다.
+            <br>
+            <div class="sub-title">
+                2. PWA를 통한 웹/앱 동시 경험 제공
+            </div>
+            반응형 웹으로 구현하여 모든 디바이스(PC, 태블릿, 모바일)를 지원합니다.
+            <br>
+            또한 PWA(Progressive Web App) 기술을 적용하여, 사용자가 별도 앱을 설치하지 않아도 홈 화면에 아이콘을 추가하고 앱처럼 사용할 수 있는 환경을 제공합니다.
+            <br>
+            <div class="sub-title">
+                3. 맞춤형 추천 알고리즘 (프로토타입)
+            </div>
+            기능:고객이 본인의 신체 사이즈를 등록하면, 그에 맞는 의류를 추천합니다.
+            <br>
+            구현 전략 (포트폴리오): 실제 머신러닝 구현은 많은 리소스가 필요하므로,
+            <br>
+            초기 버전에서는 **사이즈별 필터링 기능** 또는 **간단한 룰 기반 추천**(예: 키 170cm 이상 → L 사이즈 상품 노출)을 구현합니다.
+            <br>
+            이를 통해 "추천 시스템 도입 시도" 및 향후 확장 가능성이 있습니다.
+            <br>
+            <div class="sub-title">
+                4. 블록체인 결제 (프로토타입)
+            </div>
+            기능: 차세대 결제 방식으로 블록체인 기반 암호화폐 결제 프로토타입을 제공합니다.
+            <br>
+            구현 전략 (포트폴리오): 실제 상용 결제를 붙이는 대신, 모의 결제 API를 이용한 가상 카드 결제와 블록체인 테스트넷(Testnet)을 이용한 결제 옵션을 함께 제공하여, 기술적 이해도와 새로운 시도를 강조합니다.
+        </div>
+
+    </li>
+</ul>
+
+
+<script>
+    document.addEventListener('scroll', function() {
+        const header = document.getElementById('header');
+        if (window.scrollY > 0) {
+            header.classList.add('scroll-active');
+        } else {
+            header.classList.remove('scroll-active');
+        }
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', function(e) {
+            // 모든 점의 'checked' 클래스 제거
+            dots.forEach(d => d.classList.remove('checked'));
+
+            // 현재 클릭된 점에 'checked' 클래스 추가
+            this.classList.add('checked');
+        });
+    });
+    // 검색창에 있는 헤더를 위한
+    const searchIcon = document.querySelector('.glass');
+    const searchInput = document.getElementById('searchInput');
+
+    // 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
+    searchIcon.addEventListener('click', (event) => {
+
+
+        // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
+        searchInput.classList.toggle('show');
+
+        // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
+        if (searchInput.classList.contains('show')) {
+            searchInput.focus();
+        }
+    });
+</script>
+
+
+</body>
+</html>

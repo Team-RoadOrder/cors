@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Black+Han+Sans&family=Gowun+Dodum&family=Lavishly+Yours&family=Nanum+Brush+Script&family=Yellowtail&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Black+Han+Sans&family=Gowun+Dodum&family=Lavishly+Yours&family=Nanum+Brush+Script&family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&family=Yellowtail&display=swap');
+#inner >.item >.text-container >.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+}
+#inner >.item >.text-container >.description{
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: #a0a0a0;
+}
+#inner >.item {
+    padding: 4rem 0 1rem 0;
+}
+#inner .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+#inner .grid .box {
+    padding: 1.2rem;
+}
+#inner .grid .image {
+    border-radius: 10px;
+}
+#inner .grid >.box >.info {
+   padding: 0.5rem;
+}
+#inner .grid >.box >.info > .title {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 1.875rem;
+    font-weight: 800;
+    padding: 0.625rem 0;
+    display: block;
+}
+#inner .grid >.box >.info > .subtitle {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #a0a0a0;
+}

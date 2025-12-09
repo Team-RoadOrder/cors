@@ -1,0 +1,46 @@
+#main {
+    width: 100%;
+    overflow: hidden;
+    height: 97.09px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#main .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+#shop-header{
+    position: fixed;
+    right: 20px;
+    bottom: 200px;
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    z-index: 999;
+}
+#shop-header::before{
+    content: "";
+    background-image: url("../../images/icon.png");
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+
+}

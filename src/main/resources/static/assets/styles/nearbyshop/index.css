@@ -1,0 +1,20 @@
+@import "../../MAINPAGE/index/header.css";
+@import "index/main.css";
+@import "index/map.css";
+@import "index/marker.css";
+
+@import "common.css";
+
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+}
+
+body > .box {
+    width: 71.25rem;
+}

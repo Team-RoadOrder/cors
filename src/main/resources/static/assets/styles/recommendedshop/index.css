@@ -1,0 +1,22 @@
+@import "../../MAINPAGE/index/header.css";
+@import "index/inner.css";
+
+@import "common.css";
+@import "object/video.css";
+
+
+body {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+body > .box {
+    width: 71.25rem;
+}
+body > #inner {
+    width: 65rem;
+
+
+}

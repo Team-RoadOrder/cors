@@ -1,0 +1,117 @@
+#shop {
+    width: 95%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    border-radius: 5px;
+    position: relative;
+  /*  border: 1px solid #eaeaea;*/
+}
+/* 지도로 주변매장 페이지로 이동 하는 버튼 */
+#map{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+#map::before{
+    content: "";
+    background-image: url("../../images/icon.png");
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+
+}
+
+/*매장 이미지 및 옆에 들어가는 설명부분 2열로 정렬 */
+#shop .image {
+    width: 7rem;
+    aspect-ratio: 1/1;
+    border-radius: 5px;
+}
+#shop .shop-list {
+      padding: 1.5rem 1.4rem;
+    font-size: 1.2rem;
+     font-weight: 700;
+}
+#shop .option-list {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0 2rem 2rem 1rem;
+}
+#shop .option-list .item{
+    border: #eaeaea solid 1px;
+    border-radius: 2rem;
+    padding: 0.5rem 1rem;
+}
+#shop .store-list {
+    display: grid; /* flex를 grid로 변경 */
+    grid-template-columns: 1fr 1fr; /* 1:1 비율의 2개 열 생성 */
+    gap: 1rem; /* 아이템 사이의 간격 */
+    padding: 0 1rem;
+}
+#shop .store a {
+   margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+
+}
+#shop .store-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2rem;
+
+}
+#shop .store-info .firstLine{
+    margin-bottom: 0.5rem;
+}
+#shop .store-info .firstLine .name {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+#shop .store-info .firstLine .km {
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#shop .store-info .address{
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#shop .store-info .time {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: rgb(139,144,144);
+}
+#shop .store-info .tag-area{
+    display: flex;
+    font-size: 0.7rem;
+    font-weight: 400;
+    padding-top: 0.4rem;
+    padding-left: 0.1rem;
+    gap: 0.4rem;
+}
+#shop .store-info .tag{
+    border-radius: 3px;
+    padding: 0.2rem;
+    background-color: #eaeaea;
+}
