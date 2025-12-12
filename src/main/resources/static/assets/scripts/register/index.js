@@ -28,10 +28,22 @@ ownerRadio.addEventListener('change', updateForm);
 
 customerForm.addEventListener('submit',(e) => {
     e.preventDefault();
+
+    // null 검사하는 로직 추가해야함
     // password 랑 confirm같은지 확인하기
-    // null 검
+    // alert 대신 모달창 띄우기
     if(customerForm['password'].value !== customerForm['confirm'].value) {
-        alert('비밀번호가 일치하지 않습니다.')
+      /*  alert('비밀번호가 일치하지 않습니다.')
+        customerForm['confirm'].focus();
+        return;*/
+        const title ="PasswordError";
+        const content = `<p>비밀번호가 같지않습니다</p>`;
+        const options = {
+            confirmText: '확인',
+            onConfirm: () => {
+            }
+        }
+        openModal(title,content,options);
         customerForm['confirm'].focus();
         return;
     }

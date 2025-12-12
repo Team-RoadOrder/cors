@@ -24,15 +24,15 @@ public class RegisterService {
                  || register.getAddressDetail() == null || register.getAddressDetail().isEmpty()) {
              return RegisterResult.FAILURE;
          }
-
+            // 섣불리 수정했다가 터질 가능성이 높은것 customer와 owner를 구분해주는 아주 중요한 로직
          if (register.getUsertype().equals("customer")) {
              if (register.getGender() == null || register.getGender().isEmpty()) {
-                 return RegisterResult.FAILURE;
+                 return RegisterResult.FAILURE;   // 무슨 실패인지 로직 확장해서 작성하기
              }
          } else if (register.getUsertype().equals("owner")) {
              if (register.getStoreName() == null || register.getStoreName().isEmpty()
                      || register.getBusinessNum() == null || register.getBusinessNum().isEmpty()) {
-                 return RegisterResult.FAILURE;
+                 return RegisterResult.FAILURE;    // 마찬가지로 확장하기
              }
          } else {
              return RegisterResult.FAILURE;

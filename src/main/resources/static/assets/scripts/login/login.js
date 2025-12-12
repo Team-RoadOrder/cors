@@ -9,6 +9,8 @@ $loginForm.addEventListener('submit', (e)=> {
     formData.append('email', $loginForm['email'].value);
     formData.append('password', $loginForm['password'].value);
     xhr.onreadystatechange = () => {
+        // 여기에 이메일이나 비밀번호 필터링 로직작성
+
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
         }
@@ -43,3 +45,4 @@ $loginForm.addEventListener('submit', (e)=> {
      xhr.send(formData);
 
 })
+// 모달창 수정

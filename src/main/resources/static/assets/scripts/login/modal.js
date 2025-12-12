@@ -134,7 +134,7 @@ function openModal(title, content, options = {}) {
 
 
 // =========================================================
-// 단순화된 모달 사용 예시 (인덱스 로직 제거)
+// 단순화된 모달 사용 예시
 // =========================================================
 
 const $projectDetailBtn = document.getElementById('project-detail-btn');
@@ -161,7 +161,7 @@ if ($projectDetailBtn) {
 // 예시 2: 확인/취소 모달 (버튼 있음)
 if ($deleteAccountBtn) {
     $deleteAccountBtn.addEventListener('click', () => {
-        const title = "❗ 계정 삭제 확인";
+        const title = "❗계정 삭제 확인";
         const content = `
             <p style="color: red; font-weight: bold;">정말로 계정을 삭제하시겠습니까?</p>
             <p>삭제된 계정 정보는 복구할 수 없습니다.</p>

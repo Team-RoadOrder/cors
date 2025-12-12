@@ -43,7 +43,7 @@ public class LoginController {
             responseBody.put("usertype", user.getUsertype());
         } else {
             responseBody.put("status", LoginResult.FAILURE);
-        }
+        }      // 세분화된 실패케이스를 elseif로 구분하여 밑에 쭉 적기
         System.out.println(responseBody);
         return responseBody;
     }
