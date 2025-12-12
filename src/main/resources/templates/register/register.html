@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/assets/styles/register/index.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script defer src="/assets/scripts/register/address.js"></script>
+    <script defer src="/assets/scripts/register/index.js"></script>
     <link href="/assets/images/login/favicon.png" rel="icon"  ></head>
 <body>
 <div id="dialog">
@@ -22,51 +23,55 @@
         <input type="radio" id="customer" name="usertype" value="customer" checked>
         <label for="customer" class="tab active">CUSTOMER</label>
 
-        <input type="radio" id="owner" name="usertype" value="owner">
+        <input type="radio" id="owner" name="usertype" value="owner" >
         <label for="owner" class="tab">OWNER</label>
     </div>
 
     <form id="customerForm" class="signup-form" autocomplete="off">
         <div class="int-area">
-            <input type="email" id="email" name="email" required>
-            <label for="email">이메일 *</label>
+            <input type="email" id="email" name="email" required placeholder="" minlength="5" maxlength="50">
+            <label for="email">이메일</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="name" name="name" required>
-            <label for="name">이름 *</label>
+            <input type="text" id="name" name="name" required placeholder="" minlength="2" maxlength="10">
+            <label for="name">이름</label>
         </div>
 
         <div class="int-area">
-            <input type="password" id="password" name="password" placeholder="" required minlength="6" maxlength="20"> <label for="password">비밀번호 (6자 이상) *</label>
+            <input type="password" id="password" name="password" placeholder="" required minlength="6" maxlength="20"> <label for="password">비밀번호 (6자 이상)</label>
         </div>
 
         <div class="int-area">
-            <input type="password" id="confirm" name="confirm" required>
-            <label for="confirm">비밀번호 확인 *</label>
+            <input type="password" id="confirm" name="confirm" maxlength="20" minlength="6" required placeholder="">
+            <label for="confirm">비밀번호 확인</label>
         </div>
 
-        <label class="group-label">휴대폰 번호 *</label>
+        <!--<label class="group-label">휴대폰 번호</label>
         <div class="phone-input">
-            <input type="text" maxlength="3"> -
-            <input type="text" maxlength="4"> -
+            <input type="text" maxlength="3">
             <input type="text" maxlength="4">
+            <input type="text" maxlength="4">
+        </div>-->
+        <div class="int-area">
+            <input type="tel" id="phone" name="phone" maxlength="11" minlength="11" required placeholder="">
+            <label for="phone">전화 번호</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="address_customer" name="address_customer" required>
-            <label for="address_customer">주소 *</label>
+            <input type="text" id="address_customer" name="address" required placeholder="">
+            <label for="address_customer">주소</label>
             <button id="customer-button">입력하기</button>
         </div>
         <div class="int-area">
-            <input type="text" id="address_customer_detail" name="address_customer" required>
-            <label for="address_customer">상세주소 *</label>
+            <input type="text" id="address_customer_detail" name="addressDetail" required placeholder="">
+            <label for="address_customer">상세주소</label>
         </div>
 
         <label class="group-label">성별</label>
         <div class="gender">
-            <label><input type="radio" name="gender" value="male"> 남자</label>
-            <label><input type="radio" name="gender" value="female"> 여자</label>
+            <label><input required type="radio" name="gender" value="male"> 남자</label>
+            <label><input required type="radio" name="gender" value="female"> 여자</label>
         </div>
 
         <div class="checkboxes">
@@ -81,56 +86,54 @@
 
     <form id="ownerForm" class="signup-form hidden" autocomplete="off">
         <div class="int-area">
-            <input type="email" id="email2" name="email2" required>
-            <label for="email2">이메일 *</label>
+            <input type="email" id="email2" name="email" required placeholder="">
+            <label for="email2">이메일</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="name2" name="name2" required>
-            <label for="name2">이름 *</label>
+            <input type="text" id="name2" name="name" required placeholder="">
+            <label for="name2">이름</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="storeName" name="storeName" required>
-            <label for="storeName">가게 이름 *</label>
+            <input type="text" id="storeName" name="storeName" required placeholder="">
+            <label for="storeName">가게 이름</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="businessNum" name="businessNum" placeholder="" required> <label for="businessNum">사업자등록번호 (예: 123-45-67890) *</label>
+            <input type="text" id="businessNum" name="businessNum" placeholder="" required> <label for="businessNum">사업자등록번호 (예: 123-45-67890)</label>
         </div>
 
         <div class="int-area">
-            <input type="password" id="password2" name="password2" placeholder="" required minlength="6"> <label for="password2">비밀번호 (6자 이상) *</label>
+            <input type="password" id="password2" name="password" placeholder="" required minlength="6"> <label for="password2">비밀번호 (6자 이상)</label>
         </div>
 
         <div class="int-area">
-            <input type="password" id="confirm2" name="confirm2" required>
-            <label for="confirm2">비밀번호 확인 *</label>
-        </div>
-
-        <label class="group-label">휴대폰 번호 *</label>
-        <div class="phone-input">
-            <input type="text" maxlength="3"> -
-            <input type="text" maxlength="4"> -
-            <input type="text" maxlength="4">
+            <input type="password" id="confirm2" name="confirm" required placeholder="">
+            <label for="confirm2">비밀번호 확인</label>
         </div>
 
         <div class="int-area">
-            <input type="text" id="address_owner" name="address_owner" required>
-            <label for="address_owner">사업장 주소 *</label>
+            <input type="tel" id="phone2" name="phone" maxlength="11" minlength="11" required placeholder="">
+            <label for="phone2">전화 번호</label>
+        </div>
+
+
+        <div class="int-area">
+            <input type="text" id="address_owner" name="address" required placeholder="">
+            <label for="address_owner">사업장 주소</label>
             <button id="owner-button">입력하기</button>
         </div>
         <div class="int-area">
-            <input type="text" id="address_owner_detail" name="address_owner" required>
-            <label for="address_owner">상세 주소 *</label>
+            <input type="text" id="address_owner_detail" name="addressDetail" required placeholder="">
+            <label for="address_owner">상세 주소</label>
         </div>
 
-        <div class="imageSelect">
+     <!--   <div class="imageSelect">
             <input type="file" class="image" id="image">
             <label for="image" class="button-label">매장사진을 첨부해주세요.</label>
         </div>
-
-        <div class="checkboxes">
+-->        <div class="checkboxes">
             <label><input type="checkbox" required> (필수) 약관 및 개인정보 이용 동의</label>
             <label><input type="checkbox" required> (필수) 만 14세 이상입니다</label>
         </div>
@@ -142,43 +145,5 @@
 
 </section>
 
-
-<script>
-    const customerRadio = document.getElementById('customer');
-    const ownerRadio = document.getElementById('owner');
-    const customerForm = document.getElementById('customerForm');
-    const ownerForm = document.getElementById('ownerForm');
-    const customerLabel = document.querySelector('label[for="customer"]');
-    const ownerLabel = document.querySelector('label[for="owner"]');
-
-    function updateForm() {
-        if (customerRadio.checked) {
-            customerForm.classList.remove('hidden');
-            ownerForm.classList.add('hidden');
-            customerLabel.classList.add('active');
-            ownerLabel.classList.remove('active');
-        } else {
-            ownerForm.classList.remove('hidden');
-            customerForm.classList.add('hidden');
-            ownerLabel.classList.add('active');
-            customerLabel.classList.remove('active');
-        }
-    }
-
-    customerRadio.addEventListener('change', updateForm);
-    ownerRadio.addEventListener('change', updateForm);
-
-    document.querySelectorAll('.int-area input[placeholder=" "]').forEach(input => {
-        if (input.value === "") { // 값이 없을 때만
-            input.value = " "; // 공백 한 칸을 넣어 :valid 상태 방지
-            input.addEventListener('focus', () => {
-                if(input.value === " ") input.value = "";
-            });
-            input.addEventListener('blur', () => {
-                if(input.value === "") input.value = " ";
-            });
-        }
-    });
-</script>
 </body>
 </html>

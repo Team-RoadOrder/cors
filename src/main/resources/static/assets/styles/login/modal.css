@@ -1,0 +1,114 @@
+
+#CustomModal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #212121a0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000; /* 가장 위에 표시되도록 높게 설정 */
+    opacity: 0; /* 초기 투명 상태 */
+    visibility: hidden; /* 초기 숨김 상태 */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+#CustomModal.is-open {
+    opacity: 1; /* 서서히 나타남 */
+    visibility: visible; /* 보이게 설정 */
+}
+#CustomModal.is-open .modal-box {
+    transform: translateY(0);
+}
+#CustomModal .modal-box {
+    position: relative;
+    max-width: 30rem;
+    width: 90%;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(62, 39, 35, 0.15);
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out;
+}
+
+#CustomModal .header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2b3137; /* 다크 헤더 배경 */
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#CustomModal .header .close-btn {
+    cursor: pointer;
+    font-size: 1.7rem;
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+#CustomModal .header .close-btn:hover {
+    opacity: 1;
+}
+
+#CustomModal .content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+    color: #333;
+    h2, h3, h4 {
+        margin-top: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    p, ul, ol {
+        margin-bottom: 15px;
+    }
+}
+
+#CustomModal .footer {
+    flex-shrink: 0;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 7. 공통 버튼 스타일 (.modal-btn) */
+#CustomModal .modal-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+#CustomModal .modal-btn.cancel {
+    background-color: #e0e0e0;
+    color: #555;
+}
+
+#CustomModal .modal-btn.cancel:hover {
+    background-color: #d0d0d0;
+}
+
+#CustomModal .modal-btn.confirm {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#CustomModal .modal-btn.confirm:hover {
+    background-color: #0056b3;
+}
