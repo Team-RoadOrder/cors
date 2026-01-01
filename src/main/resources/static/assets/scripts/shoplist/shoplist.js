@@ -21,7 +21,7 @@ const renderShopList = () => {
                     : 'https://static.upbit.com/logos/USDT.png'; // 기본 이미지
             const html = `
             <li class="store" >
-            <a href="/shop/?id=${shop.shopId}">
+            <a href="/shop/?shopId=${shop.shopId}">
             <img class="image" src="${imgSrc}" alt="매장이미지">
             <div class="store-info">
                 <div class="firstLine">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1">
@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
     <link href="/assets/images/login/favicon.png" rel="icon">
     <script defer src="/assets/scripts/common.js"></script>
+    <script defer src="/assets/scripts/shop/shop.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}">
@@ -18,18 +19,18 @@
 <!--헤더에 호버하면 나타나는 메뉴 -->
 <!-- 헤더 렌더링 하는법 몰라서 일단 복붙함 뒤에 배경넣고-->
 <main id="main" >
-        <img src="../assets/images/shop/waviness.jpeg" class="image" alt="">
+        <img src="../assets/images/shop/waviness.jpeg" class="image" alt="" th:src="${shopInfo.backgroundImage}">
 </main> <!-- 헤더뒤에 배경 -->
 <div class="box" id="shop-header">
-<img src="../assets/images/shop/brand.jpeg" class="logo" alt="">
+<img th:src="${shopInfo.profileImage}" class="logo" alt="">
     <div class="profile">
-        <div class="title">Waviness</div>
-        <span class="description">웨이비니스</span>
+        <div class="title" th:text="${shopInfo.shopName}" >Waviness</div>
+        <span class="description" th:text="${shopInfo.shopCategory}">웨이비니스</span>
         <div class="count">
-            <span class="like">관심</span>
-            <span class="num">4,001 ></span>
-            <span class="style">스타일</span>
-            <span class="num">565 ></span>
+            <span class="like">영업시간</span>
+            <span class="num" th:text="${shopInfo.shopTime}">4,001 ></span>
+            <span class="style">전화번호</span>
+            <span class="num" th:text="${shopInfo.shopTel}">565 ></span>
         </div>
         <div class="button">
         <button class="like"><a href="#">관심 저장</a></button>
@@ -105,92 +106,48 @@
 
 </ul>
 <div class="box" id="category">
-<div class="form-container">
-    <ul class="selection">
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="1" class="radio checked" checked>
-                <span class="caption">전체</span>
-            </label>
-        </li>
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="2" class="radio">
-                <span class="caption">아우터</span>
-            </label>
-        </li>
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="3" class="radio">
-                <span class="caption">상의</span>
-            </label>
-        </li>
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="4" class="radio">
-                <span class="caption">하의</span>
-            </label>
-        </li>
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="5" class="radio">
-                <span class="caption">가방</span>
-            </label>
-        </li>
-        <li class="item">
-            <label class="label">
-                <input type="radio" name="selection" value="6" class="radio">
-                <span class="caption">패션잡화</span>
-            </label>
-        </li>
-    </ul>
-</div>
-<div class="grid">
-        <a class="box one" href="#">
-            <span class="image-wrapper">
-            <span class="image"></span>
-                </span>
-            <span class="text-container">
-            <span class="title"></span>
-            <span class="price"></span>
-        </span>
-        </a>
-        <a class="box two" href="#">
-             <span class="image-wrapper">
-            <span class="image"></span>
-                </span>
-            <span class="text-container">
-            <span class="title"></span>
-            <span class="price"></span>
-        </span>
-        </a>
-        <a class="box three" href="#">
-             <span class="image-wrapper">
-            <span class="image"></span>
-                </span> <!--background 이미지로처리--><!--background 이미지로처리-->
-            <span class="text-container">
-         <span class="title"></span>
-        <span class="price"></span>
-        </span>
-        </a>
-        <a class="box four" href="#">
-           <span class="image-wrapper">
-            <span class="image"></span>
-                </span>
-            <span class="text-container">
-            <span class="title"></span>
-            <span class="price"></span>
-        </span>
-        </a>
-        <a class="box five" href="#">
-           <span class="image-wrapper">
-            <span class="image"></span>
-                </span>
-            <span class="text-container">
-            <span class="title"></span>
-            <span class="price"></span>
-        </span>
-        </a>
+    <div class="form-container">
+        <ul class="selection">
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="1" class="radio checked" checked onchange="changeCategory('1')">
+                    <span class="caption">전체</span>
+                </label>
+            </li>
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="2" class="radio" onchange="changeCategory('2')">
+                    <span class="caption">아우터</span>
+                </label>
+            </li>
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="3" class="radio" onchange="changeCategory('3')">
+                    <span class="caption">상의</span>
+                </label>
+            </li>
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="4" class="radio" onchange="changeCategory('4')">
+                    <span class="caption">하의</span>
+                </label>
+            </li>
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="5" class="radio" onchange="changeCategory('5')">
+                    <span class="caption">신발</span>
+                </label>
+            </li>
+            <li class="item">
+                <label class="label">
+                    <input type="radio" name="selection" value="6" class="radio" onchange="changeCategory('6')">
+                    <span class="caption">패션잡화</span>
+                </label>
+            </li>
+        </ul>
+    </div>
+
+    <div class="grid" id="productGrid">
     </div>
 </div>
 </body>

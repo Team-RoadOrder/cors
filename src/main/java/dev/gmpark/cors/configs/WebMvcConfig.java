@@ -1,5 +1,6 @@
 package dev.gmpark.cors.configs;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -7,12 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    @Value("${file.upload-dir}") // 설정 파일에서 경로 가져오기
+    private String uploadDir;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 규칙: 사용자가 웹 브라우저에서 /images/ 로 시작하는 주소로 접속하면
-        // 실제로는 내 컴퓨터(Mac)의 /Users/parkgyumin/Desktop/upload/ 폴더를 뒤져서 보여준다.
+        // 경로 끝에 슬래시(/)가 없으면 붙여줌 (안전장치)
+        String path = uploadDir.endsWith("/") ? uploadDir : uploadDir + "/";
 
-        registry.addResourceHandler("/images/**") // 웹 접근 경로
-                .addResourceLocations("file:///Users/parkgyumin/Desktop/upload/"); // 실제 파일 경로 (file:/// 3개 주의!)
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:" + path); // 이제 동적으로 경로를 찾습니다.
     }
 }

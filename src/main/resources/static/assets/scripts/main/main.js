@@ -1,34 +1,5 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    //로그인 / 로그아웃
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/login-status', true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                try {
-                    const data = JSON.parse(xhr.responseText);
-                    if (data.isLoggedIn) {
-                        if (loginBtn) loginBtn.style.display = 'none';
-                        if (logoutBtn) logoutBtn.style.display = 'inline-block';
-                    } else {
-                        // 비로그인 상태면: 로그인 버튼 표시, 로그아웃 버튼 숨김
-                        if (loginBtn) loginBtn.style.display = 'inline-block';
-                        if (logoutBtn) logoutBtn.style.display = 'none';
-                    }
-                } catch (e) {
-                    console.error('JSON 파싱 에러:', e);
-                }
-            } else {
-                console.error('서버 에러:', xhr.status);
-            }
-        }
-    };
-    xhr.send();
-
     changeCategory('1');
     renderShops();
 
@@ -134,7 +105,7 @@ const renderShops = () => {
                     : 'https://static.upbit.com/logos/USDT.png'; // 기본 이미지
 
                 const html = `
-                    <li class="item">
+                    <a class="item" href="/shop/?shopId=${shop.shopId}">
                         <img alt="${shop.shopName}" class="logo" draggable="false" src="${imgSrc}">
                         <div class="text-container">
                             <div class="name-container">
@@ -147,7 +118,7 @@ const renderShops = () => {
                         <div class="address-container">
                             <span class="address">${shop.shopAddress}</span>
                         </div>
-                    </li>`;
+                    </a>`;
 
                 // 생성한 HTML을 ul 태그 안에 추가
                 $shopList.insertAdjacentHTML('beforeend', html);

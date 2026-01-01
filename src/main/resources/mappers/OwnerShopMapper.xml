@@ -64,7 +64,6 @@
         FROM `cors`.`shop_items`
         ORDER BY `updated_at` DESC
     </select>
-
     <select id="selectAllByShopId">
         SELECT si.`id`               AS `id`,
                si.`item_name`        AS `itemName`,
@@ -131,5 +130,34 @@
         ORDER BY si.`updated_at` DESC
         LIMIT 6
     </select>
-
+    <select id="selectItemByIdAndCategory" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT si.`id`               AS `id`,
+        si.`shop_id`          AS `shopId`,
+        si.`item_name`        AS `itemName`,
+        si.`color`            AS `color`,
+        si.`size`             AS `size`,
+        si.`price`            AS `price`,
+        si.`style`            AS `style`,
+        si.`main_category`    AS `mainCategory`,
+        si.`sub_category`     AS `subCategory`,
+        si.`detail_category`  AS `detailCategory`,
+        si.`main_image_index` AS `mainImageIndex`,
+        si.`created_at`       AS `createdAt`,
+        si.`updated_at`       AS `updateAt`,
+        si.`deleted_at`       AS `deletedAt`,
+        (SELECT img.`image_path`
+        FROM `cors`.`shop_item_images` img
+        WHERE img.`product_id` = si.`id`
+        LIMIT 1)             AS `imagePath`
+        FROM `cors`.`shop_items` si
+        WHERE si.`shop_id` = #{shopId}
+        <if test="categoryName != null and categoryName != ''">
+            AND (
+            si.`main_category` = #{categoryName}
+            OR si.`sub_category` = #{categoryName}
+            OR si.`detail_category` = #{categoryName}
+            )
+        </if>
+        ORDER BY si.`updated_at` DESC
+    </select>
 </mapper>
