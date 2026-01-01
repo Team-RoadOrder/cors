@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1">
     <title>Register</title>
-    <link rel="stylesheet" href="/assets/styles/login/modal.css">
+    <link rel="stylesheet" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/register/index.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script defer src="/assets/scripts/register/address.js"></script>
-    <script defer src="/assets/scripts/register/index.js"></script>
-    <script defer src="/assets/scripts/login/modal.js"></script>
+    <script defer src="/assets/scripts/register/register.js"></script>
+    <script defer src="/assets/scripts/common.js"></script>
     <link href="/assets/images/login/favicon.png" rel="icon"  ></head>
 <body>
 <div id="dialog">
@@ -29,12 +29,18 @@
         <label for="owner" class="tab">OWNER</label>
     </div>
 
-    <form id="customerForm" class="signup-form" autocomplete="off">
+    <form novalidate id="customerForm" class="signup-form" autocomplete="off">
         <div class="int-area">
             <input type="email" id="email" name="email" required placeholder="" minlength="5" maxlength="50">
             <label for="email">이메일</label>
+            <input hidden name="salt" type="hidden">
+            <button type="button" name="emailSendButton">인증하기</button>
         </div>
-
+        <div class="int-area">
+            <input type="text" id="code" name="code" required placeholder="" minlength="6" maxlength="6" disabled>
+            <label for="code">이메일 인증번호</label>
+            <button type="button" name="verifyButton" disabled>확인하기</button>
+        </div>
         <div class="int-area">
             <input type="text" id="name" name="name" required placeholder="" minlength="2" maxlength="10">
             <label for="name">이름</label>
@@ -48,22 +54,43 @@
             <input type="password" id="confirm" name="confirm" maxlength="20" minlength="6" required placeholder="">
             <label for="confirm">비밀번호 확인</label>
         </div>
-
-        <!--<label class="group-label">휴대폰 번호</label>
+<!--        <label class="group-label">휴대폰 번호</label>
         <div class="phone-input">
-            <input type="text" maxlength="3">
+        &lt;!&ndash;    <input type="text" maxlength="3" name="">
             <input type="text" maxlength="4">
-            <input type="text" maxlength="4">
+            <input type="text" maxlength="4">&ndash;&gt;
+            <select required class="contact-first" name="contactFirst" >
+                <option selected value="010">010</option>
+            </select>
+            <input required autocomplete="off" class="contact-second" maxlength="4" minlength="3" name="contactSecond" placeholder="0000" spellcheck="false" type="text" >
+            <input required autocomplete="off" class="contact-third" maxlength="4" minlength="4" name="contactThird" placeholder="0000" spellcheck="false" type="text">
         </div>-->
+
         <div class="int-area">
             <input type="tel" id="phone" name="phone" maxlength="11" minlength="11" required placeholder="">
             <label for="phone">전화 번호</label>
         </div>
+        <div class="style-hashtag-area">
+            <label>스타일(선호)</label>
+            <div class="selected-tags empty" id="selectedTags"></div>
+            <input type="hidden" name="style" id="styleInput">
 
+            <div class="hashtag-options">
+                <button type="button" class="hashtag-btn" data-style="스트릿">#스트릿</button>
+                <button type="button" class="hashtag-btn" data-style="미니멀">#미니멀</button>
+                <button type="button" class="hashtag-btn" data-style="댄디">#댄디</button>
+                <button type="button" class="hashtag-btn" data-style="캐주얼">#캐주얼</button>
+                <button type="button" class="hashtag-btn" data-style="빈티지">#빈티지</button>
+                <button type="button" class="hashtag-btn" data-style="모던">#모던</button>
+                <button type="button" class="hashtag-btn" data-style="스포티">#스포티</button>
+                <button type="button" class="hashtag-btn" data-style="페미닌">#페미닌</button>
+            </div>
+            <div class="helper-text">최대 2개까지 선택할 수 있습니다</div>
+        </div>
         <div class="int-area">
             <input type="text" id="address_customer" name="address" required placeholder="">
             <label for="address_customer">주소</label>
-            <button id="customer-button">입력하기</button>
+            <button id="customer-button" type="button">입력하기</button>
         </div>
         <div class="int-area">
             <input type="text" id="address_customer_detail" name="addressDetail" required placeholder="">
@@ -72,8 +99,8 @@
 
         <label class="group-label">성별</label>
         <div class="gender">
-            <label><input required type="radio" name="gender" value="male"> 남자</label>
-            <label><input required type="radio" name="gender" value="female"> 여자</label>
+            <label><input required type="radio" name="gender" value="M"> 남자</label>
+            <label><input required type="radio" name="gender" value="F"> 여자</label>
         </div>
 
         <div class="checkboxes">
@@ -86,12 +113,18 @@
         </div>
     </form>
 
-    <form id="ownerForm" class="signup-form hidden" autocomplete="off">
+    <form novalidate id="ownerForm" class="signup-form hidden" autocomplete="off">
         <div class="int-area">
             <input type="email" id="email2" name="email" required placeholder="">
             <label for="email2">이메일</label>
+            <input hidden name="salt" type="hidden">
+            <button type="button" name="emailSendButton">인증하기</button>
         </div>
-
+        <div class="int-area">
+            <input type="text" id="code2" name="code" required placeholder="" minlength="6" maxlength="6" disabled>
+            <label for="code2">이메일 인증번호</label>
+            <button type="button" name="verifyButton" disabled>확인하기</button>
+        </div>
         <div class="int-area">
             <input type="text" id="name2" name="name" required placeholder="">
             <label for="name2">이름</label>
@@ -119,12 +152,10 @@
             <input type="tel" id="phone2" name="phone" maxlength="11" minlength="11" required placeholder="">
             <label for="phone2">전화 번호</label>
         </div>
-
-
         <div class="int-area">
             <input type="text" id="address_owner" name="address" required placeholder="">
             <label for="address_owner">사업장 주소</label>
-            <button id="owner-button">입력하기</button>
+            <button id="owner-button" type="button">입력하기</button>
         </div>
         <div class="int-area">
             <input type="text" id="address_owner_detail" name="addressDetail" required placeholder="">
@@ -147,5 +178,8 @@
 
 </section>
 
+<script>
+
+</script>
 </body>
 </html>

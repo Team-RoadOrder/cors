@@ -33,25 +33,35 @@
 
 }
 #popularShop > .list >.item {
-    padding: 2rem 0;
+    padding: 2rem 0.5rem;
+    flex-grow: 1;
+    flex-shrink: 1;
+
 }
 #popularShop > .list >.item .logo {
-    width: 10rem;
+    width: 9.5rem;
+    aspect-ratio: 1/1;
+    border-radius: 1rem;
 }
 #popularShop > .list >.item .text-container{
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: rgb(116,116,116);
     text-align: center;
+    color: #4d4d4d;
 }
-#popularShop > .list >.item .number-container{
+#popularShop > .list >.item .text-container  .shopName {
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 2.5rem;
+}
+#popularShop > .list >.item .text-container > .time {
+    font-size: 0.8rem;
+}
+
+#popularShop > .list >.item .address-container{
     font-size: 0.8rem;
     font-weight: 700;
     text-align: center;
+    color: #8e8d8d;
 }
-#popularShop > .list >.item .text-container > .code::after {
-    content: ')';
-}
-#popularShop > .list >.item .text-container > .code::before {
-    content: '(';
+#popularShop > .list >.item .text-container > .time::before {
+    content: '영업시간 : ';
 }

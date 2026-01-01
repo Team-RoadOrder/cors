@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.ShopInfoMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="info.shopId" keyProperty="info.shopId">
+        INSERT INTO `cors`.`shop_info` (
+            user_email,
+            shop_name,
+            shop_time,
+            shop_category,
+            shop_address,
+            shop_tel,
+            profile_image,
+            background_image
+        ) VALUES (
+                     #{info.userEmail},
+                     #{info.shopName},
+                     #{info.shopTime},
+                     #{info.shopCategory},
+                     #{info.shopAddress},
+                     #{info.shopTel},
+                     #{info.profileImage},
+                     #{info.backgroundImage}
+                 )
+    </insert>
+    <select id="selectShopByUserEmail" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT
+            shop_id          AS shopId,
+            user_email       AS userEmail,
+            shop_name        AS shopName,
+            shop_time        AS shopTime,
+            shop_category    AS shopCategory,
+            shop_address     AS shopAddress,
+            shop_tel         AS shopTel,
+            profile_image    AS profileImage,
+            background_image AS backgroundImage
+        FROM `cors`.`shop_info`
+        WHERE user_email = #{email}
+    </select>
+    <select id="selectAllShops" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT
+            shop_id          AS shopId,
+            user_email       AS userEmail,
+            shop_name        AS shopName,
+            shop_time        AS shopTime,
+            shop_category    AS shopCategory,
+            shop_address     AS shopAddress,
+            shop_tel         AS shopTel,
+            profile_image    AS profileImage,
+            background_image AS backgroundImage
+        FROM `cors`.`shop_info`
+        ORDER BY `shopId` DESC
+    </select>
+    <update id="update">
+        UPDATE `cors`.`shop_info`
+        SET
+        shop_name = #{info.shopName},
+        shop_time = #{info.shopTime},
+        shop_category = #{info.shopCategory},
+        shop_address = #{info.shopAddress},
+        shop_tel = #{info.shopTel}
+        <if test="info.profileImage != null">
+            , profile_image = #{info.profileImage}
+        </if>
+        <if test="info.backgroundImage != null">
+            , background_image = #{info.backgroundImage}
+        </if>
+        WHERE user_email = #{info.userEmail}
+    </update>
+</mapper>

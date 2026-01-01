@@ -7,6 +7,7 @@
     margin-top: 2rem;
     border-radius: 1rem;
     overflow: hidden;
+
 }
 #shop-info .background-image-box {
     flex: 1;
@@ -54,36 +55,37 @@
     font: inherit;
     color: inherit;
 }
-#form input[name="shop-name"] {
+#form input[name="shopName"] {
     font-size: 2rem;
     position: absolute;
     left: 30rem;
     top: 20rem;
+    width: 9rem;
     font-weight: 500;
 }
-#form input[name="shop-time"] {
+#form input[name="shopTime"] {
     font-size: 0.9rem;
     position: absolute;
     left: 40rem;
     top: 20.9rem;
 
 }
-#form input[name="shop-type"] {
+#form input[name="shopType"] {
     font-size: 0.9rem;
     position: absolute;
     left: 30rem;
     top: 23.8rem;
     color: #a0a0a0;
 }
-#form input[name="shop-address"] {
+#form input[name="shopAddress"] {
     font-size: 0.9rem;
     position: absolute;
     left: 30rem;
     top: 25.8rem;
-    width: 20rem !important;
+    width: 22rem !important;
     color: #a0a0a0;
 }
-#form input[name="shop-tel"] {
+#form input[name="shopTel"] {
     font-size: 0.9rem;
     position: absolute;
     left: 30rem;
@@ -92,3 +94,18 @@
     color: #a0a0a0;
 }
 
+/* 수정 모드(readonly가 풀렸을 때) 스타일 */
+#form input:not(:read-only) {
+    /*border-bottom: 2px solid #2196f3; !* 파란색 밑줄 *!*/
+    border: none!important;
+    outline: none !important;
+    background-color: rgba(72, 143, 202, 0.05); /* 아주 연한 파란 배경 */
+    cursor: text; /* 마우스 커서 모양 변경 */
+    padding-bottom: 5px; /* 밑줄과 글자 사이 간격 */
+
+}
+
+/* (선택) 수정 모드에서 포커스(클릭) 했을 때 */
+#form input:not(:read-only):focus {
+    border-bottom: 2px solid #f44336; /* 클릭하면 빨간색 등으로 변경 강조 */
+}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.OwnerShopMapper">
+    <insert id="insertItem" useGeneratedKeys="true" keyProperty="item.id">
+        INSERT INTO `cors`.`shop_items` (`shop_id`,`item_name`, `color`, `size`, `price`,`style` ,`main_category`, `sub_category`,
+                                         `detail_category`, `main_image_index`, `created_at`, `updated_at`)
+        VALUES (#{item.shopId},
+                #{item.itemName},
+                #{item.color},
+                #{item.size},
+                #{item.price},
+                #{item.style},
+                #{item.mainCategory},
+                #{item.subCategory},
+                #{item.detailCategory},
+                #{item.mainImageIndex},
+                IFNULL(#{item.createdAt}, NOW()),
+                IFNULL(#{item.updatedAt}, NOW()))
+    </insert>
+    <insert id="insertShopItemImage">
+        INSERT INTO `cors`.`shop_item_images` (`product_id`, `image_path`, `original_name`, `created_at`)
+        VALUES (
+                #{productId},
+                #{imagePath},
+                #{originalName},
+                NOW()
+               )
+    </insert>
+    <update id="updateItem">
+        UPDATE `cors`.`shop_items`
+        SET
+             `item_name` = #{item.itemName},
+             `color` = #{item.color},
+             `size` = #{item.size},
+             `price` = #{item.price},
+             `style` = #{item.style},
+             `main_category` = #{item.mainCategory},
+             `sub_category` = #{item.subCategory},
+             `updated_at` = NOW()
+         WHERE `id` = #{item.id}
+        LIMIT 1
+     </update>
+    <delete id="deleteItemById">
+        DELETE FROM `cors`.`shop_items`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </delete>
+    <select id="selectAll">
+        SELECT `id`               AS `id`,
+               `item_name`        AS `itemName`,
+               `color`            AS `color`,
+               `size`             AS `size`,
+               `price`            AS `price`,
+               `style`            AS `style`,
+               `main_category`    AS `mainCategory`,
+               `sub_category`     AS `subCategory`,
+               `detail_category`  AS `detailCategory`,
+               `main_image_index` AS `mainImageIndex`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updateAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `cors`.`shop_items`
+        ORDER BY `updated_at` DESC
+    </select>
+
+    <select id="selectAllByShopId">
+        SELECT si.`id`               AS `id`,
+               si.`item_name`        AS `itemName`,
+               si.`color`            AS `color`,
+               si.`size`             AS `size`,
+               si.`price`            AS `price`,
+               si.`style`            AS `style`,
+               si.`main_category`    AS `mainCategory`,
+               si.`sub_category`     AS `subCategory`,
+               si.`detail_category`  AS `detailCategory`,
+               si.`main_image_index` AS `mainImageIndex`,
+               si.`created_at`       AS `createdAt`,
+               si.`updated_at`       AS `updateAt`,
+               si.`deleted_at`       AS `deletedAt`,
+               (SELECT img.`image_path`
+                FROM `cors`.`shop_item_images` img
+                WHERE img.`product_id` = si.`id`
+                LIMIT 1)             AS `imagePath`
+        FROM `cors`.`shop_items` si
+        WHERE si.`shop_id` = #{shopId}
+        ORDER BY si.`updated_at` DESC
+    </select>
+    <select id="selectItemById" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT `id`               AS `id`,
+               `shop_id`          AS `shopId`,
+               `item_name`        AS `itemName`,
+               `color`            AS `color`,
+               `size`             AS `size`,
+               `price`            AS `price`,
+               `style`            AS `style`,
+               `main_category`    AS `mainCategory`,
+               `sub_category`     AS `subCategory`,
+               `detail_category`  AS `detailCategory`,
+               `main_image_index` AS `mainImageIndex`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updateAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `cors`.`shop_items`
+        WHERE `id` = #{id}
+        LIMIT 1;
+    </select>
+    <select id="selectItemByStyle" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT si.`id`               AS `id`,
+               si.`shop_id`          AS `shopId`,
+               si.`item_name`        AS `itemName`,
+               si.`color`            AS `color`,
+               si.`size`             AS `size`,
+               si.`price`            AS `price`,
+               si.`style`            AS `style`,
+               si.`main_category`    AS `mainCategory`,
+               si.`sub_category`     AS `subCategory`,
+               si.`detail_category`  AS `detailCategory`,
+               si.`main_image_index` AS `mainImageIndex`,
+               si.`created_at`       AS `createdAt`,
+               si.`updated_at`       AS `updateAt`,
+               si.`deleted_at`       AS `deletedAt`,
+            /* 아래 서브쿼리가 추가되어야 이미지를 가져옵니다 */
+               (SELECT img.`image_path`
+                FROM `cors`.`shop_item_images` img
+                WHERE img.`product_id` = si.`id`
+                LIMIT 1)             AS `imagePath`
+        FROM `cors`.`shop_items` si
+        WHERE si.`style` = #{style}
+        ORDER BY si.`updated_at` DESC
+        LIMIT 6
+    </select>
+
+</mapper>

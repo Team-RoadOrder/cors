@@ -1,178 +1,225 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html >
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>판매자 메인 </title>
-    <link href="/assets/images/login/favicon.png" rel="icon" >
+    <title>판매자 메인</title>
+    <link href="/assets/images/login/favicon.png" rel="icon">
     <link rel="stylesheet" href="/assets/styles/ownermain/index.css">
     <link rel="stylesheet" href="/assets/styles/ownermain/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <script defer src="/assets/scripts/common.js"></script>
     <script src="/assets/scripts/ownermain/toggle.js" defer></script>
+    <script src="/assets/scripts/ownermain/ownermain.js" defer></script>
+
 </head>
 <body>
-<header id="header">
-    <a href="/owner">   <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
+<th:block th:replace="~{/fragments/common.html :: owner-header}">
+</th:block>
+<!--<header id="owner-header">
+    <a href="/owner"> <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
     <ul class="header-list">
-    <li class="service">서비스/도구</li> <li class="shop">매장관리</li>
+        <li class="service">서비스/도구</li>
+        <li class="shop">매장관리</li>
     </ul>
-  <ul class="tools"> <li class="notice">공지사항</li> <li>고객센터</li> <li>로그아웃</li></ul>
-</header>
+    <ul class="tools">
+        <li class="notice">공지사항</li>
+        <li>고객센터</li>
+        <li id="logoutBtn">로그아웃</li>
+        <li id="loginBtn" style="display:none;">로그인</li>
+    </ul>
+</header>-->
+
 <main id="main">
-    <button id="toggleNav" class="toggle-btn **nav-open**">
-        <img src="/assets/images/ownermain/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
+    <button id="toggleNav" class="toggle-btn">
+        <img src="/assets/images/ownermain/arrow-left.png" alt="닫기" class="toggle-icon"/>
+    </button>
+
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
-            <img src="/assets/images/ownermain/brand.jpeg" alt="" class="profile-img">
+            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
+                 alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
             <div class="message">클릭시 변경 가능합니다.</div>
-            <div class="title">waviness</div>
+
+            <div class="title">
+                <input type="text" id="shopTitle" th:value="${shop.shopName}" readonly>
+            </div>
         </div>
         <ul class="nav-list">
             <li class="dashboard">
                 <a href="#">대시보드</a>
             </li>
             <li class="register-form">
-                <a href="/assets/images/ownershop/ownershop.html">상품등록</a>
+                <a href="/owner/shop">상품등록</a>
             </li>
         </ul>
     </nav>
+
     <div class="sections">
-    <section id="shop-info" >
-        <div class="background-image-box" id="background-ImageBox">
-            <img id="backgroundImage" src="/assets/images/ownermain/img.png" alt="배경이미지">
-        </div>
-        <button class="button">대표사진수정</button>
-        <form id="form">
-            <label class="label">
-                <input readonly required class="input" id="shopName_Input" maxlength="20" minlength="3" name="shop-name" type="text" value="waviness">
-            </label>
-            <label class="label">
-            <input readonly required class="input" id="time" maxlength="20" minlength="3" name="shop-time" type="text" value="11:20~20:00">
-             </label>
-            <label class="label">
-                <input readonly required class="input" id="category" maxlength="20" minlength="3" name="shop-type" type="text" value="의류매장>캐주얼/댄디" >
-            </label>
-             <label class="label">
-                <input readonly required class="input" id="address" maxlength="50" minlength="3" name="shop-address" type="text" value="경기 성남시 분당구 판교역로 166 카카오판교아지트 A동 3층">
-            </label>
-            <label class="label">
-            <input readonly required class="input" id="tel" maxlength="20" minlength="3" name="shop-tel" type="text" value="031-678-6789">
-            </label>
-        </form>
-        <button class="button shopInfo">매장정보수정</button>
-    </section>
-    <section id="items">
-        <div class="item-list">
-            <div class="spring"> 등록상품 수정</div>
-          <span class="product">
-                    <span class="image-wrapper">
-                 <img src="/assets/images/ownermain/item-list/one-1.webp" class="image" alt="">
-                        </span>
+        <section id="shop-info">
+            <div class="background-image-box" id="background-ImageBox">
+                <img id="backgroundImage"
+                     th:src="${shop.backgroundImage != null ? shop.backgroundImage : '/assets/images/ownermain/img.png'}"
+                     alt="배경이미지">
+            </div>
+
+            <button class="button" id="bgUpdateBtn">대표사진수정</button>
+
+            <form id="form" name="form" novalidate>
+                <input type="file" id="profileImageInput" name="profileImage" style="display: none;" accept="image/*">
+                <input type="file" id="backgroundImageInput" name="backgroundImage" style="display: none;" accept="image/*">
+
+                <label class="label">
+                    <input readonly required class="input" id="shopName_Input" maxlength="20" minlength="3" name="shopName" type="text" th:value="${shop.shopName}">
+                </label>
+                <label class="label">
+                    <input readonly required class="input" id="time" maxlength="20" minlength="3" name="shopTime" type="text" th:value="${shop.shopTime}">
+                </label>
+                <label class="label">
+                    <input readonly required class="input" id="category" maxlength="20" minlength="3" name="shopType" type="text" th:value="${shop.shopCategory}">
+                </label>
+                <label class="label">
+                    <input readonly required class="input" id="address" maxlength="50" minlength="3" name="shopAddress" type="text" th:value="${shop.shopAddress}">
+                </label>
+                <label class="label">
+                    <input readonly required class="input" id="tel" maxlength="20" minlength="3" name="shopTel" type="text" th:value="${shop.shopTel}">
+                </label>
+            </form>
+
+            <button type="button" class="button shopInfo" id="infoUpdateBtn">매장정보수정</button>
+        </section>
+
+        <section id="items">
+            <div class="item-list">
+                <div class="spring"> 등록상품 관리</div>
+                <div class="spring hidden"> </div>
+                <div class="empty hidden">
+                    등록된 상품이 없습니다 상품을 등록해주세요.</div>
+                <form class="product" name="productForm" novalidate>
+                    <input type="file" name="productImage" class="file-input" style="display: none;" accept="image/*">
+                    <div class="image-wrapper">
+                        <img src="/assets/images/ownermain/item-list/one-1.webp" class="image" alt="상품이미지">
+                    </div>
                     <span class="itemTitle">
-                        <span class="title"> contemporary derby</span>
-                        <span class="description">230~280</span>
+                         <input type="text" class="title" name="itemName" value="contemporary derby" readonly required>
+                         <input type="text" class="description" name="size" value="230~280" readonly>
+                         <input type="number" class="price" name="price" value="90000" readonly>
                     </span>
                     <span class="itemStatus">
-                        <span class="type"><span class="productType">구두</span>/ <span class="productCategory">댄디</span></span>
-                        <span class="list-column">
-                            <span class="color">색상:Black </span>
-                            <span class="res-btn">수정하기</span>
-                        </span>
+                      <span class="type">
+                      <input type="text" class="productType" name="mainCategory" value="구두" readonly style="text-align: right; width: 40px;">
+                       <span>/</span>
+                      <input type="text" class="productCategory" name="subCategory" value="댄디" readonly style="text-align: right; width: 40px;">
                     </span>
-                </span>
-            <span class="product">
+                     <span class="list-column">
+                          <div class="color">
+                          색상:
+                          <input type="text" name="color" value="Black" readonly style="text-align: right; width: 60px;">
+                     </div>
+                     <span class="button-container">
+                    <button type="button" class="res-btn" onclick="toggleEditMode(this)">수정하기</button>
+                    <button type="button" class="del-btn">삭제하기</button>
+                    <button type="submit" class="save-btn">저장하기</button>
+                    </span>
+                    </span>
+                   </span>
+                </form>
+                <span class="product">
                     <span class="image-wrapper">
-                 <img src="/assets/images/ownermain/item-list/one-2.webp" class="image" alt="">
-                        </span>
+                        <img src="/assets/images/ownermain/item-list/one-2.webp" class="image" alt="">
+                    </span>
                     <span class="itemTitle">
                         <span class="title">Denim Pants</span>
                         <span class="description">S ~ XL</span>
+                        <span class="price">90000원</span>
                     </span>
                     <span class="itemStatus">
                          <span class="type"><span class="productType">청바지</span>/ <span class="productCategory">캐주얼</span></span>
                         <span class="list-column">
                            <span class="color">색상:Indigo </span>
-                            <span class="res-btn">수정하기</span>
+                        <span class="button-container">
+                                <button class="res-btn">수정하기</button>
+                                <button class="del-btn">삭제하기</button>
+                            </span>
                         </span>
                     </span>
                 </span>
-            <div class="spring"> </div>
-        </div>
+                <div class="spring"> </div>
+            </div>
+
             <div class="res-list">
                 <div class="spring"> 예약정보 확인</div>
-                <div class="product">
-                    <div class="user-info">
-                   <span class="date">2025-11-07 12:43</span>
-                    <span class="user">박규민</span>
-                        <br>
-                    <span class="tel">010-8006-8384</span>
-                    </div>
-                    <span class="image-wrapper">
-                 <img src="/assets/images/ownermain/item-list/one-1.webp" class="image" alt="">
-                        </span>
-                    <span class="itemTitle">
-                        <span class="title"> contemporary derby</span>
-                        <span class="description">280</span>
-                        <span class="description">색상:Black</span>
-                    </span>
-                    <span class="itemStatus">
-                            <span class="fix-btn">수락하기</span>
-                            <span class="res-btn">거절하기</span>
-                    </span>
-                </div>
-                <div class="product">
-                    <div class="user-info">
-                        <span class="date">2025-11-07 12:43</span>
-                        <span class="user">박규민</span>
-                        <br>
-                        <span class="tel">010-8006-8384</span>
-                    </div>
-                    <span class="image-wrapper">
-                 <img src="/assets/images/ownermain/item-list/one-4.webp" class="image" alt="">
-                        </span>
-                    <span class="itemTitle">
-                        <span class="title"> Modern Cradigan</span>
-                        <span class="description">M</span>
-                        <span class="description">색상:Black</span>
-                    </span>
-                    <span class="itemStatus">
-                            <span class="fix-btn">수락하기</span>
-                            <span class="res-btn">거절하기</span>
-                    </span>
-                </div>
-                <div class="product">
-                    <div class="user-info">
-                        <span class="date">2025-11-07 12:43</span>
-                        <span class="user">박규민</span>
-                        <br>
-                        <span class="tel">010-8006-8384</span>
-                    </div>
-                    <span class="image-wrapper">
-                 <img src="/assets/images/ownermain/item-list/one-2.webp" class="image" alt="">
-                        </span>
-                    <span class="itemTitle">
-                        <span class="title"> Denim</span>
-                        <span class="description">32</span>
-                        <span class="description">색상:Black</span>
-                    </span>
-                    <span class="itemStatus">
-                            <span class="fix-btn">수락하기</span>
-                            <span class="res-btn">거절하기</span>
-                    </span>
-                </div>
-
+                <div class="spring hidden"> </div>
+                <div class="empty hidden"> 예약 정보가 없습니다.</div>
+                <!--                <div class="product">
+                                    <div class="user-info">
+                                        <span class="date">2025-11-07 12:43</span>
+                                        <span class="user">박규민</span>
+                                        <br>
+                                        <span class="tel">010-8006-8384</span>
+                                    </div>
+                                    <span class="image-wrapper">
+                                        <img src="/assets/images/ownermain/item-list/one-1.webp" class="image" alt="">
+                                    </span>
+                                    <span class="itemTitle">
+                                        <span class="title"> contemporary derby</span>
+                                        <span class="description">280</span>
+                                        <span class="description">색상:Black</span>
+                                    </span>
+                                    <span class="itemStatus">
+                                        <span class="fix-btn">수락하기</span>
+                                        <span class="res-btn">거절하기</span>
+                                    </span>
+                                </div>
+                                <div class="product">
+                                    <div class="user-info">
+                                        <span class="date">2025-11-07 12:43</span>
+                                        <span class="user">박규민</span>
+                                        <br>
+                                        <span class="tel">010-8006-8384</span>
+                                    </div>
+                                    <span class="image-wrapper">
+                                        <img src="/assets/images/ownermain/item-list/one-4.webp" class="image" alt="">
+                                    </span>
+                                    <span class="itemTitle">
+                                        <span class="title"> Modern Cradigan</span>
+                                        <span class="description">M</span>
+                                        <span class="description">색상:Black</span>
+                                    </span>
+                                    <span class="itemStatus">
+                                        <span class="fix-btn">수락하기</span>
+                                        <span class="res-btn">거절하기</span>
+                                    </span>
+                                </div>
+                                <div class="product">
+                                    <div class="user-info">
+                                        <span class="date">2025-11-07 12:43</span>
+                                        <span class="user">박규민</span>
+                                        <br>
+                                        <span class="tel">010-8006-8384</span>
+                                    </div>
+                                    <span class="image-wrapper">
+                                        <img src="/assets/images/ownermain/item-list/one-2.webp" class="image" alt="">
+                                    </span>
+                                    <span class="itemTitle">
+                                        <span class="title"> Denim</span>
+                                        <span class="description">32</span>
+                                        <span class="description">색상:Black</span>
+                                    </span>
+                                    <span class="itemStatus">
+                                        <span class="fix-btn">수락하기</span>
+                                        <span class="res-btn">거절하기</span>
+                                    </span>
+                                </div>-->
                 <div class="spring"> </div>
-        </div>
-    </section>
+            </div>
+        </section>
     </div>
 </main>
 
-<footer id="footer">
-
-</footer>
-
-
+<footer id="footer"></footer>
 
 </body>
 </html>

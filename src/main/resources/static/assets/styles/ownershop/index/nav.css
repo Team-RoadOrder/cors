@@ -61,7 +61,7 @@
 #nav > .profile >.title::after {
     content: '';
     display: block;
-    background-image: url("../../images/checkicon.png");
+    background-image: url("/assets/images/ownershop/checkicon.png");
     position: absolute;
     width: 1.2rem;
     height: 1.2rem;
@@ -90,7 +90,7 @@
 #nav > .nav-list > .dashboard::before {
     content: '';
     display: block;
-    background-image: url("../../images/dashboard.png");
+    background-image: url("/assets/images/ownershop/dashboard.png");
     position: absolute;
     width: 2rem;
     height: 2rem;
@@ -111,7 +111,7 @@
 #nav > .nav-list > .register-form::before {
     content: '';
     display: block;
-    background-image: url("../../images/shopping-blue.png");
+    background-image: url("/assets/images/ownershop/shopping-blue.png");
     position: absolute;
     width: 2rem;
     height: 2rem;

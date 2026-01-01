@@ -1,3 +1,30 @@
+
+// 헤더 스크롤 했을때 색바꾸기
+document.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    if (window.scrollY > 0) {
+        header.classList.add('scroll-active');
+    } else {
+        header.classList.remove('scroll-active');
+    }
+});
+// 검색창에 있는 헤더를 위한
+const searchIcon = document.querySelector('.glass');
+const searchInput = document.getElementById('searchInput');
+
+// 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
+searchIcon.addEventListener('click', (event) => {
+
+
+    // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
+    searchInput.classList.toggle('show');
+
+    // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
+    if (searchInput.classList.contains('show')) {
+        searchInput.focus();
+    }
+});
+
 // =========================================================
 // openModal 함수 (애니메이션, duration 옵션 및 클린업 로직 통합)
 // =========================================================
@@ -196,3 +223,65 @@ if ($loginErrorBtn) {
         openModal(title, content, options);
     });
 }
+
+// 로딩영역
+
+const Loading = {
+    show: function(msg) {
+        let el = document.querySelector('[data-object="loading"]');
+        if (!el) {
+            el = document.createElement('div');
+            el.setAttribute('data-object', 'loading');
+            el.innerHTML = `
+                <div data-component="loading.icon"></div>
+                <div data-component="loading.message"></div>
+            `;
+            document.body.appendChild(el);
+        }
+
+        const msgEl = el.querySelector('[data-component~="loading.message"]');
+        if (msg) {
+            msgEl.innerText = msg;
+        } else {
+            msgEl.innerText = ""; // CSS의 ::before 내용이 나올 수 있게 비움
+        }
+
+        // 렌더링 동기화를 위해 setTimeout 사용
+        setTimeout(() => el.setAttribute('data-visible', ''), 10);
+    },
+
+    hide: function() {
+        const el = document.querySelector('[data-object="loading"]');
+        if (el) {
+            el.removeAttribute('data-visible');
+        }
+    }
+};
+
+///‼️‼️‼️‼️ 아래에 사용 예시있음 ‼️‼️‼️‼️‼️
+
+/*
+
+// 이메일 인증 버튼 클릭 시 예시
+$ownerEmailSendButton.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // 1. 로딩창 띄우기 (사용자 클릭 방지 및 상태 알림)
+    Loading.show("인증 번호를 발송 중입니다...");
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/register/email-code');
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            // 2. 서버 응답이 오면 결과(성공/실패)에 상관없이 로딩을 숨김
+            Loading.hide();
+
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const response = JSON.parse(xhr.responseText);
+                // 모달 띄우기 등 후속 처리...
+            }
+        }
+    };
+    xhr.send(formData);
+});*/

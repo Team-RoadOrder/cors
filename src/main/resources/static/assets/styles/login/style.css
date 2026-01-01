@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 :root {
-    --basis-font-color: rgb(206, 206, 206); }
-
+    --basis-font-color: rgb(206, 206, 206);
+}
 *{margin :0; padding:0; box-sizing: border-box;}
 body{
     font-family: "Gowun Dodum", sans-serif;
@@ -10,7 +10,7 @@ body{
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url("/assets/images/login/road.jpg");
+    background: url("/assets/images/login/clothes.jpeg");
     background-size: cover;
     position: relative;
 }
@@ -19,6 +19,8 @@ body{
     width: 20rem;
     aspect-ratio: 1/1;
     top: -16rem;
+    filter: invert(20%);
+
 }
 #logo{
     position: relative;
@@ -26,7 +28,12 @@ body{
 }
 .login-form{
     position: absolute;
-    top: 18rem;
+    background-color: rgba(215, 224, 232, 0.9);
+    padding: 13rem 3rem 3rem 3rem;
+    border-radius: 1rem;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
 }
 
 .login-form h1 {
@@ -40,31 +47,44 @@ body{
 {
     position: relative;
     width: 400px;
+
 }
 .int-area input {
     width: 100%;
     padding: 20px 10px 10px;
     background: transparent;
     border: none;
-    border-bottom: 2px solid #fff;
+    border-bottom: 0.13rem solid #fefefe;
     color: #4d4d4d;
     font-size: 1.2rem;
     outline: none;
+
+}
+.int-area input:first-child {
+    margin-bottom: 0.5rem;
+}
+/* 입력창 클릭(포커스) 시 하단 라인 색상 변경 */
+.int-area input:focus {
+    border-bottom: 2px solid #23B1FA;
 }
 
+/* 포커스 시 라벨 색상도 테마 색상으로 맞춤 (선택사항) */
+.int-area input:focus + label {
+    color: #23B1FA !important;
+}
 .int-area label {
     position: absolute;
     left: 10px;
     top: 15px;
     font-size: 1.2rem;
-    color: #312f2f;
+    color: #4d4d4d;
     transition: 0.5s;
 }
 
 .int-area input:focus + label ,input:valid + label  {
     top: 0;
     font-size: 0.9rem;
-    color: var(--basis-font-color);
+    color: #878787;
 }
 
 .btn-area {
@@ -74,10 +94,14 @@ body{
 .btn-area button {
     width: 100%;
     height: 50px;
-    background-color: var(--basis-font-color);
+    background: #23B1FA;
+    color: #eaeaea;
     border: none;
-    color: #312f2f;
-    border-radius: 25px;
+    font-size: 1.2rem;
+    border-radius: 0.8rem;
+    opacity: 100% !important;
+    /*font-family: "Gowun Dodum", sans-serif;*/
+    font-weight: 600;
 }
 
 .caption {
@@ -85,7 +109,7 @@ body{
     text-align: center;
 }
 .caption a {
-    font-size: 0.9rem;
-    color: #fff;
+    font-size: 1rem;
+    color: #4d4d4d;
     text-decoration: none;
 }

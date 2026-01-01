@@ -92,7 +92,7 @@
 
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.one .image {
-    background-image: url("/SHOP/images/category/one-1.webp");
+    background-image: url("../../../images/shop/category/one-1.webp");
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.one >.text-container >.title::after {
     content:"Waviness Tide Layer Wool Crop Jacket Black";
@@ -109,7 +109,7 @@
     color: #000000;
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.two .image {
-    background-image: url("/SHOP/images/category/one-2.webp");
+    background-image: url("../../../images/shop/category/one-2.webp");
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.two >.text-container >.title::after {
     content:"Waviness Tide Layer Wool Crop Jacket Black";
@@ -126,7 +126,7 @@
     color: #000000;
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.three .image {
-    background-image: url("/SHOP/images/category/one-3.webp");
+    background-image: url("../../../images/shop/category/one-3.webp");
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.three >.text-container >.title::after {
     content:"Waviness Tide Layer Wool Crop Jacket Black";
@@ -143,7 +143,7 @@
     color: #000000;
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.four .image {
-    background-image: url("/SHOP/images/category/one-4.webp");
+    background-image: url("../../../images/shop/category/one-4.webp");
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.four >.text-container >.title::after {
     content:"Waviness Tide Layer Wool Crop Jacket Black";
@@ -160,7 +160,7 @@
     color: #000000;
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.five .image {
-    background-image: url("/SHOP/images/category/one-5.webp");
+    background-image: url("../../../images/shop/category/one-5.webp");
 }
 #category .form-container:has(.radio[value="1"]:checked) + .grid > .box.five >.text-container >.title::after {
     content:"Waviness Tide Layer Wool Crop Jacket Black";

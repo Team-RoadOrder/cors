@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 본문 (0)</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div style="max-width: 500px; margin: 0 auto; font-family: 'Pretendard Variable', Pretendard, serif; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+    <div style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); color:#ffffff; font-size: 13pt;
+font-weight: 600; letter-spacing: 4px; padding: 24px 32px; border-bottom: 2px solid #333;">CORS</div>
+    <div style="padding: 32px;">
+        <div style="color: #e0e0e0; line-height: 1.6; margin: 0 0 32px 0; text-align: justify; font-size: 10.5pt;">회원가입 요청에 따라 아래 인증번호를 전송하였습니다. 본인이 요청한게 아니라면 해당 이메일을 안전하게 삭제해 주시고,
+            절대로 아래 인증번호를 타인에게 알려주어서는 안됩니다.</div>
+        <code style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); color: #ffffff; display: block;
+font-size: 18pt; padding: 28px 20px; text-align: center; letter-spacing: 16px; margin: 0 0 32px -16px;
+user-select: all; font-family: 'Roboto Mono', monospace; cursor: pointer; border-radius: 12px; border: 1px solid #333; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" th:text="${code}">000000</code>
+        <div style="color: #b0b0b0; line-height: 1.6; margin: 0; text-align: justify; font-size: 10pt;">
+            기타 문의 사항은 <a href="#" style="color: #4a9eff; text-decoration: none; font-weight: 500; border-bottom: 1px solid #4a9eff;">고객센터</a>를 통해 남겨주시기 바랍니다. 감사합니다
+        </div>
+    </div>
+    <div style="background-color: #0a0a0a; padding: 24px 32px; border-top: 1px solid #222;">
+        <div style="color:#666666; font-size: 9pt; margin-bottom: 4px;">&copy; 2025 CORS.</div>
+        <div style="color:#666666; font-size: 9pt;">https://www.your-domain.tld.</div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<!--customer header-->
+<header class="box" id="header" th:fragment="customer-header" th:with="isSigned = ${session.sessionUser != null}">
+    <div class="left">
+        <a href="/main" class="box" id="logo">
+            <img src="/assets/images/main/img.png" alt="" class="logo">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+        <ul class="nav">
+            <li class="item selected"><a href="/main">HOME</a></li>
+            <li class="item shop">
+                <a href="#">SHOP</a>
+                <div class="sub-menu">
+                    <ul class="shop-menu">
+                        <li class="item">
+                            <a href="./SHOPLIST/shoplist.html" class="link">
+                                Popular Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="./NEARBYSHOP/nearbyshop.html" class="link">
+                                Nearby Shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="./RECOMMENDEDSHOP/recommendedshop.html" class="link">
+                                recommended shops
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="./Reservation/reservation.html" class="link">
+                                Reservation
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="./MY/my.html" class="link">
+                                My Page
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="item"><a href="./INFO/info.html">INFO</a></li>
+            <li class="item"><a href="./Reservation/reservation.html">RESERVATION</a></li>
+            <li class="item"><a href="./ITEMLIST/itemlist.html">PRODUCT</a></li>
+            <li class="item"><a href="./MY/my.html">MY PAGE</a></li>
+        </ul>
+    </div>
+    <ul class="icon-menu">
+        <li class="item">
+            <form action="./SEARCHRESULT/searchresult.html" method="get" >
+                <button class="glass" aria-label="검색창 열기" type="button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="25" viewBox="0 0 48 48">
+                        <path d="M 20.5 6 C 12.515556 6 6 12.515562 6 20.5 C 6 28.484438 12.515556 35 20.5 35 C 23.773158 35 26.788919 33.893018 29.220703 32.050781 L 38.585938 41.414062 A 2.0002 2.0002 0 1 0 41.414062 38.585938 L 32.050781 29.220703 C 33.893017 26.788918 35 23.773156 35 20.5 C 35 12.515562 28.484444 6 20.5 6 z M 20.5 10 C 26.322685 10 31 14.677319 31 20.5 C 31 23.295711 29.914065 25.820601 28.148438 27.697266 A 2.0002 2.0002 0 0 0 27.701172 28.144531 C 25.824103 29.912403 23.29771 31 20.5 31 C 14.677315 31 10 26.322681 10 20.5 C 10 14.677319 14.677315 10 20.5 10 z"></path>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" class="search-box" aria-label="검색창">
+            </form>
+        </li>
+        <li class="item">
+            <a class="cart" href="./CART/cart.html">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="30" height="25" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.78571 5H18.2251C19.5903 5 20.5542 6.33739 20.1225 7.63246L18.4558 12.6325C18.1836 13.4491 17.4193 14 16.5585 14H6.07142M4.78571 5L4.74531 4.71716C4.60455 3.73186 3.76071 3 2.76541 3H2M4.78571 5L6.07142 14M6.07142 14L6.25469 15.2828C6.39545 16.2681 7.23929 17 8.23459 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"></path>
+                </svg>
+            </a>
+
+        </li>
+        <li class="item">
+            <a id="loginBtn" href="/login" class="icon" th:if="${isSigned == false }">Login</a>
+            <a id="logoutBtn" href="/logout"  class="icon" th:if="${isSigned == true}">Logout</a>
+        </li>
+    </ul>
+    <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
+</header>
+
+<header id="owner-header" th:fragment="owner-header" th:with="isSigned = ${session.sessionUser != null}">
+    <a href="/owner"> <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
+    <ul class="header-list">
+        <li class="service">서비스/도구</li>
+        <li class="shop">매장관리</li>
+    </ul>
+    <div class="tools">
+        <div class="notice">공지사항</div>
+        <div>고객센터</div>
+        <a id="logout" href="/logout" th:if="${isSigned == true}" >로그아웃</a>
+        <a id="login"  href="/login" th:if="${isSigned == false}" >로그인</a>
+    </div>
+</header>
+</body>
+</html>

@@ -21,7 +21,7 @@ public class LoginService {
             return null;
         }
         // 로그인 실패시 널값 반환하는 로직 작성 Failure를 반환하는 형태로 수정해도됨
-        return registerMapper.selectUser(email, password);
+        return registerMapper.selectByEmailAndPasswordUser(email, password);
     }
 }
 

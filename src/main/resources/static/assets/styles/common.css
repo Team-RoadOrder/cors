@@ -1,0 +1,394 @@
+/* 초기 상태: 투명하고 텍스트가 흰색인 헤더 */
+#header {
+    background-color: transparent; /* 배경을 투명하게 설정 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+    position: fixed; /* 페이지 스크롤 시에도 고정되도록 설정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+}
+#header .logo {
+    width: 11rem;
+    top: -1.2rem;
+    left: -1rem;
+    aspect-ratio: 1/1;
+    position: absolute;
+    filter: invert(100%) brightness(200%);
+}
+#header .nav a {
+    color: #fff; /* 네비게이션 텍스트를 흰색으로 설정 */
+    transition: color 0.3s ease;
+}
+#header .nav a:hover {
+    /* color: rgb(236,235,233); */
+    color: rgb(101, 101, 101);
+}
+#header #loginBtn:hover,
+#header #logoutBtn:hover{
+    color: rgb(101, 101, 101);
+
+}
+#header .icon-menu {
+    transform: translateX(3rem);
+    height: 2rem;
+}
+#header .icon-menu .icon {
+    fill: #fff; /* 아이콘 색상을 흰색으로 설정 */
+    transition: fill 0.3s ease;
+}
+
+/* 스크롤 시 적용되는 스타일 */
+#header.scroll-active {
+    background-color: rgb(216, 232, 243); /* 스크롤 시 배경색 변경 */
+}
+
+#header.scroll-active .nav a {
+    color: #000; /* 스크롤 시 텍스트 색상을 검정으로 변경 */
+}
+#header.scroll-active #logo {
+    filter: invert(0%) brightness(0%);
+}
+#header.scroll-active .nav .selected a {
+    color: rgb(82,141,216);
+}
+#header.scroll-active .nav a:hover {
+    color: rgb(101, 101, 101); /* 호버 색상 유지 */
+}
+#header.scroll-active .icon-menu .icon path{
+    filter: invert(0%) brightness(0%);
+}
+#header.scroll-active #searchInput {
+    filter: invert(0%) brightness(0%);
+}
+#header.scroll-active .icon-menu #loginBtn,
+#header.scroll-active .icon-menu #logoutBtn{
+    color: black;
+}
+#header.scroll-active .icon-menu #loginBtn:hover{
+    color: rgb(101, 101, 101) ;
+}
+#header.scroll-active .icon-menu #logoutBtn:hover{
+    color: rgb(101, 101, 101);
+}
+#header #loginBtn,
+#header #logoutBtn {
+    color: #fefefe;
+    font-size: 1.3rem;
+    font-weight: 500;
+    font-family: "Bitter", serif;
+}
+#header > .left > .nav {
+    margin-left: 6rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    font-family: "Bitter", serif;
+    box-sizing: border-box;
+    position: relative;
+    top: -0.5rem;
+    left: 3rem;
+}
+
+#header > .left > #logo {
+    position: relative;
+    top: 1rem;
+    left: 1rem;
+    padding: 2rem;
+}
+
+#header > .icon-menu {
+    gap: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: absolute;
+    right: 10%;
+    top: 35%;
+}
+/* 서브메뉴 기본 스타일: display 대신 opacity와 visibility 사용 */
+#header > .left >.nav >.item >.sub-menu {
+    position: absolute;
+    top: 80%;
+    left: 8%;
+    z-index: 1000;
+    box-sizing: border-box;
+    background: #D4E8F4;
+    padding: 13.5px;
+    border: 0.1rem solid #8BBDFF;
+    /* 1. display:none 대신 visibility: hidden과 opacity: 0을 사용하여 숨김 */
+    display: flex; /* 레이아웃 유지 */
+    visibility: hidden;
+    opacity: 0;
+    /* 2. 사라지는 것을 0.5초 동안 지연시킵니다. (마우스를 뗄 때 적용됨) */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition-delay: 175ms; /* <- 핵심: 사라지는 것을 0.5초 지연 */
+}
+#header > .left > .nav > .item > .sub-menu .item {
+    margin-bottom: 8px; /* 항목 아래에 8px 간격 추가 */
+}
+
+/* 마지막 항목은 아래 간격을 제거하여 깔끔하게 만듭니다. */
+#header > .left > .nav > .item > .sub-menu .item:last-child {
+    margin-bottom: 0;
+}
+
+/* 서브메뉴 내부의 링크 텍스트 색상을 검은색으로 고정 */
+#header > .left > .nav > .item > .sub-menu .link {
+    color: #000000 !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: "Bitter", serif;
+}
+
+
+#header > .left > .nav > .item > .sub-menu .item:hover .link {
+    color: rgb(159, 166, 172) !important; /* !important를 사용하여 다른 색상 규칙을 덮어씁니다. */
+}
+/* 호버 시 서브메뉴 표시 스타일 */
+#header > .left >.nav >.item.shop:hover >.sub-menu {
+    /* 3. 호버 시 visibility와 opacity를 전환하여 보이게 함 */
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0ms;
+    transition-duration: 0.3s;
+}
+
+/* 아이콘 메뉴 아이템들을 정렬하기 위한 스타일 */
+#header .icon-menu .item {
+    display: flex;
+    align-items: center;
+    position: relative;/* 아이콘과 검색창을 세로 중앙 정렬 */
+}
+#header .icon-menu .item form {
+    display: flex;
+    flex-direction: row
+}
+#header .icon-menu .item .glass {
+    background: none; /* 배경 제거 */
+    border: none;     /* 테두리 제거 */
+    padding: 0;       /* 안쪽 여백 제거 */
+    cursor: pointer;
+}
+#header .icon-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 아이콘 사이의 간격을 15px로 설정 */
+}
+/* 검색창 기본 스타일 (숨겨진 상태) */
+#header .search-box {
+    width: 0;
+    opacity: 0;
+    display: none;
+    border: none;
+    outline: none;
+    background: transparent; /* 배경 투명 */
+    border-bottom: 2px solid white; /* 밑줄 스타일 */
+    color: white; /* 입력 텍스트 색상 */
+    font-size: 16px;
+    padding: 5px;
+    margin-left: 10px; /* 아이콘과의 간격 */
+    transition: all 0.5s ease; /* 부드러운 애니메이션 효과 */
+}
+
+/* 검색창이 보여질 때의 스타일 (show 클래스가 추가될 때) */
+#header .search-box.show {
+    width: 150px; /* 원하는 너비로 조절 */
+    opacity: 1;
+    display: block;
+}
+
+/* 모든 아이콘 색상을 흰색으로 통일 */
+#header .icon-menu .icon path {
+    fill: white; /* 아이콘 내부 색상 */
+    stroke: white; /* 아이콘 테두리 색상 (필요시) */
+}
+
+
+#CustomModal {
+    position: fixed;
+   /* width: 100%;
+    height: 100%;*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #212121a0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000; /* 가장 위에 표시되도록 높게 설정 */
+    opacity: 0; /* 초기 투명 상태 */
+    visibility: hidden; /* 초기 숨김 상태 */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+#CustomModal.is-open {
+    opacity: 1; /* 서서히 나타남 */
+    visibility: visible; /* 보이게 설정 */
+}
+#CustomModal.is-open .modal-box {
+    transform: translateY(0);
+}
+#CustomModal .modal-box {
+    position: relative;
+    max-width: 30rem;
+    width: 90%;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(62, 39, 35, 0.15);
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out;
+}
+
+#CustomModal .header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2b3137; /* 다크 헤더 배경 */
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#CustomModal .header .close-btn {
+    cursor: pointer;
+    font-size: 1.7rem;
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+#CustomModal .header .close-btn:hover {
+    opacity: 1;
+}
+
+#CustomModal .content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+    color: #333;
+    h2, h3, h4 {
+        margin-top: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    p, ul, ol {
+        margin-bottom: 15px;
+    }
+}
+
+#CustomModal .footer {
+    flex-shrink: 0;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 7. 공통 버튼 스타일 (.modal-btn) */
+#CustomModal .modal-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+#CustomModal .modal-btn.cancel {
+    background-color: #e0e0e0;
+    color: #555;
+}
+
+#CustomModal .modal-btn.cancel:hover {
+    background-color: #d0d0d0;
+}
+
+#CustomModal .modal-btn.confirm {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#CustomModal .modal-btn.confirm:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+/* 로딩영역 */
+
+
+
+
+[data-object=loading] {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    /* 위치 및 크기 */
+    position: fixed !important; /* fixed인지 다시 확인 */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* 배경 및 가시성 */
+    background-color: rgba(33, 33, 33, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10000 !important; /* 다른 요소보다 압도적으로 높게 */
+    transition: opacity 175ms;
+    color : #eaeaea;
+}
+
+[data-object=loading][data-visible] {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 아이콘 및 메시지 애니메이션 (제공해주신 코드 그대로) */
+[data-object=loading] > [data-component~="loading.icon"],
+[data-object=loading] > [data-component~="loading.message"] {
+    top: 0.25rem;
+    opacity: 0;
+    position: relative;
+    transition: top 250ms, opacity 250ms;
+}
+
+[data-object=loading][data-visible] > [data-component~="loading.icon"],
+[data-object=loading][data-visible] > [data-component~="loading.message"] {
+    top: 0;
+    opacity: 1;
+}
+
+/* 회전 애니메이션 */
+@keyframes anim {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+[data-object=loading] > [data-component~="loading.icon"] {
+    width: 3.5rem;
+    height: 3.5rem;
+    animation: anim 1s linear infinite;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='50px' height='50px' viewBox='0,0,256,256'%3E%3Cg fill='%23ffffff' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cg transform='scale(5.12,5.12)'%3E%3Cpath d='M25.00586,2.00195c-9.51246,0 -17.67532,5.78862 -21.17187,14.03711c-0.02548,0.04319 -0.04768,0.08824 -0.06641,0.13477c-0.0838,0.20186 -0.15089,0.40642 -0.22852,0.60938c-0.105,0.27404 -0.21585,0.54525 -0.31055,0.82422c-0.17304,0.5093 -0.32878,1.02156 -0.46484,1.53516c-0.00134,0.0052 -0.00265,0.01041 -0.00391,0.01563c-0.00813,0.03105 -0.01934,0.06069 -0.02734,0.0918c-0.1379,0.53496 0.1839,1.08044 0.71882,1.21848c0.53492,0.13804 1.08049,-0.1836 1.21868,-0.71848c0.00372,-0.01446 0.00797,-0.02852 0.01172,-0.04297c0.12864,-0.49539 0.2802,-0.98045 0.44336,-1.46094c0.08624,-0.25364 0.18664,-0.50564 0.2832,-0.75781c3.02232,-7.88054 10.64077,-13.48633 19.59766,-13.48633c11.60854,0 20.99805,9.3895 20.99805,20.99805c-0.0051,0.36064 0.18438,0.69608 0.49587,0.87789c0.3115,0.18181 0.69676,0.18181 1.00825,0c0.3115,-0.18181 0.50097,-0.51725 0.49587,-0.87789c0,-12.68946 -10.30859,-22.99805 -22.99805,-22.99805zM2.70898,24.0918l-0.64453,0.62305l-0.05664,0.34766l0.01563,0.94141l0.00195,0.0293l0.00195,0.02734l0.0918,1.24805l0.00195,0.0293l0.00391,0.02734l0.16406,1.23828l0.00391,0.02734l0.00586,0.02734l0.23047,1.22461l0.00586,0.02734l0.00781,0.02734l0.24609,0.99219l0.58398,0.68164l0.89453,-0.06055l0.48633,-0.75195l-0.02344,-0.35156l-0.24219,-0.97266l-0.2168,-1.13281l-0.00195,-0.01758l-0.15625,-1.18945l-0.08984,-1.20508l-0.00195,-0.01758l-0.01367,-0.88281l-0.41406,-0.79492zM6.05273,34.95508l-0.84375,0.30664l-0.25977,0.85742l0.12109,0.33008l0.35547,0.61523l0.01563,0.02539l0.01367,0.02344l0.68359,1.03906l0.01563,0.02344l0.01758,0.02344l0.74219,1.00195l0.01563,0.02344l0.01953,0.02148l0.79883,0.96094l0.01953,0.02148l0.01953,0.02148l0.85742,0.91797l0.83984,0.31055l0.75195,-0.48633l0.06055,-0.89453l-0.19141,-0.29492l-0.8457,-0.9043l-0.01172,-0.01367l-0.74609,-0.89844l-0.69141,-0.93164l-0.65234,-0.99023l-0.00586,-0.01172l-0.35156,-0.60547zM40.38867,39.71094c-0.25937,0.00517 -0.50658,0.11091 -0.68945,0.29492c-0.22789,0.22312 -0.45979,0.44062 -0.69727,0.65234c-0.28155,0.23352 -0.41315,0.60213 -0.34315,0.96117c0.07,0.35903 0.33043,0.65121 0.67909,0.76186c0.34866,0.11065 0.72991,0.02213 0.99414,-0.23084c0.26052,-0.23227 0.51552,-0.46997 0.76563,-0.71484c0.29905,-0.2844 0.3927,-0.72327 0.23578,-1.10497c-0.15691,-0.38169 -0.53216,-0.62781 -0.94477,-0.61964zM13.80859,42.9707c-0.44313,0.02511 -0.81671,0.33927 -0.91743,0.77154c-0.10073,0.43226 0.09549,0.8792 0.48189,1.09761c0.89063,0.52058 1.82698,0.98916 2.80664,1.39648c0.01804,0.00704 0.03627,0.01355 0.05469,0.01953c0.306,0.12682 0.61334,0.24763 0.92188,0.35938c0.33773,0.12869 0.71862,0.06514 0.99629,-0.16622c0.27767,-0.23136 0.4089,-0.59452 0.34328,-0.94993c-0.06562,-0.35541 -0.3179,-0.64776 -0.65988,-0.76471c-0.29715,-0.10762 -0.5927,-0.22296 -0.88672,-0.3457c-0.00065,0 -0.0013,0 -0.00195,0c-0.89634,-0.37268 -1.75108,-0.79997 -2.56445,-1.27539c-0.17265,-0.10435 -0.37281,-0.15405 -0.57422,-0.14258zM34.22656,43.94727l-0.3418,0.08008l-1.02734,0.44531l-0.01367,0.00586l-0.90234,0.32422l-0.61719,0.65039l0.15039,0.88281l0.79883,0.4082l0.3457,-0.05859l0.91602,-0.33008l0.0293,-0.01172l0.0293,-0.01172l1.08398,-0.46875l0.57617,-0.6875l-0.20508,-0.87109zM25.90234,45.96875l-0.49805,0.0293l-1.55469,-0.02734v0.02148l-0.78711,0.30859l-0.23633,0.86328l0.55078,0.70703l0.33984,0.09375l0.02734,0.00195l0.03711,0.00391h0.03711l1.60938,0.02734h0.03711l0.03711,-0.00195l0.51563,-0.0293l0.77734,-0.44727l0.10742,-0.88867l-0.64844,-0.61914z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}

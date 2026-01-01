@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.EmailTokenMapper">
+
+    <insert id="insert">
+        INSERT INTO  `cors`.`email_tokens` ( `email`, `code`, `salt`,
+                                                   `is_verified`, `is_used`, `created_at`, `expires_at`)
+        VALUES  (#{emailToken.email},
+                 #{emailToken.code},
+                 #{emailToken.salt},
+                 #{emailToken.isVerified},
+                 #{emailToken.isUsed},
+                 #{emailToken.createdAt},
+                 #{emailToken.expiresAt})
+    </insert>
+    <select id="select" resultType="dev.gmpark.cors.entities.EmailTokenEntity">
+        SELECT `email`       AS `email`,
+               `code`        AS `code`,
+               `salt`        AS `salt`,
+               `is_verified` AS `isVerified`,
+               `is_used`     AS `isUsed`,
+               `created_at`  AS `createdAt`,
+               `expires_at`  AS `expiresAt`
+        FROM `cors`.`email_tokens`
+        WHERE `email` = #{email}
+          AND `code` = #{code}
+          AND `salt` = #{salt}
+        LIMIT 1
+    </select>
+    <update id="update">
+        UPDATE `cors`.`email_tokens`
+        SET `is_verified` = #{emailToken.isVerified},
+            `is_used`     = #{emailToken.isUsed},
+            `created_at`  = #{emailToken.createdAt},
+            `expires_at`  = #{emailToken.expiresAt}
+        WHERE `email` = #{emailToken.email}
+          AND `code` = #{emailToken.code}
+          AND `salt` = #{emailToken.salt}
+        LIMIT 1
+    </update>
+
+</mapper>

@@ -1,6 +1,40 @@
 .res-list {
     background: #FFFFFF;
     border-radius: 1rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+.res-list > .hidden {
+    display: none;
+}
+
+.res-list > .empty {
+    margin: 2rem 0 0 10rem;
+    font-size: 1.3rem;
+    color: #aca7a7;
+}
+
+.res-list::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.res-list::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 60px;
+    margin-bottom: 10px;
+}
+
+/* 4. 스크롤바 막대(손잡이) 디자인 */
+.res-list::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 색상 */
+    border-radius: 10px;    /* 둥글게 */
+}
+
+.res-list .spring:first-child {
+    position: sticky;
+    top: 0;
+    background: #FFFFFF; /* 배경색 필수 (투명하면 뒤에 글씨 비침) */
+    z-index: 10;         /* 다른 내용물보다 위에 뜨도록 */
 }
 .res-list .spring {
     color: #212121;

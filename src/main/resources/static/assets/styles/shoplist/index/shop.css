@@ -30,7 +30,7 @@
 }
 #map::before{
     content: "";
-    background-image: url("../../images/icon.png");
+    background-image: url("../../../images/shoplist/icon.png");
     width: 16px;
     height: 16px;
     background-size: contain;
@@ -46,7 +46,7 @@
     border-radius: 5px;
 }
 #shop .shop-list {
-      padding: 1.5rem 1.4rem;
+    padding: 1.5rem 1.4rem;
     font-size: 1.2rem;
      font-weight: 700;
 }
@@ -55,11 +55,13 @@
     flex-direction: row;
     gap: 0.5rem;
     padding: 0 2rem 2rem 1rem;
+
 }
 #shop .option-list .item{
     border: #eaeaea solid 1px;
     border-radius: 2rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
 }
 #shop .store-list {
     display: grid; /* flex를 grid로 변경 */
@@ -67,6 +69,10 @@
     gap: 1rem; /* 아이템 사이의 간격 */
     padding: 0 1rem;
 }
+#shop .store:hover{
+    opacity: 0.8;
+}
+
 #shop .store a {
    margin-bottom: 1rem;
     display: flex;
