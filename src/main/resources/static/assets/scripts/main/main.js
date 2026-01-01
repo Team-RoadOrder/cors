@@ -1,20 +1,4 @@
 
-// 검색창에 있는 헤더를 위한
-const searchIcon = document.querySelector('.glass');
-const searchInput = document.getElementById('searchInput');
-
-// 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
-searchIcon.addEventListener('click', (event) => {
-
-
-    // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
-    searchInput.classList.toggle('show');
-
-    // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
-    if (searchInput.classList.contains('show')) {
-        searchInput.focus();
-    }
-});
 document.addEventListener("DOMContentLoaded", () => {
 
     //로그인 / 로그아웃
