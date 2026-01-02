@@ -24,7 +24,9 @@ public class RegisterEntity {
 
 }
 /*
-create table email_tokens
+
+CREATE SCHEMA `cors`;
+create table `cors`.`email_tokens`
         (
                 email       varchar(50)          not null,
 code        varchar(6)           not null,
@@ -36,7 +38,7 @@ expires_at  datetime             null,
 primary key (email, code, salt)
 );
 
-create table users
+create table `cors`.`users`
         (
                 usertype       varchar(10)  null,
 email          varchar(40)  not null
@@ -52,7 +54,7 @@ address_detail varchar(255) null,
 gender         varchar(10)  null
         );
 
-create table shop_info
+create table `cors`.`shop_info`
         (
                 shop_id          int unsigned auto_increment comment '매장 고유 ID (PK)'
                         primary key,
@@ -70,7 +72,7 @@ on update cascade on delete cascade
 )
 comment '매장 정보';
 
-create table shop_items
+create table `cors`.`shop_items`
         (
                 id               bigint auto_increment comment 'PK'
                         primary key,
@@ -94,7 +96,7 @@ on update cascade on delete cascade
 )
 comment '상품 정보' collate = utf8mb4_uca1400_ai_ci;
 
-create table shop_item_images
+create table `cors`.`shop_item_images`
         (
                 id            bigint auto_increment comment 'PK'
                         primary key,
@@ -107,6 +109,7 @@ foreign key (product_id) references shop_items (id)
 on update cascade on delete cascade
 )
 comment '상품 이미지 정보' collate = utf8mb4_uca1400_ai_ci;
+
 */
 
 
