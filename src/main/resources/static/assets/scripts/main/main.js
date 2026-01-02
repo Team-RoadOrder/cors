@@ -52,7 +52,7 @@ const  renderItems = (items) => {
 
         const html = `
             <div class="box">
-                <a href="#"><div class="image" style="background-image: url('${imgSrc}'); background-size: cover; background-position: center; cursor: pointer"></div></a>
+                <a href="/item/?shopId=${item.shopId}&id=${item.id}"><div class="image" style="background-image: url('${imgSrc}'); background-size: cover; background-position: center; cursor: pointer"></div></a>
                 <div class="text-container">
                     <span class="title">${item.itemName}</span>
                     <span class="price">${formattedPrice}</span>

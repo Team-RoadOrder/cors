@@ -21,7 +21,7 @@ public class ShopController {
     private final ShopService shopService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView shop(ModelAndView modelAndView,
+    public ModelAndView getShop(ModelAndView modelAndView,
                        @RequestParam(value = "shopId", required = false, defaultValue = "0") int shopId) {
         ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
         modelAndView.addObject("shopInfo", shopInfo);
@@ -39,7 +39,7 @@ public class ShopController {
         String dbCategoryName = switch (categoryCode){
             case "2" -> "아우터";
             case "3" -> "상의" ;
-            case "4" -> "하의" ;
+            case "4" -> "바지" ;
             case "5" -> "신발" ;
             case "6" -> "악세사리";
             default -> null;

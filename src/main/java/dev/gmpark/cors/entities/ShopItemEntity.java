@@ -1,13 +1,15 @@
 package dev.gmpark.cors.entities;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @EqualsAndHashCode(of = "id")
 public class ShopItemEntity {
 

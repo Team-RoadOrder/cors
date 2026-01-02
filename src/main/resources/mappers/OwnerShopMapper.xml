@@ -160,4 +160,34 @@
         </if>
         ORDER BY si.`updated_at` DESC
     </select>
+    <resultMap id="ItemWithImages" type="dev.gmpark.cors.vos.ShopItemVo" autoMapping="true">
+        <id property="id" column="id"/>
+
+        <collection property="images" ofType="dev.gmpark.cors.entities.ShopItemImagesEntity">
+            <id property="id" column="img_id"/> <result property="imagePath" column="img_path"/> <result property="originalName" column="img_name"/>
+        </collection>
+    </resultMap>
+    <select id="selectItemVoById" resultMap="ItemWithImages">
+        SELECT
+            si.`id`               AS `id`,
+            si.`shop_id`          AS `shopId`,
+            si.`item_name`        AS `itemName`,
+            si.`color`            AS `color`,
+            si.`size`             AS `size`,
+            si.`price`            AS `price`,
+            si.`style`            AS `style`,
+            si.`main_category`    AS `mainCategory`,
+            si.`sub_category`     AS `subCategory`,
+            si.`detail_category`  AS `detailCategory`,
+            si.`main_image_index` AS `mainImageIndex`,
+            si.`created_at`       AS `createdAt`,
+            si.`updated_at`       AS `updateAt`,
+            si.`deleted_at`       AS `deletedAt`,
+            img.id            AS img_id,   -- 이미지 컬럼은 이름 겹치니까 별명 붙이기
+            img.image_path    AS img_path,
+            img.original_name AS img_name
+        FROM `cors`.`shop_items` AS `si`
+                 LEFT JOIN `cors`.`shop_item_images` AS `img` ON `si`.id = `img`.product_id
+        WHERE si.id = #{id}
+    </select>
 </mapper>

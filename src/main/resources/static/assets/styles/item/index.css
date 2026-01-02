@@ -1,8 +1,8 @@
-@import "index/header.css";
+
 @import "index/main.css";
 @import "index/item.css";
 @import "common.css";
-@import "../../MAINPAGE/index/header.css";
+
 
 
 
@@ -11,12 +11,10 @@ body {
     display: flex;
     justify-content: center;
     /*flex-direction: row;*/
-    background-color: #f4f3e8;
+    background-color: #FFFFFF;
     flex-direction: column;
 
 }
-
-
 body > .container {
     width: 71.25rem;
 }
@@ -25,14 +23,14 @@ body .container {
     padding: 2rem;
     justify-content: space-around;
     align-items: flex-start;
-    width: 100%;
+    width: 85%;
     height: auto;
     overflow-y: hidden;
     display: flex;
     flex-direction: row;
     position: relative;
     overflow-x: hidden;
-    background-color: #f4f3e8;
+    background-color: #FFFFFF;
     /*border-radius: 0.5rem;*/
     /*box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.15);*/
 
@@ -48,18 +46,36 @@ body .container {
     position: sticky;
 }
 
+/* 수정된 .image-wrapper */
 .image-wrapper {
     width: 35rem;
     aspect-ratio: 13/14;
     background-color: #ffffff;
     border-radius: 0.25rem;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    overflow: hidden;
+    flex-direction: row; /* 중요: column -> row로 변경 (가로 배치) */
+    overflow-x: auto; /* 중요: 가로 스크롤 허용 */
+    overflow-y: hidden; /* 세로 스크롤 숨김 */
     position: relative;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+    /* 스크롤바 숨기기 (선택사항) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* 크롬, 사파리 등에서 스크롤바 숨기기 */
+.image-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+/* 이미지 스타일은 기존 유지하되 flex-shrink 확인 */
+.image {
+    flex: 0 0 100%; /* 이미지가 부모 너비를 꽉 채우고 줄어들지 않도록 설정 */
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    object-fit: cover;
 }
 
 .dot-container {
@@ -115,30 +131,53 @@ body .container {
 /*
 ------------------------------------------------------------------------------------------------------------------*/
 
-#login-wrapper{
+#buying-wrapper{
+    padding: 2rem;
     width: 40%;
-    align-items: stretch;
     display: flex;
     flex-direction: column;
-    gap: 1.125rem;
+    gap: 1.6rem;
     justify-content: flex-start;
     position: relative;
-    background-color: #f4f3e8;
+    background-color: #FFFFFF;
     border-radius: 0.5rem;
     margin-left: 1.25rem;
 }
-
+.product {
+    padding: 1.5rem;
+}
+.detail-category {
+    font-size: 1.25rem;
+    color: #bfbebe;
+}
+.detail-category:after {
+    content: ")";
+}
+.detail-category:before {
+    content: "(";
+}
+.buy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
 .buyText{
     font-size: 1rem;
+    color: #a5a4a4;
     font-weight: 700;
 }
 
 .buyNumber{
-    font-size: 27px;
+    font-size: 1.5rem;
+    font-weight: 500
+}
+.productName {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .koreanProductName{
-    font-size: 14px;
+    font-size: 1rem;
     color: rgba(34,34,34,.5);
 }
 
@@ -172,8 +211,8 @@ body .container {
 }
 
 .buying{
-    background-color: rgb(239, 98, 83);
-    color: rgb(255, 255, 255);
+    background-color: #212121;
+    color: #FFFFFF;
     align-items: center;
     justify-content: center;
     font-size: 18px;
@@ -185,10 +224,17 @@ body .container {
 
     padding: 11px 8px 11px 10px;
 }
-
+.buying:hover{
+    background-color: #515151;
+    transition-delay: 0.1s;
+    transition-timing-function: ease-in;
+}
+.buying:active{
+    background-color: #212121;
+}
 .reservation{
-    background-color: rgb(65, 185, 121);
-    color: rgb(255, 255, 255);
+    background-color: #eaeaea;
+    color: #717171;
     align-items: center;
     justify-content: center;
     font-size: 18px;
@@ -198,6 +244,14 @@ body .container {
     cursor: pointer;
     display: flex;
     padding: 11px 8px 11px 10px;
+}
+.reservation:hover{
+    background-color: #f6f6f6;
+    transition-delay: 0.1s;
+    transition-timing-function: ease-in;
+}
+.reservation:active{
+    background-color: #eaeaea;
 }
 .cart_Add {
     display: flex;
@@ -253,6 +307,9 @@ body .container {
 
 .point{
     display: flex;
+    flex-direction: row;
+    align-items: center;
+
 }
 
 .pointCredit{
@@ -305,6 +362,9 @@ body .container {
     padding: 1rem 0;
     cursor: pointer;
     display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 13rem;
 }
 
 .shopName p{

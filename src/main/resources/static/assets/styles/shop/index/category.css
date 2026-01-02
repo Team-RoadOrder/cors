@@ -90,6 +90,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+    text-align: center;
 }
 
 #category .grid > .box .text-container .price {
