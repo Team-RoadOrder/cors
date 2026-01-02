@@ -1,4 +1,5 @@
 #shop-info {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 65rem;
@@ -7,7 +8,7 @@
     margin-top: 2rem;
     border-radius: 1rem;
     overflow: hidden;
-
+    box-sizing: border-box;
 }
 #shop-info .background-image-box {
     flex: 1;
@@ -24,8 +25,8 @@
 
 #shop-info .button {
     position: absolute;
-    top: 14rem;
-    right: 9rem;
+    top: 9rem;
+    right: 3rem;
     z-index: 10;
     padding: 0.5rem 1rem;
     background: #212121a0;
@@ -41,7 +42,7 @@
     flex: 1;
 }
 #shop-info .button.shopInfo {
-    top: 27rem;
+    top: 21rem;
 }
 
 #form input {
@@ -58,38 +59,38 @@
 #form input[name="shopName"] {
     font-size: 2rem;
     position: absolute;
-    left: 30rem;
-    top: 20rem;
+    left: 3rem;
+    top: 14rem;
     width: 9rem;
     font-weight: 500;
 }
 #form input[name="shopTime"] {
     font-size: 0.9rem;
     position: absolute;
-    left: 40rem;
-    top: 20.9rem;
+    left: 3rem;
+    top: 17rem;
 
 }
 #form input[name="shopType"] {
     font-size: 0.9rem;
     position: absolute;
-    left: 30rem;
-    top: 23.8rem;
+    left: 3rem;
+    top: 19rem;
     color: #a0a0a0;
 }
 #form input[name="shopAddress"] {
     font-size: 0.9rem;
     position: absolute;
-    left: 30rem;
-    top: 25.8rem;
+    left: 3rem;
+    top: 20.8rem;
     width: 22rem !important;
     color: #a0a0a0;
 }
 #form input[name="shopTel"] {
     font-size: 0.9rem;
     position: absolute;
-    left: 30rem;
-    top: 27.8rem;
+    left: 3rem;
+    top: 22.5rem;
     width: 10rem;
     color: #a0a0a0;
 }
