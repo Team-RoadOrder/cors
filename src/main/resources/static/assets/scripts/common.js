@@ -12,18 +12,18 @@ document.addEventListener('scroll', function() {
 const searchIcon = document.querySelector('.glass');
 const searchInput = document.getElementById('searchInput');
 
-// 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
-searchIcon.addEventListener('click', (event) => {
+// searchIcon과 searchInput이 모두 화면에 있을 때만 이벤트를 연결합니다.
+if (searchIcon && searchInput) {
+    searchIcon.addEventListener('click', (event) => {
+        // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
+        searchInput.classList.toggle('show');
 
-
-    // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
-    searchInput.classList.toggle('show');
-
-    // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
-    if (searchInput.classList.contains('show')) {
-        searchInput.focus();
-    }
-});
+        // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
+        if (searchInput.classList.contains('show')) {
+            searchInput.focus();
+        }
+    });
+}
 
 // =========================================================
 // openModal 함수 (애니메이션, duration 옵션 및 클린업 로직 통합)
