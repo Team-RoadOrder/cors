@@ -21,7 +21,9 @@
 <!-- 헤더뒤에 배경 -->
 <form class="search-form box" method="get" action="/search-result">
     <label class="label" >
-        <svg class="icon box" xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 32 32" version="1.1">
+        <svg class="icon box" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24" width="24px" height="24px">
+            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
         <input autofocus required class="input" maxlength="50" minlength="1"
                name="keyword" type="search" autocomplete="off"
@@ -50,36 +52,6 @@
         '<span th:text="${keyword}" style="font-weight: bold;"></span>'에 대한 검색 결과가 없습니다.
     </div>
 </div>
-
-<script>
-    document.addEventListener('scroll', function() {
-        const header = document.getElementById('header');
-        if (window.scrollY > 0) {
-            header.classList.add('scroll-active');
-        } else {
-            header.classList.remove('scroll-active');
-        }
-    });
-    // 검색창에 있는 헤더를 위한
-    const searchIcon = document.querySelector('.glass');
-    const searchInput = document.getElementById('searchInput');
-
-    // 돋보기 아이콘에 'click' 이벤트 리스너를 추가합니다.
-    if (searchIcon) {
-        searchIcon.addEventListener('click', (event) => {
-            // a 태그의 기본 동작(페이지 이동 등)을 막습니다.
-            event.preventDefault();
-
-            // searchInput 요소에 'show' 클래스를 추가하거나 제거합니다 (toggle).
-            searchInput.classList.toggle('show');
-
-            // 만약 검색창이 보이는 상태가 되었다면, 바로 입력할 수 있도록 focus를 줍니다.
-            if (searchInput.classList.contains('show')) {
-                searchInput.focus();
-            }
-        });
-    }
-</script>
 
 </body>
 </html>
