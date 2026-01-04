@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dev.gmpark.cors.mappers.ReservationMapper">
+    <insert id="insertReservation"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id">
+        INSERT INTO `cors`.`reservations` (user_email, shop_id, visit_date, status)
+        VALUES (#{reservation.userEmail},
+                #{reservation.shopId},
+                #{reservation.visitDate},
+                #{reservation.status})
+    </insert>
+    <insert id="insertReservationItems">
+        INSERT INTO `cors`.`reservation_items` (reservation_id, item_id, size)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.reservationId}, #{item.itemId}, #{item.size})
+        </foreach>
+    </insert>
+    <select id="selectReservationsByEmail" resultType="dev.gmpark.cors.vos.ReservationItemVo">
+        SELECT
+            t1.`shop_id`    AS `shopId`,
+            t4.`shop_name`  AS `shopName`,
+            t3.`id`         AS `itemId`,
+            t2.`size`       AS `size`,
+            t3.`item_name`  AS `itemName`,
+            t3.`color`      AS `color`,
+            t3.`price`      AS `price`,
+            t1.`visit_date` AS `visitDate`,
+            t1.`status`     AS `status`,
+            (SELECT img.`image_path`
+             FROM `cors`.`shop_item_images` img
+             WHERE img.`product_id` = t3.`id`
+             LIMIT 1)       AS `imagePath`
+        FROM `cors`.`reservations` AS t1
+                 JOIN `cors`.`reservation_items` AS t2
+                      ON t1.`id` = t2.`reservation_id`
+                 LEFT JOIN `cors`.`shop_items` AS t3
+                           ON t2.`item_id` = t3.`id`
+                 LEFT JOIN `cors`.`shop_info` AS t4
+                           ON t1.`shop_id` = t4.`shop_id`
+        WHERE t1.`user_email` = #{email}
+        ORDER BY t1.`visit_date` DESC
+    </select>
+</mapper>

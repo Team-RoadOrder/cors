@@ -13,16 +13,16 @@
     padding-left: 0.5rem;
 }
 /* 기존 :has() 선택자 대신 이 코드를 사용하세요 */
-#item > .container > #form > input[type="checkbox"]:checked + .label  {
+#item > .container > .item-row > input[type="checkbox"]:checked + .label  {
     background-color: #a0a0a040;
 }
 
 /* input은 숨깁니다 */
-#item > .container > #form > input[type="checkbox"] {
+#item > .container > .item-row > input[type="checkbox"] {
     display: none;
 }
 
-#item > .container > #form > .label {
+#item > .container > .item-row > .label {
     cursor: pointer;
     width: 95%;
     display: flex;
@@ -32,7 +32,7 @@
     margin-bottom: 0.5rem;
 }
 
-#item > .container > #form > .label  > .image-wrapper{
+#item > .container > .item-row > .label  > .image-wrapper{
     background-color: rgb(243, 244, 247);
     border-radius: 0.5rem;
     width: 10rem;
@@ -44,14 +44,13 @@
     margin: 1rem;
     z-index: 999;
 }
-#item > .container > #form > .label  > .image-wrapper > img {
-    width: 8rem;
-    aspect-ratio: 1 / 1;
+#item > .container > .item-row > .label  > .image-wrapper > img {
+    width: 100%;
     background-position: center;
     background-size: contain;
     flex-shrink: 0;
 }
-#item > .container > #form > .label  > .text-wrapper {
+#item > .container > .item-row > .label  > .text-wrapper {
     flex-direction: column;
     text-align: left;
     display: flex;
@@ -59,28 +58,61 @@
     gap: 1rem;
 }
 
-#item > .container > #form > .label  > .text-wrapper >.title {
+#item > .container > .item-row > .label  > .text-wrapper >.title {
     font-weight: 600;
     font-size: 1rem;
     padding-left: 0.3rem;
 }
 
-#item > .container > #form > .label  > .text-wrapper >.price {
+#item > .container > .item-row > .label  > .text-wrapper >.price {
     font-size: 0.8rem;
     padding-left: 0.3rem;
 
 }
 
-#item > .container > #form > .label  > .text-wrapper >.shop {
+#item > .container > .item-row > .label  > .text-wrapper >.shop {
     font-size: 0.7rem;
     border: 1px solid #eaeaea;
     text-align: center;
     padding: 0.0925rem;
     border-radius: 0.5rem;
     color: #a0a0a0;
-    width: 3.5rem;
+    width: 5rem;
     position: relative;
 }
 
+/* 기존 선택자 수정 및 추가 */
+#item > .container > .item-row > .label > .text-wrapper > select {
+    /* 1. 기본 브라우저 스타일 제거 (화살표 없애기 등) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 
+    /* 2. 박스 스타일링 */
+    width: 100%; /* 부모 너비에 맞춤 혹은 고정 px */
+    max-width: 8rem; /* 너무 길어지지 않게 */
+    padding: 0.4rem 2rem 0.4rem 0.8rem; /* 글자 주변 여백 (오른쪽은 화살표 자리) */
+    font-size: 0.85rem;
+    color: #9a9a9a;
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 0.4rem; /* 둥근 모서리 */
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1rem;
+}
 
+/* 4. 마우스 올렸을 때 (Hover) */
+#item > .container > .item-row > .label > .text-wrapper > select:hover {
+    border-color: #a0a0a0; /* 테두리를 조금 더 진하게 */
+}
+
+/* 5. 선택 중일 때 (Focus) */
+#item > .container > .item-row > .label > .text-wrapper > select:focus {
+    border-color: #333; /* 활성화 시 검은색 계열 */
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05); /* 살짝 번지는 효과 */
+}

@@ -58,7 +58,7 @@
 <div id = "item" >
     <h1>상품 선택</h1>
     <div class="container">
-        <form id="form">
+        <div class="item-row">
             <input type="checkbox" id="checkbox1">
             <label for="checkbox1" class="label">
 
@@ -68,59 +68,17 @@
                 <span class="text-wrapper">
                     <span class="title">Waviness Tide Layer Wool Crop Jacket Black</span>
                     <span class="price">41,2000원</span>
-                    <span class="shop">waviness</span>
+                    <span class="shop">black/white</span>
+                <select name="size" class="size-select" onclick="event.preventDefault()">
+                    <option value="" disabled selected>SIZE</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="FREE">FREE</option>
+                </select>
                 </span>
             </label>
-            <input type="checkbox" id="checkbox2">
-            <label for="checkbox2" class="label">
-
-                <span class="image-wrapper">
-                    <img src="./images/category/one-2.webp" alt="상품이미지" draggable="false">
-                </span>
-                <span class="text-wrapper">
-                    <span class="title">Waviness Tide Layer Wool Crop Jacket Black</span>
-                    <span class="price">41,2000원</span>
-                    <span class="shop">waviness</span>
-                </span>
-            </label>
-            <input type="checkbox" id="checkbox3">
-            <label for="checkbox3" class="label" >
-
-                <span class="image-wrapper">
-                    <img src="./images/category/one-3.webp" alt="상품이미지" draggable="false">
-                </span>
-                <span class="text-wrapper">
-                    <span class="title">Waviness Tide Layer Wool Crop Jacket Black</span>
-                    <span class="price">41,2000원</span>
-                    <span class="shop">waviness</span>
-                </span>
-            </label>
-            <input type="checkbox" id="checkbox4">
-            <label for="checkbox4" class="label" >
-
-
-                <span class="image-wrapper">
-                    <img src="./images/category/one-4.webp" alt="상품이미지" draggable="false">
-                </span>
-                <span class="text-wrapper">
-                    <span class="title">Waviness Tide Layer Wool Crop Jacket Black</span>
-                    <span class="price">41,2000원</span>
-                    <span class="shop">waviness</span>
-                </span>
-            </label>
-            <input type="checkbox" id="checkbox5">
-            <label for="checkbox5" class="label" >
-
-                <span class="image-wrapper">
-                    <img src="./images/category/one-5.webp" alt="상품이미지" draggable="false">
-                </span>
-                <span class="text-wrapper">
-                    <span class="title">Waviness Tide Layer Wool Crop Jacket Black</span>
-                    <span class="price">41,2000원</span>
-                    <span class="shop">waviness</span>
-                </span>
-            </label>
-        </form>
+        </div>
     </div>
 </div>
 <div id="reservation">

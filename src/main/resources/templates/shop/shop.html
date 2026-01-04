@@ -34,7 +34,7 @@
         </div>
         <div class="button">
         <button class="like"><a href="#">관심 저장</a></button>
-            <button class="share"><a href="../Reservation/reservation.html" >예약 하기</a></button>
+            <button class="share"><a th:href="@{/reservation/(shopId=${shopInfo.shopId})}" >예약 하기</a></button>
         </div>
     </div>
 </div> <!--매장 소개 들어갈곳 -->

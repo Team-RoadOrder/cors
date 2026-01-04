@@ -120,21 +120,28 @@
             <label onclick="loadTab('reservation', document.querySelectorAll('.menu .item')[1])" class="more" style="cursor:pointer">더보기 </label>
         </div>
         <div class="grid">
-            <a class="box one" href="#">
-                <span class="image-wrapper"><span class="image"></span></span>
-                <span class="text-container"><span class="title"></span><span class="price"></span></span>
-            </a>
-            <a class="box two" href="#">
-                <span class="image-wrapper"><span class="image"></span></span>
-                <span class="text-container"><span class="title"></span><span class="price"></span></span>
-            </a>
-            <a class="box three" href="#">
-                <span class="image-wrapper"><span class="image"></span></span>
-                <span class="text-container"><span class="title"></span><span class="price"></span></span>
-            </a>
-            <a class="box four" href="#">
-                <span class="image-wrapper"><span class="image"></span></span>
-                <span class="text-container"><span class="title"></span><span class="price"></span></span>
+            <div th:if="${items == null or #lists.isEmpty(items)}"
+                 style="width: 100%; text-align: center; padding: 40px; color: #888; grid-column: 1 / -1;">
+                최근 예약된 상품이 없습니다.
+            </div>
+
+            <a th:unless="${items == null or #lists.isEmpty(items)}"
+               th:each="item, stat : ${items}"
+               th:if="${stat.index < 4}"
+               class="box"
+               th:href="@{/item/(shopId=${item.shopId}, id=${item.itemId})}">
+
+            <span class="image-wrapper">
+                <img th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" class="image" alt="상품이미지">
+                <img th:unless="${item.imagePath != null}" src="/assets/images/default.png" class="image" alt="기본이미지">
+            </span>
+
+                <span class="text-container">
+                <span class="title" th:text="${item.itemName}">상품명 들어갈 곳</span>
+                <span class="price" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + ' 원'}">0원</span>
+                <span class="place" th:text="${item.shopName}">가게이름</span>
+                <span class="status" th:text="${item.status}" style="font-size: 12px; color: #999;">대기</span>
+            </span>
             </a>
         </div>
     </div>

@@ -110,6 +110,35 @@ on update cascade on delete cascade
 )
 comment '상품 이미지 정보' collate = utf8mb4_uca1400_ai_ci;
 
+CREATE TABLE `cors`.`reservations` (
+                                       `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                                       `user_email` VARCHAR(40) NOT NULL,
+                                       `shop_id` INT UNSIGNED NOT NULL,
+                                       `visit_date` DATETIME NOT NULL,
+                                       `status` VARCHAR(20) NOT NULL DEFAULT '대기',
+                                       `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                       CONSTRAINT PRIMARY KEY (`id`),
+                                       CONSTRAINT FOREIGN KEY (`user_email`) REFERENCES `cors`.`users`(`email`)
+                                           ON DELETE CASCADE
+                                           ON UPDATE CASCADE,
+                                       CONSTRAINT FOREIGN KEY (`shop_id`) REFERENCES `cors`.`shop_info`(`shop_id`)
+                                           ON DELETE CASCADE
+                                           ON UPDATE CASCADE
+);
+
+CREATE TABLE `cors`.`reservation_items` (
+                                            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                                            `reservation_id` INT UNSIGNED NOT NULL,
+                                            `item_id` BIGINT NOT NULL,
+                                            `size` VARCHAR(50) NOT NULL,
+                                            CONSTRAINT PRIMARY KEY (`id`),
+                                            CONSTRAINT FOREIGN KEY (`reservation_id`) REFERENCES `cors`.`reservations`(`id`)
+                                                ON DELETE CASCADE
+                                                ON UPDATE CASCADE,
+                                            CONSTRAINT FOREIGN KEY (`item_id`) REFERENCES `cors`.`shop_items`(`id`)
+                                                ON DELETE CASCADE
+                                                ON UPDATE CASCADE
+);
 */
 
 

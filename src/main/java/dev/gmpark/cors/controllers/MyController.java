@@ -2,6 +2,9 @@ package dev.gmpark.cors.controllers;
 
 
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.services.MyService;
+import dev.gmpark.cors.vos.ReservationItemVo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(value = "/")
+@RequiredArgsConstructor
 public class MyController {
-
+    private final MyService myService;
     @RequestMapping(value = "/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getMy(ModelAndView modelAndView,@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         modelAndView.setViewName("my/my");
@@ -35,8 +41,7 @@ public class MyController {
         if (sessionUser != null) {
             switch (menu) {
                 case "home":
-                    // 홈 탭을 다시 눌렀을 때 갱신이 필요하다면 여기서 로직 수행
-                    // modelAndView.addObject("summary", myPageService.getSummary(sessionUser));
+                    modelAndView.addObject("items", myService.getAllReservations(sessionUser));
                     break;
 
                 case "orders":
@@ -46,9 +51,7 @@ public class MyController {
                     break;
 
                 case "reservation":
-                    // [예약/픽업] 탭일 때 -> 예약 리스트 조회
-                    // List<ReservationDTO> resList = orderService.findReservations(sessionUser.getEmail());
-                    // modelAndView.addObject("resList", resList);
+                    modelAndView.addObject("items", myService.getAllReservations(sessionUser));
                     break;
 
                 case "likes-shop":

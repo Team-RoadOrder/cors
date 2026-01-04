@@ -1,3 +1,27 @@
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. URL 파라미터 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const openTab = urlParams.get('open');
+
+    console.log("현재 URL 파라미터 open 값:", openTab); // [디버깅용] 값이 잘 찍히나 확인
+
+    if (openTab) {
+        // 2. data-tab 속성으로 요소를 찾습니다. (훨씬 정확함)
+        const targetMenu = document.querySelector(`.menu .item[data-tab="${openTab}"]`);
+
+        console.log("찾은 메뉴 요소:", targetMenu); // [디버깅용] 요소를 잘 찾았나 확인
+
+        if (targetMenu) {
+            targetMenu.click();
+        } else {
+            console.warn("해당하는 탭 메뉴를 찾을 수 없습니다: " + openTab);
+        }
+    } else {
+        // 3. 파라미터 없으면 기본값(홈)
+        const homeLabel = document.querySelector('label.my');
+        if(homeLabel) homeLabel.click();
+    }
+});
 /**
  * 탭 내용을 비동기로 불러오는 함수
  * @param menuName : 컨트롤러에 요청할 메뉴 파라미터 값 (orders, profile 등)
