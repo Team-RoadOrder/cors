@@ -23,13 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-const sizes = [
-    '90(S)',
-    '100(M)',
-    '110(L)',
-    '120(XL)'
-];
+const sizeDataInput = document.getElementById('serverSizeData');
+let sizes = [];
 
+if (sizeDataInput && sizeDataInput.value) {
+    sizes = sizeDataInput.value.split(',').map(s => s.trim());
+}
 const modal = document.getElementById('optionModal');
 const openBtn = document.querySelector('.optionLink');
 const closeBtn = document.querySelector('.close');
@@ -106,18 +105,7 @@ confirmButton.addEventListener('click', () => {
         // 3. 모달 닫기
         modal.style.display = 'none';
     } else {
-        alert('사이즈를 선택해주세요.');
+        openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, {
+            confirmText: '확인'});
     }
 });
-
-// 구매하기 버튼 클릭 시 최종 확인 (기존 로직 유지)
-buyButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (!currentSelectedSize) {
-        alert('구매하시려면 먼저 옵션을 선택해주세요.');
-    } else {
-        alert(`${currentSelectedSize} 사이즈로 구매를 진행합니다.`);
-    }
-});
-
-// 초기 버튼 렌더링은 모달 열 때만 하도록 초기 실행 코드는 제거했습니다.

@@ -78,15 +78,8 @@
                 <span class="underIcon">▼</span>
             </div>
         </a>
-
-        <a href="#">
             <div class="buying">구매하기</div>
-        </a>
-
-        <a href="#">
-            <div class="reservation">예약하기</div>
-        </a>
-
+            <a class="reservation" href="/reservation">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
             <span class="add">관심상품저장</span>
@@ -119,11 +112,11 @@
 
             <div class="shopName">
                 <a href="#">
-                    <img class="shopImage" src="../assets/images/item/store.webp" alt="">
-                    <p>Polyteru</p>
+                    <img class="shopImage" src="../assets/images/item/store.webp" alt="" th:src="${shopInfo.profileImage}">
+                    <p th:text="${shopInfo.shopName}">Polyteru</p>
                     <p class="polyteru"> ></p>
                     <div class="attractive">
-                        <p>폴리테루 </p>
+                        <p th:text="${shopInfo.shopName}" >폴리테루 </p>
                         <p> º 관심</p>
                         <p>2.1만</p>
                     </div>
@@ -171,6 +164,7 @@
 </div>-->
 </div>
 <!-- 옵션 선택 모달 -->
+<input type="hidden" id="serverSizeData" th:value="${item.size}" />
 <div class="modal" id="optionModal">
     <div class="modal-content">
         <span class="close">&times;</span>

@@ -1,22 +1,22 @@
-#content-tab-5 {
-    width: 1000px;
+.tab_profile_content {
+
 }
-#content-tab-5 .tab_title {
+.tab_profile_content .tab_title {
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 20px;
 }
-#content-tab-5 .tab_info {
+.tab_profile_content .tab_info {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 32px;
 }
-#content-tab-5 .user_membership {
+.tab_profile_content .user_membership {
     width: 905px;
     height: 110px;
 }
 
-#content-tab-5 .user_detail{
+.tab_profile_content .user_detail{
     padding: 24px;
     height: 60px;
     display: flex;
@@ -28,7 +28,7 @@
 
 }
 /* 기존 .thumb에 적용된 스타일 중 일부를 .user_thumb으로 이동 */
-#content-tab-5 .user_detail .user_thumb {
+.tab_profile_content .user_detail .user_thumb {
     width: 60px; /* 이미지의 너비와 높이를 부모 컨테이너에 적용 */
     height: 60px;
     border: 1px solid #e6e6e6; /* 테두리 적용 */
@@ -40,13 +40,13 @@
 }
 
 /* 이제 .thumb 이미지 자체는 부모에 꽉 차도록 설정 */
-#content-tab-5 .user_detail .thumb {
+.tab_profile_content .user_detail .thumb {
     width: 100%;  /* 부모 .user_thumb의 너비에 꽉 차도록 */
     height: 100%; /* 부모 .user_thumb의 높이에 꽉 차도록 */
     object-fit: cover; /* 이미지가 잘리더라도 비율을 유지하면서 꽉 채우도록 */
     /* 기존 border는 여기서 제거합니다. */
 }
-#content-tab-5 .user_info {
+.tab_profile_content .user_info {
     padding-left: 1rem;
     flex-grow: 1;
     display: flex;
@@ -54,10 +54,10 @@
     justify-content: center;
     gap: 3px;
 }
-#content-tab-5 .user_info .email {
+.tab_profile_content .user_info .email {
     color: #a0a0a0;
 }
-#content-tab-5 .user_detail .info-buttons  {
+.tab_profile_content .user_detail .info-buttons  {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -65,24 +65,24 @@
     flex-shrink: 0;
     font-size: 12px;
 }
-#content-tab-5 .user_detail .info-buttons .btn.profile{
+.tab_profile_content .user_detail .info-buttons .btn.profile{
     border: 1px #e6e6e6 solid;
     padding: 11px 14px;
     border-radius: 10px;
 }
-#content-tab-5 .user_detail .info-buttons .btn.myStyle {
+.tab_profile_content .user_detail .info-buttons .btn.myStyle {
     border: 1px #e6e6e6 solid;
     padding: 11px 14px;
     border-radius: 10px;
 }
 
-#content-tab-5 h5 {
+.tab_profile_content h5 {
     color: #22222280;
     font-size: 13px;
 
     margin: 8px 0;
 }
-#content-tab-5 .name {
+.tab_profile_content .name {
 
     font-size: 17px;
     font-weight: 400;
@@ -90,7 +90,7 @@
 
 }
 
-#content-tab-5 .unit {
+.tab_profile_content .unit {
     padding: 16px 0;
     position: relative;
 }

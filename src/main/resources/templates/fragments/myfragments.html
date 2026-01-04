@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div th:fragment="home" class="tab-content">
+    <div class="user_membership">
+        <div class="user_detail">
+            <div class="user_thumb">
+                <img src="../assets/images/my/thumb.png" alt="썸네일" class="thumb">
+            </div>
+            <div class="user_info">
+                <strong class="name" th:text="${sessionUser.name}" >user name</strong>
+                <span class="email" th:text="${sessionUser.email}">kr****@naver.com</span>
+            </div>
+            <div class="info-buttons">
+                <label onclick="loadTab('profile', document.querySelectorAll('.menu .item')[4])" class="btn profile" style="cursor:pointer">프로필 관리</label>
+                <label onclick="loadTab('custom', document.querySelectorAll('.menu .item')[6])" class="btn myStyle" style="cursor:pointer">맞춤 정보</label>
+            </div>
+        </div>
+    </div>
+    <div class="shortcut-grid">
+        <ul class="menu">
+            <li class="item">
+                <img src="../assets/images/my/shortcut1.png" alt="" class="image">
+                <span class="text">판매자 등급</span>
+            </li>
+            <li class="item">
+                <img src="../assets/images/my/shortcut2.png" alt="" class="image">
+                <span class="text">0p</span>
+            </li>
+            <li class="item">
+                <img src="../assets/images/my/shortcut3.png" alt="" class="image">
+                <span class="text">쿠폰</span>
+            </li>
+            <li class="item">
+                <img src="../assets/images/my/shortcut4.png" alt="" class="image">
+                <span class="text">리뷰</span>
+            </li>
+            <li class="item">
+                <img src="../assets/images/my/shortcut5.png" alt="" class="image">
+                <span class="text">친구 초대</span>
+            </li>
+            <li class="item">
+                <img src="../assets/images/my/shortcut6.png" alt="" class="image">
+                <span class="text">공지사항</span>
+            </li>
+        </ul>
+        <div class="my_home_title">
+            <h3 class="title">구매내역</h3>
+        </div>
+        <div class="recent_purchase">
+            <label class="total">
+                    <span class="link">
+                        <span class="title">전체</span>
+                        <span class="count">7</span>
+                    </span>
+            </label>
+            <label class="on">
+                    <span class="link">
+                        <span class="title">예약</span>
+                        <span class="count">0</span>
+                    </span>
+            </label>
+            <label class="ing">
+                    <span class="link">
+                        <span class="title">픽업</span>
+                        <span class="count">0</span>
+                    </span>
+            </label>
+            <label class="end">
+                    <span class="link">
+                        <span class="title">종료</span>
+                        <span class="count">7</span>
+                    </span>
+            </label>
+        </div>
+        <div class="recent_item">
+            <label class="list">
+                    <span class="product">
+                        <span class="image-wrapper">
+                            <img src="../assets/images/my/shoe1.png" class="image" alt="">
+                        </span>
+                        <span class="itemTitle">
+                            <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
+                            <span class="description">280</span>
+                        </span>
+                        <span class="itemStatus">
+                            <span class="date">25/07/02</span>
+                            <span class="list-column">
+                                <span>배송완료</span>
+                                <span>스타일올리기</span>
+                            </span>
+                        </span>
+                    </span>
+            </label>
+            <label class="list">
+                    <span class="product">
+                        <span class="image-wrapper">
+                            <img src="../assets/images/my/shoe2.png" class="image" alt="">
+                        </span>
+                        <span class="itemTitle">
+                            <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                            <span class="description">285</span>
+                        </span>
+                        <span class="itemStatus">
+                            <span class="date">25/01/19</span>
+                            <span class="list-column">
+                                <span>배송완료</span>
+                                <span>스타일올리기</span>
+                            </span>
+                        </span>
+                    </span>
+            </label>
+        </div>
+        <div class="reservation">
+            <h3 class="title">예약 / 픽업 상품</h3>
+            <label onclick="loadTab('reservation', document.querySelectorAll('.menu .item')[1])" class="more" style="cursor:pointer">더보기 </label>
+        </div>
+        <div class="grid">
+            <a class="box one" href="#">
+                <span class="image-wrapper"><span class="image"></span></span>
+                <span class="text-container"><span class="title"></span><span class="price"></span></span>
+            </a>
+            <a class="box two" href="#">
+                <span class="image-wrapper"><span class="image"></span></span>
+                <span class="text-container"><span class="title"></span><span class="price"></span></span>
+            </a>
+            <a class="box three" href="#">
+                <span class="image-wrapper"><span class="image"></span></span>
+                <span class="text-container"><span class="title"></span><span class="price"></span></span>
+            </a>
+            <a class="box four" href="#">
+                <span class="image-wrapper"><span class="image"></span></span>
+                <span class="text-container"><span class="title"></span><span class="price"></span></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="orders" class="tab_purchase_content">
+    <h3 class="tab_title">구매 내역</h3>
+    <ul class="selection">
+        <li class="reservation">
+            <label class="label">
+                <input type="radio" name="order_filter" class="radio" checked>
+                <span class="number">4</span>
+                <span class="title">구매</span>
+            </label>
+        </li>
+
+        <li class="pickUp">
+            <label class="label">
+                <input type="radio" name="order_filter" class="radio">
+                <span class="number">2</span>
+                <span class="title">입찰</span>
+            </label>
+        </li>
+
+        <li class="end">
+            <label class="label">
+                <input type="radio" name="order_filter" class="radio">
+                <span class="number">2</span>
+                <span class="title">종료</span>
+            </label>
+        </li>
+    </ul>
+    <div class="item reservation" style="display:block">
+        <label class="list">
+                <span class="product">
+                    <span class="image-wrapper"><img src="../assets/images/my/shoe1.png" class="image" alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
+                        <span class="description">280</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/07/02</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+    </div>
+</div>
+
+<div th:fragment="reservation" class="tab_reservation_content">
+    <h3 class="tab_title">예약 및 픽업상품</h3>
+    <ul class="selection">
+        <li class="reservation">
+            <label class="label">
+                <input type="radio" name="reservation_filter" class="radio" checked>
+                <span class="number" style="color:green">4</span>
+                <span class="title" style="color:black; font-weight:600">예약</span>
+            </label>
+        </li>
+
+        <li class="pickUp">
+            <label class="label">
+                <input type="radio" name="reservation_filter" class="radio">
+                <span class="number">2</span>
+                <span class="title">픽업</span>
+            </label>
+        </li>
+
+        <li class="end">
+            <label class="label">
+                <input type="radio" name="reservation_filter" class="radio">
+                <span class="number">2</span>
+                <span class="title">종료</span>
+            </label>
+        </li>
+    </ul>    <div class="item reservation" style="display:block">
+        <label class="list">
+                <span class="product">
+                    <span class="image-wrapper"><img src="./images/shoe1.png" class="image" alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
+                        <span class="description">280</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/07/02</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+        <label class="list">
+                <span class="product">
+                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
+                    <span class="itemTitle">
+                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
+                        <span class="description">285</span>
+                    </span>
+                    <span class="itemStatus">
+                        <span class="date">25/01/19</span>
+                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                    </span>
+                </span>
+        </label>
+    </div>
+</div>
+
+<div th:fragment="likes-shop" class="tab_likeShop_content">
+    <h3 class="tab_title">관심 매장</h3>
+    <div class="grid">
+        <a class="box one" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box two" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box three" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box four" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box five" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box six" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box seven" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+        <a class="box eight" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+        </a>
+    </div>
+</div>
+
+<div th:fragment="likes-item" class="tab_likeProduct_content">
+    <h3 class="tab_title">관심 상품</h3>
+    <div class="grid">
+        <a class="box one" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box two" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box three" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box four" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box five" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box six" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box seven" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+        <a class="box eight" href="#">
+            <span class="image-wrapper"><span class="image"></span></span>
+            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+        </a>
+    </div>
+</div>
+
+<div th:fragment="profile" class="tab_profile_content">
+    <h3 class="tab_title">프로필 관리</h3>
+    <div class="user_membership">
+        <div class="user_detail">
+            <div class="user_thumb">
+                <img src="./images/thumb.png" alt="썸네일" class="thumb">
+            </div>
+            <div class="user_info">
+                <strong class="name" th:text="${sessionUser.name}">user name</strong>
+                <span class="email" th:text="${sessionUser.email}">kr****@naver.com</span>
+            </div>
+            <div class="info-buttons">
+                <label class="btn profile">이미지 변경</label>
+                <label class="btn myStyle">삭제</label>
+            </div>
+        </div>
+    </div>
+    <h4 class="tab_info">프로필 </h4>
+    <form class="unit">
+        <input type="text" id="profile-name" class="email" placeholder="나만의 프로필 이름" maxlength="50" minlength="8" autofocus required >
+        <label for="profile-name" class="text">프로필 이름</label>
+        <div class="profile-name">
+            <input type="checkbox" id="checkbox" class="checkbox">
+            <label for="checkbox" class="button">변경</label>
+        </div>
+    </form>
+    <form class="unit">
+        <input type="text" id="pw" class="email" placeholder="이름 또는 별명" maxlength="50" minlength="8" autofocus required >
+        <label for="pw" class="text">이름 </label>
+        <div class="profile-name">
+            <input type="checkbox" id="checkbox2" class="checkbox">
+            <label for="checkbox2" class="button">변경</label>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="address" class="tab_address_content">
+    <h3 class="tab_title">배송지 관리</h3>
+    <div class="standard">
+        <div class="container">
+            <div class="name-box"></div>
+            <span class="phone"></span>
+            <span class="address"></span>
+            <a href="#" class="modify">수정</a>
+            <a href="#" class="delete">삭제</a>
+        </div>
+    </div>
+    <div class="sub_title">저장된 주소</div>
+    <div class="saved">
+        <div class="container">
+            <div class="name-box"></div>
+            <span class="phone"></span>
+            <span class="address"></span>
+            <a href="#" class="standard">기본 배송지</a>
+            <a href="#" class="modify">수정</a>
+            <a href="#" class="delete">삭제</a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="custom" class="tab_custom_content" >
+    <h3 class="tab_title">나의 맞춤 정보</h3>
+    <p>개인 맞춤 설정 정보가 여기에 표시됩니다.</p>
+</div>
+</body>
+</html>
