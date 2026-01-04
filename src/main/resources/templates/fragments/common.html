@@ -80,9 +80,7 @@
     <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
 </header>
 
-
 <!--owner header-->
-
 <header id="owner-header" th:fragment="owner-header" th:with="isSigned = ${session.sessionUser != null}">
     <a href="/owner"> <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
     <ul class="header-list">
@@ -96,5 +94,8 @@
         <a id="login"  href="/login" th:if="${isSigned == false}" >로그인</a>
     </div>
 </header>
+
+
+
 </body>
 </html>

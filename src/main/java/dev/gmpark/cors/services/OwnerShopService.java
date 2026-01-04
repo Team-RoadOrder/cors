@@ -26,6 +26,13 @@ public class OwnerShopService {
 
     @Transactional
     public CommonResult registerShopItem(ShopItemEntity item, MultipartFile[] images) {
+
+        if (item.getSize() == null || item.getSize().isBlank()) {
+            item.setSize("free");
+        }
+        if (item.getSize() != null) {
+            item.setSize(item.getSize().replace(" ", ""));
+        }
         if (ownerShopMapper.insertItem(item) == 0) {
             return CommonResult.FAILURE;
         }

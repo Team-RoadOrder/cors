@@ -130,11 +130,11 @@ $form.addEventListener('submit', (e) => {
         $form['color'].focus();
         return;
     }
-    if (!size) {
+   /* if (!size) {
         alert("사이즈를 입력해주세요.");
         $form['size'].focus();
         return;
-    }
+    }*/
     if (!style ){
         alert('스타일을 입력해주세요.');
         $form['style'].focus();
