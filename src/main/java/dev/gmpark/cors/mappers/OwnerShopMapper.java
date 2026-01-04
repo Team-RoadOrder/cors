@@ -16,4 +16,5 @@ public interface OwnerShopMapper {
     ShopItemEntity[] selectItemByIdAndCategory(@Param("shopId") int shopId, @Param("categoryName") String categoryName);
     int updateItem(@Param(value = "item") ShopItemEntity shopItem);
     int deleteItemById(@Param("id") Long id);
+    ShopItemEntity[] selectItemsByKeyword(@Param("keyword") String keyword);
 }

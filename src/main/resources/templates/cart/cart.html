@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,9 @@
   <script defer src="assets/scripts/index.js"></script>
 </head>
 <body>
+<!-- 헤더부분 , 로고와 네비바가 들어감 -->
+<th:block th:replace="~{/fragments/common.html :: customer-header}">
+</th:block>
 <div class="container">
   <h1>장바구니</h1>
 

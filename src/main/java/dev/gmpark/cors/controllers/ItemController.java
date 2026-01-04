@@ -22,8 +22,14 @@ public class ItemController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getItem (ModelAndView modelAndView, @RequestParam(value = "shopId", required = false, defaultValue = "0") int shopId,
                                  @RequestParam(value = "id") Long id){
-        ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
         ShopItemVo item = this.itemService.getItemById(id);
+        
+        if (shopId == 0 && item != null) {
+            shopId = item.getShopId();
+        }
+        
+        ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
+
         modelAndView.addObject("shopInfo", shopInfo);
         modelAndView.addObject("item", item);
         modelAndView.setViewName("item/item");

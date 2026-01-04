@@ -190,4 +190,34 @@
                  LEFT JOIN `cors`.`shop_item_images` AS `img` ON `si`.id = `img`.product_id
         WHERE si.id = #{id}
     </select>
+    <select id="selectItemsByKeyword" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT si.`id`               AS `id`,
+        si.`shop_id`          AS `shopId`,
+        si.`item_name`        AS `itemName`,
+        si.`color`            AS `color`,
+        si.`size`             AS `size`,
+        si.`price`            AS `price`,
+        si.`style`            AS `style`,
+        si.`main_category`    AS `mainCategory`,
+        si.`sub_category`     AS `subCategory`,
+        si.`detail_category`  AS `detailCategory`,
+        si.`main_image_index` AS `mainImageIndex`,
+        si.`created_at`       AS `createdAt`,
+        si.`updated_at`       AS `updateAt`,
+        si.`deleted_at`       AS `deletedAt`,
+        (SELECT img.`image_path`
+        FROM `cors`.`shop_item_images` img
+        WHERE img.`product_id` = si.`id`
+        LIMIT 1)             AS `imagePath`
+        FROM `cors`.`shop_items` si
+        WHERE si.`item_name` LIKE CONCAT('%', #{keyword}, '%')
+        OR si.`main_category` LIKE CONCAT('%', #{keyword}, '%')
+        OR si.`sub_category` LIKE CONCAT('%', #{keyword}, '%')
+        OR si.`detail_category` LIKE CONCAT('%', #{keyword}, '%')
+        OR si.`style` LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY si.`updated_at` DESC
+    </select>
+    <select id="selectMainImagePathByItemId" resultType="string">
+        SELECT image_path FROM `cors`.`shop_item_images` WHERE product_id = #{id} LIMIT 1
+    </select>
 </mapper>
