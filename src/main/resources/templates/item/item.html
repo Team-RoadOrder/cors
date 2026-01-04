@@ -79,7 +79,7 @@
             </div>
         </a>
             <div class="buying">구매하기</div>
-            <a class="reservation" href="/reservation">예약하기</a>
+        <a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
             <span class="add">관심상품저장</span>
