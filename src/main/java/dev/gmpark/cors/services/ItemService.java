@@ -15,4 +15,10 @@ public class ItemService {
     public ShopItemVo getItemById (Long id ) {
         return this.ownerShopMapper.selectItemVoById(id);
     }
+    public ShopItemEntity[] searchItems(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return new ShopItemEntity[0]; // 키워드가 없으면 빈 배열 반환
+        }
+        return this.ownerShopMapper.selectItemsByKeyword(keyword);
+    }
 }
