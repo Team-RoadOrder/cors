@@ -51,7 +51,21 @@ public class MyController {
                     break;
 
                 case "reservation":
-                    modelAndView.addObject("items", myService.getAllReservations(sessionUser));
+                    List<ReservationItemVo> items = this.myService.getAllReservations(sessionUser);
+                    modelAndView.addObject("items",items );
+                    long waitCount = 0;
+                    long confirmCount = 0;
+                    long endCount = 0;
+
+                    if (items != null) {
+                        waitCount = items.stream().filter(i -> "대기".equals(i.getStatus())).count();
+                        confirmCount = items.stream().filter(i -> "확정".equals(i.getStatus())).count();
+                        // 종료는 '완료' 또는 '취소'인 경우
+                        endCount = items.stream().filter(i -> "완료".equals(i.getStatus()) || "취소".equals(i.getStatus())).count();
+                    }
+                    modelAndView.addObject("waitCount", waitCount);
+                    modelAndView.addObject("confirmCount", confirmCount);
+                    modelAndView.addObject("endCount", endCount);
                     break;
 
                 case "likes-shop":

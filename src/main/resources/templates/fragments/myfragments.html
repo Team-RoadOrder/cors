@@ -232,82 +232,67 @@
 
 <div th:fragment="reservation" class="tab_reservation_content">
     <h3 class="tab_title">예약 및 픽업상품</h3>
+
     <ul class="selection">
         <li class="reservation">
             <label class="label">
-                <input type="radio" name="reservation_filter" class="radio" checked>
-                <span class="number" style="color:green">4</span>
-                <span class="title" style="color:black; font-weight:600">예약</span>
+                <input type="radio" name="reservation_filter" class="radio" checked onclick="filterStatus('대기')">
+                <span class="number" th:text="${waitCount}">0</span>
+                <span class="title" style="color:black; font-weight:600">대기</span>
             </label>
         </li>
 
         <li class="pickUp">
             <label class="label">
-                <input type="radio" name="reservation_filter" class="radio">
-                <span class="number">2</span>
-                <span class="title">픽업</span>
+                <input type="radio" name="reservation_filter" class="radio" onclick="filterStatus('확정')">
+                <span class="number" th:text="${confirmCount}">0</span>
+                <span class="title">확정</span>
             </label>
         </li>
 
         <li class="end">
             <label class="label">
-                <input type="radio" name="reservation_filter" class="radio">
-                <span class="number">2</span>
+                <input type="radio" name="reservation_filter" class="radio" onclick="filterStatus('종료')">
+                <span class="number" th:text="${endCount}">0</span>
                 <span class="title">종료</span>
             </label>
         </li>
-    </ul>    <div class="item reservation" style="display:block">
-        <label class="list">
-                <span class="product">
-                    <span class="image-wrapper"><img src="./images/shoe1.png" class="image" alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
-                        <span class="description">280</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/07/02</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
+    </ul>
+
+    <div class="item reservation" style="display:block">
+
+        <div id="no-reservation-msg"
+             style="width: 100%; text-align: center; padding: 40px; color: #888; display: none;">
+            해당하는 예약 상품이 없습니다.
+        </div>
+
+        <label class="list res-item-row"
+               th:if="${items != null}"
+               th:each="item : ${items}"
+               th:data-status="${item.status}">
+
+            <span class="product">
+                <span class="image-wrapper">
+                     <img th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" class="image" alt="상품이미지">
+                     <img th:unless="${item.imagePath != null}" src="/assets/images/default.png" class="image" alt="기본이미지">
                 </span>
-        </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
+
+                <span class="itemTitle">
+                    <span class="title" th:text="${item.itemName}">상품명</span>
+                    <span class="description" th:text="|Size : ${item.size}|">280</span>
                 </span>
-        </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
+
+                <span class="itemStatus">
+                    <span class="date" th:text="${#temporals.format(item.visitDate, 'yy/MM/dd')}">25/07/02</span>
+
+                    <span class="list-column">
+                        <span th:text="${item.status}"
+                              th:style="${item.status == '대기' ? 'color:green; font-weight:bold;' : 'color:red; font-weight:bold'}">상태</span>
+                        <span th:text="${item.shopName}">매장명</span>
                     </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
+                    <button th:style="${item.status== '대기' ? 'display:block;' : 'display:none;'}">삭제</button>
                 </span>
-        </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="./images/shoe2.png" class="image"  alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
-                </span>
+            </span>
         </label>
     </div>
 </div>

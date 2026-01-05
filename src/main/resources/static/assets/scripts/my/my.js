@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const homeLabel = document.querySelector('label.my');
         if(homeLabel) homeLabel.click();
     }
+
+// 페이지 로딩 시(탭 이동 시) 기본적으로 '대기' 상태만 보이게 초기화
+    setTimeout(() => filterStatus('대기'), 50);
 });
 /**
  * 탭 내용을 비동기로 불러오는 함수
@@ -54,4 +57,39 @@ const loadTab = (menuName, element) => {
      xhr.open('GET', '/my/tab?menu=' + menuName)
      xhr.send();
 
+}
+function filterStatus(statusType) {
+    const rows = document.querySelectorAll('.res-item-row');
+    const noDataMsg = document.getElementById('no-reservation-msg');
+    let visibleCount = 0; // 화면에 보이는 아이템 개수 세기
+
+    rows.forEach(row => {
+        const itemStatus = row.getAttribute('data-status');
+        let isVisible = false;
+
+        if (statusType === '종료') {
+            if (itemStatus === '완료' || itemStatus === '취소') {
+                isVisible = true;
+            }
+        } else {
+            if (itemStatus === statusType) {
+                isVisible = true;
+            }
+        }
+
+        if (isVisible) {
+            // ★ [수정] flex가 아니라 block으로 해야 찌그러지지 않음 (CSS .list가 block이므로)
+            row.style.display = 'block';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // ★ [수정] 보이는 아이템이 0개면 "데이터 없음" 메시지를 보여줌
+    if (visibleCount === 0) {
+        if(noDataMsg) noDataMsg.style.display = 'block';
+    } else {
+        if(noDataMsg) noDataMsg.style.display = 'none';
+    }
 }
