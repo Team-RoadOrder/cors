@@ -152,67 +152,53 @@
             <div class="res-list">
                 <div class="spring"> 예약정보 확인</div>
                 <div class="spring hidden"> </div>
-                <div class="empty hidden"> 예약 정보가 없습니다.</div>
-                                <div class="product">
-                                    <div class="user-info">
-                                        <span class="date">2025-11-07 12:43</span>
-                                        <span class="user">박규민</span>
-                                        <br>
-                                        <span class="tel">010-8006-8384</span>
-                                    </div>
-                                    <span class="image-wrapper">
-                                        <img src="/assets/images/ownermain/item-list/one-1.webp" class="image" alt="">
-                                    </span>
-                                    <span class="itemTitle">
-                                        <span class="title"> contemporary derby</span>
-                                        <span class="description">280</span>
-                                        <span class="description">색상:Black</span>
-                                    </span>
-                                    <span class="itemStatus">
-                                        <span class="fix-btn">수락하기</span>
-                                        <span class="res-btn">거절하기</span>
-                                    </span>
-                                </div>
-                                <div class="product">
-                                    <div class="user-info">
-                                        <span class="date">2025-11-07 12:43</span>
-                                        <span class="user">박규민</span>
-                                        <br>
-                                        <span class="tel">010-8006-8384</span>
-                                    </div>
-                                    <span class="image-wrapper">
-                                        <img src="/assets/images/ownermain/item-list/one-4.webp" class="image" alt="">
-                                    </span>
-                                    <span class="itemTitle">
-                                        <span class="title"> Modern Cradigan</span>
-                                        <span class="description">M</span>
-                                        <span class="description">색상:Black</span>
-                                    </span>
-                                    <span class="itemStatus">
-                                        <span class="fix-btn">수락하기</span>
-                                        <span class="res-btn">거절하기</span>
-                                    </span>
-                                </div>
-                                <div class="product">
-                                    <div class="user-info">
-                                        <span class="date">2025-11-07 12:43</span>
-                                        <span class="user">박규민</span>
-                                        <br>
-                                        <span class="tel">010-8006-8384</span>
-                                    </div>
-                                    <span class="image-wrapper">
-                                        <img src="/assets/images/ownermain/item-list/one-2.webp" class="image" alt="">
-                                    </span>
-                                    <span class="itemTitle">
-                                        <span class="title"> Denim</span>
-                                        <span class="description">32</span>
-                                        <span class="description">색상:Black</span>
-                                    </span>
-                                    <span class="itemStatus">
-                                        <span class="fix-btn">수락하기</span>
-                                        <span class="res-btn">거절하기</span>
-                                    </span>
-                                </div>
+
+                <div class="empty" th:if="${reservations == null or #lists.isEmpty(reservations.?[status == '대기' or status == '확정'])}">
+                    예약 정보가 없습니다.
+                </div>
+
+
+                <div class="product"
+                     th:unless="${reservations == null or #lists.isEmpty(reservations)}"
+                     th:each="res : ${reservations}"
+                     th:if="${res.status == '대기' or res.status == '확정'}" >
+
+                    <div class="user-info">
+                        <span class="date" th:text="${'방문예정일: '+ #temporals.format(res.visitDate, 'yyyy-MM-dd HH:mm')}">2025-11-07 12:43</span>
+                        <span class="user" th:text="${res.userName}">박규민</span>
+                        <br>
+                        <span class="tel" th:text="${res.userTel}">010-0000-0000</span>
+                    </div>
+
+                    <span class="image-wrapper">
+            <img th:if="${res.imagePath != null}"
+                 th:src="@{/images/{path}(path=${res.imagePath})}"
+                 class="image" alt="상품이미지">
+            <img th:unless="${res.imagePath != null}"
+                 src="/assets/images/default.png"
+                 class="image" alt="기본이미지">
+        </span>
+
+                    <span class="itemTitle">
+            <span class="title" th:text="${res.itemName}">상품명</span>
+            <span class="description" th:text="${res.size}">Size</span>
+            <span class="description" th:text="|색상:${res.color}|">Color</span>
+        </span>
+
+                    <span class="itemStatus">
+            <th:block th:if="${res.status == '대기'}">
+                <button type="button" class="fix-btn"
+                        th:onclick="|changeStatus(${res.reservationId}, '확정')|">수락하기</button>
+                <button type="button" class="res-btn"
+                        th:onclick="|changeStatus(${res.reservationId}, '취소')|">거절하기</button>
+            </th:block>
+            <th:block th:if="${res.status == '확정'}">
+                <button type="button" class="fix-btn"
+                        th:onclick="|changeStatus(${res.reservationId}, '완료')|">거래완료</button>
+            </th:block>
+        </span>
+                </div>
+
                 <div class="spring"> </div>
             </div>
         </section>

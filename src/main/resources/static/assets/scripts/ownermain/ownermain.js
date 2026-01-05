@@ -267,6 +267,8 @@ function checkEmptyState() {
 const $item = document.getElementById('items');
 /**@type{HTMLDivElement} */
 const $itemList = $item.querySelector(':scope > .item-list')
+/**@type{HTMLDivElement} */
+const $resList = $item.querySelector(':scope > .res-list');
 
 const loadList = () => {
     const xhr = new XMLHttpRequest();
@@ -372,6 +374,44 @@ if ($itemList) {
             saveProduct(e.target); // 이름도 edit보다는 save가 더 직관적이죠?
         }
     });
+}
+// 모든 상태변경 대응  수락, 취소 , 확정
+const changeStatus = ( a, b ) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('reservationId', a);
+    formData.append('status', b);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {
+                confirmText: '확인'
+            });
+            return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        switch (response.result) {
+            case 'FAILURE':
+                openModal("FAILURE", `<p>예약 확정에 실패하였습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>예약 정보가 성공적으로 변경되었습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        location.reload();
+                    }
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+     };
+     xhr.open('PATCH', '/owner/patch-reservation')
+     xhr.send(formData);
+            
 }
 
 // 취소하기/저장하기로 바뀌는버튼

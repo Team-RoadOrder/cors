@@ -94,6 +94,9 @@
     padding: 16px 0;
     position: relative;
 }
+.tab_profile_content .unit:last-child {
+    margin-bottom: 9rem;
+}
 .unit {
     position: relative;
 }

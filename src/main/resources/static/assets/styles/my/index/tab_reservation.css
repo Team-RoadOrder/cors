@@ -142,6 +142,7 @@
     font-size: 13px;
     color: #999;
     text-align: right;
+    gap: 0.2rem;
 }
 
 /* 날짜 스타일 */
@@ -168,4 +169,16 @@
 .tab_reservation_content .item .list .product .itemStatus .list-column > span:last-child {
     color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
     text-decoration: none; /* 밑줄 제거 (선택 사항) */
+}
+.tab_reservation_content .item .list .product .itemStatus .delete-btn {
+
+    outline: none;
+    border: none;
+    padding: 0.3rem 1.1rem;
+    color: #fff;
+    background-color: #e42a2a;
+    border-radius: 0.25rem;
+}
+.tab_reservation_content .item .list .product .itemStatus .delete-btn:hover {
+    background-color: #f85353;
 }

@@ -24,7 +24,67 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // 페이지 로딩 시(탭 이동 시) 기본적으로 '대기' 상태만 보이게 초기화
     setTimeout(() => filterStatus('대기'), 50);
+
+
+
 });
+// [삭제 버튼 클릭 이벤트 위임]
+document.addEventListener('click', function(e) {
+    // 1. 클릭한 요소가 'delete-btn' 클래스를 가진 요소인지 확인
+    if (e.target && e.target.classList.contains('delete-btn')) {
+        e.preventDefault();
+
+        // 2. 버튼에 심어둔 data-id 값을 가져옴
+        const reservationId = e.target.getAttribute('data-id');
+
+        if (!reservationId) {
+            alert("예약 정보를 찾을 수 없습니다.");
+            return;
+        }
+
+        // 3. 모달창 띄우기 (기존에 쓰시던 openModal 활용)
+        openModal("answer", "<p>정말 예약내역을 삭제하시겠습니까?</p>", {
+            confirmText: '확인',
+            onConfirm: () => {
+                // 4. 서버로 삭제 요청 보내기
+                deleteReservation(reservationId);
+            },
+            cancelText: '취소', onCancel: () => {
+
+            }
+        });
+    }
+});
+
+// [삭제 요청 함수]
+const deleteReservation = (reservationId) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.result === 'SUCCESS') {
+                openModal("alert", "<p>예약내역이 삭제되었습니다.</p>", {
+                    onConfirm: () => {
+                        // 성공 시 탭을 새로고침하여 목록 갱신
+                        // 현재 열려있는 탭이 예약 탭이라면 리로드
+                        loadTab('reservation', document.querySelector('.menu .item[data-tab="reservation"]'));
+                    }
+                });
+            } else {
+                openModal("WARN", "<p>삭제에 실패하였습니다.</p>");
+            }
+        } else {
+            openModal("ERROR", "<p>서버 통신 오류</p>");
+        }
+    };
+
+    // DELETE 메서드나 POST 메서드로 요청
+    xhr.open('DELETE', `/reservation/delete?reservationId=${reservationId}`);
+    // 만약 POST만 쓴다면: xhr.open('POST', '/reservation/cancel'); xhr.setRequestHeader...
+    xhr.send();
+}
 /**
  * 탭 내용을 비동기로 불러오는 함수
  * @param menuName : 컨트롤러에 요청할 메뉴 파라미터 값 (orders, profile 등)
@@ -58,7 +118,7 @@ const loadTab = (menuName, element) => {
      xhr.send();
 
 }
-function filterStatus(statusType) {
+const filterStatus= (statusType) => {
     const rows = document.querySelectorAll('.res-item-row');
     const noDataMsg = document.getElementById('no-reservation-msg');
     let visibleCount = 0; // 화면에 보이는 아이템 개수 세기

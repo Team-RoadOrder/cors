@@ -62,10 +62,11 @@ public class RegisterService {
                  emailToken.getSalt()
          );
          // 비밀번호 암호화시키기
-         /*BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();// Bcrypt 암호화(해싱)을 위한 객체
-         String rawPassword = user.getPassword(); // 비밀번호 평문( "test1234")
-         String hashedPassword = encoder.encode(rawPassword); // 비밀번호 암호문("$2a$....")
-         user.setPassword(hashedPassword);*/
+         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+         String rawPassword = register.getPassword();
+         String hashedPassword = encoder.encode(rawPassword);
+         register.setPassword(hashedPassword);
+
          if( dbEmailToken == null || !dbEmailToken.isVerified() || dbEmailToken.isUsed()) {
              return RegisterResult.FAILURE;
          }

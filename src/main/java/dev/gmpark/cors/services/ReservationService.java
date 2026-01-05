@@ -48,4 +48,9 @@ public class ReservationService {
 
         return CommonResult.SUCCESS;
     }
+    public CommonResult deleteReservation( int reservationId) {
+      return   this.reservationMapper.deleteReservationById(reservationId) > 0
+                ? CommonResult.SUCCESS
+                : CommonResult.FAILURE;
+    }
 }

@@ -1,0 +1,14 @@
+.tab_address_content   {
+    width: 1000px;
+}
+
+.tab_address_content .tab_title {
+    font-size: 1.8rem;
+}
+.tab_address_content > .standard > .sub-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.tab_address_content > .standard > .container {
+    padding: 1rem;
+}

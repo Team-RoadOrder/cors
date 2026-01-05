@@ -4,8 +4,10 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
+import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor; // 이걸 쓰면 코드가 깔끔해집니다
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor // 생성자 주입 자동화
@@ -22,6 +25,7 @@ public class OwnerMainService {
 
     private final ShopInfoMapper shopInfoMapper;
     private final OwnerShopMapper ownerShopMapper;
+    private final ReservationMapper reservationMapper;
 
     // 설정 파일에서 경로 가져오기
     @Value("${file.upload-dir}")
@@ -29,6 +33,9 @@ public class OwnerMainService {
 
     public ShopInfoEntity getShopByEmail(String email) {
         return this.shopInfoMapper.selectShopByUserEmail(email);
+    }
+    public List<ReservationItemVo> getReservationsByShopId(int shopId) {
+        return this.reservationMapper.selectReservationsByShopId(shopId);
     }
 
     public String saveShopInfo(RegisterEntity user, ShopInfoEntity shopInfo) {
@@ -122,5 +129,11 @@ public class OwnerMainService {
         ShopItemEntity dbItem = this.ownerShopMapper.selectItemById(id);
         if (dbItem == null) return CommonResult.FAILURE;
         return this.ownerShopMapper.deleteItemById(id) > 0  ? CommonResult.SUCCESS : CommonResult.FAILURE;
+    }
+    public CommonResult updateReservationStatus(int reservationId, String status) {
+        // 2. 업데이트 실행
+       return this.reservationMapper.updateReservationStatus(reservationId, status) > 0
+               ? CommonResult.SUCCESS
+               : CommonResult.FAILURE;
     }
 }

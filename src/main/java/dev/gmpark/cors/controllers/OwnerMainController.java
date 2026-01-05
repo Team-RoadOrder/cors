@@ -5,14 +5,17 @@ import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.OwnerMainService; // OwnerMainService 사용
+import dev.gmpark.cors.vos.ReservationItemVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model; // Model 추가
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -63,6 +66,12 @@ public class OwnerMainController {
 
         // 4. HTML로 데이터 전달 (이름은 'shop')
         model.addAttribute("shop", shopInfo);
+        if (shopInfo.getShopId() > 0) {
+            List<ReservationItemVo> reservations = ownerMainService.getReservationsByShopId(shopInfo.getShopId());
+            model.addAttribute("reservations", reservations);
+        } else {
+            model.addAttribute("reservations", List.of()); // 빈 리스트 전달
+        }
 
         return "ownermain/ownermain";
     }
@@ -135,4 +144,16 @@ public class OwnerMainController {
         response.put("result",result.name() );
         return response;
     }
+    @RequestMapping(value = "/owner/patch-reservation", method = RequestMethod.PATCH,produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,Object> patchReservation(@RequestParam(value = "reservationId", required = false, defaultValue = "0") int reservationId,
+                                               @RequestParam(value = "status", required = false) String status){
+        CommonResult result = this.ownerMainService.updateReservationStatus(reservationId, status);
+        Map<String,Object> response = new HashMap<>();
+        response.put("result", result.name());
+        return response;
+
+    }
+
+
 }

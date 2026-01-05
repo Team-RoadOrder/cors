@@ -9,7 +9,7 @@
     <div class="user_membership">
         <div class="user_detail">
             <div class="user_thumb">
-                <img src="../assets/images/my/thumb.png" alt="썸네일" class="thumb">
+                <img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb">
             </div>
             <div class="user_info">
                 <strong class="name" th:text="${sessionUser.name}" >user name</strong>
@@ -127,7 +127,7 @@
 
             <a th:unless="${items == null or #lists.isEmpty(items)}"
                th:each="item, stat : ${items}"
-               th:if="${stat.index < 4}"
+               th:if="${stat.index < 4 }"
                class="box"
                th:href="@{/item/(shopId=${item.shopId}, id=${item.itemId})}">
 
@@ -262,14 +262,15 @@
     <div class="item reservation" style="display:block">
 
         <div id="no-reservation-msg"
-             style="width: 100%; text-align: center; padding: 40px; color: #888; display: none;">
+             th:style="${waitCount == 0 ? 'width: 100%; text-align: center; padding: 40px; color: #888; display: block;' : 'width: 100%; text-align: center; padding: 40px; color: #888; display: none;'}">
             해당하는 예약 상품이 없습니다.
         </div>
 
         <label class="list res-item-row"
                th:if="${items != null}"
                th:each="item : ${items}"
-               th:data-status="${item.status}">
+               th:data-status="${item.status}"
+               th:style="${item.status == '대기' ? 'display:block;' : 'display:none;'}">
 
             <span class="product">
                 <span class="image-wrapper">
@@ -290,7 +291,10 @@
                               th:style="${item.status == '대기' ? 'color:green; font-weight:bold;' : 'color:red; font-weight:bold'}">상태</span>
                         <span th:text="${item.shopName}">매장명</span>
                     </span>
-                    <button th:style="${item.status== '대기' ? 'display:block;' : 'display:none;'}">삭제</button>
+                    <button type="button"
+                            class="delete-btn"
+                            th:data-id="${item.reservationId}"
+                            th:style="${item.status== '대기' ? 'display:block;' : 'display:none;'}">삭제</button>
                 </span>
             </span>
         </label>
@@ -378,33 +382,34 @@
     <div class="user_membership">
         <div class="user_detail">
             <div class="user_thumb">
-                <img src="./images/thumb.png" alt="썸네일" class="thumb">
+                <img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb">
             </div>
             <div class="user_info">
                 <strong class="name" th:text="${sessionUser.name}">user name</strong>
                 <span class="email" th:text="${sessionUser.email}">kr****@naver.com</span>
             </div>
             <div class="info-buttons">
-                <label class="btn profile">이미지 변경</label>
+                <!--<label class="btn profile">이미지 변경</label>-->
                 <label class="btn myStyle">삭제</label>
             </div>
         </div>
     </div>
     <h4 class="tab_info">프로필 </h4>
+
     <form class="unit">
-        <input type="text" id="profile-name" class="email" placeholder="나만의 프로필 이름" maxlength="50" minlength="8" autofocus required >
-        <label for="profile-name" class="text">프로필 이름</label>
+        <input type="text" id="pw" class="email" th:placeholder="${sessionUser.name}"  placeholder="이름 또는 별명" maxlength="50" minlength="8" autofocus required >
+        <label for="pw" class="text">이름 </label>
         <div class="profile-name">
-            <input type="checkbox" id="checkbox" class="checkbox">
-            <label for="checkbox" class="button">변경</label>
+            <input type="button" id="checkbox2" class="checkbox">
+            <label for="checkbox2" class="button">변경</label>
         </div>
     </form>
     <form class="unit">
-        <input type="text" id="pw" class="email" placeholder="이름 또는 별명" maxlength="50" minlength="8" autofocus required >
-        <label for="pw" class="text">이름 </label>
+        <input type="text" id="profile-name" class="email" th:placeholder="${sessionUser.phone}" placeholder="나만의 프로필 이름" maxlength="50" minlength="8" autofocus required >
+        <label for="profile-name" class="text">전화번호</label>
         <div class="profile-name">
-            <input type="checkbox" id="checkbox2" class="checkbox">
-            <label for="checkbox2" class="button">변경</label>
+            <input type="button" id="checkbox" class="checkbox">
+            <label for="checkbox" class="button">변경</label>
         </div>
     </form>
 </div>
@@ -412,21 +417,14 @@
 <div th:fragment="address" class="tab_address_content">
     <h3 class="tab_title">배송지 관리</h3>
     <div class="standard">
+        <span class="sub-title">기본배송지</span>
         <div class="container">
-            <div class="name-box"></div>
-            <span class="phone"></span>
-            <span class="address"></span>
-            <a href="#" class="modify">수정</a>
-            <a href="#" class="delete">삭제</a>
-        </div>
-    </div>
-    <div class="sub_title">저장된 주소</div>
-    <div class="saved">
-        <div class="container">
-            <div class="name-box"></div>
-            <span class="phone"></span>
-            <span class="address"></span>
-            <a href="#" class="standard">기본 배송지</a>
+            <div class="name-box">
+                <span class="name">박규민</span>
+                <span class="standard">기본배송지</span>
+            </div>
+            <span class="phone">01080068384</span>
+            <span class="address">(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호</span>
             <a href="#" class="modify">수정</a>
             <a href="#" class="delete">삭제</a>
         </div>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/")
@@ -41,7 +42,12 @@ public class MyController {
         if (sessionUser != null) {
             switch (menu) {
                 case "home":
-                    modelAndView.addObject("items", myService.getAllReservations(sessionUser));
+                    List<ReservationItemVo> allItems = myService.getAllReservations(sessionUser);
+                    List<ReservationItemVo> homeItems = allItems.stream()
+                            .filter(item -> !"완료".equals(item.getStatus()) && !"취소".equals(item.getStatus())) // 완료도 아니고, 취소도 아닌 것
+                            .limit(4)
+                            .collect(Collectors.toList());
+                    modelAndView.addObject("items", homeItems);
                     break;
 
                 case "orders":

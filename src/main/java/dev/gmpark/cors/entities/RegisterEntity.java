@@ -44,7 +44,7 @@ create table `cors`.`users`
 email          varchar(40)  not null
 primary key,
 name           varchar(20)  null,
-password       varchar(20)  null,
+password       varchar(100)  null,
 store_name     varchar(30)  null,
 business_num   varchar(30)  null,
 phone          varchar(20)  null,

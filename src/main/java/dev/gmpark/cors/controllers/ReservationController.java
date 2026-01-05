@@ -59,5 +59,14 @@ public class ReservationController {
         response.put("result", result.name());
         return response;
     }
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,Object> deleteReservation(
+            @RequestParam(value = "reservationId") int reservationId){
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.reservationService.deleteReservation(reservationId);
+        response.put("result", result.name());
+        return response;
+    }
 
 }
