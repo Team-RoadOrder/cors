@@ -416,19 +416,22 @@
 
 <div th:fragment="address" class="tab_address_content">
     <h3 class="tab_title">배송지 관리</h3>
-    <div class="standard">
+    <form class="standard">
         <span class="sub-title">기본배송지</span>
         <div class="container">
             <div class="name-box">
-                <span class="name">박규민</span>
+                <span class="name" th:text="${sessionUser.name}">박규민</span>
                 <span class="standard">기본배송지</span>
             </div>
-            <span class="phone">01080068384</span>
-            <span class="address">(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호</span>
-            <a href="#" class="modify">수정</a>
-            <a href="#" class="delete">삭제</a>
+            <span class="phone" th:text="${sessionUser.phone}">01080068384</span>
+            <!--<span class="address">(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호</span>-->
+            <input readonly type="text" class="address" value="(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호" th:value="${sessionUser.address}">
+            <span class="button-container">
+            <button class="modify">수정</button>
+            <button class="delete">삭제</button>
+                </span>
         </div>
-    </div>
+    </form>
 </div>
 
 <div th:fragment="custom" class="tab_custom_content" >

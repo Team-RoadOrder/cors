@@ -4,14 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KREAM 장바구니</title>
-  <link rel="stylesheet" href="./assets/styles/common.css">
-  <link rel="stylesheet" href="./assets/styles/cart.css">
-  <script defer src="assets/scripts/index.js"></script>
+  <link rel="stylesheet" href="/assets/styles/cart/common.css">
+    <link rel="stylesheet" href="/assets/styles/reservation/common.css">
+  <link rel="stylesheet" href="/assets/styles/cart/cart.css">
+  <link href="/assets/images/login/favicon.png" rel="icon">
+  <script defer src="/assets/scripts/cart/index.js"></script>
+    <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
-<!-- 헤더부분 , 로고와 네비바가 들어감 -->
+<!-- 헤더부분 , 로고와 네비바가 들어감
 <th:block th:replace="~{/fragments/common.html :: customer-header}">
-</th:block>
+</th:block>-->
 <div class="container">
   <h1>장바구니</h1>
 
@@ -30,7 +33,7 @@
 
   <div class="cart-item">
     <input type="checkbox" class="item-checkbox">
-    <img src="./assets/images/productImage.png" alt="New Balance 509 Black Gray">
+    <img src="/assets/images/cart/productImage.png" alt="New Balance 509 Black Gray">
     <div class="item-info">
       <h2>New Balance 509 Black Gray</h2>
       <p>뉴발란스 509 블랙 그레이</p>
@@ -47,7 +50,7 @@
 
   <div class="cart-item">
     <input type="checkbox" class="item-checkbox">
-    <img src="./assets/images/productImage.png" alt="New Balance 530 White">
+    <img src="/assets/images/cart/productImage.png" alt="New Balance 530 White">
     <div class="item-info">
       <h2>New Balance 530 White</h2>
       <p>뉴발란스 530 화이트</p>
