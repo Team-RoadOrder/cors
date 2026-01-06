@@ -1,6 +1,7 @@
 .container {
   width: 50%;
   margin: 50px auto;
+  padding-top: 120px; /* 헤더 높이만큼 상단 여백 추가 */
 }
 
 .cart-header {
@@ -139,4 +140,3 @@
   color: #fff;
   border-color: #000;
 }
-

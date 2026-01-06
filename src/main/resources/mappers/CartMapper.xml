@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.CartMapper">
+    <insert id="insertCart" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `cors`.`carts` (`user_email`, `item_id`, `size`, `quantity`, `created_at`)
+        VALUES (#{userEmail}, #{itemId}, #{size}, #{quantity}, NOW())
+    </insert>
+
+    <resultMap id="CartVoMap" type="dev.gmpark.cors.vos.CartVo">
+        <id property="id" column="id"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="itemId" column="item_id"/>
+        <result property="size" column="size"/>
+        <result property="quantity" column="quantity"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemColor" column="color"/>
+        <result property="itemPrice" column="price"/>
+        <result property="itemImage" column="image_path"/>
+    </resultMap>
+
+    <select id="selectCartByUserEmail" resultMap="CartVoMap">
+        SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
+               si.`item_name`, si.`color`, si.`price`,
+               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
+        FROM `cors`.`carts` c
+        JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`
+        WHERE c.`user_email` = #{userEmail}
+        ORDER BY c.`created_at` DESC
+    </select>
+
+    <delete id="deleteCartItem">
+        DELETE FROM `cors`.`carts` WHERE `id` = #{id}
+    </delete>
+</mapper>

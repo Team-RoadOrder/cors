@@ -4,17 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KREAM 장바구니</title>
+  <link rel="stylesheet" href="/assets/styles/common.css">
   <link rel="stylesheet" href="/assets/styles/cart/common.css">
     <link rel="stylesheet" href="/assets/styles/reservation/common.css">
   <link rel="stylesheet" href="/assets/styles/cart/cart.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap" rel="stylesheet">
   <link href="/assets/images/login/favicon.png" rel="icon">
   <script defer src="/assets/scripts/cart/index.js"></script>
     <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
-<!-- 헤더부분 , 로고와 네비바가 들어감
+<!-- 헤더부분 , 로고와 네비바가 들어감 -->
 <th:block th:replace="~{/fragments/common.html :: customer-header}">
-</th:block>-->
+</th:block>
 <div class="container">
   <h1>장바구니</h1>
 
@@ -30,52 +32,42 @@
     <button class="delete">삭제</button>
   </div>
 
-
-  <div class="cart-item">
-    <input type="checkbox" class="item-checkbox">
-    <img src="/assets/images/cart/productImage.png" alt="New Balance 509 Black Gray">
-    <div class="item-info">
-      <h2>New Balance 509 Black Gray</h2>
-      <p>뉴발란스 509 블랙 그레이</p>
-      <p>사이즈: 255 / 빠른배송</p>
+  <th:block th:if="${#lists.isEmpty(cartList)}">
+    <div class="empty-cart" style="text-align: center; padding: 50px;">
+      <p>장바구니에 담긴 상품이 없습니다.</p>
     </div>
-    <div class="item-actions">
-      <button class="reserve-btn">예약</button>
-      <button class="ship-btn">픽업</button>
+  </th:block>
+
+  <th:block th:unless="${#lists.isEmpty(cartList)}">
+    <div class="cart-item" th:each="cart : ${cartList}">
+      <input type="checkbox" class="item-checkbox" th:value="${cart.id}">
+      <img th:src="@{/images/{path}(path=${cart.itemImage})}" alt="상품 이미지">
+      <div class="item-info">
+        <h2 th:text="${cart.itemName}">New Balance 509 Black Gray</h2>
+        <p th:text="${cart.itemColor}">뉴발란스 509 블랙 그레이</p>
+        <p th:text="'사이즈: ' + ${cart.size} + ' / 수량: ' + ${cart.quantity}">사이즈: 255 / 수량: 1</p>
+      </div>
+      <div class="item-actions">
+        <button class="reserve-btn">예약</button>
+        <button class="ship-btn">픽업</button>
+      </div>
+
+      <div class="item-price" th:text="${cart.itemPrice} + '원'">₩159,000</div>
     </div>
-
-    <div class="item-price">₩159,000</div>
-  </div>
-
-
-  <div class="cart-item">
-    <input type="checkbox" class="item-checkbox">
-    <img src="/assets/images/cart/productImage.png" alt="New Balance 530 White">
-    <div class="item-info">
-      <h2>New Balance 530 White</h2>
-      <p>뉴발란스 530 화이트</p>
-      <p>사이즈: 260 / 빠른배송</p>
-    </div>
-    <div class="item-actions">
-      <button class="reserve-btn">예약</button>
-      <button class="ship-btn">픽업</button>
-    </div>
-    <div class="item-price">₩149,000</div>
-  </div>
-
+  </th:block>
 
   <div class="summary">
     <div class="summary-row">
       <span>상품금액</span>
-      <span>₩308,000</span>
+      <span id="totalProductPrice">0원</span>
     </div>
     <div class="summary-row">
       <span>배송비</span>
-      <span>₩5,000</span>
+      <span id="deliveryFee">0원</span>
     </div>
     <div class="summary-row total">
       <span>총 결제금액</span>
-      <span>₩313,000</span>
+      <span id="totalPrice">0원</span>
     </div>
     <button class="order-btn">바로 결제</button>
   </div>

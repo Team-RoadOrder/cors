@@ -139,6 +139,22 @@ CREATE TABLE `cors`.`reservation_items` (
                                                 ON DELETE CASCADE
                                                 ON UPDATE CASCADE
 );
+
+CREATE TABLE `cors`.`carts` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_email` VARCHAR(40) NOT NULL,
+    `item_id` BIGINT NOT NULL,
+    `size` VARCHAR(50) NOT NULL,
+    `quantity` INT NOT NULL DEFAULT 1,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY (`id`),
+    CONSTRAINT FOREIGN KEY (`user_email`) REFERENCES `cors`.`users`(`email`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (`item_id`) REFERENCES `cors`.`shop_items`(`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 */
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,15 +18,15 @@
     <div class="address">
       <div class="To">
         <span>받는 분</span>
-        <p class="name">홍길동</p>
+        <p class="name" th:text="${user.name}">홍길동</p>
       </div>
       <div class="phone">
         <span>연락처</span>
-        <p class="phoneNumber">010-1234-5678</p>
+        <p class="phoneNumber" th:text="${user.phone}">010-1234-5678</p>
       </div>
       <div class="adr">
         <span>주소</span>
-        <p class="myAddress">[12345]대구광역시 중구 ...</p>
+        <p class="myAddress" th:text="${user.address} + ' ' + ${user.addressDetail}">[12345]대구광역시 중구 ...</p>
       </div>
       <label for="please">
       <select class="please" name="please" id="please">
@@ -45,12 +45,13 @@
     <h2>주문 상품 및 쿠폰 <span>총 1건</span></h2>
 
     <div class="product">
-      <img class="productImage" src="/assets/images/payment/productImage.png" alt="상품 이미지">
+      <img class="productImage" th:if="${!#lists.isEmpty(item.images)}" th:src="@{/images/{path}(path=${item.images[0].imagePath})}" alt="상품 이미지">
+      <img class="productImage" th:if="${#lists.isEmpty(item.images)}" src="/assets/images/default.png" alt="기본 이미지">
       <div class="info">
-        <p class="title">New Balance 509 Black Gray</p>
-        <p class="desc">뉴발란스 509 블랙 그레이<br>255 / 빠른배송</p>
+        <p class="title" th:text="${item.itemName}">New Balance 509 Black Gray</p>
+        <p class="desc"><span th:text="${item.color}">뉴발란스 509 블랙 그레이</span><br><span th:text="${size}">255</span> / 빠른배송</p>
       </div>
-      <div class="price">163,000원</div>
+      <div class="price" th:text="${item.price} + '원'">163,000원</div>
     </div>
 
     <div class="delivery">
@@ -66,7 +67,7 @@
 
     <div class="total">
       <p>결제금액</p>
-      <span>171,200원</span>
+      <span th:text="${item.price} + '원'">171,200원</span>
     </div>
   </div>
 
@@ -122,10 +123,10 @@
   <div class="section summary">
     <h2>최종 주문정보</h2>
     <table>
-      <tr><td>구매가</td><td>163,000원</td></tr>
+      <tr><td>구매가</td><td th:text="${item.price} + '원'">163,000원</td></tr>
       <tr><td>배송비</td><td>3,200원</td></tr>
       <tr><td>포인트 사용</td><td>0원</td></tr>
-      <tr class="total-row"><td>총 결제금액</td><td>171,200원</td></tr>
+      <tr class="total-row"><td>총 결제금액</td><td th:text="${item.price + 3200} + '원'">171,200원</td></tr>
     </table>
   </div>
 

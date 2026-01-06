@@ -34,7 +34,9 @@ const openBtn = document.querySelector('.optionLink');
 const closeBtn = document.querySelector('.close');
 const sizeGrid = document.getElementById('sizeGrid');
 const confirmButton = document.getElementById('confirmSizeButton');
-const buyButton = document.getElementById('buyButton');
+const buyButton = document.querySelector('.buying');
+// 수정: .cart 클래스가 헤더 등 다른 곳에도 존재할 수 있으므로 구체적인 선택자 사용
+const cartButton = document.querySelector('.cart_Add .cart');
 
 // ✅ 옵션링크 내부의 <b> 태그를 참조합니다.
 const selectOptionText = document.querySelector('.selectOption b');
@@ -109,3 +111,56 @@ confirmButton.addEventListener('click', () => {
             confirmText: '확인'});
     }
 });
+
+if (buyButton) {
+    buyButton.addEventListener('click', () => {
+        if (currentSelectedSize) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('id');
+            location.href = `/pay?itemId=${itemId}&size=${currentSelectedSize}`;
+        } else {
+            openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, {
+                confirmText: '확인'});
+        }
+    });
+}
+
+if (cartButton) {
+    cartButton.addEventListener('click', () => {
+        if (currentSelectedSize) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('id');
+
+            const formData = new FormData();
+            formData.append('itemId', itemId);
+            formData.append('size', currentSelectedSize);
+            formData.append('quantity', 1);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/cart');
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.result === 'success') {
+                            location.href = '/cart';
+                        } else {
+                            openModal("ERROR", `<p>${response.message || '장바구니 담기에 실패했습니다.'}</p>`, {
+                                confirmText: '확인'
+                            });
+                        }
+                    } else {
+                        openModal("ERROR", `<p>오류가 발생했습니다.</p>`, {
+                            confirmText: '확인'
+                        });
+                    }
+                }
+            };
+            xhr.send(formData);
+
+        } else {
+            openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, {
+                confirmText: '확인'});
+        }
+    });
+}

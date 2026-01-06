@@ -1,6 +1,6 @@
 .container {
-
   width: 50%;
+  margin: 0 auto; /* 중앙 정렬 */
 }
 
 .section {

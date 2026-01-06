@@ -271,6 +271,7 @@ body .container {
     display: flex;
     justify-content: center;
     box-shadow: black 0 0 0.0625rem;
+    z-index: 10; /* 클릭 가능하도록 z-index 추가 */
 }
 .cart_Add .add {
     flex: 1;
