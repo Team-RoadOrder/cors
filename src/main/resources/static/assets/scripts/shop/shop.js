@@ -60,3 +60,43 @@ function renderItems(items) {
         gridContainer.insertAdjacentHTML('beforeend', html);
     });
 }
+
+const toggleLikeShop = (shopId) => {
+     const xhr = new XMLHttpRequest();
+     const formData = new FormData();
+     formData.append('shopId', shopId);
+     xhr.onreadystatechange = () => {
+         if (xhr.readyState !== XMLHttpRequest.DONE) {
+             return;
+         }
+         if (xhr.status < 200 || xhr.status >= 400) {
+             openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
+             return;
+         }
+         const response = JSON.parse(xhr.responseText);
+         switch (response.result) {
+             case "FAILURE_SESSION":
+                 openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                     confirmText: '확인',
+                     onConfirm: () => { location.href = '/login'; }
+                 });
+                 break;
+             case 'FAILURE':
+                 openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {confirmText: '확인'});
+                 break;
+             case 'SUCCESS':
+                 openModal("SUCCESS", `<p>관심매장에 등록되었습니다..</p>`, {
+                     confirmText: '확인',
+                     onConfirm: () => {
+                         location.href="/my?open=likes-shop"
+                     }
+                 });
+                 break;
+             default:
+                 openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+
+         }
+     }
+        xhr.open('POST', '/shop/like')
+        xhr.send(formData);
+}

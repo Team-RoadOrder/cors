@@ -12,6 +12,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (targetMenu) {
             targetMenu.click();
+            setTimeout(() => {
+                let targetClass = '';
+                switch(openTab) {
+                    case 'likes-shop':
+                        targetClass = '.tab_likeShop_content';
+                        break;
+                    case 'reservation':
+                        targetClass = '.tab_reservation_content';
+                        break;
+                    case 'orders':
+                        targetClass = '.tab_purchase_content';
+                        break;
+                    case 'profile':
+                        targetClass = '.tab_profile_content';
+                        break;
+                    case 'address':
+                        targetClass = '.tab_address_content';
+                        break;
+                    case 'custom':
+                        targetClass = '.tab_custom_content';
+                        break;
+                    default:
+                        targetClass = '.tab-content';
+                }
+
+                const targetElement = document.querySelector(targetClass);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 300);
         } else {
             console.warn("해당하는 탭 메뉴를 찾을 수 없습니다: " + openTab);
         }
@@ -23,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // 페이지 로딩 시(탭 이동 시) 기본적으로 '대기' 상태만 보이게 초기화
     setTimeout(() => filterStatus('대기'), 50);
-
 
 });
 
@@ -346,4 +375,68 @@ const  toggleAddressMode = (btn, addrInput, detailInput) => {
         xhr.open('PATCH', '/my/address');
         xhr.send(formData);
     }
+}
+
+const toggleLikeShop = (e, shopId) => {
+    // [중요] 부모 <a> 태그로 클릭 이벤트가 전파되는 것을 막음
+    if(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('shopId', shopId);
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
+            return;
+        }
+
+        try {
+            const response = JSON.parse(xhr.responseText);
+            switch (response.result) {
+                case "FAILURE_SESSION":
+                    openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { location.href = '/login'; }
+                    });
+                    break;
+                case 'FAILURE':
+                    openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {confirmText: '확인', onConfirm: () => {
+                            if (window.location.search.includes('open=likes-shop')) {
+                                window.location.reload();
+                            } else {
+                                // 다른 페이지(예: 상품상세)에서 온 거라면? -> 이동
+                                location.href = "/my?open=likes-shop";
+                            }
+                        }});
+                    break;
+                case 'SUCCESS':
+                    openModal("SUCCESS", `<p>관심매장에 등록되었습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            if (window.location.search.includes('open=likes-shop')) {
+                                window.location.reload();
+                            } else {
+                                // 다른 페이지(예: 상품상세)에서 온 거라면? -> 이동
+                                location.href = "/my?open=likes-shop";
+                            }
+                        }
+                    });
+                    break;
+                default:
+                    openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+            }
+        } catch (error) {
+            console.error(error);
+            openModal("ERROR", `<p>응답 처리 중 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+    }
+    xhr.open('POST', '/shop/like')
+    xhr.send(formData);
 }

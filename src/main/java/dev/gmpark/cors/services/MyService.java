@@ -5,7 +5,9 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ReservationItemsEntity;
 import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
+import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.vos.LikeShopVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MyService {
     private final ReservationMapper reservationMapper;
     private final RegisterMapper registerMapper;
+    private final ShopInfoMapper shopInfoMapper;
     public List<ReservationItemVo> getAllReservations(RegisterEntity sessionUser) {
         return this.reservationMapper.selectReservationsByEmail(sessionUser.getEmail());
     }
@@ -73,5 +76,9 @@ public class MyService {
         } else {
             return CommonResult.FAILURE;
         }
+    }
+    public LikeShopVo[] getLikeShops(RegisterEntity sessionUser) {
+        return this.shopInfoMapper.selectLikedShopsByUser(sessionUser.getEmail());
+
     }
 }

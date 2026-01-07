@@ -303,39 +303,23 @@
 
 <div th:fragment="likes-shop" class="tab_likeShop_content">
     <h3 class="tab_title">관심 매장</h3>
-    <div class="grid">
-        <a class="box one" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
+    <div class="grid" th:if="${not #arrays.isEmpty(likeShops)}">
+        <a class="box" th:each="shop : ${likeShops}" th:href="@{'/shop/'(shopId=${shop.shopId})}">
+            <span class="image-wrapper">
+                <span class="image" th:style="|background-image: url('${shop.profileImage}');|"></span>
+               <button class="button" type="button" th:onclick="|toggleLikeShop(event, ${shop.shopId})|">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24px" width="24px" version="1.1" id="Layer_1" viewBox="0 0 512.003 512.003" xml:space="preserve"><g><path style="fill:#ff2929;" d="M256.001,105.69c19.535-49.77,61.325-87.79,113.231-87.79c43.705,0,80.225,22.572,108.871,54.44 c39.186,43.591,56.497,139.193-15.863,209.24c-37.129,35.946-205.815,212.524-205.815,212.524S88.171,317.084,50.619,281.579 C-22.447,212.495-6.01,116.919,34.756,72.339c28.919-31.629,65.165-54.44,108.871-54.44 C195.532,17.899,236.466,55.92,256.001,105.69"/></g></svg>
+                </button>
+            </span>
+            <span class="text-container">
+                <span class="title" th:text="${shop.shopName}">매장명</span>
+                <span class="address" th:text="${shop.shopAddress}">주소</span>
+            </span>
         </a>
-        <a class="box two" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box three" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box four" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box five" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box six" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box seven" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
-        <a class="box eight" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="address"></span></span>
-        </a>
+    </div>
+
+    <div th:if="${#arrays.isEmpty(likeShops)}" style="text-align: center; padding: 50px 0; color: #888;">
+        <p>등록된 관심 매장이 없습니다.</p>
     </div>
 </div>
 

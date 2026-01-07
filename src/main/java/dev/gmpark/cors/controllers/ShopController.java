@@ -1,18 +1,21 @@
 package dev.gmpark.cors.controllers;
 
 
+import dev.gmpark.cors.entities.LikeShopEntity;
+import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
+import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.OwnerShopService;
 import dev.gmpark.cors.services.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/shop")
@@ -46,5 +49,16 @@ public class ShopController {
         };
         return this.shopService.getItemsByShopAndCategory(shopId, dbCategoryName);
     }
-
+    @RequestMapping(value = "/like", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> postLikeShop(LikeShopEntity likeShopEntity,
+                                            @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response= new HashMap<>();
+        if (sessionUser == null) {
+            response.put("result", "FAILURE_SESSION");
+        }
+        CommonResult result = this.shopService.toggleLikeInfo(likeShopEntity, sessionUser);
+        response.put("result", result.name());
+        return response;
+    }
 }

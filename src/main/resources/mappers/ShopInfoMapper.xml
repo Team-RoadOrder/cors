@@ -25,6 +25,18 @@
                      #{info.backgroundImage}
                  )
     </insert>
+    <insert id="insertLikeShop">
+        INSERT INTO `cors`.`like_shops` (user_email, shop_id, created_at)
+        VALUES (
+                 #{like.userEmail},
+                #{like.shopId},
+                #{like.createdAt}
+               )
+    </insert>
+    <delete id="deleteLikeShop">
+        DELETE FROM `cors`.`like_shops`
+        WHERE `shop_id` = #{shopId} AND `user_email` = #{email}
+    </delete>
     <select id="selectShopByUserEmail" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
         SELECT
             shop_id          AS shopId,
@@ -66,6 +78,29 @@
             background_image AS backgroundImage
         FROM `cors`.`shop_info`
         WHERE shop_id = #{shopId}
+    </select>
+    <select id="selectLikeCount" resultType="java.lang.Integer">
+        SELECT COUNT(user_email)
+        FROM `cors`.`like_shops`
+        WHERE user_email = #{like.userEmail}
+          AND shop_id = #{like.shopId}
+    </select>
+    <select id="selectLikedShopsByUser">
+        SELECT t1.shop_id          AS shopId,
+               t1.user_email       AS userEmail,
+               t1.shop_name        AS shopName,
+               t1.shop_time        AS shopTime,
+               t1.shop_category    AS shopCategory,
+               t1.shop_address     AS shopAddress,
+               t1.shop_tel         AS shopTel,
+               t1.profile_image    AS profileImage,
+               t1.background_image AS backgroundImage,
+               t2.created_at       AS likedAt
+        FROM cors.shop_info AS t1
+                 INNER JOIN cors.like_shops AS t2
+                            ON t2.shop_id = t1.shop_id
+        WHERE t2.user_email = #{userEmail}
+        ORDER BY t2.created_at DESC
     </select>
     <update id="update">
         UPDATE `cors`.`shop_info`

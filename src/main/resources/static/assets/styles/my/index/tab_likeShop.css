@@ -1,4 +1,4 @@
-.tab_likeShop_content   {
+.tab_likeShop_content {
     width: 1000px;
 }
 .tab_likeShop_content .tab_title {
@@ -9,8 +9,8 @@
 
 .tab_likeShop_content .grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5rem;
 }
 
 .tab_likeShop_content .grid .box {
@@ -18,8 +18,11 @@
     align-items: flex-start;
     display: flex;
     margin-bottom: 5rem;
+    text-decoration: none; /* a태그 밑줄 제거 */
+    color: inherit; /* 폰트 색상 상속 */
 }
-.tab_likeShop_content .grid .box >.image-wrapper {
+
+.tab_likeShop_content .grid .box > .image-wrapper {
     border-radius: 0.5rem;
     width: 100%;
     aspect-ratio: 1/1;
@@ -27,15 +30,19 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 }
+
 .tab_likeShop_content .grid > .box .image {
     width: 100%;
     aspect-ratio: 1/1;
     background-position: center;
-    background-size: 300%;  /*이미지 너무 작은것도 많아서 이상해보여서 3배 확대함 */
     background-repeat: no-repeat;
+    background-size: contain;
     flex-shrink: 0;
+
 }
+
 .tab_likeShop_content .grid > .box .text-container {
     align-items: stretch;
     display: flex;
@@ -44,149 +51,40 @@
     justify-content: flex-start;
     padding-top: 1rem;
     padding-left: 0.2rem;
+    width: 100%;
 }
+
 .tab_likeShop_content .grid > .box .text-container .price {
     padding-top: 0.5rem;
-
-}
-.tab_likeShop_content .grid > .box.one .image {
-    background-image: url("/MY/images/shop/shop1.webp");
 }
 
-.tab_likeShop_content .grid > .box.one >.text-container >.title::after {
-    content:"FOGSY 포그씨";
+/* ::after를 제거하고 직접 스타일 적용 */
+.tab_likeShop_content .grid > .box .text-container .title {
     font-size: 1rem;
     font-weight: 700;
     position: relative;
     color: #000000;
 }
-.tab_likeShop_content  .grid > .box.one >.text-container >.address::after {
-    content:"Achasna-ro 5-gil, 24-11";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.two .image {
-    background-image: url("/MY/images/shop/shop2.webp");
-}
-.tab_likeShop_content .grid > .box.two >.text-container >.title::after {
-    content:"수아레 성수 플래그십 스토어";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.two >.text-container >.address:after {
-    content:"Seongdong-gu, seoul";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.three .image {
-    background-image: url("/MY/images/shop/shop3.png");
-}
-.tab_likeShop_content .grid > .box.three >.text-container >.title::after {
-    content:"Waviness";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.three >.text-container >.address:after {
-    content:"Yonsan District, Seoul";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.four .image {
-    background-image: url("/MY/images/shop/shop4.webp");
-}
-.tab_likeShop_content .grid > .box.four >.text-container >.title::after {
-    content:"Tonywack 한남";
-    font-size: 1em;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.four >.text-container >.address:after {
-    content:"Yongsan Distric,Seoul";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.five .image {
-    background-image: url("/MY/images/shop/shop5.webp");
-}
 
-.tab_likeShop_content .grid > .box.five >.text-container >.title::after {
-    content:"우알롱 플래그쉽 스토어";
-    font-size: 1em;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.five >.text-container >.address:after {
-    content:"Yeonmujang 7 ga-gil";
+/* ::after를 제거하고 직접 스타일 적용 */
+.tab_likeShop_content .grid > .box .text-container .address {
     font-size: 0.8rem;
     font-weight: 400;
     position: relative;
     color: #000000;
 }
-.tab_likeShop_content .grid > .box.six .image {
-    background-image: url("/MY/images/shop/shop6.webp");
+.tab_likeShop_content > .grid > .box > .image-wrapper>.button {
+    outline: none;
+    border: none;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.2rem;
 }
-
-.tab_likeShop_content .grid > .box.six >.text-container >.title::after {
-    content:"RECTO";
-    font-size: 1em;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.six >.text-container >.address:after {
-    content:"Yongsan Distric,Seoul";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.seven .image {
-    background-image: url("/MY/images/shop/shop7.jpg");
-}
-
-.tab_likeShop_content .grid > .box.seven >.text-container >.title::after {
-    content:"VASKA 스토어";
-    font-size: 1em;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.seven >.text-container >.address:after {
-    content:"Gongpyeun-ro, 13";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content .grid > .box.eight .image {
-    background-image: url("/MY/images/shop/shop8.webp");
-}
-
-.tab_likeShop_content .grid > .box.eight >.text-container >.title::after {
-    content:"BPLS";
-    font-size: 1em;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeShop_content  .grid > .box.eight >.text-container >.address:after {
-    content:"Samdeok-dong 1-ga";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
+.tab_likeShop_content > .grid > .box > .image-wrapper>.button:hover {
+    transform:scale(1.1);
 }

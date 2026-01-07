@@ -1,10 +1,12 @@
 package dev.gmpark.cors.entities;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Getter
 @Setter
 @EqualsAndHashCode(of = "shopId") // PK를 기준으로 객체 비교

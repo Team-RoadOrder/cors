@@ -75,9 +75,7 @@ public class MyController {
                     break;
 
                 case "likes-shop":
-                    // [관심 매장] 탭일 때 -> 매장 리스트 조회
-                    // List<ShopDTO> likeShops = shopService.findLikeShops(sessionUser.getEmail());
-                    // modelAndView.addObject("likeShops", likeShops);
+                    modelAndView.addObject("likeShops", this.myService.getLikeShops(sessionUser));
                     break;
 
                 case "likes-item":
