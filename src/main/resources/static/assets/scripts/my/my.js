@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const openTab = urlParams.get('open');
 
-    console.log("현재 URL 파라미터 open 값:", openTab); // [디버깅용] 값이 잘 찍히나 확인
 
     if (openTab) {
         // 2. data-tab 속성으로 요소를 찾습니다. (훨씬 정확함)
@@ -26,9 +25,9 @@ document.addEventListener("DOMContentLoaded", function() {
     setTimeout(() => filterStatus('대기'), 50);
 
 
-
 });
-// [삭제 버튼 클릭 이벤트 위임]
+
+// 이벤트 위임용
 document.addEventListener('click', function(e) {
     // 1. 클릭한 요소가 'delete-btn' 클래스를 가진 요소인지 확인
     if (e.target && e.target.classList.contains('delete-btn')) {
@@ -53,9 +52,46 @@ document.addEventListener('click', function(e) {
 
             }
         });
+        return;
+    }
+    if (e.target && e.target.id === 'nameChangeButton') {
+        e.preventDefault(); // type="button"이라 필수는 아니지만 안전하게
+        const inputElement = document.getElementById('name');
+
+        if (inputElement) {
+            // 2. 입력값(.value)을 가져옵니다.
+            changeName(inputElement.value);
+        } else {
+            alert("이름 입력창을 찾을 수 없습니다.");
+        }
+    }
+    if (e.target && e.target.id === 'telChangeButton') {
+        e.preventDefault(); // type="button"이라 필수는 아니지만 안전하게
+        const inputElement = document.getElementById('phone');
+
+        if (inputElement) {
+            // 2. 입력값(.value)을 가져옵니다.
+            changePhone(inputElement.value);
+        } else {
+            alert("전화번호 입력창을 찾을 수 없습니다.");
+        }
+    }
+    if (e.target && e.target.id === 'addressActionBtn') {
+        e.preventDefault(); // type="button"이라도 습관적으로 넣어주면 좋음
+
+        // 2. 요소 찾기 (버튼이 있다는 건 탭이 열려있다는 뜻이므로 안전함)
+        const addressContainer = document.querySelector('.tab_address_content');
+
+        // 혹시 모를 에러 방지
+        if (!addressContainer) return;
+
+        const inputAddress = addressContainer.querySelector('input[name="address"]');
+        const inputDetail = addressContainer.querySelector('input[name="addressDetail"]');
+
+        // 3. 함수 바로 호출 (리스너를 또 등록하지 않음!)
+        toggleAddressMode(e.target, inputAddress, inputDetail);
     }
 });
-
 // [삭제 요청 함수]
 const deleteReservation = (reservationId) => {
     const xhr = new XMLHttpRequest();
@@ -114,7 +150,8 @@ const loadTab = (menuName, element) => {
         }
 
      };
-     xhr.open('GET', '/my/tab?menu=' + menuName)
+    const timestamp = new Date().getTime();
+    xhr.open('GET', '/my/tab?menu=' + menuName + '&t=' + timestamp);
      xhr.send();
 
 }
@@ -151,5 +188,146 @@ const filterStatus= (statusType) => {
         if(noDataMsg) noDataMsg.style.display = 'block';
     } else {
         if(noDataMsg) noDataMsg.style.display = 'none';
+    }
+}
+
+const changeName = (name) => {
+    if (!name || name.trim().length < 2) {
+        alert("이름을 2글자 이상 입력해주세요.");
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    // FormData 객체 생성
+    const formData = new FormData();
+    formData.append('name', name);
+
+    xhr.onreadystatechange = () => {
+        // 요청이 완료되지 않았으면 중단
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+
+        // 요청 완료 후 상태 코드 확인
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // ★ 중요: 응답 처리는 여기서 해야 합니다.
+            try {
+                const response = JSON.parse(xhr.responseText);
+
+                switch (response.result) {
+                    case 'SUCCESS':
+                        openModal("SUCCESS", "<p>이름이 변경되었습니다.</p>", {
+                            confirmText: '확인',
+                            onConfirm: () => {
+                                // 성공 시 프로필 탭 새로고침
+                                loadTab('profile', document.querySelector('.menu .item[data-tab="profile"]'));
+                                // 혹은 전체 새로고침: window.location.reload();
+                            }
+                        });
+                        break;
+                    case 'FAILURE':
+                        openModal("WARN", `<p>이름 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
+                        break;
+                    default:
+                        openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+                }
+            } catch (e) {
+                console.error("JSON 파싱 에러:", e);
+                openModal("ERROR", "<p>응답 데이터 형식이 올바르지 않습니다.</p>");
+            }
+        } else {
+            // HTTP 에러 처리 (400, 500 등)
+            openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`, {confirmText: '확인'});
+        }
+    };
+    xhr.open('PATCH', '/my/name');
+    xhr.send(formData);
+}
+const changePhone = (phone) => {
+    const xhr = new XMLHttpRequest();
+    // FormData 객체 생성
+    const formData = new FormData();
+    formData.append('phone', phone);
+
+    xhr.onreadystatechange = () => {
+        // 요청이 완료되지 않았으면 중단
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+
+                switch (response.result) {
+                    case 'SUCCESS':
+                        openModal("SUCCESS", "<p>전화번호가 변경되었습니다.</p>", {
+                            confirmText: '확인',
+                            onConfirm: () => {
+                                // 성공 시 프로필 탭 새로고침
+                                loadTab('profile', document.querySelector('.menu .item[data-tab="profile"]'));
+                                // 혹은 전체 새로고침: window.location.reload();
+                            }
+                        });
+                        break;
+                    case 'FAILURE':
+                        openModal("WARN", `<p>이름 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
+                        break;
+                    default:
+                        openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+                }
+            } catch (e) {
+                console.error("JSON 파싱 에러:", e);
+                openModal("ERROR", "<p>응답 데이터 형식이 올바르지 않습니다.</p>");
+            }
+        } else {
+            // HTTP 에러 처리 (400, 500 등)
+            openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`, {confirmText: '확인'});
+        }
+    };
+    xhr.open('PATCH', '/my/phone');
+    xhr.send(formData);
+}
+
+/**
+ * 주소 수정 모드 토글 및 저장 처리 함수
+ * @param {HTMLElement} btn - 클릭된 버튼 요소
+ * @param {HTMLElement} addrInput - 주소 인풋 요소
+ * @param {HTMLElement} detailInput - 상세주소 인풋 요소
+ */
+const  toggleAddressMode = (btn, addrInput, detailInput) => {
+    // 현재 버튼 텍스트가 '수정'인지 확인
+    if (btn.innerText.trim() === '수정') {
+
+        // === [수정 모드 전환] ===
+
+        // readonly 제거 & 스타일 변경
+        addrInput.removeAttribute('readonly');
+        detailInput.removeAttribute('readonly');
+
+        addrInput.focus();
+
+        // 버튼 텍스트 변경
+        btn.innerText = '완료';
+
+    } else {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append('address', addrInput.innerText);
+        formData.append('addressDetail', detailInput.innerText);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (xhr.status < 200 || xhr.status >= 400) {
+
+                return;
+            }
+
+
+         };
+         xhr.open('PATCH', '/my/address');
+         xhr.send(formData);
+
+        //TODO xhr
     }
 }

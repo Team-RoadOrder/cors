@@ -34,13 +34,22 @@
     /* white-space: nowrap; */
     /* overflow: hidden; */
 }
-.tab_address_content > .standard > .container > input {
-    outline: none;        /* 포커스시 외곽선 제거 */
-    border: none;         /* 기본 테두리 제거 */
-    background: transparent; /* 배경 투명하게 (혹은 원하는 색상) */
-    width: 100%;          /* 부모 컨테이너 너비에 맞게 꽉 채움 */
-    font-size: 1rem;      /* 폰트 크기 조정 */
-    color: #333;
+.tab_address_content > .standard > .container > input.address:not([readonly]) {
+    border: none;
+    background-color: #eaeaea;    /* 배경색 흰색 */
+    color: #4d4d4d;
+    padding: 5px 10px;            /* 입력하기 편하게 내부 여백 추가 */
+    border-radius: 4px;           /* 모서리 살짝 둥글게 */
+    cursor: text;                 /* 텍스트 입력 커서 */
+    box-sizing: border-box;       /* 패딩 포함해서 너비 계산 */
+    outline: none;
+
+}
+
+/* 수정 모드에서 포커스(클릭) 했을 때 강조 */
+.tab_address_content > .standard > .container > input.address:not([readonly]):focus {
+    outline: none;                /* 기본 브라우저 아웃라인 제거 */
+    border: none;
 }
 .tab_address_content > .standard > .container > .name-box > .name {
     font-size: 1rem;

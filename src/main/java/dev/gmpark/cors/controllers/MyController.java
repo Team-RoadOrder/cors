@@ -2,18 +2,18 @@ package dev.gmpark.cors.controllers;
 
 
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -106,5 +106,24 @@ public class MyController {
         modelAndView.setViewName("fragments/myfragments :: " + menu);
 
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/my/name", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> patchMyName(@RequestParam("name") String newName,
+                           @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.myService.updateUserName(sessionUser, newName);
+        response.put("result", result.name());
+        return response;
+    }
+    @RequestMapping(value = "/my/phone", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> patchMyPhone(@RequestParam("phone") String newPhone,
+                                           @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.myService.updateUserPhone(sessionUser, newPhone);
+        response.put("result", result.name());
+        return response;
     }
 }

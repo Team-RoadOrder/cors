@@ -280,7 +280,7 @@
 
                 <span class="itemTitle">
                     <span class="title" th:text="${item.itemName}">상품명</span>
-                    <span class="description" th:text="|Size : ${item.size}|">280</span>
+                    <span class="description" th:text="|size : ${item.size}|">280</span>
                 </span>
 
                 <span class="itemStatus">
@@ -396,20 +396,22 @@
     </div>
     <h4 class="tab_info">프로필 </h4>
 
-    <form class="unit">
-        <input type="text" id="pw" class="email" th:placeholder="${sessionUser.name}"  placeholder="이름 또는 별명" maxlength="50" minlength="8" autofocus required >
-        <label for="pw" class="text">이름 </label>
+    <form class="unit" name="nameForm">
+        <input type="text" id="name" class="email" th:placeholder="${sessionUser.name}"  placeholder="이름 또는 별명" maxlength="50" minlength="8" autofocus required >
+        <label for="name" class="text">이름 </label>
         <div class="profile-name">
-            <input type="button" id="checkbox2" class="checkbox">
-            <label for="checkbox2" class="button">변경</label>
+            <input type="button"
+                   id="nameChangeButton"
+                   class="checkbox" minlength="2">
+            <label for="nameChangeButton" class="button">변경</label>
         </div>
     </form>
     <form class="unit">
-        <input type="text" id="profile-name" class="email" th:placeholder="${sessionUser.phone}" placeholder="나만의 프로필 이름" maxlength="50" minlength="8" autofocus required >
-        <label for="profile-name" class="text">전화번호</label>
+        <input type="text" id="phone" class="email" th:placeholder="${sessionUser.phone}"  placeholder="나만의 프로필 이름" maxlength="50" minlength="8" autofocus required >
+        <label for="phone" class="text">전화번호</label>
         <div class="profile-name">
-            <input type="button" id="checkbox" class="checkbox">
-            <label for="checkbox" class="button">변경</label>
+            <input type="button" id="telChangeButton" class="checkbox">
+            <label for="telChangeButton" class="button">변경</label>
         </div>
     </form>
 </div>
@@ -424,11 +426,13 @@
                 <span class="standard">기본배송지</span>
             </div>
             <span class="phone" th:text="${sessionUser.phone}">01080068384</span>
-            <!--<span class="address">(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호</span>-->
-            <input readonly type="text" class="address" value="(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호" th:value="${sessionUser.address}">
+            <span style="color: #8e8d8d; font-weight: bold; ">기본주소</span>
+            <input readonly name="address" type="text" class="address" value="(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호" th:value="${sessionUser.address}">
+            <span style="color: #8e8d8d; font-weight: bold; ">상세주소</span>
+            <input readonly name="addressDetail" type="text" class="address" value="(42959)대구 달성군 화원읍 화암로 120 (명곡미래빌4단지) 410동 1103호" th:value="${sessionUser.addressDetail}">
             <span class="button-container">
-            <button class="modify">수정</button>
-            <button class="delete">삭제</button>
+            <button type="button" id="addressActionBtn" class="modify">수정</button>
+            <!--<button class="delete">삭제</button>-->
                 </span>
         </div>
     </form>

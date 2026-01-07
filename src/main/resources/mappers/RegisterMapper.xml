@@ -18,6 +18,17 @@
                 #{register.gender}
                )
     </insert>
+    <update id="update">
+        UPDATE `cors`.`users`
+        SET `name` = #{user.name},
+            `password` = #{user.password},
+            `phone` = #{user.phone},
+            `style` = #{user.style},
+            `address` = #{user.address},
+            `address_detail` = #{user.addressDetail}
+        WHERE `email` = #{user.email}
+     </update>
+
     <select id="selectByEmailAndPasswordUser" resultType="dev.gmpark.cors.entities.RegisterEntity">
         SELECT `name`           AS `name`
              , `store_name`     AS `storeName`
@@ -36,8 +47,17 @@
         LIMIT 1;
     </select>
     <select id="selectByEmail" resultType="dev.gmpark.cors.entities.RegisterEntity">
-        SELECT `email`    AS `email`,
-               `password` AS `password`
+        SELECT `name`           AS `name`
+             , `store_name`     AS `storeName`
+             , `business_num`   AS `bubusinessNum`
+             , `usertype`       AS `usertype`
+             , `email`          AS `email`
+             , `password`       AS `password`
+             , `phone`          AS `phone`
+             , `style`          AS `style`
+             , `address`        AS `address`
+             , `address_detail` AS `addressDetail`
+             , `gender`         AS `gender`
         FROM `cors`.`users`
         WHERE email = #{email}
         LIMIT 1;
