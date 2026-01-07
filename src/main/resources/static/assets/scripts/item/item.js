@@ -126,7 +126,8 @@ if (buyButton) {
 }
 
 if (cartButton) {
-    cartButton.addEventListener('click', () => {
+    cartButton.addEventListener('click', (e) => {
+        e.preventDefault();
         if (currentSelectedSize) {
             const urlParams = new URLSearchParams(window.location.search);
             const itemId = urlParams.get('id');

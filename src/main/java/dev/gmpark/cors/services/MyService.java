@@ -51,4 +51,27 @@ public class MyService {
             return CommonResult.FAILURE;
         }
     }
+    public CommonResult updateUserAddress(RegisterEntity sessionUser, String newAddress, String newAddressDetail) {
+        RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
+
+        if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+
+        // DB 업데이트용 객체 설정
+        dbUser.setAddress(newAddress);
+        dbUser.setAddressDetail(newAddressDetail);
+
+        int rows = this.registerMapper.update(dbUser);
+
+        if (rows > 0) {
+            // [수정 핵심] dbUser가 아니라 sessionUser(메모리에 있는 로그인 정보)를 업데이트해야 함
+            sessionUser.setAddress(newAddress);
+            sessionUser.setAddressDetail(newAddressDetail);
+
+            return CommonResult.SUCCESS;
+        } else {
+            return CommonResult.FAILURE;
+        }
+    }
 }

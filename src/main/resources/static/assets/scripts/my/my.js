@@ -76,9 +76,9 @@ document.addEventListener('click', function(e) {
             alert("전화번호 입력창을 찾을 수 없습니다.");
         }
     }
-    if (e.target && e.target.id === 'addressActionBtn') {
+    const addressBtn = e.target.closest('#addressActionBtn');
+    if (addressBtn) {
         e.preventDefault(); // type="button"이라도 습관적으로 넣어주면 좋음
-
         // 2. 요소 찾기 (버튼이 있다는 건 탭이 열려있다는 뜻이므로 안전함)
         const addressContainer = document.querySelector('.tab_address_content');
 
@@ -294,40 +294,56 @@ const changePhone = (phone) => {
  * @param {HTMLElement} addrInput - 주소 인풋 요소
  * @param {HTMLElement} detailInput - 상세주소 인풋 요소
  */
+
 const  toggleAddressMode = (btn, addrInput, detailInput) => {
     // 현재 버튼 텍스트가 '수정'인지 확인
     if (btn.innerText.trim() === '수정') {
-
-        // === [수정 모드 전환] ===
-
-        // readonly 제거 & 스타일 변경
         addrInput.removeAttribute('readonly');
         detailInput.removeAttribute('readonly');
-
         addrInput.focus();
-
-        // 버튼 텍스트 변경
         btn.innerText = '완료';
 
     } else {
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        formData.append('address', addrInput.innerText);
-        formData.append('addressDetail', detailInput.innerText);
+        formData.append('address', addrInput.value);
+        formData.append('addressDetail', detailInput.value);
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
-            if (xhr.status < 200 || xhr.status >= 400) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
 
-                return;
+                    switch (response.result) {
+                        case 'SUCCESS':
+                            openModal("SUCCESS", "<p>주소가 변경되었습니다.</p>", {
+                                confirmText: '확인',
+                                onConfirm: () => {
+                                    // 성공 시 프로필 탭 새로고침
+                                    loadTab('address', document.querySelector('.menu .item[data-tab="address"]'));
+                                    // 혹은 전체 새로고침: window.location.reload();
+                                }
+                            });
+                            break;
+                        case 'FAILURE':
+                            openModal("WARN", `<p>이름 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
+                            break;
+                        default:
+                            openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+                    }
+                } catch (e) {
+                    console.error("JSON 파싱 에러:", e);
+                    openModal("ERROR", "<p>응답 데이터 형식이 올바르지 않습니다.</p>");
+                }
+            } else {
+                // HTTP 에러 처리 (400, 500 등)
+                openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`, {confirmText: '확인'});
             }
 
-
-         };
-         xhr.open('PATCH', '/my/address');
-         xhr.send(formData);
-
-        //TODO xhr
+        }
+        xhr.open('PATCH', '/my/address');
+        xhr.send(formData);
     }
 }

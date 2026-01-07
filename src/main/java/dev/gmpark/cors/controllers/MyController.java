@@ -126,4 +126,14 @@ public class MyController {
         response.put("result", result.name());
         return response;
     }
+    @RequestMapping(value = "/my/address", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> patchMyAddress(@RequestParam("address") String newAddress,
+                                            @RequestParam("addressDetail") String newAddressDetail,
+                                            @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.myService.updateUserAddress(sessionUser, newAddress, newAddressDetail);
+        response.put("result", result.name());
+        return response;
+    }
 }
