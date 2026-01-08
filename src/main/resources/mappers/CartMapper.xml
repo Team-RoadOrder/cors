@@ -15,6 +15,7 @@
         <result property="size" column="size"/>
         <result property="quantity" column="quantity"/>
         <result property="createdAt" column="created_at"/>
+        <result property="shopId" column="shop_id"/>
         <result property="itemName" column="item_name"/>
         <result property="itemColor" column="color"/>
         <result property="itemPrice" column="price"/>
@@ -23,7 +24,7 @@
 
     <select id="selectCartByUserEmail" resultMap="CartVoMap">
         SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
-               si.`item_name`, si.`color`, si.`price`,
+               si.`shop_id`, si.`item_name`, si.`color`, si.`price`,
                (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
         FROM `cors`.`carts` c
         JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`
@@ -37,7 +38,7 @@
 
     <select id="selectCartItemsByIds" resultMap="CartVoMap">
         SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
-               si.`item_name`, si.`color`, si.`price`,
+               si.`shop_id`, si.`item_name`, si.`color`, si.`price`,
                (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
         FROM `cors`.`carts` c
         JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`

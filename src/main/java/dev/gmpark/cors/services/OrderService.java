@@ -55,6 +55,7 @@ public class OrderService {
         List<OrderItemEntity> items = new ArrayList<>();
         items.add(OrderItemEntity.builder()
                 .itemId(itemId)
+                .shopId(item.getShopId()) // shopId 추가
                 .size(size)
                 .quantity(1)
                 .price(item.getPrice())
@@ -77,6 +78,7 @@ public class OrderService {
             totalProductPrice += cart.getItemPrice() * cart.getQuantity();
             orderItems.add(OrderItemEntity.builder()
                     .itemId(cart.getItemId())
+                    .shopId(cart.getShopId()) // shopId 추가
                     .size(cart.getSize())
                     .quantity(cart.getQuantity())
                     .price(cart.getItemPrice())
