@@ -5,6 +5,84 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+/// 무한루프 슬라이드
+const side = document.getElementById('side');
+let images = side.querySelectorAll('.image');
+const dots = document.querySelectorAll('.dot');
+
+const imageCount = images.length; // 원본 개수 (3개)
+
+const clone = images[0].cloneNode(true);
+side.appendChild(clone);
+images = side.querySelectorAll('.image'); // 리스트 갱신
+
+let currentIndex = 0;
+let isSliding = false;
+const slideInterval = 5000;
+
+
+const getSlideWidth = () => side.clientWidth;
+
+const updateDots = (index) => {
+
+    const targetIndex = (index === imageCount) ? 0 : index;
+    dots.forEach(dot => dot.classList.remove('checked'));
+    if (dots[targetIndex]) dots[targetIndex].classList.add('checked');
+};
+
+const moveSlide = (index, transition = true) => {
+    const width = getSlideWidth();
+
+    if (transition) {
+        side.style.transition = 'transform 0.9s ease-in-out';
+    } else {
+        side.style.transition = 'none';
+    }
+
+    side.style.transform = `translateX(-${index * width}px)`;
+
+    currentIndex = index;
+    updateDots(currentIndex);
+};
+
+const nextSlide = () => {
+    if (isSliding) return;
+    isSliding = true;
+
+    moveSlide(currentIndex + 1, true);
+    if (currentIndex === imageCount) {
+        setTimeout(() => {
+            moveSlide(0, false);
+            isSliding = false;
+        }, 900);
+    } else {
+        setTimeout(() => {
+            isSliding = false;
+        }, 900);
+    }
+};
+
+let timer = setInterval(nextSlide, slideInterval);
+
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        clearInterval(timer);
+        isSliding = false;
+
+        moveSlide(index, true);
+
+        timer = setInterval(nextSlide, slideInterval);
+    });
+});
+
+window.addEventListener('resize', () => {
+    moveSlide(currentIndex, false);
+});
+
+updateDots(0);
+
 const changeCategory = (categoryValue) => {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {

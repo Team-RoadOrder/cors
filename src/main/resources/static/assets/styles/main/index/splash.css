@@ -3,10 +3,9 @@
     flex-direction: row;
     justify-content: flex-start;
     position: relative;
-    height: 748px; /* 추가 */
+    height: 748px;
     width: 100%;
-
-
+    overflow: hidden; /* 추가: 넘치는 이미지를 가려줍니다 (액자 역할) */
 }
 
 #splash > #side {
@@ -14,15 +13,11 @@
     height: 100%;
     align-items: stretch;
     background-color: #a0a0a0;
-    border-radius: 0.25rem;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    overflow: hidden;
-
     position: absolute;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
+    transition: transform 0.5s ease-in-out;
 }
 #splash > #side > .image {
     width: 100%;
@@ -31,7 +26,6 @@
     flex-shrink: 0;
     object-fit: cover;
     object-position: center;
-    scroll-snap-align: start;
 }
 
 #splash > .dot-container {
@@ -45,7 +39,7 @@
     justify-content: center;
     position: relative;
     transform: translateX(-50%); /* transform: translateX(50%);를 -50%로 수정 */
-
+    z-index: 100;
 }
 
 #splash > .dot-container > .dot {
@@ -54,6 +48,7 @@
     border-radius: 999rem;
     cursor: pointer;
     border: 0.15rem solid #fff;
+
 }
 
 #splash > .dot-container > .dot.checked{

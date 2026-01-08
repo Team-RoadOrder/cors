@@ -306,7 +306,7 @@ const loadList = () => {
                         <span class="itemTitle">
                              <input type="text" class="title" name="itemName" value="${item.itemName}" readonly required>
                              <input type="text" class="description" name="size" value="${item.size}" readonly>
-                             <span style="font-size: 0.9rem"><input type="text" class="price" name="price" value="${item.price}" readonly>원</span>
+                             <span style="font-size: 0.9rem"><input type="text" class="price" name="price" value="${Number(item.price).toLocaleString()}" readonly>원</span>
                         </span>
 
                         <span class="itemStatus">
