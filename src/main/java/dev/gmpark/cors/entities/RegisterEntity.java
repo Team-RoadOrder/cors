@@ -21,23 +21,9 @@ public class RegisterEntity {
     private String address;
     private String addressDetail;
     private String gender;
-
+    private int level;   // 0은 사용자 //  1~3 관리자
 }
 /*
-
-CREATE SCHEMA `cors`;
-create table `cors`.`email_tokens`
-        (
-                email       varchar(50)          not null,
-code        varchar(6)           not null,
-salt        varchar(255)         not null,
-is_verified tinyint(1) default 0 null,
-is_used     tinyint(1) default 0 null,
-created_at  datetime             null,
-expires_at  datetime             null,
-primary key (email, code, salt)
-);
-
 create table `cors`.`users`
         (
                 usertype       varchar(10)  null,
@@ -51,8 +37,23 @@ phone          varchar(20)  null,
 style          varchar(20)  null,
 address        varchar(255) null,
 address_detail varchar(255) null,
-gender         varchar(10)  null
+gender         varchar(10)  null,
+level          int  default(3) null
         );
+CREATE SCHEMA `cors`;
+create table `cors`.`email_tokens`
+        (
+                email       varchar(50)          not null,
+code        varchar(6)           not null,
+salt        varchar(255)         not null,
+is_verified tinyint(1) default 0 null,
+is_used     tinyint(1) default 0 null,
+created_at  datetime             null,
+expires_at  datetime             null,
+primary key (email, code, salt)
+);
+
+
 
 create table `cors`.`shop_info`
         (

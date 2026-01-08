@@ -7,6 +7,9 @@
     <title>판매자 직원관리</title>
     <link href="/assets/images/login/favicon.png" rel="icon" >
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <link rel="stylesheet" href="/assets/styles/ownermember/common.css">
+    <link rel="stylesheet" href="/assets/styles/ownermember/index.css">
+    <script src="/assets/scripts/ownermember/toggle.js" defer></script>
     <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
@@ -20,7 +23,7 @@
         <div class="profile">
             <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
                  alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
-            <div class="message">클릭시 변경 가능합니다.</div>
+            <div class="message">메인페이지에서 변경가능</div>
             <div class="title" th:text="${shop.shopName}"></div>
         </div>
         <ul class="nav-list">
@@ -28,7 +31,13 @@
                 <a href="/owner">대시보드</a>
             </li>
             <li class="register-form">
-                <a href="#">상품등록</a>
+                <a href="/owner/shop">상품등록</a>
+            </li>
+            <li class="register-owner-form">
+                <a href="/owner/member">관리자권한부여</a>
+            </li>
+            <li class="graph-form">
+                <a href="/owner/graph">매출흐름</a>
             </li>
         </ul>
     </nav>

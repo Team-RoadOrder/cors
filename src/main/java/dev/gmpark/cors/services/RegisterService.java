@@ -80,10 +80,12 @@ public class RegisterService {
                 return RegisterResult.FAILURE_EMAIL_DUPLICATE;
             }
          if (register.getUsertype().equals("customer")) {
+             register.setLevel(0);
              if (Arrays.stream(Gender.values()).map(x -> x.code).noneMatch(x -> x.equals(register.getGender()))) {
                  return RegisterResult.FAILURE;   // 무슨 실패인지 로직 확장해서 작성하기
              }
          } else if (register.getUsertype().equals("owner")) {
+             register.setLevel(3);
              if (register.getStoreName() == null || register.getStoreName().isEmpty()
                      || register.getBusinessNum() == null || register.getBusinessNum().isEmpty()) {
                  return RegisterResult.FAILURE;    // 마찬가지로 확장하기
