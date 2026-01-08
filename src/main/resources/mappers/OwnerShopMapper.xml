@@ -28,6 +28,10 @@
                 NOW()
                )
     </insert>
+    <insert id="insertLikeItem">
+        INSERT INTO `cors`.`like_items` (`user_email`, `shop_id`, `item_id`, `created_at`)
+        VALUES (#{likeItem.userEmail}, #{likeItem.shopId}, #{likeItem.itemId}, NOW())
+    </insert>
     <update id="updateItem">
         UPDATE `cors`.`shop_items`
         SET
@@ -46,6 +50,12 @@
         DELETE FROM `cors`.`shop_items`
         WHERE `id` = #{id}
         LIMIT 1
+    </delete>
+    <delete id="deleteLikeItem">
+        DELETE FROM `cors`.`like_items`
+        WHERE `user_email` = #{userEmail}
+          AND `shop_id` = #{shopId}
+          AND `item_id` = #{itemId}
     </delete>
     <select id="selectAll">
         SELECT `id`               AS `id`,
@@ -219,5 +229,30 @@
     </select>
     <select id="selectMainImagePathByItemId" resultType="string">
         SELECT image_path FROM `cors`.`shop_item_images` WHERE product_id = #{id} LIMIT 1
+    </select>
+    <select id="selectLikeItemCount" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `cors`.`like_items`
+        WHERE `user_email` = #{userEmail}
+          AND `shop_id` = #{shopId}
+          AND `item_id` = #{itemId}
+    </select>
+    <select id="selectLikeItemsByUser" resultType="dev.gmpark.cors.vos.LikeItemVo">
+        SELECT
+            si.`id`               AS `id`,
+            si.`item_name`        AS `itemName`,
+            si.`price`            AS `price`,
+            si.`shop_id`          AS `shopId`,
+            info.`shop_name`      AS `shopName`,  /* 요청하신 이미지 서브쿼리 */
+            (SELECT img.`image_path`
+             FROM `cors`.`shop_item_images` img
+             WHERE img.`product_id` = si.`id`
+             LIMIT 1)             AS `imagePath`,
+            li.`created_at`       AS `createdAt`
+        FROM `cors`.`like_items` li
+                 INNER JOIN `cors`.`shop_items` si ON li.`item_id` = si.`id`
+                 INNER JOIN `cors`.`shop_info` info ON li.`shop_id` = info.`shop_id`
+        WHERE li.`user_email` = #{userEmail}
+        ORDER BY li.`created_at` DESC
     </select>
 </mapper>

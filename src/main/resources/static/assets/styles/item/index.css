@@ -246,7 +246,7 @@ body .container {
     padding: 11px 8px 11px 10px;
 }
 .reservation:hover{
-    background-color: #f6f6f6;
+    background-color: #efefef;
     transition-delay: 0.1s;
     transition-timing-function: ease-in;
 }
@@ -287,7 +287,9 @@ body .container {
     background-color: #212121;
     box-shadow: black 0 0 0.0625rem;
 }
-
+.cart_Add .add:hover {
+    opacity: 0.8;
+}
 
 .additional{
     display: flex;

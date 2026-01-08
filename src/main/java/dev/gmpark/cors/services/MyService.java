@@ -3,10 +3,12 @@ package dev.gmpark.cors.services;
 
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ReservationItemsEntity;
+import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.vos.LikeItemVo;
 import dev.gmpark.cors.vos.LikeShopVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class MyService {
     private final ReservationMapper reservationMapper;
     private final RegisterMapper registerMapper;
     private final ShopInfoMapper shopInfoMapper;
+    private final OwnerShopMapper ownerShopMapper;
     public List<ReservationItemVo> getAllReservations(RegisterEntity sessionUser) {
         return this.reservationMapper.selectReservationsByEmail(sessionUser.getEmail());
     }
@@ -80,5 +83,9 @@ public class MyService {
     public LikeShopVo[] getLikeShops(RegisterEntity sessionUser) {
         return this.shopInfoMapper.selectLikedShopsByUser(sessionUser.getEmail());
 
+    }
+    public LikeItemVo[] getLikeItems(RegisterEntity sessionUser) {
+        if (sessionUser == null) return new LikeItemVo[0];
+        return this.ownerShopMapper.selectLikeItemsByUser(sessionUser.getEmail());
     }
 }

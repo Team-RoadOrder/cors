@@ -18,17 +18,18 @@
     align-items: flex-start;
     display: flex;
     margin-bottom: 5rem;
+    text-decoration: none; /* a태그 밑줄 제거 */
+    color: inherit; /* 폰트 색상 상속 */
 }
 .tab_likeProduct_content .grid .box >.image-wrapper {
-
-    background-color: rgb(243, 244, 247);
-    border-radius: 0.5rem;
     width: 100%;
     aspect-ratio: 1/1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    flex-shrink: 0;
+    position: relative;
+
 }
 .tab_likeProduct_content .grid > .box .image {
     width: 165px;
@@ -45,95 +46,41 @@
     justify-content: flex-start;
     padding-top: 1rem;
     padding-left: 0.2rem;
+    width: 100%;
+
 }
 .tab_likeProduct_content .grid > .box .text-container .price {
     padding-top: 0.5rem;
 
 }
-.tab_likeProduct_content .grid > .box.one .image {
-    background-image: url("/SHOP/images/category/one-1.webp");
-}
-.tab_likeProduct_content .grid > .box.one >.text-container >.title::after {
-    content:"Waviness Tide Layer Wool Crop Jacket Black";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.one >.text-container >.price:after {
-    content:"41,2000원";
+
+.tab_likeProduct_content .grid > .box .text-container .title {
     font-size: 1rem;
     font-weight: 700;
     position: relative;
     color: #000000;
+    text-align: center;
 }
-.tab_likeProduct_content .grid > .box.two .image {
-    background-image: url("/SHOP/images/category/one-2.webp");
-}
-.tab_likeProduct_content .grid > .box.two >.text-container >.title::after {
-    content:"Waviness Tide Layer Wool Crop Jacket Black";
+.tab_likeProduct_content .grid > .box .text-container .address {
     font-size: 0.8rem;
     font-weight: 400;
     position: relative;
     color: #000000;
-}
-.tab_likeProduct_content  .grid > .box.two >.text-container >.price:after {
-    content:"41,2000원";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.three .image {
-    background-image: url("/SHOP/images/category/one-3.webp");
-}
-.tab_likeProduct_content .grid > .box.three >.text-container >.title::after {
-    content:"Waviness Tide Layer Wool Crop Jacket Black";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.three >.text-container >.price:after {
-    content:"41,2000원";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.four .image {
-    background-image: url("/SHOP/images/category/one-4.webp");
-}
-.tab_likeProduct_content .grid > .box.four >.text-container >.title::after {
-    content:"Waviness Tide Layer Wool Crop Jacket Black";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content  .grid > .box.four >.text-container >.price:after {
-    content:"41,2000원";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.five .image {
-    background-image: url("/SHOP/images/category/one-5.webp");
-}
-.tab_likeProduct_content .grid > .box.five >.text-container >.title::after {
-    content:"Waviness Tide Layer Wool Crop Jacket Black";
-    font-size: 0.8rem;
-    font-weight: 400;
-    position: relative;
-    color: #000000;
-}
-.tab_likeProduct_content .grid > .box.five >.text-container >.price:after {
-    content:"41,2000원";
-    font-size: 1rem;
-    font-weight: 700;
-    position: relative;
-    color: #000000;
+    text-align: center;
 }
 
-
+.tab_likeProduct_content > .grid > .box > .image-wrapper>.button {
+    outline: none;
+    border: none;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: transparent;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.2rem;
+}
+.tab_likeProduct_content > .grid > .box > .image-wrapper>.button:hover {
+    transform:scale(1.1);
+}

@@ -18,4 +18,5 @@ public interface ShopInfoMapper {
     int deleteLikeShop(@Param("shopId") int shopId, @Param("email")  String email );
     int selectLikeCount(@Param(value = "like") LikeShopEntity likeShop);
     LikeShopVo[] selectLikedShopsByUser(@Param("userEmail") String userEmail);
+    int selectLikeCountByShopId(@Param("shopId") int shopId);
 }

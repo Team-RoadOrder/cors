@@ -40,5 +40,8 @@ public class ShopService {
             return CommonResult.SUCCESS;
         }
     }
+    public int getShopLikeCount(int shopId) {
+        return this.shopInfoMapper.selectLikeCountByShopId(shopId);
+    }
 
 }

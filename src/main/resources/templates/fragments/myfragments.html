@@ -325,38 +325,31 @@
 
 <div th:fragment="likes-item" class="tab_likeProduct_content">
     <h3 class="tab_title">관심 상품</h3>
-    <div class="grid">
-        <a class="box one" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box two" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box three" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box four" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box five" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box six" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box seven" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
-        </a>
-        <a class="box eight" href="#">
-            <span class="image-wrapper"><span class="image"></span></span>
-            <span class="text-container"><span class="title"></span><span class="price"></span></span>
+
+    <div th:if="${likeItems == null or #arrays.isEmpty(likeItems)}" style="text-align:center; padding: 50px;">
+        관심 등록한 상품이 없습니다.
+    </div>
+
+    <div class="grid" th:unless="${likeItems == null or #arrays.isEmpty(likeItems)}">
+        <a class="box" th:each="item : ${likeItems}"
+           th:href="@{/item/(id=${item.id})}"> <span class="image-wrapper">
+                <span class="image"
+                      th:style="'background-image: url(' + @{/images/{path}(path=${item.imagePath})} + '); background-size: cover; background-position: center; display:block; width:100%; height:100%;'">
+                </span>
+
+                <button class="button" type="button"
+                        th:onclick="|toggleLikeItems(${item.shopId}, ${item.id}); event.preventDefault();|">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 512.003 512.003">
+                        <g><path style="fill:#ff2929;" d="M256.001,105.69c19.535-49.77,61.325-87.79,113.231-87.79c43.705,0,80.225,22.572,108.871,54.44 c39.186,43.591,56.497,139.193-15.863,209.24c-37.129,35.946-205.815,212.524-205.815,212.524S88.171,317.084,50.619,281.579 C-22.447,212.495-6.01,116.919,34.756,72.339c28.919-31.629,65.165-54.44,108.871-54.44 C195.532,17.899,236.466,55.92,256.001,105.69"/></g>
+                    </svg>
+                </button>
+            </span>
+
+            <span class="text-container">
+                <span class="title" th:text="${item.itemName}">상품이름</span>
+                <span class="address" th:text="${item.shopName}">매장명</span>
+                <span class="address" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')} + '원'">가격</span>
+            </span>
         </a>
     </div>
 </div>

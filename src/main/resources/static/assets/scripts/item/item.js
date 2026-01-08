@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-
 const sizeDataInput = document.getElementById('serverSizeData');
 let sizes = [];
 
@@ -37,6 +36,7 @@ const confirmButton = document.getElementById('confirmSizeButton');
 const buyButton = document.querySelector('.buying');
 // 수정: .cart 클래스가 헤더 등 다른 곳에도 존재할 수 있으므로 구체적인 선택자 사용
 const cartButton = document.querySelector('.cart_Add .cart');
+
 
 // ✅ 옵션링크 내부의 <b> 태그를 참조합니다.
 const selectOptionText = document.querySelector('.selectOption b');
@@ -173,4 +173,86 @@ if (cartButton) {
                 confirmText: '확인'});
         }
     });
+}
+
+const toggleLikeItem = ( shopId, itemId) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('shopId', shopId);
+    formData.append('itemId', itemId);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
+            return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        switch (response.result) {
+            case "FAILURE_SESSION":
+                openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => { location.href = '/login'; }
+                });
+                break;
+            case 'FAILURE':
+                openModal("FAILURE", `<p>관심상품 등록을 취소하였습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>관심상품으로 저장했습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        location.href="/my?open=likes-item"
+                    }
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+
+        }
+     };
+     xhr.open('POST', '/item/')
+     xhr.send(formData);
+
+}
+
+const toggleLikeShop = (shopId) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('shopId', shopId);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
+            return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        switch (response.result) {
+            case "FAILURE_SESSION":
+                openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => { location.href = '/login'; }
+                });
+                break;
+            case 'FAILURE':
+                openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>관심매장에 등록되었습니다..</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        location.href="/my?open=likes-shop"
+                    }
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+
+        }
+    }
+    xhr.open('POST', '/shop/like')
+    xhr.send(formData);
 }

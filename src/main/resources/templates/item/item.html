@@ -64,7 +64,7 @@
             <p class="koreanProductName" th:text="${item.color}">폴리테루 X 롯데자이언츠 레트로 유니폼 블랙</p>
             <div class="buy">
                 <span class="buyText" >판매가격</span>
-                <span class="buyNumber"  th:text="${item.price} + ' ' +원"><b>139,000원</b></span>
+                <span class="buyNumber"  th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')+ ' ' + '원'}"><b>139,000원</b></span>
             </div>
             <p class="star">★</p>
             <a href="#"><p class="score"><b>4.9</b></p></a>
@@ -82,9 +82,8 @@
         <a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
-            <span class="add">관심상품저장</span>
+            <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장</button>
         </div>
-
 <!--        <div class="additional">
             <p>추가 혜택</p>
             <a href="#">더보기</a>
@@ -98,7 +97,6 @@
             <p class="pointCredit">결제</p>
             <p class="credit">크림카드 최대 15만... 외 10건</p>
         </div>-->
-
         <div class="delivery">
             <p class="deliveryInformation">배송 정보</p>
             <div class="deliveryImage">
@@ -118,11 +116,14 @@
                     <div class="attractive">
                         <p th:text="${shopInfo.shopName}" >폴리테루 </p>
                         <p> º 관심</p>
-                        <p>2.1만</p>
+                        <p th:text="${#numbers.formatInteger(likeCount, 0, 'COMMA')}">2.1만</p>
                     </div>
                 </a>
                 <div class="save">
-                    <input type="checkbox" id="bookmark-toggle" hidden>
+                    <input type="checkbox" id="bookmark-toggle"
+                           th:onclick="|toggleLikeShop(${shopInfo.shopId}, '확정')|"
+                           th:checked="${isLiked}"
+                           hidden>
                     <label for="bookmark-toggle" class="bookmark-label">
                         <img src="../assets/images/item/save1.png" class="bookmark default" alt="bookmark">
                         <img src="../assets/images/item/save2.png" class="bookmark active" alt="bookmark-black">
@@ -134,8 +135,6 @@
         <div class="ad">
             <img src="../assets/images/item/ad.png" alt="ad" class="ad">
         </div>
-
-        리뷰
         <div class="review">
             <h3>리뷰 ★ 4.9 (276)</h3>
             <div class="review-bar">

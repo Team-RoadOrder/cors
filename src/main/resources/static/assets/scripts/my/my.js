@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     case 'likes-shop':
                         targetClass = '.tab_likeShop_content';
                         break;
+                    case 'likes-item':
+                        targetClass = '.tab_likeProduct_content';
+                        break;
                     case 'reservation':
                         targetClass = '.tab_reservation_content';
                         break;
@@ -353,6 +356,7 @@ const  toggleAddressMode = (btn, addrInput, detailInput) => {
                                     // 성공 시 프로필 탭 새로고침
                                     loadTab('address', document.querySelector('.menu .item[data-tab="address"]'));
                                     // 혹은 전체 새로고침: window.location.reload();
+
                                 }
                             });
                             break;
@@ -438,5 +442,63 @@ const toggleLikeShop = (e, shopId) => {
         }
     }
     xhr.open('POST', '/shop/like')
+    xhr.send(formData);
+}
+
+const toggleLikeItems = (shopId, itemId) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('shopId', shopId);
+    formData.append('itemId', itemId);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
+            return;
+        }
+
+        try {
+            const response = JSON.parse(xhr.responseText);
+            switch (response.result) {
+                case "FAILURE_SESSION":
+                    openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { location.href = '/login'; }
+                    });
+                    break;
+                case 'FAILURE':
+                    openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {confirmText: '확인', onConfirm: () => {
+                            if (window.location.search.includes('open=likes-item')) {
+                                window.location.reload();
+                            } else {
+                                // 다른 페이지(예: 상품상세)에서 온 거라면? -> 이동
+                                location.href = "/my?open=likes-item";
+                            }
+                        }});
+                    break;
+                case 'SUCCESS':
+                    openModal("SUCCESS", `<p>관심매장에 등록되었습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            if (window.location.search.includes('open=likes-item')) {
+                                window.location.reload();
+                            } else {
+                                // 다른 페이지(예: 상품상세)에서 온 거라면? -> 이동
+                                location.href = "/my?open=likes-item";
+                            }
+                        }
+                    });
+                    break;
+                default:
+                    openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+            }
+        } catch (error) {
+            console.error(error);
+            openModal("ERROR", `<p>응답 처리 중 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+    }
+    xhr.open('POST', '/item/')
     xhr.send(formData);
 }

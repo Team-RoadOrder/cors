@@ -37,6 +37,8 @@
             <span class="num" th:text="${shopInfo.shopTime}">4,001 ></span>
             <span class="style">연락처</span>
             <span class="num" th:text="${shopInfo.shopTel}">565 ></span>
+            <span class="style">주소</span>
+            <span class="num" th:text="${shopInfo.getShopAddress()}">565 ></span>
         </div>
         <div class="button">
             <button class="like"><a href="#">관심 저장</a></button>

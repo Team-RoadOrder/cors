@@ -4,6 +4,7 @@ package dev.gmpark.cors.controllers;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.MyService;
+import dev.gmpark.cors.vos.LikeItemVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -79,9 +80,7 @@ public class MyController {
                     break;
 
                 case "likes-item":
-                    // [관심 상품] 탭일 때 -> 상품 리스트 조회
-                    // List<ItemDTO> likeItems = itemService.findLikeItems(sessionUser.getEmail());
-                    // modelAndView.addObject("likeItems", likeItems);
+                    modelAndView.addObject("likeItems", this.myService.getLikeItems(sessionUser));
                     break;
 
                 case "profile":

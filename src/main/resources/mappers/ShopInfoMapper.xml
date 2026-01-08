@@ -102,6 +102,11 @@
         WHERE t2.user_email = #{userEmail}
         ORDER BY t2.created_at DESC
     </select>
+    <select id="selectLikeCountByShopId" resultType="java.lang.Integer">
+        SELECT COUNT(`user_email`)
+        FROM `cors`.`like_shops`
+        WHERE `shop_id` = #{shopId}
+    </select>
     <update id="update">
         UPDATE `cors`.`shop_info`
         SET
