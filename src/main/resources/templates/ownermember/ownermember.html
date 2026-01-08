@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>판매자 직원관리</title>
+    <link href="/assets/images/login/favicon.png" rel="icon" >
+    <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
+    <script defer src="/assets/scripts/common.js"></script>
+</head>
+<body>
+<th:block th:replace="~{/fragments/common.html :: owner-header}">
+</th:block>
+<main id="main">
+    <button id="toggleNav" class="toggle-btn **nav-open**">
+        <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
+    <nav id="nav">
+        <div class="info">매장관리 페이지</div>
+        <div class="profile">
+            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
+                 alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
+            <div class="message">클릭시 변경 가능합니다.</div>
+            <div class="title" th:text="${shop.shopName}"></div>
+        </div>
+        <ul class="nav-list">
+            <li class="dashboard">
+                <a href="/owner">대시보드</a>
+            </li>
+            <li class="register-form">
+                <a href="#">상품등록</a>
+            </li>
+        </ul>
+    </nav>
+</main>
+
+</body>
+</html>

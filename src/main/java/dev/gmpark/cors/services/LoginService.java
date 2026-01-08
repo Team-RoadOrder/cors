@@ -4,6 +4,8 @@ package dev.gmpark.cors.services;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.RegisterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,7 +13,7 @@ import java.util.*;
 @Service
 public class LoginService {
     private final RegisterMapper registerMapper;
-
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     @Autowired
     public LoginService(RegisterMapper registerMapper) {
         this.registerMapper = registerMapper;
@@ -20,8 +22,14 @@ public class LoginService {
         if(email.isEmpty() || password.isEmpty()) {
             return null;
         }
-        // 로그인 실패시 널값 반환하는 로직 작성 Failure를 반환하는 형태로 수정해도됨
-        return registerMapper.selectByEmailAndPasswordUser(email, password);
+        RegisterEntity dbUser = registerMapper.selectByEmail(email);
+        if(dbUser == null) {
+            return null;
+        }
+        if( !BCrypt.checkpw(password, dbUser.getPassword())) {
+            return null;
+        }
+        return dbUser;
     }
 }
 

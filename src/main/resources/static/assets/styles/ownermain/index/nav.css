@@ -152,6 +152,46 @@
     top: 1.8rem;
     left: 2.45rem;
 }
+#nav > .nav-list > .register-owner-form {
+    padding: 2rem 5rem;
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border-bottom: 1px solid #eaeaeaa0;
+    color: #5C5C5C;
+}
+#nav > .nav-list > .register-owner-form::before {
+    content: '';
+    display: block;
+    background-image: url("/assets/images/ownermain/user.png");
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 1.8rem;
+    left: 2.45rem;
+}
+#nav > .nav-list > .graph-form {
+    padding: 2rem 5rem;
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    border-bottom: 1px solid #eaeaeaa0;
+    color: #5C5C5C;
+}
+#nav > .nav-list > .graph-form::before {
+    content: '';
+    display: block;
+    background-image: url("/assets/images/ownermain/graph.png");
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-size: contain; /* 또는 cover, 100% 100% 등 */
+    background-repeat: no-repeat;
+    top: 1.8rem;
+    left: 2.45rem;
+}
 
 /* #toggleNav 스타일 수정 */
 #toggleNav {
