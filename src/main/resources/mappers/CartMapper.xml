@@ -34,4 +34,16 @@
     <delete id="deleteCartItem">
         DELETE FROM `cors`.`carts` WHERE `id` = #{id}
     </delete>
+
+    <select id="selectCartItemsByIds" resultMap="CartVoMap">
+        SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
+               si.`item_name`, si.`color`, si.`price`,
+               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
+        FROM `cors`.`carts` c
+        JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`
+        WHERE c.`id` IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

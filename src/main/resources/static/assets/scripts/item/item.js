@@ -143,8 +143,17 @@ if (cartButton) {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         const response = JSON.parse(xhr.responseText);
-                        if (response.result === 'success') {
-                            location.href = '/cart';
+                        if (response.result === 'SUCCESS') {
+                            openModal("장바구니 담기 성공", `<p>장바구니에 상품이 담겼습니다.</p>`, {
+                                confirmText: '장바구니로 이동',
+                                cancelText: '계속 쇼핑하기',
+                                onConfirm: () => {
+                                    location.href = '/cart';
+                                },
+                                onCancel: () => {
+                                    // 계속 쇼핑하기: 아무 동작 안 함 (모달 닫힘)
+                                }
+                            });
                         } else {
                             openModal("ERROR", `<p>${response.message || '장바구니 담기에 실패했습니다.'}</p>`, {
                                 confirmText: '확인'

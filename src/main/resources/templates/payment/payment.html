@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/assets/styles/payment/pay.css">
   <link rel="stylesheet" href="/assets/styles/payment/common.css">
   <script defer src="/assets/scripts/common.js"></script>
+  <script defer src="/assets/scripts/payment/payment.js"></script>
 </head>
 <body>
 <div class="container">
@@ -31,10 +32,10 @@
       <label for="please">
       <select class="please" name="please" id="please">
         <option value="please">요청사항 없음</option>
-        <option value="please">문 앞에 놓아주세요</option>
-        <option value="please">경비실에 맡겨 주세요</option>
-        <option value="please">파손 위험 상품입니다. 배송시 주의해주세요</option>
-        <option value="please">직접입력</option>
+        <option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+        <option value="경비실에 맡겨 주세요">경비실에 맡겨 주세요</option>
+        <option value="파손 위험 상품입니다. 배송시 주의해주세요">파손 위험 상품입니다. 배송시 주의해주세요</option>
+        <option value="direct">직접입력</option>
       </select>
           <img src="/assets/images/payment/arrow.png" alt="화살표" class="arrowImg">
       </label>
@@ -44,7 +45,7 @@
   <div class="section">
     <h2>주문 상품 및 쿠폰 <span>총 1건</span></h2>
 
-    <div class="product">
+    <div class="product" th:data-item-id="${item.id}" th:data-size="${size}">
       <img class="productImage" th:if="${!#lists.isEmpty(item.images)}" th:src="@{/images/{path}(path=${item.images[0].imagePath})}" alt="상품 이미지">
       <img class="productImage" th:if="${#lists.isEmpty(item.images)}" src="/assets/images/default.png" alt="기본 이미지">
       <div class="info">
@@ -130,7 +131,7 @@
     </table>
   </div>
 
-  <button type="submit" class="submit-btn">결제하기</button>
+  <button type="button" class="submit-btn" id="paymentButton">결제하기</button>
 
 </div>
 

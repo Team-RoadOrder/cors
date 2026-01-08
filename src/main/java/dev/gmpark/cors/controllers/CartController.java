@@ -1,9 +1,11 @@
 package dev.gmpark.cors.controllers;
 
+import dev.gmpark.cors.dtos.CartOrderDto;
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.CartService;
+import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.vos.CartVo;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+    private final OrderService orderService;
 
     @RequestMapping(value = "/cart", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getCart(ModelAndView modelAndView,
@@ -41,16 +44,12 @@ public class CartController {
                                        @RequestParam(value = "quantity", defaultValue = "1") int quantity) {
         Map<String, Object> response = new HashMap<>();
         if (sessionUser == null) {
-            response.put("result", "failure");
+            response.put("result", CommonResult.FAILURE.name());
             response.put("message", "로그인이 필요합니다.");
             return response;
         }
         boolean result = this.cartService.addCart(sessionUser.getEmail(), itemId, size, quantity);
-        if (result) {
-            response.put("result", "success");
-        } else {
-            response.put("result", "failure");
-        }
+        response.put("result", result ? CommonResult.SUCCESS.name() : CommonResult.FAILURE.name());
         return response;
     }
 
@@ -60,22 +59,40 @@ public class CartController {
                                           @RequestParam(value = "ids") List<Long> ids) {
         Map<String, Object> response = new HashMap<>();
         if (sessionUser == null) {
-            response.put("result", "failure");
+            response.put("result", CommonResult.FAILURE.name());
             response.put("message", "로그인이 필요합니다.");
             return response;
         }
         
-        boolean result = true;
-        for (Long id : ids) {
-            if (!this.cartService.deleteCartItem(id)) {
-                result = false;
-            }
+        boolean result = this.cartService.deleteCartItems(ids);
+        response.put("result", result ? CommonResult.SUCCESS.name() : CommonResult.FAILURE.name());
+        return response;
+    }
+
+    @RequestMapping(value = "/cart/order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> orderCart(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+                                         @RequestBody CartOrderDto dto) {
+        Map<String, Object> response = new HashMap<>();
+        if (sessionUser == null) {
+            response.put("result", CommonResult.FAILURE.name());
+            response.put("message", "로그인이 필요합니다.");
+            return response;
         }
 
-        if (result) {
-            response.put("result", "success");
-        } else {
-            response.put("result", "failure");
+        try {
+            if (dto.getCartIds() == null || dto.getCartIds().isEmpty()) {
+                response.put("result", CommonResult.FAILURE.name());
+                response.put("message", "주문할 상품이 없습니다.");
+                return response;
+            }
+
+            CommonResult result = this.orderService.processCartOrder(sessionUser, dto.getCartIds());
+            response.put("result", result.name());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("result", CommonResult.FAILURE.name());
+            response.put("message", "주문 처리 중 오류가 발생했습니다.");
         }
         return response;
     }
