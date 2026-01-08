@@ -13,6 +13,25 @@
   font-weight: bold;
 }
 
+/* 스크롤 영역 추가 */
+.cart-items-wrapper {
+  max-height: 500px; /* 원하는 높이로 조절 가능 */
+  overflow-y: auto;
+  border-bottom: 1px solid #eee;
+}
+
+/* 스크롤바 스타일링 (선택 사항) */
+.cart-items-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.cart-items-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+.cart-items-wrapper::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
 .cart-item {
   display: flex;
   align-items: center;

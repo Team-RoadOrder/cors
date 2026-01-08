@@ -1,5 +1,6 @@
 package dev.gmpark.cors.services;
 
+import dev.gmpark.cors.dtos.PaymentItemDto;
 import dev.gmpark.cors.entities.OrderEntity;
 import dev.gmpark.cors.entities.OrderItemEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
@@ -21,6 +22,9 @@ public class OrderService {
     private final ItemService itemService;
     private final CartService cartService;
 
+    private static final long FREE_DELIVERY_THRESHOLD = 70000;
+    private static final long DELIVERY_FEE = 3000;
+
     @Transactional
     public CommonResult createOrder(OrderEntity order, List<OrderItemEntity> items) {
         if (this.orderMapper.insertOrder(order) == 0) {
@@ -41,9 +45,13 @@ public class OrderService {
             return CommonResult.FAILURE;
         }
 
+        long totalProductPrice = item.getPrice();
+        long deliveryFee = totalProductPrice >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+        long totalPrice = totalProductPrice + deliveryFee;
+
         OrderEntity order = OrderEntity.builder()
                 .userEmail(user.getEmail())
-                .totalPrice(item.getPrice() + 3200) // 배송비 포함
+                .totalPrice(totalPrice)
                 .status("PAID")
                 .receiverName(user.getName())
                 .receiverPhone(user.getPhone())
@@ -55,7 +63,7 @@ public class OrderService {
         List<OrderItemEntity> items = new ArrayList<>();
         items.add(OrderItemEntity.builder()
                 .itemId(itemId)
-                .shopId(item.getShopId()) // shopId 추가
+                .shopId(item.getShopId())
                 .size(size)
                 .quantity(1)
                 .price(item.getPrice())
@@ -78,14 +86,16 @@ public class OrderService {
             totalProductPrice += cart.getItemPrice() * cart.getQuantity();
             orderItems.add(OrderItemEntity.builder()
                     .itemId(cart.getItemId())
-                    .shopId(cart.getShopId()) // shopId 추가
+                    .shopId(cart.getShopId())
                     .size(cart.getSize())
                     .quantity(cart.getQuantity())
                     .price(cart.getItemPrice())
                     .build());
         }
 
-        long deliveryFee = totalProductPrice > 0 ? 3000 : 0;
+        long deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD) ? 0 : DELIVERY_FEE;
+        if (totalProductPrice == 0) deliveryFee = 0; // 상품이 없으면 배송비도 0
+
         long totalPrice = totalProductPrice + deliveryFee;
 
         OrderEntity order = OrderEntity.builder()
@@ -102,10 +112,44 @@ public class OrderService {
         CommonResult orderResult = this.createOrder(order, orderItems);
         
         if (orderResult == CommonResult.SUCCESS) {
-            // 주문 성공 시 장바구니에서 삭제
             this.cartService.deleteCartItems(cartIds);
         }
         
         return orderResult;
+    }
+
+    public List<PaymentItemDto> getPaymentItemsForSingleOrder(Long itemId, String size) {
+        List<PaymentItemDto> items = new ArrayList<>();
+        ShopItemVo item = this.itemService.getItemById(itemId);
+        if (item != null) {
+            items.add(PaymentItemDto.builder()
+                    .itemId(item.getId())
+                    .itemName(item.getItemName())
+                    .color(item.getColor())
+                    .size(size)
+                    .quantity(1)
+                    .price(item.getPrice())
+                    .imagePath(item.getImages().isEmpty() ? null : item.getImages().get(0).getImagePath())
+                    .build());
+        }
+        return items;
+    }
+
+    public List<PaymentItemDto> getPaymentItemsForCartOrder(List<Long> cartIds) {
+        List<PaymentItemDto> items = new ArrayList<>();
+        List<CartVo> cartItems = this.cartService.getCartItemsByIds(cartIds);
+        for (CartVo cart : cartItems) {
+            items.add(PaymentItemDto.builder()
+                    .itemId(cart.getItemId())
+                    .itemName(cart.getItemName())
+                    .color(cart.getItemColor())
+                    .size(cart.getSize())
+                    .quantity(cart.getQuantity())
+                    .price(cart.getItemPrice())
+                    .imagePath(cart.getItemImage())
+                    .cartId(cart.getId())
+                    .build());
+        }
+        return items;
     }
 }

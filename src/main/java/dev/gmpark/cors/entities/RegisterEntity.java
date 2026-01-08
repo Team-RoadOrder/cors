@@ -161,4 +161,3 @@ CREATE TABLE `cors`.`carts` (
 /*
 TRUNCATE `study_memo`.memos;
 */
-

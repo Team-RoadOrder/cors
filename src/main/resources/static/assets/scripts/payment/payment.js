@@ -1,16 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
     const paymentButton = document.getElementById('paymentButton');
-    const productElement = document.querySelector('.product');
     const requestSelect = document.getElementById('please');
+    const isCartOrderInput = document.getElementById('isCartOrder');
 
     if (paymentButton) {
         paymentButton.addEventListener('click', () => {
-            const itemId = productElement.dataset.itemId;
-            const size = productElement.dataset.size;
             const request = requestSelect.value;
+            const isCartOrder = isCartOrderInput.value === 'true';
+            
+            let url = '';
+            let data = {};
+
+            if (isCartOrder) {
+                // 장바구니 주문
+                const productElements = document.querySelectorAll('.product');
+                const cartIds = [];
+                productElements.forEach(el => {
+                    const cartId = el.dataset.cartId;
+                    if (cartId) cartIds.push(cartId);
+                });
+                
+                url = '/cart/order';
+                data = { cartIds: cartIds }; // request는 현재 CartOrderDto에 없으므로 추가 필요할 수 있음
+            } else {
+                // 단일 상품 주문
+                const productElement = document.querySelector('.product');
+                const itemId = productElement.dataset.itemId;
+                const size = productElement.dataset.size;
+                
+                url = '/pay';
+                data = {
+                    itemId: itemId,
+                    size: size,
+                    request: request
+                };
+            }
 
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/pay');
+            xhr.open('POST', url);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -35,11 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             };
-            xhr.send(JSON.stringify({
-                itemId: itemId,
-                size: size,
-                request: request
-            }));
+            xhr.send(JSON.stringify(data));
         });
     }
 });

@@ -43,16 +43,25 @@
 
 
   <div class="section">
-    <h2>주문 상품 및 쿠폰 <span>총 1건</span></h2>
+    <h2 th:text="'주문 상품 및 쿠폰 총 ' + ${#lists.size(items)} + '건'">주문 상품 및 쿠폰 <span>총 1건</span></h2>
 
-    <div class="product" th:data-item-id="${item.id}" th:data-size="${size}">
-      <img class="productImage" th:if="${!#lists.isEmpty(item.images)}" th:src="@{/images/{path}(path=${item.images[0].imagePath})}" alt="상품 이미지">
-      <img class="productImage" th:if="${#lists.isEmpty(item.images)}" src="/assets/images/default.png" alt="기본 이미지">
-      <div class="info">
-        <p class="title" th:text="${item.itemName}">New Balance 509 Black Gray</p>
-        <p class="desc"><span th:text="${item.color}">뉴발란스 509 블랙 그레이</span><br><span th:text="${size}">255</span> / 빠른배송</p>
+    <!-- 스크롤 영역으로 감싸기 -->
+    <div class="products-wrapper">
+      <div class="product" th:each="item : ${items}"
+           th:data-item-id="${item.itemId}"
+           th:data-size="${item.size}"
+           th:data-cart-id="${item.cartId}">
+        <img class="productImage" th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" alt="상품 이미지">
+        <img class="productImage" th:if="${item.imagePath == null}" src="/assets/images/default.png" alt="기본 이미지">
+        <div class="info">
+          <p class="title" th:text="${item.itemName}">New Balance 509 Black Gray</p>
+          <p class="desc">
+              <span th:text="${item.color}">뉴발란스 509 블랙 그레이</span><br>
+              <span th:text="${item.size}">255</span> / 수량: <span th:text="${item.quantity}">1</span>
+          </p>
+        </div>
+        <div class="price" th:text="${item.price * item.quantity} + '원'">163,000원</div>
       </div>
-      <div class="price" th:text="${item.price} + '원'">163,000원</div>
     </div>
 
     <div class="delivery">
@@ -68,7 +77,7 @@
 
     <div class="total">
       <p>결제금액</p>
-      <span th:text="${item.price} + '원'">171,200원</span>
+      <span th:text="${totalProductPrice} + '원'">171,200원</span>
     </div>
   </div>
 
@@ -124,13 +133,14 @@
   <div class="section summary">
     <h2>최종 주문정보</h2>
     <table>
-      <tr><td>구매가</td><td th:text="${item.price} + '원'">163,000원</td></tr>
-      <tr><td>배송비</td><td>3,200원</td></tr>
+      <tr><td>구매가</td><td th:text="${totalProductPrice} + '원'">163,000원</td></tr>
+      <tr><td>배송비</td><td th:text="${deliveryFee} + '원'">3,200원</td></tr>
       <tr><td>포인트 사용</td><td>0원</td></tr>
-      <tr class="total-row"><td>총 결제금액</td><td th:text="${item.price + 3200} + '원'">171,200원</td></tr>
+      <tr class="total-row"><td>총 결제금액</td><td th:text="${totalPrice} + '원'">171,200원</td></tr>
     </table>
   </div>
 
+  <input type="hidden" id="isCartOrder" th:value="${isCartOrder}">
   <button type="button" class="submit-btn" id="paymentButton">결제하기</button>
 
 </div>
