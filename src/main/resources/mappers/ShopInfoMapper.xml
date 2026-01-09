@@ -65,6 +65,21 @@
         FROM `cors`.`shop_info`
         ORDER BY `shopId` DESC
     </select>
+    <select id="selectSixShops">
+        SELECT
+            shop_id          AS shopId,
+            user_email       AS userEmail,
+            shop_name        AS shopName,
+            shop_time        AS shopTime,
+            shop_category    AS shopCategory,
+            shop_address     AS shopAddress,
+            shop_tel         AS shopTel,
+            profile_image    AS profileImage,
+            background_image AS backgroundImage
+        FROM `cors`.`shop_info`
+        ORDER BY `shopId` DESC
+        LIMIT 6
+    </select>
     <select id="selectShopByShopId" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
         SELECT
             shop_id          AS shopId,
@@ -107,6 +122,7 @@
         FROM `cors`.`like_shops`
         WHERE `shop_id` = #{shopId}
     </select>
+
     <update id="update">
         UPDATE `cors`.`shop_info`
         SET

@@ -16,6 +16,9 @@ public class MainService {
     public ShopItemEntity[] getAllByStyle(String style) {
         return ownerShopMapper.selectItemByStyle(style);
     }
+    public ShopInfoEntity[] getSixShop() {
+        return this.shopInfoMapper.selectSixShops();
+    }
     public ShopInfoEntity[] getAllShop() {
         return this.shopInfoMapper.selectAllShops();
     }

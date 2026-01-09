@@ -14,6 +14,7 @@ public interface ShopInfoMapper {
     ShopInfoEntity selectShopByShopId(@Param("shopId") int shopId);
     int update(@Param("info") ShopInfoEntity shopInfo);
     ShopInfoEntity[] selectAllShops();
+    ShopInfoEntity[] selectSixShops();
     int insertLikeShop(@Param(value = "like") LikeShopEntity likeShop);
     int deleteLikeShop(@Param("shopId") int shopId, @Param("email")  String email );
     int selectLikeCount(@Param(value = "like") LikeShopEntity likeShop);

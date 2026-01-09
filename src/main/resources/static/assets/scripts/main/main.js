@@ -149,7 +149,7 @@ const renderShops = () => {
 
     const xhr = new XMLHttpRequest();
     // MainController에 정의된 /all-shops 엔드포인트 호출
-    xhr.open('GET', '/all-shops');
+    xhr.open('GET', '/six-shops');
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {

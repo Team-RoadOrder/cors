@@ -62,6 +62,12 @@ public class MainController {
         // 이제 "미니멀"이라는 문자열이 서비스 -> 매퍼 -> SQL로 전달됩니다.
         return this.mainService.getAllByStyle(dbStyleName);
     }
+    @RequestMapping(value = "/six-shops", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ShopInfoEntity[] getSixShops() {
+        /*return this.*/
+        return this.mainService.getSixShop();
+    }
     @RequestMapping(value = "/all-shops", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ShopInfoEntity[] getAllShops() {
