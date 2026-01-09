@@ -212,7 +212,7 @@ const toggleLikeItem = ( shopId, itemId) => {
 
         }
      };
-     xhr.open('POST', '/item/')
+     xhr.open('POST', '/item/like')
      xhr.send(formData);
 
 }

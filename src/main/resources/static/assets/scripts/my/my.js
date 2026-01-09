@@ -499,6 +499,6 @@ const toggleLikeItems = (shopId, itemId) => {
             openModal("ERROR", `<p>응답 처리 중 오류가 발생했습니다.</p>`, {confirmText: '확인'});
         }
     }
-    xhr.open('POST', '/item/')
+    xhr.open('POST', '/item/like')
     xhr.send(formData);
 }

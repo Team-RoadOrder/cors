@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -33,11 +34,11 @@ public class ItemController {
             return modelAndView;
         }
         ShopItemVo item = this.itemService.getItemById(id);
-        
+
         if (shopId == 0 && item != null) {
             shopId = item.getShopId();
         }
-        
+
         ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
         int likeCount = this.shopService.getShopLikeCount(shopId);
         ShopInfoEntity[] likeShops = this.myService.getLikeShops(sessionUser);
@@ -48,15 +49,20 @@ public class ItemController {
             isLiked = Arrays.stream(likeShops)
                     .anyMatch(shop -> shop.getShopId() == currentShopId);
         }
+
+        // [AI 추가] 추천 상품 조회
+        List<ShopItemVo> relatedItems = this.itemService.getRelatedItems(id);
+
         modelAndView.addObject("shopInfo", shopInfo);
         modelAndView.addObject("item", item);
         modelAndView.addObject("likeShops", this.myService.getLikeShops(sessionUser));
         modelAndView.addObject("isLiked", isLiked); // boolean
         modelAndView.addObject("likeCount", likeCount);
+        modelAndView.addObject("relatedItems", relatedItems); // AI 추천 상품 추가
         modelAndView.setViewName("item/item");
         return modelAndView;
     }
-    @RequestMapping(value = "/" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/like" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> postLikeItem(
             @RequestParam(value = "shopId") int shopId,
