@@ -9,16 +9,16 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/ownermember/common.css">
     <link rel="stylesheet" href="/assets/styles/ownermember/index.css">
-    <script src="/assets/scripts/ownermember/toggle.js" defer></script>
+    <script src="/assets/scripts/ownermain/toggle.js" defer></script>
     <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: owner-header}">
 </th:block>
 <main id="main">
-    <button id="toggleNav" class="toggle-btn **nav-open**">
+    <button id="toggleNav" class="toggle-btn">
         <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
-    <nav id="nav">
+    <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
             <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
