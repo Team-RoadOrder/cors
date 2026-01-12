@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>상품목록</title>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/styles/itemlist/common.css">
     <link rel="stylesheet" href="/assets/styles/itemlist/index.css">
     <link href="/assets/images/login/favicon.png" rel="icon"  >
     <link rel="stylesheet" href="/assets/styles/common.css">
     <script defer src="/assets/scripts/common.js"></script>
-    <script defer src="/assets/scripts/itemlist/index.js"></script>
-    <title>상품목록</title>
+    <script defer src="/assets/scripts/itemlist/itemlist.js"></script>
+
 </head>
 <body>
 <!-- 헤더부분 , 로고와 네비바가 들어감 -->
@@ -20,8 +21,7 @@
 <!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
 <!--헤더에 호버하면 나타나는 메뉴 -->
 <main id="main" >
-    <img src="../MY/images/waviness.png" class="image" alt="메인이미지">
-    <!--    <img src="./images/img.png" class="image" alt="메인이미지">-->
+    <img src="/assets/images/main/splash1.jpg" class="image" alt="메인이미지">
 </main> <!-- 헤더뒤에 배경 -->
 <div id="item">
     <div class="item-list">상품 목록</div>
@@ -30,160 +30,42 @@
         <li class="item">가격순</li>
     </ul>
     <ul class="item-container">
-        <li class="list" >
-            <a href="../SHOP/shop.html">
-                <img class="image" src="https://static.upbit.com/logos/BTC.png" alt="상품이미지">
+        <li class="list" th:each="item : ${items}">
+            <a th:href="@{/item/(shopId=${item.shopId}, id=${item.id})}">
+                <img class="image"
+                     th:src="${item.imagePath != null} ? '/images/' + ${item.imagePath} : '/assets/images/ownermain/item-list/default.png'"
+                     alt="매장이미지">
+
                 <div class="item-info">
                     <div class="firstLine">
-                        <span class="name">비트코인</span>
-                        <span class="km">Bitcoin</span>
+                        <span class="name" th:text="${item.itemName}">Fogssy 포그씨</span>
+                        <span class="km" th:text="${item.color}">Color</span>
                     </div>
-                    <div class="address">KRW-BTC</div>
-                    <div class="time">162,939,000</div>
-                    <div class="tag-area">
-                        <span class="tag">2,856,000</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop1.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">Fogssy 포그씨</span>
-                        <span class="km">0.15km</span>
-                    </div>
-                    <div class="address">ACSan-ro, 5-gil,24-11</div>
-                    <div class="time">영업중 10:00~22:00</div>
+                    <div class="address" th:text="${item.mainCategory}">Category</div>
+
+                    <div class="time" th:text="|${#numbers.formatInteger(item.price, 0, 'COMMA')}원|">10,000원</div>
+
                     <div class="tag-area">
                         <span class="tag">예약가능</span>
                         <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop2.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">수아레 성수 플래그십 스토어</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Seongdong-gu, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약가능</span>
-                        <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop4.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">TonyWack 한남</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Yongsan District, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약가능</span>
-                        <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list" >
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop3.png" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">waviness</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Yongsan District, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약 가능</span>
-                        <span class="tag">픽업 가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop1.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">Fogssy 포그씨</span>
-                        <span class="km">0.15km</span>
-                    </div>
-                    <div class="address">ACSan-ro, 5-gil,24-11</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약가능</span>
-                        <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop2.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">수아레 성수 플래그십 스토어</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Seongdong-gu, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약가능</span>
-                        <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list">
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop4.webp" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">TonyWack 한남</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Yongsan District, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약가능</span>
-                        <span class="tag">픽업가능</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li class="list" >
-            <a href="../SHOP/shop.html">
-                <img class="image" src="../MY/images/shop/shop3.png" alt="매장이미지">
-                <div class="item-info">
-                    <div class="firstLine">
-                        <span class="name">waviness</span>
-                        <span class="km">0.67km</span>
-                    </div>
-                    <div class="address">Yongsan District, seoul</div>
-                    <div class="time">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약 가능</span>
-                        <span class="tag">픽업 가능</span>
                     </div>
                 </div>
             </a>
         </li>
     </ul>
-
+    <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
+        <div class="group prev" th:if="${pageVo.requestPage > 1}">
+            <a class="link" th:href="@{/items(page=${pageVo.requestPage - 1})}">&lt; 이전</a>
+        </div>
+        <div class="group"
+             th:each="p : ${#numbers.sequence(pageVo.startPage, pageVo.endPage)}"
+             th:classappend="${p == pageVo.requestPage ? ' -selected' : ''} + ${p == pageVo.endPage ? ' last-num' : ''}">
+            <a class="link" th:href="@{/items(page=${p})}" th:text="${p}">1</a>
+        </div>
+        <div class="group next" th:if="${pageVo.requestPage < pageVo.maxPage}">
+            <a class="link" th:href="@{/items(page=${pageVo.requestPage + 1})}">다음 &gt;</a>
+        </div>
+    </div>
 </div>
 </body>
 </html>

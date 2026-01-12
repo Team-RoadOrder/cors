@@ -122,45 +122,100 @@
     padding: 0.2rem;
     background-color: #eaeaea;
 }
+/* --- 페이지네이션 컨테이너 --- */
 #shop .page-container {
     display: flex;
     flex-direction: row;
-    align-self: center;
-    padding-bottom: 2rem;
-    width: 50rem;
     justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+    width: 100%;
 }
-#shop .page-container > .group:first-child {
-    border-top-left-radius: 0.3rem;
-    border-bottom-left-radius: 0.3rem;
-    margin-right: 0.5rem;
-    width: 4rem;
-}
-#shop .page-container > .group:nth-child(2) {
-    border-top-left-radius: 0.3rem;
-    border-bottom-left-radius: 0.3rem;
-}
-#shop .page-container > .group:nth-last-child(2) {
-    border-top-right-radius: 0.3rem;
-    border-bottom-right-radius: 0.3rem;
-}
-#shop .page-container > .group  {
-    width: 3rem;
-    aspect-ratio: 1/1;
-    background-color: #73acea;
-    color: #eaeaea;
+
+#shop .page-container > .group {
+    width: 2rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    color: #707070;
+    background-color: #eaeaea;
+    cursor: pointer;
+    text-decoration: none;
 }
+
+/* 링크 태그가 꽉 차게 */
+#shop .page-container > .group > .link {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit; /* 부모 색상 상속 */
+}
+
 #shop .page-container > .group:hover {
     opacity: 0.8;
-    cursor: pointer;
+    background-color: #dcdcdc;
+}
+
+#shop .page-container > .group.-selected {
+    background-color: #6dacf1;
+    color: #fff;
+    font-weight: bold;
+}
+
+#shop .page-container > .group.prev{
+    width: 5rem;
+    background-color: #fff !important;
+    color: #aeaeae;
+    font-size: 1rem;
+
+}
+#shop .page-container > .group.prev + .group {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+#shop .page-container > .group.prev + .group:last-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+#shop .page-container > .group.next {
+    width: 5rem;
+    background-color: #fff !important;
+    color: #aeaeae;
+    font-size: 1rem;
+}
+#shop .page-container > .group.next + .group:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+#shop .page-container > .group.next + .group:last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+#shop .page-container > .group:first-child {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
 }
 #shop .page-container > .group:last-child {
-    border-top-right-radius: 0.3rem;
-    border-bottom-right-radius: 0.3rem;
-    margin-left: 0.5rem;
-    width: 4rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+#shop .page-container > .group:last-child  + .group {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+/* 1. Next 버튼이 없을 때: 숫자가 마지막 자식이므로 둥글게 */
+#shop .page-container > .group:not(.next):last-child {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* 2. Next 버튼이 있을 때: .next 바로 앞에 있는 그룹을 선택 */
+#shop .page-container > .group:has(+ .next) {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
 }

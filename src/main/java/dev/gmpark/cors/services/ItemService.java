@@ -6,8 +6,10 @@ import dev.gmpark.cors.entities.*;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.vos.LikeItemVo;
+import dev.gmpark.cors.vos.PageVo;
 import dev.gmpark.cors.vos.ShopItemVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -84,4 +86,13 @@ public class ItemService {
         return relatedItems;
     }
 
+    public ShopItemEntity[] getAllItems() {
+        return this.ownerShopMapper.selectAll();
+    }
+    public ShopItemEntity[] getAllItemsByPage(PageVo pageVo) {
+        return this.ownerShopMapper.selectAllItemByPage(pageVo);
+    }
+    public int getCountAll(){
+        return this.ownerShopMapper.selectCountAll();
+    }
 }

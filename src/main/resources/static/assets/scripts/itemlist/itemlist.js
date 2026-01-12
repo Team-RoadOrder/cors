@@ -1,0 +1,1 @@
+const $shop = document.getElementById("shop");

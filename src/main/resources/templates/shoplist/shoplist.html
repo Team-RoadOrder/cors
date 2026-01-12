@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1">
-    <title>SHOP list</title>
+    <title>매장목록</title>
     <link rel="stylesheet" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/shoplist/index.css">
     <link href="/assets/images/login/favicon.png" rel="icon">
@@ -30,52 +30,40 @@
     </label>
     <button id="map"><a href="../NEARBYSHOP/nearbyshop.html">지도보기</a></button>
     <ul class="store-list">
-        <li class="store" >
-            <a href="../SHOP/shop.html">
-            <img class="image" src="../assets/images/mypage/shop/shop3.png" alt="매장이미지">
-            <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
+        <li class="store" th:each="shop : ${shops}" >
+            <a href="../SHOP/shop.html" th:href="@{/shop/(shopId=${shop.shopId})}" >
+                <img class="image" th:src="${shop.profileImage != null} ?  ${shop.profileImage} : '/assets/images/ownermain/item-list/default.png'" alt="매장이미지">
+                <div class="store-info">
+                    <div class="firstLine">
+                        <span class="name" th:text="${shop.shopName}">waviness</span>
+                        <span class="km">0.67km</span>
+                    </div>
+                    <div class="address" th:text="${shop.shopAddress}">Yongsan District, seoul</div>
+                    <div class="time" th:text="${shop.shopTime}">영업중 10:00~22:00</div>
+                    <div class="tag-area">
+                        <span class="tag">예약 가능</span>
+                        <span class="tag">픽업 가능</span>
+                    </div>
                 </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
-                </div>
-            </div>
             </a>
         </li>
     </ul>
-    <div class="page-container">
-        <div class="group" >
-            <a class="link">&lt; 이전</a>
+    <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
+
+        <div class="group prev" th:if="${pageVo.requestPage > 1}">
+            <a class="link" th:href="@{/shops(page=${pageVo.requestPage - 1})}">&lt; 이전</a>
         </div>
-        <div class="group">
-            <a class="link -selected">1</a>
+
+        <div class="group link"
+             th:each="page : ${#numbers.sequence(pageVo.startPage, pageVo.endPage)}"
+             th:classappend="${page == pageVo.requestPage} ? ' -selected'"  >
+            <a class="link" th:href="@{/shops(page=${page})}" th:text="${page}">1</a>
         </div>
-        <div class="group">
-            <a class="link">2</a>
+
+        <div class="group next" th:if="${pageVo.requestPage < pageVo.maxPage}">
+            <a class="link" th:href="@{/shops(page=${pageVo.requestPage + 1})}">다음 &gt;</a>
         </div>
-        <div class="group">
-            <a class="link">3</a>
-        </div>
-        <div class="group">
-            <a class="link">4</a>
-        </div>
-        <div class="group">
-            <a class="link">5</a>
-        </div>
-        <div class="group">
-            <a class="link">6</a>
-        </div>
-        <div class="group">
-            <a class="link">7</a>
-        </div>
-        <div class="group" >
-            <a class="link">다음 &gt;</a>
-        </div>
+
     </div>
 </div>
 </body>

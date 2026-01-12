@@ -122,7 +122,25 @@
         FROM `cors`.`like_shops`
         WHERE `shop_id` = #{shopId}
     </select>
-
+    <select id="selectAllByPage">
+        SELECT
+            shop_id          AS shopId,
+            user_email       AS userEmail,
+            shop_name        AS shopName,
+            shop_time        AS shopTime,
+            shop_category    AS shopCategory,
+            shop_address     AS shopAddress,
+            shop_tel         AS shopTel,
+            profile_image    AS profileImage,
+            background_image AS backgroundImage
+        FROM `cors`.`shop_info`
+        ORDER BY `shopId` DESC
+        LIMIT #{page.rowCount} OFFSET #{page.dbOffset}
+    </select>
+    <select id="selectCountAll" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `cors`.`shop_info`
+    </select>
     <update id="update">
         UPDATE `cors`.`shop_info`
         SET

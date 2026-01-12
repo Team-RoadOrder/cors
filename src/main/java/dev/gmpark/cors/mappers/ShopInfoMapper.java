@@ -4,6 +4,7 @@ package dev.gmpark.cors.mappers;
 import dev.gmpark.cors.entities.LikeShopEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.vos.LikeShopVo;
+import dev.gmpark.cors.vos.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,6 +16,8 @@ public interface ShopInfoMapper {
     int update(@Param("info") ShopInfoEntity shopInfo);
     ShopInfoEntity[] selectAllShops();
     ShopInfoEntity[] selectSixShops();
+    ShopInfoEntity[] selectAllByPage(@Param(value = "page")PageVo pageVo);
+    int selectCountAll();
     int insertLikeShop(@Param(value = "like") LikeShopEntity likeShop);
     int deleteLikeShop(@Param("shopId") int shopId, @Param("email")  String email );
     int selectLikeCount(@Param(value = "like") LikeShopEntity likeShop);
