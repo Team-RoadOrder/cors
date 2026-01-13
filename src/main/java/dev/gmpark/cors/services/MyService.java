@@ -3,13 +3,11 @@ package dev.gmpark.cors.services;
 
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ReservationItemsEntity;
-import dev.gmpark.cors.mappers.OwnerShopMapper;
-import dev.gmpark.cors.mappers.RegisterMapper;
-import dev.gmpark.cors.mappers.ReservationMapper;
-import dev.gmpark.cors.mappers.ShopInfoMapper;
+import dev.gmpark.cors.mappers.*;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.vos.LikeItemVo;
 import dev.gmpark.cors.vos.LikeShopVo;
+import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,7 @@ public class MyService {
     private final RegisterMapper registerMapper;
     private final ShopInfoMapper shopInfoMapper;
     private final OwnerShopMapper ownerShopMapper;
+    private final OrderMapper orderMapper;
     public List<ReservationItemVo> getAllReservations(RegisterEntity sessionUser) {
         return this.reservationMapper.selectReservationsByEmail(sessionUser.getEmail());
     }
@@ -80,6 +79,18 @@ public class MyService {
             return CommonResult.FAILURE;
         }
     }
+    public CommonResult deleteUser(RegisterEntity sessionUser) {
+        RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
+        if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+        int rows = this.registerMapper.delete(dbUser);
+        if (rows > 0) {
+            return CommonResult.SUCCESS;
+        }  else {
+            return CommonResult.FAILURE;
+        }
+    }
     public LikeShopVo[] getLikeShops(RegisterEntity sessionUser) {
         return this.shopInfoMapper.selectLikedShopsByUser(sessionUser.getEmail());
 
@@ -87,5 +98,8 @@ public class MyService {
     public LikeItemVo[] getLikeItems(RegisterEntity sessionUser) {
         if (sessionUser == null) return new LikeItemVo[0];
         return this.ownerShopMapper.selectLikeItemsByUser(sessionUser.getEmail());
+    }
+    public OrderHistoryVo[] getOrderHistory(RegisterEntity sessionUser) {
+        return this.orderMapper.getAllOrders( sessionUser.getEmail());
     }
 }

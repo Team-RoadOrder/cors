@@ -28,7 +28,7 @@
         <button class="item">거리순</button>
         <button class="item">인기순</button>
     </label>
-    <button id="map"><a href="../NEARBYSHOP/nearbyshop.html">지도보기</a></button>
+    <button id="map"><a href="/nearby-shop">지도보기</a></button>
     <ul class="store-list">
         <li class="store" th:each="shop : ${shops}" >
             <a href="../SHOP/shop.html" th:href="@{/shop/(shopId=${shop.shopId})}" >

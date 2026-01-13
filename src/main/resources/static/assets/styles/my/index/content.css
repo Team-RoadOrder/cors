@@ -229,6 +229,16 @@
     height: 100%;
     object-fit: contain; /* 이미지 비율 유지 */
 }
+.my_home_title {
+    position: relative;
+}
+.my_home_title .more {
+    color: #a0a0a0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 
 /* 상품명 및 사이즈 영역 (왼쪽 정렬) */
 .tab-content .recent_item .list .product .itemTitle {
@@ -287,6 +297,10 @@
 .tab-content .recent_item .list .product .itemStatus .list-column > span:last-child {
     color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
     text-decoration: none; /* 밑줄 제거 (선택 사항) */
+}
+.tab-content .recent_item .list .product .itemStatus .list-column >a:hover {
+    color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
+    text-decoration: underline; /* 밑줄 제거 (선택 사항) */
 }
 .tab-content .reservation {
     display: flex;

@@ -28,6 +28,10 @@
             `address_detail` = #{user.addressDetail}
         WHERE `email` = #{user.email}
      </update>
+    <delete id="delete">
+        DELETE FROM `cors`.`users`
+        WHERE `email` = #{user.email}
+    </delete>
 
     <select id="selectByEmailAndPasswordUser" resultType="dev.gmpark.cors.entities.RegisterEntity">
         SELECT `name`           AS `name`

@@ -17,12 +17,12 @@
             </div>
             <div class="info-buttons">
                 <label onclick="loadTab('profile', document.querySelectorAll('.menu .item')[4])" class="btn profile" style="cursor:pointer">프로필 관리</label>
-                <label onclick="loadTab('custom', document.querySelectorAll('.menu .item')[6])" class="btn myStyle" style="cursor:pointer">맞춤 정보</label>
+                <!--<label onclick="loadTab('custom', document.querySelectorAll('.menu .item')[6])" class="btn myStyle" style="cursor:pointer">맞춤 정보</label>-->
             </div>
         </div>
     </div>
     <div class="shortcut-grid">
-        <ul class="menu">
+        <!--<ul class="menu">
             <li class="item">
                 <img src="../assets/images/my/shortcut1.png" alt="" class="image">
                 <span class="text">판매자 등급</span>
@@ -47,73 +47,40 @@
                 <img src="../assets/images/my/shortcut6.png" alt="" class="image">
                 <span class="text">공지사항</span>
             </li>
-        </ul>
+        </ul>-->
         <div class="my_home_title">
             <h3 class="title">구매내역</h3>
+            <label onclick="loadTab('orders', document.querySelectorAll('.menu .item')[0])" class="more" style="cursor:pointer">더보기 </label>
         </div>
-<!--        <div class="recent_purchase">
-            <label class="total">
-                    <span class="link">
-                        <span class="title">전체</span>
-                        <span class="count">7</span>
-                    </span>
-            </label>
-            <label class="on">
-                    <span class="link">
-                        <span class="title">예약</span>
-                        <span class="count">0</span>
-                    </span>
-            </label>
-            <label class="ing">
-                    <span class="link">
-                        <span class="title">픽업</span>
-                        <span class="count">0</span>
-                    </span>
-            </label>
-            <label class="end">
-                    <span class="link">
-                        <span class="title">종료</span>
-                        <span class="count">7</span>
-                    </span>
-            </label>
-        </div>-->
         <div class="recent_item">
-            <label class="list">
-                    <span class="product">
-                        <span class="image-wrapper">
-                            <img src="../assets/images/my/shoe1.png" class="image" alt="">
-                        </span>
-                        <span class="itemTitle">
-                            <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
-                            <span class="description">280</span>
-                        </span>
-                        <span class="itemStatus">
-                            <span class="date">25/07/02</span>
-                            <span class="list-column">
-                                <span>배송완료</span>
-                                <span>스타일올리기</span>
-                            </span>
-                        </span>
-                    </span>
+            <label class="list" th:each="order, stat  : ${homeOrders}"
+                   th:if="${stat.index < 3 }">
+                     <span class="product">
+                     <span class="image-wrapper">
+                     <img th:if="${order.imagePath != null}"
+                     th:src="@{/images/{path}(path=${order.imagePath})}"
+                     class="image" alt="상품이미지">
+                     <img th:unless="${order.imagePath != null}"
+                     src="/assets/images/default.png"
+                     class="image" alt="기본이미지">
+            </span>
+            <span class="itemTitle">
+                <span class="title" th:text="${order.itemName}">상품명</span>
+                <span class="description" th:text="${order.size}">사이즈</span>
+            </span>
+            <span class="itemStatus">
+                <span class="date" th:text="${#temporals.format(order.createdAt, 'yy/MM/dd')}">날짜</span>
+                <span class="list-column">
+                    <span>구매완료</span>
+                    <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a>
+                </span>
+            </span>
+        </span>
             </label>
-            <label class="list">
-                    <span class="product">
-                        <span class="image-wrapper">
-                            <img src="../assets/images/my/shoe2.png" class="image" alt="">
-                        </span>
-                        <span class="itemTitle">
-                            <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                            <span class="description">285</span>
-                        </span>
-                        <span class="itemStatus">
-                            <span class="date">25/01/19</span>
-                            <span class="list-column">
-                                <span>배송완료</span>
-                                <span>스타일올리기</span>
-                            </span>
-                        </span>
-                    </span>
-            </label>
+            <div th:if="${homeOrders == null or #arrays.isEmpty(homeOrders)}"
+                 style="text-align: center; padding: 20px; color: #999;">
+                최근 구매 내역이 없습니다.
+            </div>
         </div>
         <div class="reservation">
             <h3 class="title">예약 / 픽업 상품</h3>
@@ -149,84 +116,26 @@
 
 <div th:fragment="orders" class="tab_purchase_content">
     <h3 class="tab_title">구매 내역</h3>
-    <ul class="selection">
-        <li class="reservation">
-            <label class="label">
-                <input type="radio" name="order_filter" class="radio" checked>
-                <span class="number">4</span>
-                <span class="title">구매</span>
-            </label>
-        </li>
-
-        <li class="pickUp">
-            <label class="label">
-                <input type="radio" name="order_filter" class="radio">
-                <span class="number">2</span>
-                <span class="title">입찰</span>
-            </label>
-        </li>
-
-        <li class="end">
-            <label class="label">
-                <input type="radio" name="order_filter" class="radio">
-                <span class="number">2</span>
-                <span class="title">종료</span>
-            </label>
-        </li>
-    </ul>
     <div class="item reservation" style="display:block">
-        <label class="list">
+        <label class="list" th:each="order, stat : ${orders}"
+        th:if="${stat.index < 7 }">
                 <span class="product">
-                    <span class="image-wrapper"><img src="../assets/images/my/shoe1.png" class="image" alt=""></span>
+                    <span class="image-wrapper"><img th:src="@{/images/{path}(path=${order.imagePath})}" src="../assets/images/my/shoe1.png" class="image" alt=""></span>
                     <span class="itemTitle">
-                        <span class="title">Asics Gel-Venture 6 Shield Black Feather Grey</span>
-                        <span class="description">280</span>
+                        <span class="title" th:text="${order.itemName}">Asics Gel-Venture 6 Shield Black Feather Grey</span>
+                        <span class="description" th:text="${order.size}">280</span>
                     </span>
                     <span class="itemStatus">
-                        <span class="date">25/07/02</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
+                        <span class="date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">25/07/02</span>
+                        <span class="list-column"><span>구매완료</span><a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a></span>
                     </span>
                 </span>
         </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
-                </span>
-        </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
-                </span>
-        </label>
-        <label class="list">
-                <span class="product">
-                     <span class="image-wrapper"><img src="../assets/images/my/shoe2.png" class="image" alt=""></span>
-                    <span class="itemTitle">
-                        <span class="title">Mizuno Wave Prophecy MOC Suede Chicory Coffee Mole Black</span>
-                        <span class="description">285</span>
-                    </span>
-                    <span class="itemStatus">
-                        <span class="date">25/01/19</span>
-                        <span class="list-column"><span>배송완료</span><span>스타일올리기</span></span>
-                    </span>
-                </span>
-        </label>
+        <div th:if="${orders == null or #arrays.isEmpty(orders)}"
+             style="text-align: center; padding: 20px; color: #999;">
+            최근 구매 내역이 없습니다.
+        </div>
+
     </div>
 </div>
 
@@ -367,7 +276,9 @@
             </div>
             <div class="info-buttons">
                 <!--<label class="btn profile">이미지 변경</label>-->
-                <label class="btn myStyle">삭제</label>
+                <label class="btn myStyle"
+                       th:data-email="${sessionUser.email}"
+                       onclick="deleteMember(this.getAttribute('data-email'))">삭제</label>
             </div>
         </div>
     </div>

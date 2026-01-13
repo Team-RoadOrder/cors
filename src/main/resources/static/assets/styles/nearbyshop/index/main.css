@@ -17,12 +17,13 @@
 
 #shop-header{
     position: fixed;
-    right: 20px;
-    bottom: 200px;
-    background-color: #ffffff;
-    border: 1px solid #ebebeb;
-    border-radius: 12px;
-    padding: 12px 24px;
+    right: 1rem;
+    top: 8rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
+    backdrop-filter: blur(12px) saturate(150%);
+    border: 0.0625rem solid #ebebeb;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1.2rem;
     font-size: 1rem;
     font-weight: 600;
     color: #333;
@@ -36,11 +37,10 @@
 }
 #shop-header::before{
     content: "";
-    background-image: url("../../images/icon.png");
+    background-image: url("../../../images/nearbyshop/icon.png");
     width: 16px;
     height: 16px;
     background-size: contain;
     background-repeat: no-repeat;
     display: inline-block;
-
 }

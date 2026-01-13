@@ -1,57 +1,105 @@
-
-#map {
+#map-wrapper {
+    position: relative;       /* 기준점 */
     width: 100%;
-    height: 648px;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+    height: calc(100vh - 80px); /* 화면 높이 꽉 차게 (헤더 높이만큼 뺌) */
+    overflow: hidden;
 }
-#map .shop-detail {
-    width: 250px;
-    height: 134px;
-    background: #fff;
-    padding: 14px 16px 16px;
-    border-radius: 5px;
-    z-index: 99;
-    position: relative;
-   margin-top: 32rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.2s ease-in-out;
 
+#map-background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
-.store-info {
+#map-wrapper > .shop-list {
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding : 1.3rem 1.5rem;
+    position: absolute;
+    top:0;
+    overflow-y: auto;
+    margin-left: 1rem;
+    gap: 1rem;
+}
+#map-wrapper > .shop-list > .shop-detail {
+    width: 17rem;
+    height: auto;
+    min-height: auto;
+    z-index: 100;
+    background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
+    backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 10px 0 rgba(145, 145, 145, 0.2);
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
 
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+    line-height: 1.3;
 }
-.store-info .firstLine{
-    margin-bottom: 0.5rem;
+.info-header >.firstLine {
+    display: flex;
+    padding-left: 1rem;
+    gap: 0.5rem;
 }
-.store-info .firstLine .name {
-    font-size: 1.4rem;
-    font-weight: 600;
-}
-.store-info .firstLine .km {
-    font-weight: 300;
-    font-size: 0.8rem;
-    color: rgb(139,144,144);
-}
-.store-info .address{
+.info-header >.firstLine > .name {
+    font-size: 1.3rem;
+    align-self: center;
     font-weight: 500;
-    font-size: 0.9rem;
-    color: rgb(139,144,144);
 }
-.store-info .time {
-    font-weight: 400;
-    font-size: 0.9rem;
-    color: rgb(139,144,144);
-    margin-top: 0.5rem;
+.info-header >.firstLine > .km {
+    font-size: 1rem;
+    align-self: center;
+    color: #7a7a7a;
+}
+.shop-detail.active .info-header {
+    padding-bottom: 1rem;
 }
 
-.store-info .tag-area{
+.info-body {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px solid transparent;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition:
+            max-height 0.35s ease-in-out,
+            opacity 0.3s ease-in-out,
+            margin-top 0.35s ease-in-out,
+            padding-top 0.35s ease-in-out,
+            border-color 0.35s ease-in-out;
+    will-change: max-height, opacity, margin-top, padding-top;
+}
+.shop-detail.active .info-body {
+    max-height: 20rem;
+    opacity: 1;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.info-body > .address {
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding-bottom: 0.5rem;
+}
+ .info-body > .time {
+    font-size: 0.9rem;
+    color: #7a7a7a;
+}
+ .info-body > .tag-area {
     display: flex;
     font-size: 0.7rem;
     font-weight: 400;
@@ -59,9 +107,28 @@
     padding-left: 0.1rem;
     gap: 0.4rem;
 }
-
-.store-info .tag{
+ .info-body > .tag-area > .tag {
     border-radius: 3px;
     padding: 0.2rem;
     background-color: #eaeaea;
+}
+.toggle-icon {
+    font-size: 0.8rem;
+    color: #888;
+    transition: transform 0.3s;
+
+}
+.shop-detail.active .toggle-icon {
+    transform: rotate(180deg);
+    transition-property: transform;
+}
+
+.detail-link {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: #333;
+    font-weight: bold;
+    text-align: right;
+    text-decoration: none;
 }

@@ -33,6 +33,7 @@
     font-size: 1.1rem;
     font-weight:400;
     color : rgb(155,155,155);
+
 }
 #shop-header .count >.style{
     font-size: 1.1rem;
@@ -56,6 +57,7 @@
     background: #000000;
     color: #ffffff;
     font-weight: 600;
+    cursor: pointer;
 }
 #shop-header .button >.share {
     padding: 1rem 3rem;

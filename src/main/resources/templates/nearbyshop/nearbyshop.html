@@ -10,154 +10,51 @@
     <link href="/assets/images/login/favicon.png" rel="icon"  >
     <link rel="stylesheet" href="/assets/styles/common.css">
     <script defer src="/assets/scripts/common.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dbcb22a9911b142fc070c041189c30b6&libraries=services,clusterer,drawing"></script>
+    <script defer src="/assets/scripts/nearbyshop/nearbyshop.js"></script>
+    <script th:inline="javascript">
+        const serverShopList = [[${shops}]];
+    </script>
 </head>
 <body>
 <!-- 헤더부분 , 로고와 네비바가 들어감 -->
 <th:block th:replace="~{/fragments/common.html :: customer-header}">
 </th:block>
-<!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
-<!--헤더에 호버하면 나타나는 메뉴 -->
-<!-- 헤더 렌더링 하는법 몰라서 일단 복붙함 뒤에 배경넣고-->
+
 <main id="main" >
-    <img src="../MY/images/waviness.png" class="image" alt="메인이미지">
-</main> <!-- 헤더뒤에 배경 -->
+    <img src="/assets/images/main/splash1.jpg" class="image" alt="메인이미지">
+</main>
+
 <div id="map-wrapper">
-<ul id="map">
-    <li class="shop-detail">
-        <a href="../SHOP/shop.html">
+    <div id="map-background"></div>
+    <ul class="shop-list">
+        <li class="shop-detail"
+            th:each="shop, stat : ${shops}"
+            th:if="${stat.index < 7}"
+            th:data-shop-id="${shop.shopId}">
+            <div class="store-info-wrapper">
             <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
+                <div class="info-header">
+                    <div class="firstLine">
+                        <span class="name" th:text="${shop.shopName}">waviness</span>
+                        <span class="km" th:text="${shop.shopCategory}">(0.67km)</span>
+                    </div>
+                    <span class="toggle-icon">▼</span>
                 </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
+                <div class="info-body">
+                    <div class="address" th:text="${shop.shopAddress}">Yongsan District, seoul</div>
+                    <div class="time"  th:text="${shop.shopTime}">영업중 10:00~22:00</div>
+                    <div class="tag-area">
+                        <span class="tag">예약 가능</span>
+                        <span class="tag">픽업 가능</span>
+                    </div>
+                    <a th:href="@{/shop/(shopId=${shop.shopId})}" class="detail-link">매장 상세 보기 &rarr;</a>
                 </div>
             </div>
-        </a>
-    </li>
-    <li class="shop-detail">
-        <a href="../SHOP/shop.html">
-            <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
-                </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
-                </div>
-            </div>
-        </a>
-    </li>
-    <li class="shop-detail">
-        <a href="../SHOP/shop.html">
-            <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
-                </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
-                </div>
-            </div>
-        </a>
-    </li>
-    <li class="shop-detail">
-        <a href="../SHOP/shop.html">
-            <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
-                </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
-                </div>
-            </div>
-        </a>
-    </li>
-    <li class="shop-detail">
-        <a href="../SHOP/shop.html">
-            <div class="store-info">
-                <div class="firstLine">
-                    <span class="name">waviness</span>
-                    <span class="km">0.67km</span>
-                </div>
-                <div class="address">Yongsan District, seoul</div>
-                <div class="time">영업중 10:00~22:00</div>
-                <div class="tag-area">
-                    <span class="tag">예약 가능</span>
-                    <span class="tag">픽업 가능</span>
-                </div>
-            </div>
-        </a>
-    </li>
-
-</ul>
+        </div>
+        </li>
+    </ul>
 </div>
-<button id="shop-header"><a href="../SHOPLIST/shoplist.html">매장 목록 보기</a></button>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dbcb22a9911b142fc070c041189c30b6&libraries=services,clusterer,drawing"></script>
-<script type="text/javascript">
-    window.onload = function() {
-        // 1. 지도를 표시할 div와 지도 옵션 설정
-        var mapContainer = document.getElementById('map'),
-            mapOption = {
-                center: new kakao.maps.LatLng( 37.541814343510836 , 127.00460531687455 ), // 초기 중심 좌표
-                level: 4// 지도의 확대 레벨
-            };
-
-        // 2. 지도 생성
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        // 3. 여러 마커의 위치와 정보를 담은 배열
-        var positions = [
-            {
-                title: 'waviness',
-                latlng: new kakao.maps.LatLng(37.543643, 127.002840)
-            },
-            {
-                title: 'Shop 2',
-                latlng: new kakao.maps.LatLng(37.544600, 127.005800)
-            },
-            {
-                title: 'Shop 3',
-                latlng: new kakao.maps.LatLng(37.541699, 127.001950)
-            },
-            {
-                title: 'Shop 4',
-                latlng: new kakao.maps.LatLng(37.542888, 127.006999)
-            }
-        ];
-
-        // 4. 반복문을 사용하여 여러 개의 커스텀 오버레이를 생성하고 지도에 표시
-        positions.forEach(function(pos) {
-            // 내부의 .marker-text div를 제거하고 더 간단하게 만듭니다.
-            // .substring()을 제거하여 전체 이름이 표시되도록 합니다.
-            var content = '<div class="custom-marker-style">' + pos.title + '</div>';
-
-            // 커스텀 오버레이를 생성하는 나머지 코드는 동일합니다.
-            var customOverlay = new kakao.maps.CustomOverlay({
-                map: map,
-                position: pos.latlng,
-                content: content,
-                yAnchor: 1
-            });
-        });
-
-        // 지도의 중심을 첫 번째 마커 위치로 부드럽게 이동시킬 수도 있습니다.
-        map.panTo(positions[0].latlng);
-    };
-</script>
+<button id="shop-header"><a href="/shops">매장 목록 보기</a></button>
 </body>
 </html>

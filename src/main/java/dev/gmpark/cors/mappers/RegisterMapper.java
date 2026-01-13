@@ -10,4 +10,5 @@ public interface RegisterMapper {
     RegisterEntity selectByEmailAndPasswordUser(@Param(value = "email") String email , @Param(value = "password") String password);
     RegisterEntity selectByEmail(@Param(value = "email") String email);
     int update(@Param(value = "user") RegisterEntity user);
+    int delete(@Param(value = "user") RegisterEntity user);
 }

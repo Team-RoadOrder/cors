@@ -5,6 +5,7 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.vos.LikeItemVo;
+import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -48,13 +49,14 @@ public class MyController {
                             .filter(item -> !"완료".equals(item.getStatus()) && !"취소".equals(item.getStatus())) // 완료도 아니고, 취소도 아닌 것
                             .limit(4)
                             .collect(Collectors.toList());
+                    OrderHistoryVo[] homeOrders = this.myService.getOrderHistory(sessionUser); // 변수명 변경
+                    modelAndView.addObject("homeOrders", homeOrders);
                     modelAndView.addObject("items", homeItems);
                     break;
 
                 case "orders":
-                    // [구매 내역] 탭일 때 -> 구매 리스트 조회
-                    // List<OrderDTO> orderList = orderService.findOrdersByUser(sessionUser.getEmail());
-                    // modelAndView.addObject("orderList", orderList);
+                    OrderHistoryVo[] orders = this.myService.getOrderHistory(sessionUser);
+                    modelAndView.addObject("orders", orders);
                     break;
 
                 case "reservation":
@@ -130,6 +132,14 @@ public class MyController {
                                             @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
         CommonResult result = this.myService.updateUserAddress(sessionUser, newAddress, newAddressDetail);
+        response.put("result", result.name());
+        return response;
+    }
+    @RequestMapping(value = "/my/delete-user", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> deleteMyUser(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.myService.deleteUser(sessionUser);
         response.put("result", result.name());
         return response;
     }

@@ -17,6 +17,7 @@ public interface ShopInfoMapper {
     ShopInfoEntity[] selectAllShops();
     ShopInfoEntity[] selectSixShops();
     ShopInfoEntity[] selectAllByPage(@Param(value = "page")PageVo pageVo);
+    ShopInfoEntity[] selectShopsByAddress(@Param("address") String address);
     int selectCountAll();
     int insertLikeShop(@Param(value = "like") LikeShopEntity likeShop);
     int deleteLikeShop(@Param("shopId") int shopId, @Param("email")  String email );

@@ -15,9 +15,8 @@ public class OrderEntity {
     private Long id;
     private String userEmail;
     private Long totalPrice;
-    private String status; // 'PENDING', 'PAID', 'CANCELLED'
+    private String status;
     private LocalDateTime createdAt;
-    
     private String receiverName;
     private String receiverPhone;
     private String address;

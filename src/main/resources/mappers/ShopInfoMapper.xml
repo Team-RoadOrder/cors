@@ -141,6 +141,12 @@
         SELECT COUNT(0)
         FROM `cors`.`shop_info`
     </select>
+    <select id="selectShopsByAddress" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT *
+        FROM `cors`.`shop_info`
+        WHERE `shop_address` LIKE CONCAT('%', #{address}, '%')
+    </select>
+
     <update id="update">
         UPDATE `cors`.`shop_info`
         SET

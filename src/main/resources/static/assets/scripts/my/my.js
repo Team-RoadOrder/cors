@@ -502,3 +502,50 @@ const toggleLikeItems = (shopId, itemId) => {
     xhr.open('POST', '/item/like')
     xhr.send(formData);
 }
+
+
+const deleteMember = (email) => {
+    // 1. 탈퇴 확인 모달 띄우기
+    openModal("answer", "<p>정말 탈퇴하시겠습니까?<br>삭제된 계정은 복구할 수 없습니다.</p>", {
+        confirmText: '탈퇴',
+        cancelText: '취소',
+        onConfirm: () => {
+            // 2. 확인 버튼 클릭 시 AJAX 요청 전송
+            const xhr = new XMLHttpRequest();
+
+            // 응답 처리 리스너
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                    return;
+                }
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.result === 'SUCCESS') {
+                            // 3. 성공 시 알림 후 메인/로그인 페이지로 이동
+                            openModal("SUCCESS", "<p>회원 탈퇴가 완료되었습니다.<br>이용해 주셔서 감사합니다.</p>", {
+                                confirmText: '확인',
+                                onConfirm: () => {
+                                    // 탈퇴했으므로 로그아웃 처리 후 이동
+                                    location.href = '/logout';
+                                }
+                            });
+                        } else {
+                            openModal("WARN", "<p>탈퇴 처리에 실패하였습니다.</p>");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        openModal("ERROR", "<p>응답 처리 중 오류가 발생했습니다.</p>");
+                    }
+                } else {
+                    openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`);
+                }
+            };
+
+            // 서버로 요청 전송 (Body 없이 DELETE 메서드만 호출해도, 서버에서 Session으로 유저를 찾음)
+            xhr.open('DELETE', '/my/delete-user');
+            xhr.send();
+        }
+    });
+}

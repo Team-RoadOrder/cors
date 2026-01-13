@@ -1,6 +1,7 @@
 
 .tab_purchase_content {
-
+    width: 65rem;
+    margin-bottom: 5rem;
 }
 
 /* 탭 내부의 제목 스타일 */
@@ -168,6 +169,10 @@
 .tab_purchase_content .item .list .product .itemStatus .list-column > span:last-child {
     color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
     text-decoration: none; /* 밑줄 제거 (선택 사항) */
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column > a:hover {
+    color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
+    text-decoration: underline; /* 밑줄 제거 (선택 사항) */
 }
 /*
 !* 구매 내역 목록 컨테이너 스타일 *!
