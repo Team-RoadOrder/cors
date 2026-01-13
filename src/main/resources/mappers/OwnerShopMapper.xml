@@ -79,6 +79,13 @@
         FROM `cors`.`shop_items` si
         ORDER BY si.`updated_at` DESC
     </select>
+    <select id="selectAllLikeItems" resultType="dev.gmpark.cors.entities.LikeItemEntity">
+        SELECT `user_email` AS `userEmail`,
+               `shop_id`    AS `shopId`,
+               `item_id`    AS `itemId`,
+               `created_at` AS `createdAt`
+        FROM `cors`.`like_items`
+    </select>
     <select id="selectAllByShopId">
         SELECT si.`id`               AS `id`,
                si.`item_name`        AS `itemName`,

@@ -26,10 +26,14 @@ public class LoginService {
         if(dbUser == null) {
             return null;
         }
-        if( !BCrypt.checkpw(password, dbUser.getPassword())) {
+        try {
+            if( !BCrypt.checkpw(password, dbUser.getPassword())) {
+                return null;
+            }
+        } catch (IllegalArgumentException e) {
+            // 비밀번호 형식이 잘못된 경우 (예: 평문 저장됨) 로그인 실패 처리
             return null;
         }
         return dbUser;
     }
 }
-

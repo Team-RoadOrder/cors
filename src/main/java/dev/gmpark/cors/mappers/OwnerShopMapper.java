@@ -30,6 +30,7 @@ public interface OwnerShopMapper {
     int deleteLikeItem(@Param("userEmail") String userEmail, @Param("shopId") int shopId, @Param("itemId") Long itemId);
     // 반환 타입은 List나 배열[]로
     LikeItemVo[] selectLikeItemsByUser(@Param("userEmail") String userEmail);
+    LikeItemEntity[] selectAllLikeItems();
     ShopItemEntity[] selectItemsByCategoriesOrderByLikes(@Param("categories") String[] categories);
     ShopItemEntity[] selectItemsByCategories(@Param("categories") String[] categories);
 }

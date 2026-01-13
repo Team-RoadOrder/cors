@@ -21,6 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ItemService {
     private final OwnerShopMapper ownerShopMapper;
+    private final AiRecommendationService aiRecommendationService;
+
     /*public  getItemById*/
     public ShopItemVo getItemById (Long id ) {
         return this.ownerShopMapper.selectItemVoById(id);
@@ -54,34 +56,21 @@ public class ItemService {
         }
     }
 
-    //  Python 서버 추천 호출
+    //  Java AI 서비스 호출로 변경
     public List<ShopItemVo> getRelatedItems(Long itemId) {
         List<ShopItemVo> relatedItems = new ArrayList<>();
         try {
-            // 동적으로 할당된 포트 사용
-            int port = CorsApplication.AI_SERVER_PORT;
-            WebClient webClient = WebClient.create("http://127.0.0.1:" + port);
-
-            Map response = webClient.get()
-                    .uri("/recommend/" + itemId)
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block(); // 동기 호출 (간편 구현)
-
-            if (response != null && response.containsKey("recommendations")) {
-                List<Map<String, Object>> recs = (List<Map<String, Object>>) response.get("recommendations");
-                for (Map<String, Object> rec : recs) {
-                    Long id = ((Number) rec.get("id")).longValue();
-                    // 추천된 ID로 DB 정보 조회
-                    ShopItemVo item = this.getItemById(id);
-                    if (item != null) {
-                        relatedItems.add(item);
-                    }
+            List<ShopItemEntity> recommendations = aiRecommendationService.getRecommendations(itemId);
+            for (ShopItemEntity entity : recommendations) {
+                // ShopItemEntity -> ShopItemVo 변환 (필요한 경우)
+                // 여기서는 간단히 ID로 다시 조회하여 VO를 가져오거나, Entity를 VO로 변환하는 로직을 사용
+                ShopItemVo item = this.getItemById(entity.getId());
+                if (item != null) {
+                    relatedItems.add(item);
                 }
             }
         } catch (Exception e) {
-            // AI 서버가 꺼져 있어도 메인 로직은 돌아가야 함
-            System.out.println("⚠ [AI 서버 연결 실패] : " + e.getMessage());
+            System.out.println("⚠ [AI 추천 실패] : " + e.getMessage());
         }
         return relatedItems;
     }
