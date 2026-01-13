@@ -63,7 +63,20 @@
             profile_image    AS profileImage,
             background_image AS backgroundImage
         FROM `cors`.`shop_info`
-        ORDER BY `shopId` DESC
+        WHERE
+            /* 최소한 '대구시' 같은 큰 지역은 맞아야 검색되도록 설정 */
+            `shop_address` LIKE CONCAT('%', #{region}, '%')
+        ORDER BY
+            /* 정렬 로직 (점수 매기기) */
+            (CASE
+                /* 1순위: "대구시 달서구" (구까지 일치하면 가장 위) */
+                 WHEN `shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                /* 2순위: "대구시" (시만 일치해도 그 다음) */
+                 WHEN `shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                /* 그 외 */
+                 ELSE 0
+                END) DESC,
+            `shopId` DESC
     </select>
     <select id="selectSixShops">
         SELECT
@@ -77,8 +90,22 @@
             profile_image    AS profileImage,
             background_image AS backgroundImage
         FROM `cors`.`shop_info`
-        ORDER BY `shopId` DESC
+        WHERE
+            /* 최소한 '대구시' 같은 큰 지역은 맞아야 검색되도록 설정 */
+            `shop_address` LIKE CONCAT('%', #{region}, '%')
+        ORDER BY
+            /* 정렬 로직 (점수 매기기) */
+            (CASE
+                /* 1순위: "대구시 달서구" (구까지 일치하면 가장 위) */
+                 WHEN `shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                /* 2순위: "대구시" (시만 일치해도 그 다음) */
+                 WHEN `shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                /* 그 외 */
+                 ELSE 0
+                END) DESC,
+            `shopId` DESC
         LIMIT 6
+
     </select>
     <select id="selectShopByShopId" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
         SELECT
@@ -124,17 +151,37 @@
     </select>
     <select id="selectAllByPage">
         SELECT
-            shop_id          AS shopId,
-            user_email       AS userEmail,
-            shop_name        AS shopName,
-            shop_time        AS shopTime,
-            shop_category    AS shopCategory,
-            shop_address     AS shopAddress,
-            shop_tel         AS shopTel,
-            profile_image    AS profileImage,
-            background_image AS backgroundImage
+        shop_id          AS shopId,
+        user_email       AS userEmail,
+        shop_name        AS shopName,
+        shop_time        AS shopTime,
+        shop_category    AS shopCategory,
+        shop_address     AS shopAddress,
+        shop_tel         AS shopTel,
+        profile_image    AS profileImage,
+        background_image AS backgroundImage
+        /* 콤마(,) 제거됨 */
         FROM `cors`.`shop_info`
-        ORDER BY `shopId` DESC
+
+        <choose>
+            <when test="sort == 'popular'">
+                ORDER BY
+                (SELECT COUNT(*) FROM `cors`.`like_shops` WHERE `shop_id` = `cors`.`shop_info`.`shop_id`) DESC,
+                `shopId` DESC
+            </when>
+
+            <otherwise>
+                ORDER BY
+                (CASE
+                WHEN `shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                WHEN `shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                ELSE 0
+                END) DESC,
+                `shop_address` ASC,
+                `shopId` DESC
+            </otherwise>
+        </choose>
+
         LIMIT #{page.rowCount} OFFSET #{page.dbOffset}
     </select>
     <select id="selectCountAll" resultType="java.lang.Integer">

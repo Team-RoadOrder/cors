@@ -11,18 +11,37 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ShopInfoMapper {
     int insert(@Param(value = "info")ShopInfoEntity shopInfo);
+
     ShopInfoEntity selectShopByUserEmail(@Param("email") String email);
+
     ShopInfoEntity selectShopByShopId(@Param("shopId") int shopId);
+
     int update(@Param("info") ShopInfoEntity shopInfo);
-    ShopInfoEntity[] selectAllShops();
-    ShopInfoEntity[] selectSixShops();
-    ShopInfoEntity[] selectAllByPage(@Param(value = "page")PageVo pageVo);
+
+    ShopInfoEntity[] selectAllShops(@Param("address") String address,
+                                    @Param("region") String region);
+
+    ShopInfoEntity[] selectSixShops(@Param("address") String address,
+                                    @Param("region") String region);
+
+    ShopInfoEntity[] selectAllByPage(@Param(value = "page") PageVo pageVo,
+                                     @Param("address") String address,
+                                     @Param("region") String region,
+                                     @Param("sort") String sort);
+
     ShopInfoEntity[] selectShopsByAddress(@Param("address") String address);
+
     int selectCountAll();
+
     int insertLikeShop(@Param(value = "like") LikeShopEntity likeShop);
+
     int deleteLikeShop(@Param("shopId") int shopId, @Param("email")  String email );
+
     int selectLikeCount(@Param(value = "like") LikeShopEntity likeShop);
+
     LikeShopVo[] selectLikedShopsByUser(@Param("userEmail") String userEmail);
+
     int selectLikeCountByShopId(@Param("shopId") int shopId);
+
     ShopInfoEntity[] selectShopsByCategories(@Param("categories") String[] categories);
 }

@@ -24,9 +24,17 @@
 <div id="shop">
     <div class="shop-list">매장 목록</div>
     <label class="option-list">
-        <button class="item">영업중</button>
-        <button class="item">거리순</button>
-        <button class="item">인기순</button>
+        <button class="item"
+                th:onclick="|location.href='@{/shops(sort='distance')}'|"
+                th:style="${sort == 'distance' or sort == null} ? 'background-color:#333; color:#fff;' : ''">
+            거리순
+        </button>
+
+        <button class="item"
+                th:onclick="|location.href='@{/shops(sort='popular')}'|"
+                th:style="${sort == 'popular'} ? 'background-color:#333; color:#fff;' : ''">
+            인기순
+        </button>
     </label>
     <button id="map"><a href="/nearby-shop">지도보기</a></button>
     <ul class="store-list">
@@ -51,13 +59,13 @@
     <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
 
         <div class="group prev" th:if="${pageVo.requestPage > 1}">
-            <a class="link" th:href="@{/shops(page=${pageVo.requestPage - 1})}">&lt; 이전</a>
+            <a class="link" th:href="@{/shops(page=${pageVo.requestPage - 1}, sort=${sort})}">&lt; 이전</a>
         </div>
 
         <div class="group link"
              th:each="page : ${#numbers.sequence(pageVo.startPage, pageVo.endPage)}"
              th:classappend="${page == pageVo.requestPage} ? ' -selected'"  >
-            <a class="link" th:href="@{/shops(page=${page})}" th:text="${page}">1</a>
+            <a class="link" th:href="@{/shops(page=${page}, sort=${sort})}" th:text="${page}">1</a>
         </div>
 
         <div class="group next" th:if="${pageVo.requestPage < pageVo.maxPage}">

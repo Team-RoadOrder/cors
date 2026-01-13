@@ -78,8 +78,21 @@ public class ItemService {
     public ShopItemEntity[] getAllItems() {
         return this.ownerShopMapper.selectAll();
     }
-    public ShopItemEntity[] getAllItemsByPage(PageVo pageVo) {
-        return this.ownerShopMapper.selectAllItemByPage(pageVo);
+    public ShopItemEntity[] getAllItemsByPage(PageVo pageVo, String address, String sort) {
+        String region = "";
+
+        // 주소 파싱 (시/도 추출)
+        if (address != null && address.contains(" ")) {
+            region = address.split(" ")[0];
+        } else {
+            region = address;
+        }
+
+        if (address == null) address = "";
+        if (region == null) region = "";
+
+        // 매퍼 호출
+        return this.ownerShopMapper.selectAllItemByPage(pageVo, address, region, sort);
     }
     public int getCountAll(){
         return this.ownerShopMapper.selectCountAll();

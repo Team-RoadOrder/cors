@@ -52,26 +52,32 @@ public class MainController {
     }
     @RequestMapping(value = "/items", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ShopItemEntity[] getItemsByStyle(@RequestParam(value = "style") String style) {
+    public ShopItemEntity[] getItemsByStyle(
+            @RequestParam(value = "style") String style,
+            @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+
         String dbStyleName = switch (style) {
             case "1" -> "미니멀";
             case "2" -> "캐주얼";
             case "3" -> "스트릿";
-            default -> "미니멀"; // 기본값
+            case "4" -> "댄디";
+            case "5" -> "빈티지";
+            case "6" -> "모던";
+            case "7" -> "스포티";
+            case "8" -> "페미닌";
+            default -> "미니멀";
         };
-        // 이제 "미니멀"이라는 문자열이 서비스 -> 매퍼 -> SQL로 전달됩니다.
-        return this.mainService.getAllByStyle(dbStyleName);
+        return this.mainService.getAllByStyle(dbStyleName, sessionUser.getAddress());
     }
     @RequestMapping(value = "/six-shops", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ShopInfoEntity[] getSixShops() {
-        /*return this.*/
-        return this.mainService.getSixShop();
+    public ShopInfoEntity[] getSixShops(@SessionAttribute(value = "sessionUser",required = false)RegisterEntity sessionUser) {
+        return this.mainService.getSixShop(sessionUser.getAddress());
     }
     @RequestMapping(value = "/all-shops", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ShopInfoEntity[] getAllShops() {
+    public ShopInfoEntity[] getAllShops(@SessionAttribute(value = "sessionUser",required = false)RegisterEntity sessionUser) {
         /*return this.*/
-        return this.mainService.getAllShop();
+        return this.mainService.getAllShop(sessionUser.getAddress());
     }
 }

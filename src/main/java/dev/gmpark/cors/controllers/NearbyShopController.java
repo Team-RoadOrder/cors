@@ -25,9 +25,9 @@ public class NearbyShopController {
             return modelAndView;
         }
 
-        ShopInfoEntity[] shops = this.mainService.getAllShop();
+        /*ShopInfoEntity[] shops = this.mainService.getAllShop();*/
         modelAndView.addObject("sessionUser", sessionUser);
-        modelAndView.addObject("shops", shops);
+        /*modelAndView.addObject("shops", shops);*/
         modelAndView.setViewName("nearbyshop/nearbyshop");
         return modelAndView;
     }

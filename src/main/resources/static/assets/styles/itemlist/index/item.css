@@ -33,8 +33,9 @@
 #item .option-list .item{
     border: #eaeaea solid 1px;
     border-radius: 2rem;
-    padding: 0.5rem 1.5rem;
+    padding: 0.3rem 1.5rem;
     cursor: pointer;
+    font-size: 1rem;
 }
 #item .item-container {
     display: grid; /* flex를 grid로 변경 */

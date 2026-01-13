@@ -142,14 +142,22 @@
                si.`created_at`       AS `createdAt`,
                si.`updated_at`       AS `updateAt`,
                si.`deleted_at`       AS `deletedAt`,
-            /* 아래 서브쿼리가 추가되어야 이미지를 가져옵니다 */
                (SELECT img.`image_path`
                 FROM `cors`.`shop_item_images` img
                 WHERE img.`product_id` = si.`id`
                 LIMIT 1)             AS `imagePath`
         FROM `cors`.`shop_items` si
+                 /* [수정 1] 주소 비교를 위해 매장 정보 테이블과 조인 */
+                 JOIN `cors`.`shop_info` info ON si.`shop_id` = info.`shop_id`
         WHERE si.`style` = #{style}
-        ORDER BY si.`updated_at` DESC
+        /* [수정 2] 주소 우선순위 정렬 로직 추가 */
+        ORDER BY
+            (CASE
+                 WHEN info.`shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                 WHEN info.`shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                 ELSE 0
+                END) DESC,
+            si.`updated_at` DESC
         LIMIT 6
     </select>
     <select id="selectItemByIdAndCategory" resultType="dev.gmpark.cors.entities.ShopItemEntity">
@@ -271,27 +279,59 @@
         SELECT COUNT(0)
         FROM `cors`.`shop_items`
     </select>
-    <select id="selectAllItemByPage">
+    <select id="selectAllItemByPage" resultType="dev.gmpark.cors.entities.ShopItemEntity">
         SELECT si.`id`               AS `id`,
-               si.`item_name`        AS `itemName`,
-               si.`shop_id`          AS `shopId`,
-               si.`color`            AS `color`,
-               si.`size`             AS `size`,
-               si.`price`            AS `price`,
-               si.`style`            AS `style`,
-               si.`main_category`    AS `mainCategory`,
-               si.`sub_category`     AS `subCategory`,
-               si.`detail_category`  AS `detailCategory`,
-               si.`main_image_index` AS `mainImageIndex`,
-               si.`created_at`       AS `createdAt`,
-               si.`updated_at`       AS `updateAt`,
-               si.`deleted_at`       AS `deletedAt`,
-               (SELECT img.`image_path`
-                FROM `cors`.`shop_item_images` img
-                WHERE img.`product_id` = si.`id`
-                LIMIT 1)             AS `imagePath`
+        si.`item_name`        AS `itemName`,
+        si.`shop_id`          AS `shopId`,
+        si.`color`            AS `color`,
+        si.`size`             AS `size`,
+        si.`price`            AS `price`,
+        si.`style`            AS `style`,
+        si.`main_category`    AS `mainCategory`,
+        si.`sub_category`     AS `subCategory`,
+        si.`detail_category`  AS `detailCategory`,
+        si.`main_image_index` AS `mainImageIndex`,
+        si.`created_at`       AS `createdAt`,
+        si.`updated_at`       AS `updateAt`,
+        si.`deleted_at`       AS `deletedAt`,
+        (SELECT img.`image_path`
+        FROM `cors`.`shop_item_images` img
+        WHERE img.`product_id` = si.`id`
+        LIMIT 1)             AS `imagePath`
         FROM `cors`.`shop_items` si
-        ORDER BY si.`updated_at` DESC
+        /* [중요] 주소 비교를 위해 매장 정보와 JOIN */
+        JOIN `cors`.`shop_info` info ON si.`shop_id` = info.`shop_id`
+        <choose>
+            <when test="sort == 'popular'">
+                ORDER BY
+                /* 1순위: 거리 점수 */
+                (CASE
+                WHEN info.`shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                WHEN info.`shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                ELSE 0
+                END) DESC,
+                /* 2순위: 좋아요 많은 순 */
+                (SELECT COUNT(*) FROM `cors`.`like_items` WHERE `item_id` = si.`id`) DESC,
+                si.`updated_at` DESC
+            </when>
+
+            <when test="sort == 'price'">
+                ORDER BY
+<!--                /* 1순위: 거리 점수 */
+                (CASE
+                WHEN info.`shop_address` LIKE CONCAT(#{address}, '%') THEN 2
+                WHEN info.`shop_address` LIKE CONCAT(#{region}, '%') THEN 1
+                ELSE 0
+                END) DESC,-->
+                /* 2순위: 가격 낮은 순 */
+                si.`price` ASC
+            </when>
+
+            <otherwise>
+                ORDER BY si.`updated_at` DESC
+            </otherwise>
+        </choose>
+
         LIMIT #{page.rowCount} OFFSET #{page.dbOffset}
     </select>
     <select id="selectItemsByCategoriesOrderByLikes" resultType="dev.gmpark.cors.entities.ShopItemEntity">
@@ -350,5 +390,9 @@
             #{category}
         </foreach>
         ORDER BY si.`updated_at` DESC
+    </select>
+
+    <select id="selectCountAllItems" resultType="_int">
+        SELECT COUNT(*) FROM `cors`.`shop_items` WHERE `deleted_at` IS NULL
     </select>
 </mapper>

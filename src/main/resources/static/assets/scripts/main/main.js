@@ -95,7 +95,6 @@ const changeCategory = (categoryValue) => {
             openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
             return;
         }
-
         // 2. JSON 변환 시도 (여기서 에러가 날 수 있으므로 안전장치 추가)
         try {
             const items = JSON.parse(xhr.responseText);
@@ -116,7 +115,7 @@ const  renderItems = (items) => {
     gridContainer.innerHTML = ''; // 기존 목록 비우기
 
     if (items.length === 0) {
-        gridContainer.innerHTML = '<p>해당 스타일의 상품이 없습니다.</p>';
+        gridContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: #888;">해당 스타일의 상품이 없습니다.</p>';
         return;
     }
 

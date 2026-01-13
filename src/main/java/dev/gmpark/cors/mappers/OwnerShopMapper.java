@@ -16,17 +16,21 @@ public interface OwnerShopMapper {
     ShopItemEntity selectItemById(@Param("id") Long id);
     ShopItemVo selectItemVoById(@Param("id") Long id);
     ShopItemEntity[] selectAll();
-    ShopItemEntity[] selectItemByStyle(@Param("style") String style);
+    ShopItemEntity[] selectItemByStyle(@Param("style") String style,
+                                       @Param("address") String address,
+                                       @Param("region") String region);
     ShopItemEntity[] selectItemByIdAndCategory(@Param("shopId") int shopId, @Param("categoryName") String categoryName);
     int updateItem(@Param(value = "item") ShopItemEntity shopItem);
     int deleteItemById(@Param("id") Long id);
     int selectCountAll();
-    ShopItemEntity[] selectAllItemByPage(@Param(value = "page") PageVo pageVo);
+    ShopItemEntity[] selectAllItemByPage(@Param("page") PageVo pageVo,
+                                         @Param("address") String address,
+                                         @Param("region") String region,
+                                         @Param("sort") String sort);
     ShopItemEntity[] selectItemsByKeyword(@Param("keyword") String keyword);
     int selectLikeItemCount(@Param("userEmail") String userEmail, @Param("shopId") int shopId, @Param("itemId") Long itemId);
-
     int insertLikeItem(@Param("likeItem") LikeItemEntity likeItem);
-
+    int selectCountAllItems();
     int deleteLikeItem(@Param("userEmail") String userEmail, @Param("shopId") int shopId, @Param("itemId") Long itemId);
     // 반환 타입은 List나 배열[]로
     LikeItemVo[] selectLikeItemsByUser(@Param("userEmail") String userEmail);

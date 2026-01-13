@@ -26,8 +26,17 @@
 <div id="item">
     <div class="item-list">상품 목록</div>
     <ul class="option-list">
-        <li class="item">인기순</li>
-        <li class="item">가격순</li>
+        <li class="item"
+            th:onclick="|location.href='@{/itemList(sort='popular')}'|"
+            th:style="${sort == 'popular' or sort == null} ? 'background-color:#333; color:#fff; cursor:pointer;' : 'cursor:pointer;'">
+            인기순
+        </li>
+
+        <li class="item"
+            th:onclick="|location.href='@{/itemList(sort='price')}'|"
+            th:style="${sort == 'price'} ? 'background-color:#333; color:#fff; cursor:pointer;' : 'cursor:pointer;'">
+            가격순
+        </li>
     </ul>
     <ul class="item-container">
         <li class="list" th:each="item : ${items}">
@@ -55,15 +64,17 @@
     </ul>
     <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
         <div class="group prev" th:if="${pageVo.requestPage > 1}">
-            <a class="link" th:href="@{/items(page=${pageVo.requestPage - 1})}">&lt; 이전</a>
+            <a class="link" th:href="@{/itemList(page=${pageVo.requestPage - 1}, sort=${sort})}">&lt; 이전</a>
         </div>
+
         <div class="group"
              th:each="p : ${#numbers.sequence(pageVo.startPage, pageVo.endPage)}"
              th:classappend="${p == pageVo.requestPage ? ' -selected' : ''} + ${p == pageVo.endPage ? ' last-num' : ''}">
-            <a class="link" th:href="@{/items(page=${p})}" th:text="${p}">1</a>
+            <a class="link" th:href="@{/itemList(page=${p}, sort=${sort})}" th:text="${p}">1</a>
         </div>
+
         <div class="group next" th:if="${pageVo.requestPage < pageVo.maxPage}">
-            <a class="link" th:href="@{/items(page=${pageVo.requestPage + 1})}">다음 &gt;</a>
+            <a class="link" th:href="@{/itemList(page=${pageVo.requestPage + 1}, sort=${sort})}">다음 &gt;</a>
         </div>
     </div>
 </div>
