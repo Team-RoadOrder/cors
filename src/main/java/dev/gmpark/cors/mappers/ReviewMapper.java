@@ -22,6 +22,9 @@ public interface ReviewMapper {
     // 리뷰 본문 저장 (삽입 후 생성된 id가 entity에 담김)
     int insertReview(ItemReviewEntity review);
 
+    //주문완료시 -> 리뷰 본문 저장 :"주문 리뷰"일 때는 reservation_id가 아예 필요 없는 상태여야함.
+    int insertReservationForOrder(ItemReviewEntity review);
+
     // 리뷰 이미지 저장
     int insertReviewImage(ItemReviewImageEntity image);
 

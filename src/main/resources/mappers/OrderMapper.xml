@@ -38,4 +38,13 @@
         WHERE `t2`.`user_email` = #{userEmail}
         ORDER BY `createdAt`
     </select>
+    <!--특정 상품 구매 완료 조회-->
+    <select id="selectCompleteOrderCount" resultType="java.lang.Integer">
+        SELECT COUNT(OI.`id`)
+        FROM `cors`.`order_items` AS OI
+                 INNER JOIN `cors`.`orders` AS O ON OI.`order_id` = O.`id`
+        WHERE O.`user_email` = #{userEmail}
+          AND OI.`item_id` = #{itemId}
+          AND O.`status` = 'PAID'
+    </select>
 </mapper>

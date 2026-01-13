@@ -2,6 +2,7 @@ package dev.gmpark.cors.services;
 
 import dev.gmpark.cors.dtos.ReviewStatsDto;
 import dev.gmpark.cors.entities.*;
+import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.ReviewMapper;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.vos.ReviewVo;
@@ -21,6 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewMapper reviewMapper;
+    /*TODO : oderMapper 추가*/
+    private final OrderMapper orderMapper;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -42,10 +45,21 @@ public class ReviewService {
         if (content.isEmpty() || (images != null && images.length > 3)) return CommonResult.FAILURE;
         review.setContent(content);
 
-        // 구매 이력 및 작성 횟수 확인
-        int history = this.reviewMapper.checkPurchaseHistory(user.getEmail(), review.getItemId());
+        // 예약완료 기반 완료수 : history ->reservationHistory변경
+        int reservationHistory = this.reviewMapper.checkPurchaseHistory(user.getEmail(), review.getItemId());
+        // TODO : 주문완료 기반 완료수
+        int orderHistory = this.orderMapper.selectCompleteOrderCount(review.getItemId(),user.getEmail());
+        // TODO :총 권한 합산 (예약 + 주문)
+        int totalHistory = orderHistory + reservationHistory;
+
+        //TODO : 이미 작성된 리뷰의 수
         Integer written = this.reviewMapper.selectReviewCountByEmail(user.getEmail(), review.getItemId());
-        if (history == 0 || (written != null && written >= history)) return CommonResult.FAILURE;
+        int actualWritten = (written != null) ? written : 0;
+
+        //TODO :검증 : 합산권한이 0 이거나 이미 작성되어 권한이없은 경우는 실패
+        if(totalHistory == 0 ||actualWritten>= totalHistory){
+            return CommonResult.FAILURE;
+        }
 
         review.setUserEmail(user.getEmail());
         if (this.reviewMapper.insertReview(review) <= 0) return CommonResult.FAILURE;
@@ -73,7 +87,7 @@ public class ReviewService {
         return CommonResult.SUCCESS;
     }
 
-    /*리뷰 목록 조회 (이미지 포함)*/
+    /*[TODO:리뷰테이블에서 가져오는거라 - 수정 필요 x]리뷰 목록 조회 (이미지 포함)*/
     public List<ReviewVo> getReviews(Long itemId, String sortType) {
         List<ReviewVo> reviews = this.reviewMapper.selectReviewsByItemId(itemId, sortType);
         if (reviews != null) {
@@ -81,8 +95,7 @@ public class ReviewService {
         }
         return reviews;
     }
-
-    /*단일 리뷰 조회*/
+    /*[TODO:리뷰테이블에서 가져오는거라 - 수정 필요 x]단일 리뷰 조회*/
     public ReviewVo getReviewById(Long reviewId) {
         ReviewVo review = this.reviewMapper.selectReviewById(reviewId);
         if (review != null) {
@@ -97,7 +110,10 @@ public class ReviewService {
         if (user == null) return CommonResult.FAILURE_SESSION;
         String normalized = normalizeText(content, 1, 100);
         ReviewVo review = this.reviewMapper.selectReviewById(reviewId);
-        if (normalized.isEmpty() || review == null || !review.getUserEmail().equals(user.getEmail())) return CommonResult.FAILURE;
+
+        //본인확인 ( 작성이메일 : 로그인 유저 이메일)
+        if (normalized.isEmpty() || review == null || !review.getUserEmail().equals(user.getEmail()))
+            return CommonResult.FAILURE;
 
         ItemReviewEntity entity = new ItemReviewEntity();
         entity.setId(reviewId);
@@ -128,6 +144,7 @@ public class ReviewService {
 
     /*리뷰 삭제*/
     @Transactional
+    /*TODO :userEmail 비교 기반*/
     public CommonResult deleteReview(Long reviewId, RegisterEntity user) {
         if (user == null) return CommonResult.FAILURE_SESSION;
         ReviewVo review = this.reviewMapper.selectReviewById(reviewId);
@@ -152,6 +169,8 @@ public class ReviewService {
         return this.reviewMapper.selectAvailableReservationId(email, itemId);
     }
 
+
+
     /*도움돼요 토글*/
     @Transactional
     public CommonResult toggleReviewLike(Long reviewId, RegisterEntity user) {
@@ -174,12 +193,15 @@ public class ReviewService {
     /*댓글 작성*/
     @Transactional
     public CommonResult writeComment(ItemReviewCommentEntity comment, RegisterEntity user) {
+        /*history와 purchaseHistory를 합산하여 사용자가 가진 전체 리뷰 작성 권한을 계산*/
         if (user == null) return CommonResult.FAILURE_SESSION;
         String content = normalizeText(comment.getContent(), 1, 100);
         if (content.isEmpty()) return CommonResult.FAILURE;
         comment.setContent(content);
         comment.setUserEmail(user.getEmail());
-        return this.reviewMapper.insertComment(comment) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+
+        return this.reviewMapper.insertComment(comment) > 0 ?
+                CommonResult.SUCCESS : CommonResult.FAILURE;
     }
 
     /*댓글 목록 조회*/

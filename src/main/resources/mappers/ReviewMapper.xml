@@ -27,6 +27,17 @@
         INSERT INTO `cors`.`item_review_comments` (`review_id`, `user_email`, `content`, `parent_id`)
         VALUES (#{reviewId}, #{userEmail}, #{content}, #{parentId})
     </insert>
+    <insert id="insertReservationForOrder">
+        INSERT INTO `cors`.`reservations` (
+            `user_email`,
+            `shop_id`,
+            `visit_date`,
+            `status`,
+            `created_at`) VALUES
+                              ( #{userEmail},#{shopId},NOW(),
+                     'ORDER_REVIEW', NOW()
+                 )
+    </insert>
 
     <update id="updateReview" parameterType="dev.gmpark.cors.entities.ItemReviewEntity">
         UPDATE `cors`.`item_reviews`

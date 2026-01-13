@@ -12,5 +12,7 @@ import java.util.List;
 public interface OrderMapper {
     int insertOrder(OrderEntity order);
     int insertOrderItems(@Param("items") List<OrderItemEntity> items);
+    //특정 상품 구매 완료 조회
+    int selectCompleteOrderCount(@Param("itemId")Long ItemId,@Param("userEmail")String userEmail);
     OrderHistoryVo[] getAllOrders(String userEmail);
 }
