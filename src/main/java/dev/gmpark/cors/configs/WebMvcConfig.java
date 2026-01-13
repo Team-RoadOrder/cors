@@ -18,5 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + path); // 이제 동적으로 경로를 찾습니다.
+
+        //리뷰 이미지 전용
+        registry.addResourceHandler("/review-images/**")
+                .addResourceLocations("file:" + path); // 이제 동적으로 경로를 찾습니다.
     }
 }

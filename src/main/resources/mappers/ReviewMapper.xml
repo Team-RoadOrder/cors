@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.ReviewMapper">
+
+    <insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `cors`.`item_reviews` (`item_id`, `shop_id`, `user_email`, `reservation_id`, `content`, `rating`)
+        VALUES (#{itemId}, #{shopId}, #{userEmail}, #{reservationId}, #{content}, #{rating})
+    </insert>
+
+    <insert id="insertReviewImage">
+        INSERT INTO `cors`.`item_review_images` (`review_id`, `image_data`)
+        VALUES (#{reviewId}, #{imageData})
+    </insert>
+
+    <insert id="insertReviewLike">
+        INSERT INTO `cors`.`item_review_likes` (`review_id`, `user_email`)
+        VALUES (#{reviewId}, #{email})
+    </insert>
+
+    <update id="increaseUsefulCount">
+        UPDATE `cors`.`item_reviews`
+        SET `useful_count` = `useful_count` + 1
+        WHERE `id` = #{reviewId}
+    </update>
+
+    <insert id="insertComment" parameterType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
+        INSERT INTO `cors`.`item_review_comments` (`review_id`, `user_email`, `content`, `parent_id`)
+        VALUES (#{reviewId}, #{userEmail}, #{content}, #{parentId})
+    </insert>
+
+    <update id="updateReview" parameterType="dev.gmpark.cors.entities.ItemReviewEntity">
+        UPDATE `cors`.`item_reviews`
+        SET `content` = #{content},
+            `rating` = #{rating},
+            `updated_at` = NOW()
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updateComment" parameterType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
+        UPDATE `cors`.`item_review_comments`
+        SET `content` = #{content},
+            `updated_at` = NOW()
+        WHERE `id` = #{id}
+    </update>
+
+    <delete id="deleteReview">
+        DELETE FROM `cors`.`item_reviews`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </delete>
+
+    <delete id="deleteReviewLike">
+        DELETE FROM `cors`.`item_review_likes`
+        WHERE `review_id` = #{reviewId} AND `user_email` = #{email}
+    </delete>
+
+    <update id="decreaseUsefulCount">
+        UPDATE `cors`.`item_reviews`
+        SET `useful_count` = GREATEST(0, `useful_count` - 1)
+        WHERE `id` = #{reviewId}
+    </update>
+
+    <delete id="deleteComment">
+        DELETE FROM `cors`.`item_review_comments`
+        WHERE `id` = #{id}
+    </delete>
+
+    <select id="selectReviewsByItemId" resultType="dev.gmpark.cors.vos.ReviewVo">
+        SELECT
+        r.`id`              AS `id`,
+        r.`item_id`         AS `itemId`,
+        r.`shop_id`         AS `shopId`,
+        r.`user_email`      AS `userEmail`,
+        r.`reservation_id`  AS `reservationId`,
+        r.`content`         AS `content`,
+        r.`rating`          AS `rating`,
+        r.`useful_count`    AS `usefulCount`,
+        r.`created_at`      AS `createdAt`,
+        r.`updated_at`      AS `updatedAt`,
+        u.`name`            AS `userName`
+        FROM `cors`.`item_reviews` AS r
+        LEFT JOIN `cors`.`users` AS u ON r.`user_email` = u.`email`
+        WHERE r.`item_id` = #{itemId}
+        <choose>
+            <when test='sortType != null and sortType.toString() == "useful"'>
+                ORDER BY r.`useful_count` DESC, r.`created_at` DESC
+            </when>
+            <otherwise>
+                ORDER BY r.`created_at` DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectImagesByReviewId" resultType="java.lang.String">
+        SELECT `image_data`
+        FROM `cors`.`item_review_images`
+        WHERE `review_id` = #{reviewId}
+        ORDER BY `id` ASC
+    </select>
+
+    <select id="selectAllReviewImages" resultType="java.lang.String">
+        SELECT ri.`image_data`
+        FROM `cors`.`item_review_images` AS ri
+                 INNER JOIN `cors`.`item_reviews` AS ir ON ri.`review_id` = ir.`id`
+        WHERE ir.`item_id` = #{itemId}
+        ORDER BY ri.`id` DESC
+    </select>
+
+    <select id="checkPurchaseHistory" resultType="java.lang.Integer">
+        SELECT IFNULL((SELECT r.`id`
+                       FROM `cors`.`reservations` AS r
+                                INNER JOIN `cors`.`reservation_items` AS ri ON r.`id` = ri.`reservation_id`
+                                LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
+                       WHERE r.`user_email` = #{email}
+                         AND ri.`item_id` = #{itemId}
+                         AND r.`status` = '확정'
+                         AND ir.`id` IS NULL
+                       LIMIT 1), 0)
+    </select>
+
+    <select id="isShopOwnerOfReview" resultType="int">
+        SELECT COUNT(*)
+        FROM `cors`.`shop_info`
+        WHERE `shop_id` = #{shopId}
+          AND `user_email` = #{email}
+    </select>
+
+    <select id="selectReviewById" resultType="dev.gmpark.cors.vos.ReviewVo">
+        SELECT
+            `id`                AS `id`,
+            `item_id`           AS `itemId`,
+            `shop_id`           AS `shopId`,
+            `user_email`        AS `userEmail`,
+            `reservation_id`    AS `reservationId`,
+            `content`           AS `content`,
+            `rating`            AS `rating`,
+            `useful_count`      AS `usefulCount`,
+            `created_at`        AS `createdAt`,
+            `updated_at`        AS `updatedAt`
+        FROM `cors`.`item_reviews`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectAvailableReservationId" resultType="java.lang.Integer">
+        SELECT r.`id`
+        FROM `cors`.`reservations` AS r
+                 INNER JOIN `cors`.`reservation_items` AS ri ON r.`id` = ri.`reservation_id`
+                 LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
+        WHERE r.`user_email` = #{email}
+          AND ri.`item_id` = CAST(#{itemId} AS UNSIGNED)
+          AND r.`status` LIKE '%확정%'
+          AND ir.`id` IS NULL
+        ORDER BY r.`id` DESC
+        LIMIT 1
+    </select>
+
+    <select id="checkReviewLikeExists" resultType="java.lang.Integer">
+        SELECT IFNULL((SELECT `review_id`
+                       FROM `cors`.`item_review_likes`
+                       WHERE `review_id` = #{reviewId} AND `user_email` = #{email}
+                       LIMIT 1), 0)
+    </select>
+
+    <select id="selectReviewLikeCount" resultType="java.lang.Integer">
+        SELECT `useful_count` FROM `cors`.`item_reviews`
+        WHERE `id` = #{reviewId}
+    </select>
+
+    <select id="selectCommentsByReviewId" resultType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
+        SELECT
+            c.`id`            AS `id`,
+            c.`review_id`     AS `reviewId`,
+            c.`user_email`    AS `userEmail`,
+            u.`name`          AS `userName`,
+            c.`content`       AS `content`,
+            c.`parent_id`     AS `parentId`,
+            c.`created_at`    AS `createdAt`,
+            c.`updated_at`    AS `updatedAt`
+        FROM `cors`.`item_review_comments` AS c
+                 LEFT JOIN `cors`.`users` AS u ON c.`user_email` = u.`email`
+        WHERE c.`review_id` = #{reviewId}
+        ORDER BY
+            IFNULL(c.`parent_id`, c.`id`) ASC,
+            c.`created_at` ASC
+    </select>
+
+    <select id="selectCommentById" resultType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
+        SELECT
+            `id`            AS `id`,
+            `review_id`     AS `reviewId`,
+            `user_email`    AS `userEmail`,
+            `content`       AS `content`,
+            `parent_id`     AS `parentId`,
+            `created_at`    AS `createdAt`,
+            `updated_at`    AS `updatedAt`
+        FROM `cors`.`item_review_comments`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectReviewCountByEmail" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `cors`.`item_reviews`
+        WHERE `user_email` = #{email}
+          AND `item_id` = #{itemId}
+        LIMIT 1
+    </select>
+
+</mapper>

@@ -5,8 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ITEM</title>
-    <!--<link href="assets/images/favicon.ico" rel="shortcut icon">-->
-    <!-- 탭창 파비콘 들어가야함-->
     <link rel="stylesheet" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/item/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap"
@@ -14,63 +12,409 @@
     <link href="/assets/images/login/favicon.png" rel="icon">
     <script defer src="/assets/scripts/common.js"></script>
     <script defer src="/assets/scripts/item/item.js"></script>
+    <script defer src="/assets/scripts/item/customerCare.js"></script>
 </head>
 <body>
-<th:block th:replace="~{/fragments/common.html :: customer-header}">
-</th:block>
-<main id="main" >
+<th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
+
+<input type="hidden" id="sessionUserEmail" th:if="${sessionUser != null}" th:value="${sessionUser.email}">
+<main id="main">
     <img src="../assets/images/my/waviness.png" th:src="${shopInfo.backgroundImage}" class="image" alt="메인이미지">
 </main>
-
-<!--상품이미지-->
 <div class="background"></div>
 <div class="container">
     <div class="splash">
         <div class="image-wrapper">
             <th:block th:each="img, iterStat : ${item.images}">
-                <img class="image"
-                     th:src="@{/images/{path}(path=${img.imagePath})}"
-                     alt="상품이미지"
+                <img class="image" th:src="@{/images/{path}(path=${img.imagePath})}" alt="상품이미지"
                      th:id="'splash' + ${iterStat.index}">
             </th:block>
-
-            <img th:if="${#lists.isEmpty(item.images)}"
-                 class="image" src="/assets/images/default.png" alt="기본이미지">
+            <img th:if="${#lists.isEmpty(item.images)}" class="image" src="/assets/images/default.png" alt="기본이미지">
         </div>
-
         <div class="dot-container">
             <th:block th:each="img, iterStat : ${item.images}">
                 <a class="dot" th:href="'#splash' + ${iterStat.index}"></a>
             </th:block>
         </div>
-
         <div class="subImage">
             <th:block th:each="img : ${item.images}">
-                <a class="sub" href="#">
-                    <img th:src="@{/images/{path}(path=${img.imagePath})}"
-                         alt="썸네일" class="sub1">
-                </a>
+                <a class="sub" href="#"><img th:src="@{/images/{path}(path=${img.imagePath})}" alt="썸네일"
+                                             class="sub1"></a>
             </th:block>
         </div>
-    </div>
-    <!--상품가격 및 구매-->
-    <div id="buying-wrapper">
+        <div class="shopName">
+            <a th:href="@{/shop/(shopId=${item.shopId})}" class="shop-brand-info">
+                <img class="shopImage" th:src="${shopInfo.profileImage}" src="../assets/images/item/store.webp"
+                     alt="브랜드로고">
+                <div class="shop-text-group">
+                    <span class="brand-name" th:text="${shopInfo.shopName}">Polyteru</span>
+                    <div class="attractive">
+                        <span class="sub-text" th:text="${shopInfo.shopName}">폴리테루</span>
+                        <span class="like-count">º 관심 <th:block
+                                th:text="${#numbers.formatInteger(likeCount, 0, 'COMMA')}">2.1만</th:block></span>
+                    </div>
+                </div>
+            </a>
+            <div class="save">
+                <input type="checkbox" id="bookmark-toggle" th:onclick="|toggleLikeShop(${shopInfo.shopId}, '확정')|"
+                       th:checked="${isLiked}" hidden>
+                <label for="bookmark-toggle" class="bookmark-label">
+                    <img src="../assets/images/item/save1.png" class="bookmark default" alt="bookmark">
+                    <img src="../assets/images/item/save2.png" class="bookmark active" alt="bookmark-black">
+                </label>
+            </div>
+        </div>
+        <div class="recommended-section">
+            <div class="recommended-header">
+                <h3 class="recommended-title">이 브랜드의 다른 상품</h3>
+            </div>
+            <div class="recommended-grid-wrapper">
+                <div th:if="${relatedItems == null or relatedItems.isEmpty()}" class="no-data">
+                    <span>현재 추천 가능한 상품이 없습니다.</span>
+                </div>
+                <div class="recommended-grid">
+                    <th:block th:each="related : ${relatedItems}">
+                        <a th:href="@{/item/(id=${related.id})}" class="related-card">
+                            <div class="img-box">
+                                <img th:src="${!#lists.isEmpty(related.images) ? '/images/' + related.images[0].imagePath : '/assets/images/default.png'}">
+                            </div>
+                            <div class="info-box">
+                                <div class="name" th:text="${related.itemName}">상품명</div>
+                                <div class="price" th:text="${#numbers.formatInteger(related.price, 0, 'COMMA')} + '원'">
+                                    가격
+                                </div>
+                            </div>
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <div class="productContainer">
+            <ul class="productHead">
+                <li class="item active" data-tab="guide-section"><a>구매전 안내 사항</a></li>
+                <li class="item" data-tab="style-section"><a>스타일 리뷰(
+                    <th:block th:text="${reviews.size()}">0</th:block>
+                    )</a></li>
+            </ul>
+            <div class="tab-content">
+                <section id="guide-section" class="content-pane active">
+                    <div class="guide-box">
+                        <h4 class="guide-title">사이즈 가이드</h4>
+                        <div class="size-tab-menu">
+                            <button type="button" class="s-tab active" onclick="changeSizeTab('man')">남자</button>
+                            <button type="button" class="s-tab" onclick="changeSizeTab('woman')">여자</button>
+                            <button type="button" class="s-tab" onclick="changeSizeTab('shoes')">신발</button>
+                        </div>
+                        <div class="size-table-wrapper">
+                            <table class="size-table" id="size-man">
+                                <thead>
+                                <tr>
+                                    <th>SIZE</th>
+                                    <th>M</th>
+                                    <th>L</th>
+                                    <th>XL</th>
+                                    <th>2XL</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>어깨너비</td>
+                                    <td>48</td>
+                                    <td>50</td>
+                                    <td>52</td>
+                                    <td>54</td>
+                                </tr>
+                                <tr>
+                                    <td>가슴단면</td>
+                                    <td>55</td>
+                                    <td>57.5</td>
+                                    <td>60</td>
+                                    <td>62.5</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
+                            <table class="size-table" id="size-woman" style="display:none;">
+                                <thead>
+                                <tr>
+                                    <th>SIZE</th>
+                                    <th>S</th>
+                                    <th>M</th>
+                                    <th>L</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>어깨너비</td>
+                                    <td>42</td>
+                                    <td>44</td>
+                                    <td>46</td>
+                                </tr>
+                                <tr>
+                                    <td>가슴단면</td>
+                                    <td>48</td>
+                                    <td>50</td>
+                                    <td>52</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="size-table" id="size-shoes" style="display:none;">
+                                <thead>
+                                <tr>
+                                    <th>KR(mm)</th>
+                                    <th>230</th>
+                                    <th>235</th>
+                                    <th>240</th>
+                                    <th>245</th>
+                                    <th>250</th>
+                                    <th>255</th>
+                                    <th>260</th>
+                                    <th>265</th>
+                                    <th>270</th>
+                                    <th>275</th>
+                                    <th>280</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>US</td>
+                                    <td>5</td>
+                                    <td>5.5</td>
+                                    <td>6</td>
+                                    <td>6.5</td>
+                                    <td>7</td>
+                                    <td>7.5</td>
+                                    <td>8</td>
+                                    <td>8.5</td>
+                                    <td>9</td>
+                                    <td>9.5</td>
+                                    <td>10</td>
+                                </tr>
+                                <tr>
+                                    <td>UK</td>
+                                    <td>4</td>
+                                    <td>4.5</td>
+                                    <td>5</td>
+                                    <td>5.5</td>
+                                    <td>6</td>
+                                    <td>6.5</td>
+                                    <td>7</td>
+                                    <td>7.5</td>
+                                    <td>8</td>
+                                    <td>8.5</td>
+                                    <td>9</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="authentic-banner">
+                            <div class="banner-content">
+                                <p class="banner-text">CORS에서는 100% 정품만 거래합니다.</p>
+                            </div>
+                        </div>
+                        <div class="delivery-process">
+                            <h3 class="delivery-process-title">브랜드 배송 과정</h3>
+                            <div class="delivery-info-box">
+                                <div class="info-item">
+                                    <h4 class="info-subtitle">구매</h4>
+                                    <p class="info-desc">구매는 대기 중(결제완료) &gt; 주문 확인(상품 준비) &gt; 출고(배송) &gt; 배송 완료 &gt;
+                                        구매확정 단계로 진행됩니다.</p>
+                                </div>
+
+                                <div class="info-item">
+                                    <h4 class="info-subtitle">교환/반품</h4>
+                                    <p class="info-desc">교환은 배송 완료 후 교환 신청 &gt; 신청 접수 &gt; 판매자에게 상품 발송 후 발송 정보 입력 &gt;
+                                        판매자 상품 확인 &gt; 교환진행(출고) &gt; 교환 완료(배송 완료) &gt; 구매확정 단계로 진행됩니다.</p>
+                                    <p class="info-desc">반품은 배송완료 후 반품 신청 &gt; 신청 접수 &gt; 판매자에게 상품 발송 후 발송 정보 입력 &gt;
+                                        판매자 상품 확인 &gt; 반품 완료 단계로 진행됩니다.</p>
+                                </div>
+
+                                <div class="info-item">
+                                    <h4 class="info-subtitle">구매확정</h4>
+                                    <ul class="info-list">
+                                        <li>배송 중 상태로 21일 경과 시 자동 배송 완료 처리됩니다.</li>
+                                        <li>배송 완료 이후 7일 동안 직접 구매 확정할 수 있으며, 해당 기간 내 미확정 시 자동 구매확정 처리됩니다.</li>
+                                        <li>교환/반품 회수 접수 방법이 '구매자 수거'인 경우 5일 이내(주말, 공휴일 제외)에 상품 발송 후 발송 정보를 입력해야 합니다. (기간
+                                            내 발송 정보를 입력하지 않을 시 교환/반품 접수건은 철회되며 자동 구매확정 처리됩니다.)
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="info-item notice">
+                                    <h4 class="info-subtitle">[유의사항]</h4>
+                                    <ul class="info-list bullet">
+                                        <li>주문취소는 대기 중(결제완료) 단계에서만 가능합니다.</li>
+                                        <li>교환/반품 신청은 상품 훼손, 회수 실패, 재고 부족 등의 사유로 거부될 수 있습니다.</li>
+                                        <li>구매자 단순변심 사유로 인한 반품 접수 시 반품 비용이 발생합니다. (ex 가격 인하, 색상/사이즈 불만)</li>
+                                        <li>상품의 불량 또는 하자로 인한 반품 접수 시 상품 실물 확인 후 사유에 따라 교환/반품 배송비가 발생할 수 있으며 계좌이체를 통해
+                                            배송비를 입금해야 합니다.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="style-section" class="content-pane">
+                    <div class="style-review-header">
+                        <div class="filter-group">
+                            <label class="capsule-toggle" id="btn-review-write">
+                                <input type="checkbox" id="review-write-toggle">
+                                <span class="switch-knob"></span>
+                                <span class="capsule-text">후기 작성</span>
+                            </label>
+
+                            <label class="capsule-toggle">
+                                <input type="checkbox" id="useful-toggle">
+                                <span class="switch-knob"></span>
+                                <span class="capsule-text">
+                                도움 돼요
+                                </span>
+                            </label>
+                        </div>
+                        <div class="style-grid" id="style-grid-container">
+                            <th:block th:each="img, iterStat : ${reviewImages}">
+                                <div th:if="${iterStat.index < 4}" class="grid-item">
+                                    <img th:src="@{/review-images/{name}(name=${img})}" class="style-review-full-img">
+                                    <div th:if="${iterStat.index == 3 and reviewImages.size() > 4}" class="grid-more-overlay">
+                                        <span th:text="'+' + (${reviewImages.size()} - 4)"></span>
+                                    </div>
+                                </div>
+
+                                <img th:if="${iterStat.index >= 4}" th:src="@{/review-images/{name}(name=${img})}"
+                                     class="style-review-full-img" style="display:none;">
+                            </th:block>
+                        </div>
+                        <div id="all-review-images-data" style="display:none;">
+                            <th:block th:each="img : ${reviewImages}">
+                                <img th:src="@{/review-images/{name}(name=${img})}" class="full-data-img">
+                            </th:block>
+                        </div>
+                    </div>
+                    <form id="style-write-form" class="review-write-box" style="display:none;"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="reservationId"
+                               th:value="${availableReservationId != null ? availableReservationId : 0}">
+                        <input type="hidden" name="itemId" th:value="${item.id}">
+                        <input type="hidden" name="shopId" th:value="${item.shopId}">
+
+                        <p class="form-title">받아보니 어땠나요? 솔직한 후기 남겨주세요.</p>
+
+                        <div class="rating-area">
+                            <select name="rating" id="review-rating">
+                                <option value="5">★★★★★ (5점)</option>
+                                <option value="4">★★★★☆ (4점)</option>
+                                <option value="3">★★★☆☆ (3점)</option>
+                                <option value="2">★★☆☆☆ (2점)</option>
+                                <option value="1">★☆☆☆☆ (1점)</option>
+                            </select>
+                        </div>
+
+                        <textarea name="content" id="review-content" minlength="1" maxlength="100" placeholder="리뷰를 1자 이상 100자 이내로 작성해주세요."></textarea>
+
+                        <div id="image-preview-container" class="image-preview-container"></div>
+
+                        <div class="write-footer">
+                            <input type="file" name="images" id="image-upload" multiple accept="image/*"
+                                   style="display:none;">
+                            <button type="button" class="btn-img-upload"
+                                    onclick="document.getElementById('image-upload').click()">
+                                사진 첨부하기
+                            </button>
+
+                            <div class="action-btns">
+                                <button type="button" class="btn-cancel" id="btn-review-cancel">취소</button>
+                                <button type="button" class="btn-confirm" id="btn-review-submit">확인</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="review-list-container">
+                        <div th:each="review : ${reviews}" class="review-item-card"
+                             th:attr="data-review-id=${review.id}">
+                            <div class="review-card-header">
+                                <div class="user-meta">
+                                    <img src="/assets/images/my/default_profile.png" class="user-avatar" alt="profile">
+                                    <div class="user-text">
+                                        <strong class="user-name" th:text="${review.userName}">작성자</strong>
+                                        <span class="review-date"
+                                              th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">2026.01.10</span>
+                                        <div class="star-rating">
+                                            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                                <span th:text="${i <= review.rating ? '★' : '☆'}" class="star"></span>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="owner-btns"
+                                     th:if="${sessionUser != null and sessionUser.email == review.userEmail}">
+                                    <button type="button" class="btn-action-text"
+                                            th:onclick="|openEditReview(${review.id})|">수정
+                                    </button>
+                                    <button type="button" class="btn-action-text"
+                                            th:onclick="|deleteReview(${review.id})|">삭제
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="review-contents-images" th:if="${not #lists.isEmpty(review.images)}">
+                                <div th:each="imgData : ${review.images}" class="review-img-box">
+                                    <img th:src="@{/review-images/{name}(name=${imgData})}" alt="review image">
+                                </div>
+                            </div>
+
+                            <div class="review-card-content">
+                                <p class="content-text" th:text="${review.content}">리뷰 내용이 여기에 표시됩니다.</p>
+                            </div>
+
+                            <div class="review-card-footer">
+                                <div class="utility-btns">
+                                    <button type="button" class="btn-utility"
+                                            th:onclick="|toggleReviewLike(${review.id}, this)|">
+                                        도움 돼요 <span class="like-count" th:text="${review.usefulCount}">0</span>
+                                    </button>
+
+                                    <button type="button" class="btn-utility"
+                                            th:onclick="|toggleCommentSection(${review.id})|">댓글
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="comment-section">
+                                <div class="comment-form">
+                                    <textarea class="comment-input" minlength="1" maxlength="100" placeholder="댓글을 1~100자 이내로 입력하세요.&#10;(정책상 답글이 달린 댓글은 삭제가 제한됩니다)"></textarea>
+                                    <div class="form-action-btns">
+                                        <button type="button" class="btn-form-cancel"
+                                                th:onclick="|toggleCommentSection(${review.id})|">취소
+                                        </button>
+                                        <button type="button" class="btn-form-submit"
+                                                th:onclick="|submitComment(${review.id}, null, this)|">등록
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="comment-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div id="buying-wrapper">
         <div class="product">
             <p class="buyText">상품이름</p>
-            <span class="productName" th:text="${item.itemName}" >Polyteru X LOTTE GIANTS Retro Uniform Black</span>
+            <span class="productName" th:text="${item.itemName}">상품명</span>
             <span class="detail-category" th:text="${item.detailCategory}"></span>
             <p class="buyText">색상</p>
-            <p class="koreanProductName" th:text="${item.color}">폴리테루 X 롯데자이언츠 레트로 유니폼 블랙</p>
+            <p class="koreanProductName" th:text="${item.color}">색상정보</p>
             <div class="buy">
-                <span class="buyText" >판매가격</span>
-                <span class="buyNumber"  th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')+ ' ' + '원'}"><b>139,000원</b></span>
+                <span class="buyText">판매가격</span>
+                <span class="buyNumber"
+                      th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')+ ' 원'}"><b>0원</b></span>
             </div>
             <p class="star">★</p>
             <a href="#"><p class="score"><b>4.9</b></p></a>
-            <a class="reviewButton" href="#">
-                <span class="review">리뷰 253</span>
-            </a>
+            <a class="reviewButton" href="#"><span class="review">리뷰 <th:block th:text="${reviews.size()}">0</th:block></span></a>
         </div>
         <a class="optionLink" href="#">
             <div class="option">
@@ -78,25 +422,22 @@
                 <span class="underIcon">▼</span>
             </div>
         </a>
-            <div class="buying">구매하기</div>
+        <input type="hidden" id="serverSizeData" th:value="${item.size}"/>
+        <div class="modal" id="optionModal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>사이즈 선택</h2>
+                <div class="size-options" id="sizeGrid"></div>
+                <button class="confirm-size-button" id="confirmSizeButton">선택 완료</button>
+            </div>
+        </div>
+        <div class="buying">구매하기</div>
         <a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
-            <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장</button>
+            <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장
+            </button>
         </div>
-<!--        <div class="additional">
-            <p>추가 혜택</p>
-            <a href="#">더보기</a>
-        </div>
-
-        <div class="point">
-            <p class="pointCredit">포인트</p>
-            <p class="credit">계좌 간편결제 시 1% 적립</p>
-        </div>
-        <div class="point">
-            <p class="pointCredit">결제</p>
-            <p class="credit">크림카드 최대 15만... 외 10건</p>
-        </div>-->
         <div class="delivery">
             <p class="deliveryInformation">배송 정보</p>
             <div class="deliveryImage">
@@ -107,102 +448,40 @@
                     <p class="deliveryText3">7만원 이상 구매 시 배송비 무료</p>
                 </div>
             </div>
-
-            <div class="shopName">
-                <a th:href="@{/shop/(shopId=${item.shopId})}">
-                    <img class="shopImage" src="../assets/images/item/store.webp" alt="" th:src="${shopInfo.profileImage}">
-                    <p th:text="${shopInfo.shopName}">Polyteru</p>
-                    <p class="polyteru"> ></p>
-                    <div class="attractive">
-                        <p th:text="${shopInfo.shopName}" >폴리테루 </p>
-                        <p> º 관심</p>
-                        <p th:text="${#numbers.formatInteger(likeCount, 0, 'COMMA')}">2.1만</p>
-                    </div>
-                </a>
-                <div class="save">
-                    <input type="checkbox" id="bookmark-toggle"
-                           th:onclick="|toggleLikeShop(${shopInfo.shopId}, '확정')|"
-                           th:checked="${isLiked}"
-                           hidden>
-                    <label for="bookmark-toggle" class="bookmark-label">
-                        <img src="../assets/images/item/save1.png" class="bookmark default" alt="bookmark">
-                        <img src="../assets/images/item/save2.png" class="bookmark active" alt="bookmark-black">
-                    </label>
-                </div>
-            </div>
-        </div>
-        <!--광고 배너-->
-        <div class="ad">
-            <img src="../assets/images/item/ad.png" alt="ad" class="ad">
         </div>
         <div class="review">
-            <h3>리뷰 ★ 4.9 (276)</h3>
+            <h3>리뷰 ★ <span th:text="${stats.averageRating}">0.0</span> (
+                <th:block th:text="${stats.totalCount}">0</th:block>
+                )
+            </h3>
             <div class="review-bar">
-                5<div class="bar"><span style="width:90%"></span></div>
-                4<div class="bar"><span style="width:5%"></span></div>
-                3<div class="bar"><span style="width:3%"></span></div>
-                2<div class="bar"><span style="width:1%"></span></div>
-                1<div class="bar"><span style="width:0"></span></div>
-            </div>
-            <ul>
-                <li>정사이즈예요 — 61%</li>
-                <li>두께감이 좋아요 — 69%</li>
-                <li>퀄리티가 만족스러워요 — 53%</li>
-            </ul>
-            <div class="moreReview">리뷰 더보기</div>
-        </div>
-    </div>
-</div>
-<div class="productContainer">
-    <ul class="productHead">
-        <li class="item"><a href="#">상품 상세정보</a></li>
-        <li class="item"><a href="#">교환 및 반품 안내</a></li>
-        <li class="item"><a href="#">스타일 리뷰14</a></li>
-        <li class="item"><a href="#">추천 상품</a></li>
-    </ul>
-</div>
-</div>
-<!-- 옵션 선택 모달 -->
-<input type="hidden" id="serverSizeData" th:value="${item.size}" />
-<div class="modal" id="optionModal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>사이즈 선택</h2>
-
-        <div class="size-options" id="sizeGrid">
-        </div>
-
-        <button class="confirm-size-button" id="confirmSizeButton">선택 완료</button>
-    </div>
-</div>
-<div class="container" style="margin-top: 60px; margin-bottom: 100px; padding-top: 20px; border-top: 1px solid #e1e1e1;">
-    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #333;">
-        🤖 이 상품과 비슷한 스타일의 추천 상품
-    </h3>
-
-    <div th:if="${relatedItems == null or relatedItems.isEmpty()}" style="text-align: center; color: #888; padding: 30px;">
-        <span style="font-size: 14px;">현재 추천 가능한 상품이 없습니다.</span>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-        <th:block th:each="related : ${relatedItems}">
-            <a th:href="@{/item/(id=${related.id})}" style="text-decoration: none; color: inherit; display: block;">
-                <div style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.2s;">
-                    <div style="width: 100%; aspect-ratio: 1/1; background: #f9f9f9; position: relative;">
-                        <img th:if="${!#lists.isEmpty(related.images)}"
-                             th:src="@{/images/{path}(path=${related.images[0].imagePath})}"
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                        <img th:if="${#lists.isEmpty(related.images)}"
-                             src="/assets/images/default.png"
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div style="padding: 12px;">
-                        <div th:text="${related.itemName}" style="font-size: 14px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">상품명</div>
-                        <div th:text="${#numbers.formatInteger(related.price, 0, 'COMMA')} + '원'" style="font-weight: 700; font-size: 15px;">가격</div>
-                    </div>
+                5
+                <div class="bar">
+                    <span th:style="|width: ${stats.totalCount > 0 ? (stats.ratingCounts[5] * 100.0 / stats.totalCount) : 0}%|"></span>
                 </div>
-            </a>
-        </th:block>
+
+                4
+                <div class="bar">
+                    <span th:style="|width: ${stats.totalCount > 0 ? (stats.ratingCounts[4] * 100.0 / stats.totalCount) : 0}%|"></span>
+                </div>
+
+                3
+                <div class="bar">
+                    <span th:style="|width: ${stats.totalCount > 0 ? (stats.ratingCounts[3] * 100.0 / stats.totalCount) : 0}%|"></span>
+                </div>
+
+                2
+                <div class="bar">
+                    <span th:style="|width: ${stats.totalCount > 0 ? (stats.ratingCounts[2] * 100.0 / stats.totalCount) : 0}%|"></span>
+                </div>
+
+                1
+                <div class="bar">
+                    <span th:style="|width: ${stats.totalCount > 0 ? (stats.ratingCounts[1] * 100.0 / stats.totalCount) : 0}%|"></span>
+                </div>
+            </div>
+        </div>
+        <div class="ad"><img src="../assets/images/item/ad.png" alt="ad" class="ad"></div>
     </div>
 </div>
 </body>

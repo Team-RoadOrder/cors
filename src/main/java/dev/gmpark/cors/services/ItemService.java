@@ -54,7 +54,7 @@ public class ItemService {
         }
     }
 
-    // [AI 추가] Python 서버 추천 호출
+    //  Python 서버 추천 호출
     public List<ShopItemVo> getRelatedItems(Long itemId) {
         List<ShopItemVo> relatedItems = new ArrayList<>();
         try {
