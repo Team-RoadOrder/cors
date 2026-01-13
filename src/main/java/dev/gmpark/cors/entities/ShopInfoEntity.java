@@ -22,6 +22,8 @@ public class ShopInfoEntity {
     private MultipartFile profileImageFile;
     private String backgroundImage; // DB에는 이미지 경로(String)가 저장됨
     private MultipartFile backgroundImageFile;
+    
+    private int likeCount; // 관심 등록 수
 }
 
 /*

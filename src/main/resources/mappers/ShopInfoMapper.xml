@@ -159,20 +159,21 @@
     </update>
     <select id="selectShopsByCategories" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
         SELECT
-            shop_id          AS shopId,
-            user_email       AS userEmail,
-            shop_name        AS shopName,
-            shop_time        AS shopTime,
-            shop_category    AS shopCategory,
-            shop_address     AS shopAddress,
-            shop_tel         AS shopTel,
-            profile_image    AS profileImage,
-            background_image AS backgroundImage
-        FROM `cors`.`shop_info`
-        WHERE shop_category IN
+            si.shop_id          AS shopId,
+            si.user_email       AS userEmail,
+            si.shop_name        AS shopName,
+            si.shop_time        AS shopTime,
+            si.shop_category    AS shopCategory,
+            si.shop_address     AS shopAddress,
+            si.shop_tel         AS shopTel,
+            si.profile_image    AS profileImage,
+            si.background_image AS backgroundImage,
+            (SELECT COUNT(*) FROM `cors`.`like_shops` ls WHERE ls.shop_id = si.shop_id) AS likeCount
+        FROM `cors`.`shop_info` si
+        WHERE si.shop_category IN
         <foreach collection="categories" item="category" open="(" separator="," close=")">
             #{category}
         </foreach>
-        ORDER BY `shopId` DESC
+        ORDER BY likeCount DESC, si.shop_id DESC
     </select>
 </mapper>

@@ -31,6 +31,9 @@ public class ShopItemEntity {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt; // 삭제 시 데이터 보존을 위한 Soft Delete용
     private String imagePath;
+    
+    private double rating; // 별점
+    private int reviewCount; // 리뷰 수
 
 }
 
