@@ -3,6 +3,7 @@ package dev.gmpark.cors.mappers;
 import dev.gmpark.cors.entities.ItemReviewCommentEntity;
 import dev.gmpark.cors.entities.ItemReviewEntity;
 import dev.gmpark.cors.entities.ItemReviewImageEntity;
+import dev.gmpark.cors.entities.ReservationEntity;
 import dev.gmpark.cors.vos.ReviewVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,7 +24,7 @@ public interface ReviewMapper {
     int insertReview(ItemReviewEntity review);
 
     //주문완료시 -> 리뷰 본문 저장 :"주문 리뷰"일 때는 reservation_id가 아예 필요 없는 상태여야함.
-    int insertReservationForOrder(ItemReviewEntity review);
+    int insertReservationForOrder(ReservationEntity reservation);
 
     // 리뷰 이미지 저장
     int insertReviewImage(ItemReviewImageEntity image);

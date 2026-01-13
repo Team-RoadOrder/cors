@@ -27,16 +27,10 @@
         INSERT INTO `cors`.`item_review_comments` (`review_id`, `user_email`, `content`, `parent_id`)
         VALUES (#{reviewId}, #{userEmail}, #{content}, #{parentId})
     </insert>
-    <insert id="insertReservationForOrder">
-        INSERT INTO `cors`.`reservations` (
-            `user_email`,
-            `shop_id`,
-            `visit_date`,
-            `status`,
-            `created_at`) VALUES
-                              ( #{userEmail},#{shopId},NOW(),
-                     'ORDER_REVIEW', NOW()
-                 )
+    <!--주문완료사용자 : 리뷰작성-->
+    <insert id="insertReservationForOrder" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `cors`.`reservations` (`user_email`,`shop_id`,`visit_date`,`status`,`created_at`)
+                                VALUES (#{userEmail},#{shopId},NOW(), 'ORDER_REVIEW', NOW())
     </insert>
 
     <update id="updateReview" parameterType="dev.gmpark.cors.entities.ItemReviewEntity">
@@ -124,7 +118,7 @@
                                 LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
                        WHERE r.`user_email` = #{email}
                          AND ri.`item_id` = #{itemId}
-                         AND r.`status` = '확정'
+                         AND r.`status` IN ('대기', '확정', '완료')
                          AND ir.`id` IS NULL
                        LIMIT 1), 0)
     </select>
@@ -160,7 +154,7 @@
                  LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
         WHERE r.`user_email` = #{email}
           AND ri.`item_id` = CAST(#{itemId} AS UNSIGNED)
-          AND r.`status` LIKE '%확정%'
+          AND r.`status` IN ('대기', '확정', '완료')
           AND ir.`id` IS NULL
         ORDER BY r.`id` DESC
         LIMIT 1

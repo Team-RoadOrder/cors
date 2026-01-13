@@ -47,23 +47,44 @@ public class ReviewService {
 
         // 예약완료 기반 완료수 : history ->reservationHistory변경
         int reservationHistory = this.reviewMapper.checkPurchaseHistory(user.getEmail(), review.getItemId());
-        // TODO : 주문완료 기반 완료수
+        // : 주문완료 기반 완료수
         int orderHistory = this.orderMapper.selectCompleteOrderCount(review.getItemId(),user.getEmail());
-        // TODO :총 권한 합산 (예약 + 주문)
+        // :총 권한 합산 (예약 + 주문)
         int totalHistory = orderHistory + reservationHistory;
 
-        //TODO : 이미 작성된 리뷰의 수
+        //: 이미 작성된 리뷰의 수
         Integer written = this.reviewMapper.selectReviewCountByEmail(user.getEmail(), review.getItemId());
         int actualWritten = (written != null) ? written : 0;
 
-        //TODO :검증 : 합산권한이 0 이거나 이미 작성되어 권한이없은 경우는 실패
+        //:검증 : 합산권한이 0 이거나 이미 작성되어 권한이없은 경우는 실패
         if(totalHistory == 0 ||actualWritten>= totalHistory){
             return CommonResult.FAILURE;
         }
-
+        //기존 예약 테이블에서 사용가능한 ID 조회
+        Integer resId = this.reviewMapper.selectAvailableReservationId(user.getEmail(), review.getItemId());
+        // 예약 ID 없는데 주문이력으로 작성하는 경우 -> 더미 예약 처리
+        if (resId == null && orderHistory > 0) {
+            ReservationEntity dummyRes = new ReservationEntity();
+            dummyRes.setUserEmail(user.getEmail());
+            dummyRes.setShopId(review.getShopId());
+            //ReviewMapper에 추가할 메서드 호출
+            if (this.reviewMapper.insertReservationForOrder(dummyRes) > 0) {
+                resId = dummyRes.getId(); // 생성된 PK(id)를 받아옴
+            } else {
+                return CommonResult.FAILURE;
+            }
+        }
+        review.setReservationId(resId); // 이제 null이 아니므로 FK 에러가 나지 않음
         review.setUserEmail(user.getEmail());
-        if (this.reviewMapper.insertReview(review) <= 0) return CommonResult.FAILURE;
+        review.setUserEmail(user.getEmail());
+//        if (this.reviewMapper.insertReview(review) <= 0) return CommonResult.FAILURE;
 
+
+
+
+
+
+        if (this.reviewMapper.insertReview(review) <= 0) return CommonResult.FAILURE;
         // 이미지 서버 저장 및 DB 기록
         if (images != null) {
             String path = uploadDir.endsWith(File.separator) ? uploadDir : uploadDir + File.separator;

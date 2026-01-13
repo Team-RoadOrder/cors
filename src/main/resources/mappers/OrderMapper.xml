@@ -12,7 +12,6 @@
             #{receiverName}, #{receiverPhone}, #{address}, #{addressDetail}, #{request}
         )
     </insert>
-
     <insert id="insertOrderItems">
         INSERT INTO `cors`.`order_items` (
             `order_id`, `item_id`, `shop_id`, `size`, `quantity`, `price`
