@@ -8,41 +8,43 @@
         VALUES (#{userEmail}, #{itemId}, #{size}, #{quantity}, NOW())
     </insert>
 
-    <resultMap id="CartVoMap" type="dev.gmpark.cors.vos.CartVo">
-        <id property="id" column="id"/>
-        <result property="userEmail" column="user_email"/>
-        <result property="itemId" column="item_id"/>
-        <result property="size" column="size"/>
-        <result property="quantity" column="quantity"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="shopId" column="shop_id"/>
-        <result property="itemName" column="item_name"/>
-        <result property="itemColor" column="color"/>
-        <result property="itemPrice" column="price"/>
-        <result property="itemImage" column="image_path"/>
-    </resultMap>
-
-    <select id="selectCartByUserEmail" resultMap="CartVoMap">
-        SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
-               si.`shop_id`, si.`item_name`, si.`color`, si.`price`,
-               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
-        FROM `cors`.`carts` c
-        JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`
-        WHERE c.`user_email` = #{userEmail}
-        ORDER BY c.`created_at` DESC
+    <select id="selectCartByUserEmail" resultType="dev.gmpark.cors.vos.CartVo">
+        SELECT t1.`id` AS `id`,
+               t1.`user_email` AS `userEmail`,
+               t1.`item_id` AS `itemId`,
+               t1.`size` AS `size`,
+               t1.`quantity` AS `quantity`,
+               t1.`created_at` AS `createdAt`,
+               si.`shop_id` AS `shopId`,
+               si.`item_name` AS `itemName`,
+               si.`color` AS `itemColor`,
+               si.`price` AS `itemPrice`,
+               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `itemImage`
+        FROM `cors`.`carts` t1
+        JOIN `cors`.`shop_items` si ON t1.`item_id` = si.`id`
+        WHERE t1.`user_email` = #{userEmail}
+        ORDER BY t1.`created_at` DESC
     </select>
 
     <delete id="deleteCartItem">
         DELETE FROM `cors`.`carts` WHERE `id` = #{id}
     </delete>
 
-    <select id="selectCartItemsByIds" resultMap="CartVoMap">
-        SELECT c.`id`, c.`user_email`, c.`item_id`, c.`size`, c.`quantity`, c.`created_at`,
-               si.`shop_id`, si.`item_name`, si.`color`, si.`price`,
-               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `image_path`
-        FROM `cors`.`carts` c
-        JOIN `cors`.`shop_items` si ON c.`item_id` = si.`id`
-        WHERE c.`id` IN
+    <select id="selectCartItemsByIds" resultType="dev.gmpark.cors.vos.CartVo">
+        SELECT t1.`id` AS `id`,
+               t1.`user_email` AS `userEmail`,
+               t1.`item_id` AS `itemId`,
+               t1.`size` AS `size`,
+               t1.`quantity` AS `quantity`,
+               t1.`created_at` AS `createdAt`,
+               si.`shop_id` AS `shopId`,
+               si.`item_name` AS `itemName`,
+               si.`color` AS `itemColor`,
+               si.`price` AS `itemPrice`,
+               (SELECT img.`image_path` FROM `cors`.`shop_item_images` img WHERE img.`product_id` = si.`id` LIMIT 1) AS `itemImage`
+        FROM `cors`.`carts` t1
+        JOIN `cors`.`shop_items` si ON t1.`item_id` = si.`id`
+        WHERE t1.`id` IN
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

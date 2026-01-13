@@ -23,4 +23,5 @@ public interface ShopInfoMapper {
     int selectLikeCount(@Param(value = "like") LikeShopEntity likeShop);
     LikeShopVo[] selectLikedShopsByUser(@Param("userEmail") String userEmail);
     int selectLikeCountByShopId(@Param("shopId") int shopId);
+    ShopInfoEntity[] selectShopsByCategories(@Param("categories") String[] categories);
 }

@@ -287,4 +287,58 @@
         ORDER BY si.`updated_at` DESC
         LIMIT #{page.rowCount} OFFSET #{page.dbOffset}
     </select>
+    <select id="selectItemsByCategoriesOrderByLikes" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT si.`id`               AS `id`,
+               si.`shop_id`          AS `shopId`,
+               si.`item_name`        AS `itemName`,
+               si.`color`            AS `color`,
+               si.`size`             AS `size`,
+               si.`price`            AS `price`,
+               si.`style`            AS `style`,
+               si.`main_category`    AS `mainCategory`,
+               si.`sub_category`     AS `subCategory`,
+               si.`detail_category`  AS `detailCategory`,
+               si.`main_image_index` AS `mainImageIndex`,
+               si.`created_at`       AS `createdAt`,
+               si.`updated_at`       AS `updateAt`,
+               si.`deleted_at`       AS `deletedAt`,
+               (SELECT img.`image_path`
+                FROM `cors`.`shop_item_images` img
+                WHERE img.`product_id` = si.`id`
+                LIMIT 1)             AS `imagePath`,
+               (SELECT COUNT(0) FROM `cors`.`like_items` li WHERE li.`item_id` = si.`id`) AS `likeCount`
+        FROM `cors`.`shop_items` si
+        WHERE si.`style` IN
+        <foreach collection="categories" item="category" open="(" separator="," close=")">
+            #{category}
+        </foreach>
+        ORDER BY `likeCount` DESC, si.`updated_at` DESC
+        LIMIT 4
+    </select>
+    <select id="selectItemsByCategories" resultType="dev.gmpark.cors.entities.ShopItemEntity">
+        SELECT si.`id`               AS `id`,
+               si.`shop_id`          AS `shopId`,
+               si.`item_name`        AS `itemName`,
+               si.`color`            AS `color`,
+               si.`size`             AS `size`,
+               si.`price`            AS `price`,
+               si.`style`            AS `style`,
+               si.`main_category`    AS `mainCategory`,
+               si.`sub_category`     AS `subCategory`,
+               si.`detail_category`  AS `detailCategory`,
+               si.`main_image_index` AS `mainImageIndex`,
+               si.`created_at`       AS `createdAt`,
+               si.`updated_at`       AS `updateAt`,
+               si.`deleted_at`       AS `deletedAt`,
+               (SELECT img.`image_path`
+                FROM `cors`.`shop_item_images` img
+                WHERE img.`product_id` = si.`id`
+                LIMIT 1)             AS `imagePath`
+        FROM `cors`.`shop_items` si
+        WHERE si.`style` IN
+        <foreach collection="categories" item="category" open="(" separator="," close=")">
+            #{category}
+        </foreach>
+        ORDER BY si.`updated_at` DESC
+    </select>
 </mapper>

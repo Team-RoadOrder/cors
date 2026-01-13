@@ -21,7 +21,7 @@
     </video>
     <div class="title-area">
         <span class="title">추천 매장</span>
-        <span class="description">선호하는 <strong>미니멀</strong> 스타일에 따른 추천</span>
+        <span class="description">선호하는 <strong th:text="${userStyle}">미니멀</strong> 스타일에 따른 추천</span>
     </div>
 </div>
 
@@ -32,66 +32,20 @@
         <span class="description">해당카테고리의 인기많은 매장</span>
     </div>
     <ul class="grid">
-        <li class="box one">
-            <img src="./images/one.png" alt="" class="image">
+        <li class="box" th:each="shop : ${recommendedShops}">
+            <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
+            <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
+            </a>
             <div class="info">
-                <span class="title">
+                <span class="title" th:text="${shop.shopName}">
                     밥 위에 소복이 쌓인 튀김,텐동집
                 </span>
                 <div class="subtitle">
-                    <span class="icon">
+                    <span class="icon" th:text="${shop.shopAddress}">
                         @전국
                     </span>
                     <span class="icon">
                         &starf;54만+
-                    </span>
-                </div>
-            </div>
-        </li>
-        <li class="box two">
-            <img src="./images/two.png" alt="" class="image">
-            <div class="info">
-                <span class="title">
-                    솥과 밥의 필연적인 만남, 솥밥
-                </span>
-                <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                    <span class="icon">
-                        &starf;243만+
-                    </span>
-                </div>
-            </div>
-        </li>
-        <li class="box three">
-            <img src="./images/three.png" alt="" class="image">
-            <div class="info">
-                <span class="title">
-                    찬바람 불 때 생각나는 오뎅바
-                </span>
-                <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                    <span class="icon">
-                        &starf;54만+
-                    </span>
-                </div>
-            </div>
-        </li>
-        <li class="box four">
-            <img src="./images/four.png" alt="" class="image">
-            <div class="info">
-                <span class="title">
-                    따끈한 온천에 온몸이 사르르
-                </span>
-                <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                    <span class="icon">
-                        &starf;24만+
                     </span>
                 </div>
             </div>
@@ -103,67 +57,21 @@
             <span class="title product">📍 PRODUCT</span>
             <span class="description">해당카테고리의 인기많은 제품</span>
             <ul class="grid">
-                <li class="box one">
-                    <img src="./images/one.png" alt="" class="image">
+                <li class="box" th:each="item : ${popularItems}">
+                    <a th:href="@{'/item/?id=' + ${item.id}}">
+                    <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                    </a>
                     <div class="info">
-                <span class="title">
-                    밥 위에 소복이 쌓인 튀김,텐동집
-                </span>
+                        <span class="title" th:text="${item.itemName}">
+                            밥 위에 소복이 쌓인 튀김,텐동집
+                        </span>
                         <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
+                            <span class="icon" th:text="${item.price} + '원'">
+                                @전국
+                            </span>
                             <span class="icon">
-                        &starf;54만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box two">
-                    <img src="./images/two.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    솥과 밥의 필연적인 만남, 솥밥
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;243만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box three">
-                    <img src="./images/three.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    찬바람 불 때 생각나는 오뎅바
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;54만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box four">
-                    <img src="./images/four.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    따끈한 온천에 온몸이 사르르
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;24만+
-                    </span>
+                                &starf;54만+
+                            </span>
                         </div>
                     </div>
                 </li>
@@ -175,67 +83,21 @@
             <span class="title all">📍 ALL PRODUCT</span>
             <span class="description">해당카테고리의 모든 제품</span>
             <ul class="grid">
-                <li class="box one">
-                    <img src="./images/one.png" alt="" class="image">
+                <li class="box" th:each="item : ${allItems}">
+                    <a th:href="@{'/item/?id=' + ${item.id}}">
+                    <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                    </a>
                     <div class="info">
-                <span class="title">
-                    밥 위에 소복이 쌓인 튀김,텐동집
-                </span>
+                        <span class="title" th:text="${item.itemName}">
+                            밥 위에 소복이 쌓인 튀김,텐동집
+                        </span>
                         <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
+                            <span class="icon" th:text="${item.price} + '원'">
+                                @전국
+                            </span>
                             <span class="icon">
-                        &starf;54만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box two">
-                    <img src="./images/two.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    솥과 밥의 필연적인 만남, 솥밥
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;243만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box three">
-                    <img src="./images/three.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    찬바람 불 때 생각나는 오뎅바
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;54만+
-                    </span>
-                        </div>
-                    </div>
-                </li>
-                <li class="box four">
-                    <img src="./images/four.png" alt="" class="image">
-                    <div class="info">
-                <span class="title">
-                    따끈한 온천에 온몸이 사르르
-                </span>
-                        <div class="subtitle">
-                    <span class="icon">
-                        @전국
-                    </span>
-                            <span class="icon">
-                        &starf;24만+
-                    </span>
+                                &starf;54만+
+                            </span>
                         </div>
                     </div>
                 </li>

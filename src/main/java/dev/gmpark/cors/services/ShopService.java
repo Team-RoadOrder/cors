@@ -43,5 +43,4 @@ public class ShopService {
     public int getShopLikeCount(int shopId) {
         return this.shopInfoMapper.selectLikeCountByShopId(shopId);
     }
-
 }

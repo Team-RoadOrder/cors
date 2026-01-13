@@ -157,4 +157,22 @@
         </if>
         WHERE user_email = #{info.userEmail}
     </update>
+    <select id="selectShopsByCategories" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT
+            shop_id          AS shopId,
+            user_email       AS userEmail,
+            shop_name        AS shopName,
+            shop_time        AS shopTime,
+            shop_category    AS shopCategory,
+            shop_address     AS shopAddress,
+            shop_tel         AS shopTel,
+            profile_image    AS profileImage,
+            background_image AS backgroundImage
+        FROM `cors`.`shop_info`
+        WHERE shop_category IN
+        <foreach collection="categories" item="category" open="(" separator="," close=")">
+            #{category}
+        </foreach>
+        ORDER BY `shopId` DESC
+    </select>
 </mapper>
