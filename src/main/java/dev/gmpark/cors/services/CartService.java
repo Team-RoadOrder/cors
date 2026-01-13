@@ -44,4 +44,8 @@ public class CartService {
     public List<CartVo> getCartItemsByIds(List<Long> ids) {
         return this.cartMapper.selectCartItemsByIds(ids);
     }
+    
+    public int getCartCount(String userEmail) {
+        return this.cartMapper.selectCartCount(userEmail);
+    }
 }

@@ -13,4 +13,5 @@ public interface CartMapper {
     CartVo[] selectCartByUserEmail(@Param("userEmail") String userEmail);
     int deleteCartItem(@Param("id") Long id);
     List<CartVo> selectCartItemsByIds(@Param("ids") List<Long> ids);
+    int selectCartCount(@Param("userEmail") String userEmail);
 }

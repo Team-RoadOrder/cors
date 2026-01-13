@@ -49,4 +49,8 @@
             #{id}
         </foreach>
     </select>
+
+    <select id="selectCartCount" resultType="int">
+        SELECT COUNT(*) FROM `cors`.`carts` WHERE `user_email` = #{userEmail}
+    </select>
 </mapper>

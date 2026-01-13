@@ -96,4 +96,17 @@ public class CartController {
         }
         return response;
     }
+    
+    @RequestMapping(value = "/cart/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> getCartCount(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        if (sessionUser == null) {
+            response.put("count", 0);
+            return response;
+        }
+        int count = this.cartService.getCartCount(sessionUser.getEmail());
+        response.put("count", count);
+        return response;
+    }
 }

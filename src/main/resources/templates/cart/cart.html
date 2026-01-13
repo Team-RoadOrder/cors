@@ -53,7 +53,9 @@
           <button class="ship-btn">픽업</button>
         </div>
 
-        <div class="item-price" th:text="${cart.itemPrice} + '원'">₩159,000</div>
+        <div class="item-price-wrapper">
+          <div class="item-price" th:text="${cart.itemPrice} + '원'">₩159,000</div>
+        </div>
       </div>
     </div>
   </th:block>

@@ -285,3 +285,30 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
     };
     xhr.send(formData);
 });*/
+
+// 장바구니 카운트 업데이트 함수
+function updateCartCount() {
+    const cartCountElement = document.getElementById('cartCount');
+    if (!cartCountElement) return;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/cart/count');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                const response = JSON.parse(xhr.responseText);
+                const count = response.count;
+                if (count > 0) {
+                    cartCountElement.textContent = count;
+                    cartCountElement.style.display = 'block';
+                } else {
+                    cartCountElement.style.display = 'none';
+                }
+            }
+        }
+    };
+    xhr.send();
+}
+
+// 페이지 로드 시 장바구니 카운트 업데이트
+document.addEventListener('DOMContentLoaded', updateCartCount);
