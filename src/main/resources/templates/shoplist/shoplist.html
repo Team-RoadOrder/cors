@@ -44,13 +44,13 @@
                 <div class="store-info">
                     <div class="firstLine">
                         <span class="name" th:text="${shop.shopName}">waviness</span>
-                        <span class="km">0.67km</span>
+                        <span class="km" th:text="${shop.shopCategory}">0.67km</span>
                     </div>
                     <div class="address" th:text="${shop.shopAddress}">Yongsan District, seoul</div>
                     <div class="time" th:text="${shop.shopTime}">영업중 10:00~22:00</div>
                     <div class="tag-area">
                         <span class="tag">예약 가능</span>
-                        <span class="tag">픽업 가능</span>
+                        <span class="tag">영업 중</span>
                     </div>
                 </div>
             </a>

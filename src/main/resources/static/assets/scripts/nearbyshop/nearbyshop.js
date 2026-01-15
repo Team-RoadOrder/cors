@@ -57,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                     // 매장용 커스텀 오버레이 내용
-                    let content = '<div class="custom-marker-style">' + shop.shopName + '</div>';
+                    let content = `<div class="custom-marker-style">
+                            <span class="shop-name">${shop.shopName}</span>
+                            <span class="shop-address">${shop.shopAddress}</span> 
+                              </div>`;
 
                     let customOverlay = new kakao.maps.CustomOverlay({
                         map: map,
