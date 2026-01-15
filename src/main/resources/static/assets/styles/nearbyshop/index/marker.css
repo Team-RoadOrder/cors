@@ -1,7 +1,7 @@
 /* Custom Marker Styles (글래스모피즘 적용) */
 .custom-marker-style {
     position: relative; /* 화살표 위치 기준점 */
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
 
     /* [핵심] 유리 효과 */
     background: rgba(255, 255, 255, 0.65); /* 반투명 흰색 */
@@ -21,6 +21,9 @@
     white-space: nowrap;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 
 /* 마우스 올렸을 때 효과 */
@@ -53,6 +56,14 @@
 
     /*z-index: -1; !* 글자 뒤로 숨김 *!*/
 }
+.custom-marker-style > .shop-name {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.custom-marker-style > .shop-address {
+    font-size: 0.7rem;
+    color: rgba(122, 122, 122, 0.8);
+ }
 
 .custom-marker-style:hover::after {
     background: rgba(255, 255, 255, 0.85); /* 호버 시 꼬리 색도 변경 */
