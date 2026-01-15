@@ -33,34 +33,34 @@ public class OwnerMemberController {
     /**
      * 사원 관리 페이지 (목록 조회)
      */
-//    @RequestMapping(value = "/member", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-//    public ModelAndView getMember(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
-//                                  @RequestParam(value = "level", required = false, defaultValue = "0") int filterLevel,
-//                                  @RequestParam(value = "keyword", required = false) String keyword,
-//                                  ModelAndView modelAndView) {
-//        //TODO
-//        // 1. 이메일이 아니라 세션 유저가 가진 shopId를 먼저 확보
-//        int currentShopId = (int) sessionUser.;
-//
-//        // TODO 2. 이메일 대신 shopId로 매장 정보를 조회하도록 변경
-//        // (ownerMainService에 해당 메서드가 없다면 추가해야 합니다)
-//        ShopInfoEntity shopInfo = this.ownerMainService.;
-//
-//        if (shopInfo != null) {
-//            // 3. 확보된 shopId를 사용하여 임직원 목록 조회
-//            OwnerMemberEntity loginUser = OwnerMemberEntity.builder()
-//                    .email(sessionUser.getEmail())
-//                    .level(sessionUser.getLevel())
-//                    .build();
-//
-//            List<OwnerMemberEntity> members = this.ownerMemberService.getMembers(loginUser, filterLevel, keyword);
-//            modelAndView.addObject("shop", shopInfo);
-//            modelAndView.addObject("members", members);
-//        }
-//
-//        modelAndView.setViewName("ownermember/ownermember");
-//        return modelAndView;
-//    }
+    @RequestMapping(value = "/member", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getMember(/*@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,*/
+                               /*   @RequestParam(value = "level", required = false, defaultValue = "0") int filterLevel,
+                                  @RequestParam(value = "keyword", required = false) String keyword,*/
+                                  ModelAndView modelAndView) {
+    /*    //TODO
+        // 1. 이메일이 아니라 세션 유저가 가진 shopId를 먼저 확보
+        int currentShopId = (int) sessionUser.;
+
+        // TODO 2. 이메일 대신 shopId로 매장 정보를 조회하도록 변경
+        // (ownerMainService에 해당 메서드가 없다면 추가해야 합니다)
+        ShopInfoEntity shopInfo = this.ownerMainService.;
+
+        if (shopInfo != null) {
+            // 3. 확보된 shopId를 사용하여 임직원 목록 조회
+            OwnerMemberEntity loginUser = OwnerMemberEntity.builder()
+                    .email(sessionUser.getEmail())
+                    .level(sessionUser.getLevel())
+                    .build();
+
+            List<OwnerMemberEntity> members = this.ownerMemberService.getMembers(loginUser, filterLevel, keyword);
+            modelAndView.addObject("shop", shopInfo);
+            modelAndView.addObject("members", members);
+        }*/
+
+        modelAndView.setViewName("ownermember/ownermember");
+        return modelAndView;
+    }
 
 
     /**
