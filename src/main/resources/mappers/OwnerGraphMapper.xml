@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.OwnerGraphMapper">
+
+    <!-- 일별 매출 및 주문수 조회 -->
+    <select id="selectDailySales" resultType="dev.gmpark.cors.vos.SalesGraphVo">
+        SELECT
+            DATE_FORMAT(o.created_at, '%Y-%m-%d') AS date,
+            SUM(oi.price * oi.quantity) AS sales,
+            COUNT(DISTINCT o.id) AS orderCount
+        FROM `cors`.`orders` o
+        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+        WHERE oi.shop_id = #{shopId}
+          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+          AND o.status = 'PAID'
+        GROUP BY DATE_FORMAT(o.created_at, '%Y-%m-%d')
+        ORDER BY date ASC
+    </select>
+
+    <!-- 월별 매출 및 주문수 조회 -->
+    <select id="selectMonthlySales" resultType="dev.gmpark.cors.vos.SalesGraphVo">
+        SELECT
+            DATE_FORMAT(o.created_at, '%Y-%m') AS date,
+            SUM(oi.price * oi.quantity) AS sales,
+            COUNT(DISTINCT o.id) AS orderCount
+        FROM `cors`.`orders` o
+        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+        WHERE oi.shop_id = #{shopId}
+          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+          AND o.status = 'PAID'
+        GROUP BY DATE_FORMAT(o.created_at, '%Y-%m')
+        ORDER BY date ASC
+    </select>
+
+    <!-- 기간별 총 매출 조회 -->
+    <select id="selectWeeklySales" resultType="java.lang.Long">
+        SELECT IFNULL(SUM(oi.price * oi.quantity), 0)
+        FROM `cors`.`orders` o
+        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+        WHERE oi.shop_id = #{shopId}
+          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+          AND o.status = 'PAID'
+    </select>
+
+    <!-- 기간별 총 주문수 조회 -->
+    <select id="selectWeeklyOrderCount" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT o.id)
+        FROM `cors`.`orders` o
+        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+        WHERE oi.shop_id = #{shopId}
+          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+          AND o.status = 'PAID'
+    </select>
+
+    <!-- 최근 결제 리스트 조회 -->
+    <select id="selectRecentPayments" resultType="dev.gmpark.cors.vos.PaymentListVo">
+        SELECT
+            u.name AS customerName,
+            si.item_name AS productName,
+            o.status AS status,
+            o.created_at AS orderDate
+        FROM `cors`.`orders` o
+        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+        JOIN `cors`.`shop_items` si ON oi.item_id = si.id
+        LEFT JOIN `cors`.`users` u ON o.user_email = u.email
+        WHERE oi.shop_id = #{shopId}
+        ORDER BY o.created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 매출 상위 제품 조회 -->
+    <select id="selectTopProducts" resultType="dev.gmpark.cors.vos.TopProductVo">
+        SELECT
+            si.item_name AS productName,
+            SUM(oi.price * oi.quantity) AS totalSales,
+            (SELECT `img`.`image_path`
+             FROM `cors`.`shop_item_images` AS `img`
+             WHERE `img`.`product_id` = `si`.`id`
+             ORDER BY `img`.`id` ASC
+             LIMIT 1) AS `imagePath`
+        FROM `cors`.`order_items` oi
+        JOIN `cors`.`shop_items` si ON oi.item_id = si.id
+        JOIN `cors`.`orders` o ON oi.order_id = o.id
+        WHERE oi.shop_id = #{shopId}
+          AND o.status = 'PAID'
+        GROUP BY si.id, si.item_name
+        ORDER BY totalSales DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

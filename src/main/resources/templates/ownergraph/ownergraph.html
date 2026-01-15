@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/ownergraph/common.css">
     <link rel="stylesheet" href="/assets/styles/ownergraph/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/assets/scripts/ownermain/toggle.js" defer></script>
     <script defer src="/assets/scripts/common.js"></script>
 </head>
@@ -59,33 +60,198 @@
         <div class="dashboard-layout">
             <div class="top-section">
                 <div class="graph-container">
-                    <h2 class="title">매출추이</h2>
-                    <button class="weekButton -selected">주간</button>
-                    <button class="monthButton">월간</button>
-                    그래프자리
+                    <div class="graph-header">
+                        <h2 class="title">매출추이</h2>
+                        <div class="buttons">
+                            <button class="weekButton -selected" onclick="loadGraph('daily')">주간</button>
+                            <button class="monthButton" onclick="loadGraph('monthly')">월간</button>
+                        </div>
+                    </div>
+                    <div class="chart-area">
+                        <canvas id="salesChart"></canvas>
+                    </div>
                 </div>
                 <div class="status-container">
-                    <div class="weekSatatus">
+                    <div class="weekStatus">
                         <h2 class="title">금주 현황</h2>
-                        금주 매출
+                        <div class="status-items">
+                            <div class="status-card">
+                                <div class="label">금주 매출</div>
+                                <div class="value-row">
+                                    <span class="value" th:text="${#numbers.formatInteger(status.currentSales, 0, 'COMMA') + '원'}">0원</span>
+                                    <span class="change"
+                                          th:classappend="${status.salesChangePercent >= 0 ? 'up' : 'down'}"
+                                          th:text="${(status.salesChangePercent >= 0 ? '▲ ' : '▼ ') + T(java.lang.Math).abs(status.salesChangePercent) + '%'}">
+                                        0%
+                                    </span>
+                                </div>
+                                <div class="sub-text">지난주 대비</div>
+                            </div>
+                            <div class="status-card">
+                                <div class="label">금주 주문수</div>
+                                <div class="value-row">
+                                    <span class="value" th:text="${status.currentOrderCount + '건'}">0건</span>
+                                    <span class="change"
+                                          th:classappend="${status.orderCountChangePercent >= 0 ? 'up' : 'down'}"
+                                          th:text="${(status.orderCountChangePercent >= 0 ? '▲ ' : '▼ ') + T(java.lang.Math).abs(status.orderCountChangePercent) + '%'}">
+                                        0%
+                                    </span>
+                                </div>
+                                <div class="sub-text">지난주 대비</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="weekList">
                         <h2 class="title">금주 결제 리스트</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>고객명</th>
+                                    <th>제품명</th>
+                                    <th>상태</th>
+                                    <th>일자</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="payment : ${payments}">
+                                    <td th:text="${payment.customerName}">고객명</td>
+                                    <td th:text="${payment.productName}">제품명</td>
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${payment.status == 'PAID' ? 'complete' : (payment.status == 'CANCELED' ? 'cancel' : '')}"
+                                              th:text="${payment.status == 'PAID' ? '결제완료' : (payment.status == 'CANCELED' ? '취소' : payment.status)}">
+                                            상태
+                                        </span>
+                                    </td>
+                                    <td th:text="${#temporals.format(payment.orderDate, 'yyyy-MM-dd')}">2023-01-01</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(payments)}">
+                                    <td colspan="4" style="text-align: center;">최근 결제 내역이 없습니다.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="bottom-section">
                 <h2>매출 상위 제품</h2>
                 <div class="product-list">
-                    <div class="product-item"></div>
-                    <div class="product-item"></div>
-                    <div class="product-item"></div>
-                    <div class="product-item"></div>
-                    <div class="product-item"></div>
+                    <div class="product-item" th:each="product : ${topProducts}">
+                        <div class="rank" th:text="${product.rank}">1</div>
+                        <div class="prod-img-container">
+                            <img th:src="${product.imagePath != null ? product.imagePath : '/assets/images/no_image.png'}" alt="제품 이미지" class="prod-img">
+                        </div>
+                        <div class="prod-info">
+                            <div class="prod-name" th:text="${product.productName}">제품명</div>
+
+                            <div class="prod-sales" th:text="${#numbers.formatInteger(product.totalSales, 0, 'COMMA') + '원'}">0원</div>
+                        </div>
+                    </div>
+                    <div class="product-item" th:if="${#lists.isEmpty(topProducts)}">
+                        <div class="prod-info">
+                            <div class="prod-name">데이터 없음</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
+<script>
+    let salesChart = null;
+
+    function loadGraph(type) {
+        // 버튼 스타일 변경
+        const weekBtn = document.querySelector('.weekButton');
+        const monthBtn = document.querySelector('.monthButton');
+        if (type === 'daily') {
+            weekBtn.classList.add('-selected');
+            monthBtn.classList.remove('-selected');
+        } else {
+            weekBtn.classList.remove('-selected');
+            monthBtn.classList.add('-selected');
+        }
+
+        // 데이터 fetch
+        fetch(`/owner/graph/data/${type}`)
+            .then(response => response.json())
+            .then(data => {
+                renderChart(data);
+            })
+            .catch(error => console.error('Error loading graph data:', error));
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+
+        const labels = data.map(item => item.date);
+        const salesData = data.map(item => item.sales);
+        const orderCountData = data.map(item => item.orderCount);
+
+        if (salesChart) {
+            salesChart.destroy();
+        }
+
+        salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '매출 (원)',
+                    data: salesData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    yAxisID: 'y',
+                    tension: 0.1
+                }, {
+                    label: '주문수 (건)',
+                    data: orderCountData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    yAxisID: 'y1',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '매출'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                        title: {
+                            display: true,
+                            text: '주문수'
+                        }
+                    },
+                }
+            }
+        });
+    }
+
+    // 초기 로드
+    document.addEventListener('DOMContentLoaded', () => {
+        loadGraph('daily');
+    });
+</script>
 </body>
 </html>
