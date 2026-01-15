@@ -3,10 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. 지도 컨테이너 및 옵션 설정
     let mapContainer = document.getElementById('map-background');
 
-
     let mapOption = {
         center: new kakao.maps.LatLng(37.541814, 127.004605), // 기본 위치 (용산/서울 근처)
-        level: 4
+        level: 3
     };
 
     // 2. 지도 생성
@@ -14,41 +13,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 3. 주소-좌표 변환 객체 생성
     let geocoder = new kakao.maps.services.Geocoder();
+    const userAddressInput = document.getElementById('user-address');
+
+    // ... (이전 코드)
+    if (userAddressInput && userAddressInput.value) {
+        geocoder.addressSearch(userAddressInput.value, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                const userCoords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 1) 지도 중심 이동
+                map.setCenter(userCoords);
+
+                // 2) 내 위치 마커 표시
+                // 눈에 잘 띄도록 스타일(배경색, 테두리 등)을 인라인으로 확실하게 지정합니다.
+                let content = `
+                 <div class="user-marker-wrap">
+                <div class="user-marker-dot"></div>
+                <div class="user-marker-pulse"></div>
+            </div>
+                `;
+
+                new kakao.maps.CustomOverlay({
+                    map: map,
+                    position: userCoords,
+                    content: content,
+                    yAnchor: 1.5,
+                    zIndex: 100  // [핵심] API 옵션으로 zIndex를 높게 설정해야 합니다.
+                });
+            } else {
+                console.log('사용자 주소를 찾을 수 없습니다.'); // 디버깅용 로그
+            }
+        });
+    }
 
     // 4. 서버 데이터 가져오기
     const shopsData = (typeof serverShopList !== 'undefined') ? serverShopList : [];
 
-    // [핵심] 주소 리스트를 돌면서 좌표로 변환 후 마커 찍기
+    // [핵심] 주소 리스트를 돌면서 좌표로 변환 후 마커(커스텀 오버레이) 찍기
     shopsData.forEach(function(shop) {
-
-        // 주소값이 있는 경우에만 실행
         if (shop.shopAddress) {
-
-            // 주소로 좌표를 검색합니다
             geocoder.addressSearch(shop.shopAddress, function(result, status) {
-
-                // 정상적으로 검색이 완료됐으면
                 if (status === kakao.maps.services.Status.OK) {
-
-                    // result[0].y 가 위도(latitude), result[0].x 가 경도(longitude)
                     let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                    // 커스텀 오버레이 내용
-                    let content = '<div class="custom-marker-style" style="padding:5px; background:white; border:1px solid #ccc; border-radius:5px;">' + shop.shopName + '</div>';
+                    // 매장용 커스텀 오버레이 내용
+                    let content = '<div class="custom-marker-style">' + shop.shopName + '</div>';
 
-                    // 커스텀 오버레이 생성
                     let customOverlay = new kakao.maps.CustomOverlay({
                         map: map,
                         position: coords,
                         content: content,
-                        yAnchor: 1.5 // 마커 위치 조정
+                        yAnchor: 1.5
                     });
-
-                    // (선택사항) 첫 번째 가게가 검색되면 거기로 중심 이동
-                    // shopsData[0]과 현재 shop이 같은지 비교하거나 flag 사용 가능
-                    if (shop === shopsData[0]) {
-                        map.setCenter(coords);
-                    }
                 }
             });
         }

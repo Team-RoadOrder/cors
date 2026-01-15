@@ -17,13 +17,14 @@
     </script>
 </head>
 <body>
-<!-- 헤더부분 , 로고와 네비바가 들어감 -->
 <th:block th:replace="~{/fragments/common.html :: customer-header}">
 </th:block>
 
 <main id="main" >
     <img src="/assets/images/main/splash1.jpg" class="image" alt="메인이미지">
 </main>
+
+<input type="hidden" id="user-address" th:value="${sessionUser.getAddress()}">
 
 <div id="map-wrapper">
     <div id="map-background"></div>
@@ -33,25 +34,25 @@
             th:if="${stat.index < 7}"
             th:data-shop-id="${shop.shopId}">
             <div class="store-info-wrapper">
-            <div class="store-info">
-                <div class="info-header">
-                    <div class="firstLine">
-                        <span class="name" th:text="${shop.shopName}">waviness</span>
-                        <span class="km" th:text="${shop.shopCategory}">(0.67km)</span>
+                <div class="store-info">
+                    <div class="info-header">
+                        <div class="firstLine">
+                            <span class="name" th:text="${shop.shopName}">waviness</span>
+                            <span class="km" th:text="${shop.shopCategory}">(0.67km)</span>
+                        </div>
+                        <span class="toggle-icon">▼</span>
                     </div>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="info-body">
-                    <div class="address" th:text="${shop.shopAddress}">Yongsan District, seoul</div>
-                    <div class="time"  th:text="${shop.shopTime}">영업중 10:00~22:00</div>
-                    <div class="tag-area">
-                        <span class="tag">예약 가능</span>
-                        <span class="tag">픽업 가능</span>
+                    <div class="info-body">
+                        <div class="address" th:text="${shop.shopAddress}">Yongsan District, seoul</div>
+                        <div class="time"  th:text="${shop.shopTime}">영업중 10:00~22:00</div>
+                        <div class="tag-area">
+                            <span class="tag">예약 가능</span>
+                            <span class="tag">픽업 가능</span>
+                        </div>
+                        <a th:href="@{/shop/(shopId=${shop.shopId})}" class="detail-link">매장 상세 보기 &rarr;</a>
                     </div>
-                    <a th:href="@{/shop/(shopId=${shop.shopId})}" class="detail-link">매장 상세 보기 &rarr;</a>
                 </div>
             </div>
-        </div>
         </li>
     </ul>
 </div>

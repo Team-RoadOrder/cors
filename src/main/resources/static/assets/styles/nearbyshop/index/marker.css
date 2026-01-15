@@ -51,9 +51,62 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.8);
     border-right: 1px solid rgba(255, 255, 255, 0.8);
 
-    z-index: -1; /* 글자 뒤로 숨김 */
+    /*z-index: -1; !* 글자 뒤로 숨김 *!*/
 }
 
 .custom-marker-style:hover::after {
     background: rgba(255, 255, 255, 0.85); /* 호버 시 꼬리 색도 변경 */
 }
+
+.user-marker-wrap {
+    /* 오버레이의 기준점(position)을 잡기 위한 래퍼 */
+    position: relative;
+    width: 40px;
+    height: 40px;
+
+    /* 자식 요소들이 이 중앙을 기준으로 위치하도록 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 1. 중심에 있는 파란색 점 */
+.user-marker-dot {
+    width: 1rem;
+    height: 1rem;
+    background-color: #007BFF;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 2; /* 펄스보다 위에 있도록 */
+}
+
+/* 2. 바깥쪽으로 퍼지는 펄스 */
+.user-marker-pulse {
+    /* 래퍼의 중앙에 고정 */
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: #007BFF;
+    opacity: 0.7;
+    z-index: 1; /* 점보다 뒤에 있도록 */
+
+    /* 'pulse' 애니메이션을 2초간 무한 반복 */
+    animation: pulse 2s infinite ease-out;
+}
+
+/* 펄스(pulse) 애니메이션 효과 정의 */
+@keyframes pulse {
+    0% {
+        /* 시작: 원래 크기, 불투명 */
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    100% {
+        /* 끝: 3배로 커지고 투명해짐 */
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
