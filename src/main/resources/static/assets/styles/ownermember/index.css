@@ -1,17 +1,288 @@
 @import "./index/header.css";
 @import "./index/nav.css";
 @import "./index/main.css";
+@import "./index/ownermember_modal.css";
 
-
-
-
-body {
+.sections {
+    padding: 3rem 10rem 3rem 2.5rem;
+    min-height: calc(100vh - 4.375rem);
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
+    box-sizing: border-box;
 }
 
-body > .box {
-    width: 42.25rem;
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 1.5rem;
+    border-bottom: 0.0625rem solid #adb5bd;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-left: -1rem;
+}
+
+.search-box {
+    position: relative;
+    width: 20rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.875rem 0.625rem;
+    border: 0.0625rem solid #adb5bd;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    outline: none;
+    background-color: #fff;
+}
+
+.search-icon {
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    right: 0.0625rem;
+    top: 32.5%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- 커스텀 셀렉트 공통  --- */
+.custom-select-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    user-select: none;
+    background-color: #fff;
+    border-radius: 0.25rem;
+}
+
+.select-trigger {
+    display: flex;
+    align-items: center;
+    border: 0.0625rem solid #adb5bd;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+/* 화살표 영역 공통 */
+.select-trigger::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #e9ecef;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-left: 0.0625rem solid #dee2e6;
+}
+
+/* 개별 셀렉트 크기 지정 */
+.role-select-wrapper {
+    width: 8.5rem;
+}
+
+.role-select-wrapper .select-trigger {
+    padding: 0.4375rem 2.5rem 0.4375rem 0.75rem;
+}
+
+.role-select-wrapper .select-trigger::after {
+    width: 2.2rem;
+    background-size: 0.75rem auto;
+}
+
+.inner-select-wrapper {
+    width: 6.5rem;
+}
+
+.inner-select-wrapper .select-trigger {
+    padding: 0.375rem 2rem 0.375rem 0.625rem;
+}
+
+.inner-select-wrapper .select-trigger::after {
+    width: 1.8rem;
+    background-size: 0.6rem auto;
+}
+
+/* 커스텀-드롭다운*/
+.custom-options {
+    position: absolute;
+    top: calc(100% + 0.0625em);
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: #fff;
+    border: 0.0625rem solid #343a40;
+    border-radius: 0.25rem;
+    z-index: 100;
+    display: none; /* JS로 제어 */
+
+}
+
+/* 펼쳐졌을 때 스타일 */
+.custom-select-container.open .custom-options {
+    display: block;
+!important;
+}
+
+.custom-select-container.open .select-trigger {
+    border-color: #343a40;
+}
+
+.custom-option {
+    padding: 0.0875rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: #495057;
+    transition: all 0.2s;
+}
+
+
+.custom-option:hover {
+    background-color: #f2f2f2;
+    color: #000;
+}
+
+
+.custom-option.selected {
+    background-color: #343a40;
+    color: #fff;
+}
+
+
+.hidden-select {
+    display: none;
+}
+
+
+.btn-delete {
+    background-color: #ef4444;
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-delete:hover{
+    background-color: #d60f0f;
+    color: #fff;
+}
+
+.btn-add {
+    background-color: #4f46e5;
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-add:hover{
+    background-color: #271eca;
+    color: #fff;
+}
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background-color: #fff;
+    padding: 1.25rem 0.625rem;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-align: center;
+}
+
+.admin-table th:first-child,
+.admin-table td:first-child {
+    padding-left: 3.5rem;
+}
+
+.admin-table th:last-child,
+.admin-table td:last-child {
+    padding-right: 3.5rem;
+}
+
+.admin-table td {
+    padding: 1.25rem 0.625rem;
+    border-bottom: 0.0625rem solid #adb5bd;
+    text-align: center;
+    vertical-align: middle;
+    color: #495057;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.status-badge.master {
+    background-color: #f4dca7 !important;
+    color: #fa3b00 !important;
+}
+
+.status-badge.active {
+    background-color: #dbe4ff;
+    color: #364fc7;
+}
+
+.status-badge.inactive {
+    background-color: #ffe3e3 !important;
+    color: #c92a2a!important;
+}
+
+.btn-edit {
+    background-color: #6b7280;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #374151;
+}
+/* 선택된 행 강조 스타일만 HTML에 유지 (동적 클래스 대응용) */
+.member-row.selected {
+    background-color: #f0f7ff !important;
+    outline: 2px solid #007bff;
+    outline-offset: -2px;
 }

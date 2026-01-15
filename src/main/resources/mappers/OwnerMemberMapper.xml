@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.gmpark.cors.mappers.OwnerMemberMapper">
+
+    <select id="countByEmail" resultType="int">
+        SELECT COUNT(`email`)
+        FROM `cors`.`users`
+        WHERE `email` = #{email}
+    </select>
+
+    <select id="countAdminByStore" resultType="int">
+        SELECT COUNT(1)
+        FROM `cors`.`users`
+        WHERE `store_name` = #{storeName} AND `level` = 1
+    </select>
+
+    <select id="countAdminByShop" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM `cors`.`users`
+        WHERE `shop_id` = #{shopId} AND `level` = 1
+    </select>
+
+    <select id="selectMembersByStore" resultType="dev.gmpark.cors.entities.OwnerMemberEntity">
+        SELECT
+        `email`, `name`, `store_name` AS `storeName`, `shop_id` AS `shopId`,
+        `usertype`, `style`, `level`, `phone`, `address`,
+        `address_detail` AS `addressDetail`, `created_at` AS `createdAt`,
+        `updated_at` AS `updatedAt`, `last_logout_at` AS `lastLogOutAt`
+        FROM `cors`.`users`
+        <where>
+            AND `store_name` = #{storeName}
+            AND `level` >= #{myLevel}
+            <if test="filterLevel != 0">
+                AND `level` = #{filterLevel}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (`name` LIKE CONCAT('%', #{keyword}, '%') OR `email` LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY `level` ASC, `created_at` DESC
+    </select>
+
+    <select id="selectMembersByShop" resultType="dev.gmpark.cors.entities.OwnerMemberEntity">
+        SELECT
+        `email`, `name`, `store_name` AS `storeName`, `shop_id` AS `shopId`,
+        `usertype`, `style`, `level`, `phone`, `address`,
+        `address_detail` AS `addressDetail`, `created_at` AS `createdAt`,
+        `updated_at` AS `updatedAt`, `last_logout_at` AS `lastLogOutAt`
+        FROM `cors`.`users`
+        <where>
+            AND `shop_id` = #{shopId}
+            AND `level` >= #{myLevel}
+            <if test="filterLevel != 0">
+                AND `level` = #{filterLevel}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (`name` LIKE CONCAT('%', #{keyword}, '%') OR `email` LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY `level` ASC, `created_at` DESC
+    </select>
+
+    <select id="selectMemberByEmail" resultType="dev.gmpark.cors.entities.OwnerMemberEntity">
+        SELECT
+            `email`, `name`, `password`, `store_name` AS `storeName`, `shop_id` AS `shopId`,
+            `usertype`, `style`, `level`, `phone`, `address`,
+            `address_detail` AS `addressDetail`, `created_at` AS `createdAt`,
+            `updated_at` AS `updatedAt`, `last_logout_at` AS `lastLogOutAt`
+        FROM `cors`.`users`
+        WHERE `email` = #{email}
+    </select>
+
+    <select id="selectShopByStoreName" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT
+            `shop_id`          AS `shopId`,
+            `user_email`       AS `userEmail`,
+            `shop_name`        AS `shopName`,
+            `shop_time`        AS `shopTime`,
+            `shop_category`    AS `shopCategory`,
+            `shop_address`     AS `shopAddress`,
+            `shop_tel`         AS `shopTel`,
+            `profile_image`    AS `profileImage`,
+            `background_image` AS `backgroundImage`
+        FROM `cors`.`shop_info`
+        WHERE `shop_name` = #{storeName}
+        LIMIT 1
+    </select>
+
+    <select id="selectShopByShopId" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT
+            `shop_id`          AS `shopId`,
+            `user_email`       AS `userEmail`,
+            `shop_name`        AS `shopName`,
+            `shop_time`        AS `shopTime`,
+            `shop_category`    AS `shopCategory`,
+            `shop_address`     AS `shopAddress`,
+            `shop_tel`         AS `shopTel`,
+            `profile_image`    AS `profileImage`,
+            `background_image` AS `backgroundImage`
+        FROM `cors`.`shop_info`
+        WHERE `shop_id` = #{shopId}
+    </select>
+
+    <insert id="insertMember">
+        INSERT INTO `cors`.`users` (
+            `email`, `name`, `password`, `store_name`, `shop_id`,
+            `usertype`, `style`, `level`, `phone`,
+            `address`, `address_detail`
+        ) VALUES (
+                     #{email},      #{name},
+                     #{password},
+                     #{storeName},
+                     #{shopId},
+                     #{usertype},
+                     #{style},
+                     #{level},
+                     #{phone},
+                     #{address},
+                     #{addressDetail}
+                 )
+    </insert>
+
+    <update id="updateMemberByAdmin">
+        UPDATE `cors`.`users`
+        SET `name` = #{name},
+        `level` = #{level},
+        `style` = #{style},
+        `phone` = #{phone},
+        `address` = #{address},
+        `address_detail` = #{addressDetail},
+        `shop_id` = #{shopId},      `store_name` = #{storeName}, `updated_at` = NOW()
+        <if test="password != null and password != ''">
+            , `password` = #{password}
+        </if>
+        WHERE `email` = #{email}
+    </update>
+
+    <update id="updateLastLogOutAt">
+        UPDATE `cors`.`users`
+        SET `last_logout_at` = NOW()
+        WHERE `email` = #{email}
+    </update>
+
+    <delete id="deleteMemberByEmail">
+        DELETE FROM `cors`.`users`
+        WHERE `email` = #{email}
+    </delete>
+
+</mapper>

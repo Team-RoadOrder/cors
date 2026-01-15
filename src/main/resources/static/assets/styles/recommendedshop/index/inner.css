@@ -9,7 +9,7 @@
 #inner >.item >.text-container >.description{
     font-family: 'Roboto', sans-serif;
     font-size: 1.8rem;
-    font-weight: 300;
+    font-weight: 700;
     color: #a0a0a0;
 }
 #inner >.item {
@@ -35,7 +35,7 @@
     background-color: #fff; /* 여백 배경색 */
 }
 #inner .grid >.box >.info {
-   padding: 0.5rem 0;
+    padding: 0.5rem 0;
 }
 #inner .grid >.box >.info > .title {
     font-family: 'Gowun Dodum', sans-serif;

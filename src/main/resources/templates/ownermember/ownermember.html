@@ -5,43 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>판매자 직원관리</title>
-    <link href="/assets/images/login/favicon.png" rel="icon" >
+    <link href="/assets/images/login/favicon.png" rel="icon">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/ownermember/common.css">
     <link rel="stylesheet" href="/assets/styles/ownermember/index.css">
-    <script src="/assets/scripts/ownermain/toggle.js" defer></script>
+    <script defer src="/assets/scripts/ownermain/toggle.js"></script>
     <script defer src="/assets/scripts/common.js"></script>
+    <script defer src="/assets/scripts/ownermember/ownermember_index.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: owner-header}">
 </th:block>
+
 <main id="main">
     <button id="toggleNav" class="toggle-btn">
-        <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
+        <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/>
+    </button>
+
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
-            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
-                 alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
+            <img th:src="${shop?.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
+                 alt="매장 프로필" class="profile-img" id="profileImg" style="cursor: pointer;">
             <div class="message">메인페이지에서 변경가능</div>
-            <div class="title" th:text="${shop.shopName}"></div>
+
+            <div class="title" th:text="${shop?.shopName != null ? shop.shopName : (session.sessionUser?.storeName != null ? session.sessionUser.storeName : '소속 매장')}"></div>
         </div>
         <ul class="nav-list">
-            <li class="dashboard">
-                <a href="/owner">대시보드</a>
-            </li>
-            <li class="register-form">
-                <a href="/owner/shop">상품등록</a>
-            </li>
-            <li class="register-owner-form">
-                <a href="/owner/member">관리자권한부여</a>
-            </li>
-            <li class="graph-form">
-                <a href="/owner/graph">매출흐름</a>
-            </li>
+            <li class="dashboard"><a href="/owner">대시보드</a></li>
+            <li class="register-form"><a href="/owner/shop">상품등록</a></li>
+            <li class="register-owner-form"><a href="/owner/member">관리자권한부여</a></li>
+            <li class="graph-form"><a href="/owner/graph">매출흐름</a></li>
         </ul>
     </nav>
-</main>
 
+    <div class="sections">
+        <div class="admin-header">
+            <h1 class="admin-title">관리자 계정 관리</h1>
+            <form class="search-box" method="get">
+                <input type="text" name="keyword" th:value="${param.keyword}" placeholder="이름 혹은 이메일을 검색해주세요" class="search-input">
+                <button type="submit">
+                    <img class="search-icon" src="/assets/images/ownermember/search.png" alt="검색">
+                </button>
+            </form>
+        </div>
+
+        <div class="table-controls">
+            <div class="filter-group">
+                <div class="custom-select-container role-select-wrapper">
+                    <div class="select-trigger">
+                        <span th:text="${param.level == null || param.level[0] == '0' ? '전체보기' : (param.level[0] == '2' ? '관리자' : '사원')}">전체보기</span>
+                        <img src="/assets/images/ownermember/arrow-down.png" alt="" class="arrow-icon">
+                    </div>
+                    <div class="custom-options">
+                        <div class="custom-option" data-value="0" th:classappend="${param.level == null || param.level[0] == '0'} ? 'selected'">전체보기</div>
+                        <div class="custom-option" data-value="2" th:classappend="${param.level != null && param.level[0] == '2'} ? 'selected'">관리자</div>
+                        <div class="custom-option" data-value="3" th:classappend="${param.level != null && param.level[0] == '3'} ? 'selected'">사원</div>
+                    </div>
+                    <select class="hidden-select" name="level">
+                        <option value="0" th:selected="${param.level == null || param.level[0] == '0'}">전체보기</option>
+                        <option value="2" th:selected="${param.level != null && param.level[0] == '2'}">관리자</option>
+                        <option value="3" th:selected="${param.level != null && param.level[0] == '3'}">사원</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn-delete" onclick="handleDeleteSelected()">- 삭제</button>
+                <button type="button" class="btn-add" onclick="showAddModal()">+ 추가</button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>권한</th>
+                    <th>입사일</th>
+                    <th>마지막접속</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}"
+                    class="member-row"
+                    th:data-email="${member.email}"
+                    th:data-name="${member.name}"
+                    th:data-level="${member.level}"
+                    style="cursor: pointer;">
+                    <td th:text="${member.name}">이름</td>
+                    <td th:text="${member.email}">이메일</td>
+                    <td>
+                        <div class="custom-select-container inner-select-wrapper" onclick="event.stopPropagation()">
+                            <div class="select-trigger">
+                                <span th:if="${member.level == 1}">최고관리자</span>
+                                <span th:if="${member.level == 2}">관리자</span>
+                                <span th:if="${member.level == 3}">사원</span>
+                            </div>
+                            <div class="custom-options">
+                                <div class="custom-option" data-value="1">최고관리자</div>
+                                <div class="custom-option" data-value="2">관리자</div>
+                                <div class="custom-option" data-value="3">사원</div>
+                            </div>
+                            <select class="hidden-select">
+                                <option value="1" th:selected="${member.level == 1}">최고관리자</option>
+                                <option value="2" th:selected="${member.level == 2}">관리자</option>
+                                <option value="3" th:selected="${member.level == 3}">사원</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td th:text="${#temporals.format(member.createdAt, 'yyyy.MM.dd')}">2026.01.14</td>
+
+                    <td th:with="now=${T(java.time.LocalDateTime).now()},
+                                  logout=${member.lastLogOutAt},
+                                  isOnline=${logout != null && T(java.time.Duration).between(logout, now).toMinutes() <= 60}">
+                        <span th:if="${!isOnline}" th:style="'color: #999;'">오프라인</span>
+                        <span th:if="${isOnline}"
+                              th:with="diffMin=${T(java.time.Duration).between(logout, now).toMinutes()}"
+                              th:style="'color: #1890ff; font-weight: 500;'"
+                              th:text="${diffMin == 0 ? '방금 전' : diffMin + '분 전'}"></span>
+                    </td>
+
+                    <td>
+                        <div th:with="now=${T(java.time.LocalDateTime).now()},
+                                      logout=${member.lastLogOutAt},
+                                      isOnline=${logout != null && T(java.time.Duration).between(logout, now).toMinutes() <= 60}">
+                            <span th:if="${member.level == 1}" class="status-badge active master">마스터</span>
+                            <span th:if="${member.level != 1 && isOnline}" class="status-badge active">활성화</span>
+                            <span th:if="${member.level != 1 && !isOnline}" class="status-badge inactive">비활성화</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="manage-btns">
+                            <button type="button" class="btn-edit"
+                                    th:data-email="${member.email}"
+                                    th:data-name="${member.name}"
+                                    th:data-level="${member.level}"
+                                    onclick="event.stopPropagation(); showEditModal(this)">수정</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(members)}">
+                    <td colspan="7" style="text-align: center; padding: 40px; color: #888;">
+                        해당 조건에 맞는 임직원이 없습니다.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
 </body>
 </html>

@@ -27,30 +27,30 @@
 
 <div id="inner">
     <div class="item">
-    <div class="text-container">
-        <span class="title shop">📍  SHOP</span>
-        <span class="description">해당카테고리의 인기많은 매장</span>
-    </div>
-    <ul class="grid">
-        <li class="box" th:each="shop : ${recommendedShops}">
-            <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
-            <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
-            </a>
-            <div class="info">
+        <div class="text-container">
+            <span class="title shop">📍  SHOP</span>
+            <span class="description">해당카테고리의 인기많은 매장</span>
+        </div>
+        <ul class="grid">
+            <li class="box" th:each="shop : ${recommendedShops}">
+                <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
+                    <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
+                </a>
+                <div class="info">
                 <span class="title" th:text="${shop.shopName}">
                     밥 위에 소복이 쌓인 튀김,텐동집
                 </span>
-                <div class="subtitle">
+                    <div class="subtitle">
                     <span class="icon" th:text="${shop.shopAddress}">
                         @전국
                     </span>
-                    <span class="icon" th:text="'♥ ' + ${shop.likeCount}">
+                        <span class="icon" th:text="'♥ ' + ${shop.likeCount}">
                         &starf;54만+
                     </span>
+                    </div>
                 </div>
-            </div>
-        </li>
-    </ul>
+            </li>
+        </ul>
     </div>
     <div class="item">
         <div class="text-container">
@@ -59,7 +59,7 @@
             <ul class="grid">
                 <li class="box" th:each="item : ${popularItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
-                    <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
                     </a>
                     <div class="info">
                         <span class="title" th:text="${item.itemName}">
@@ -85,7 +85,7 @@
             <ul class="grid">
                 <li class="box" th:each="item : ${allItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
-                    <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
                     </a>
                     <div class="info">
                         <span class="title" th:text="${item.itemName}">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,12 +20,22 @@
         <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/> </button>
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
+        <!--01-15직원:shopId없는문제로수정함-->
         <div class="profile">
-            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
+            <img src="/assets/images/ownermain/brand.jpeg"
                  alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
+
             <div class="message">메인페이지에서 변경가능</div>
-            <div class="title" th:text="${shop.shopName}"></div>
+
+            <div class="title" th:text="${session.sessionUser.storeName}"></div>
         </div>
+        <!--
+        세션의 유일성: 사용자가 로그인하면 DB의 특정 행(Row) 정보가 세션에 로드됩니다. admin1은 Rom이라는 값을 가진 행만 가져오고,
+        waviness01은 thewaviness 값을 가진 행만 가져옵니다.
+        객체 탐색의 명확성: ${session.sessionUser.storeName}은 현재 로그인한 사람의 바구니(Session) 안에서만 값을 꺼내는 작업입니다.
+        옆 사람의 바구니를 뒤지는 것이 아니므로 데이터 혼선이 생길 수 없습니다.
+        -->
+        <!--01-15직원:shopId없는문제로수정함-->
         <ul class="nav-list">
             <li class="dashboard">
                 <a href="/owner">대시보드</a>
