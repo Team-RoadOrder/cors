@@ -103,13 +103,27 @@ body{
     /*font-family: "Gowun Dodum", sans-serif;*/
     font-weight: 600;
 }
-
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    position: relative;
+}
 .caption {
-    margin-top : 20px;
+    margin-top : 2.3rem;
     text-align: center;
 }
 .caption a {
     font-size: 1rem;
     color: #4d4d4d;
     text-decoration: none;
+}
+.caption img {
+    width: 2rem;
+}
+.caption.sns {
+    display: flex;
+    gap: 0.5rem;
+    position: absolute;
+    right: 0.3rem;
 }

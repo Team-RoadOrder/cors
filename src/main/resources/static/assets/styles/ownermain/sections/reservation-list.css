@@ -3,6 +3,7 @@
     border-radius: 1rem;
     overflow-y: auto;
     scroll-behavior: smooth;
+    min-height: 30rem;
 }
 .res-list > .hidden {
     display: none;

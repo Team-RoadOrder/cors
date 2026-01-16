@@ -175,6 +175,7 @@ if (infoUpdateBtn && form) {
                                 openModal("FAILURE", `<p>매장 정보 수정에 실패하였습니다. 입력 정보를 다시 확인해주세요.</p>`, {confirmText: '확인'});
                                 break;
                             case 'NO_AUTH':
+
                                 openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
                                 break;
                             case 'SUCCESS':

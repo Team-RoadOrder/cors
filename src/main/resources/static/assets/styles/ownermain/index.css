@@ -1,6 +1,7 @@
 @import "./index/header.css";
 @import "./index/nav.css";
 @import "./index/main.css";
+@import "./sections/order-list.css";
 @import "./sections/item-list.css";
 @import "./sections/shop-info.css";
 @import "./sections/reservation-list.css";

@@ -1,0 +1,146 @@
+
+.order-list > .empty {
+    margin: 2rem 0 0 3.4rem;
+    font-size: 1.3rem;
+    color: #aca7a7;
+    text-align: center;
+}
+.order-list > .hidden {
+    display: none;
+}
+#items > .order-list {
+
+    background: #FFFFFF;
+    border-radius: 1rem;
+    overflow: hidden; /* 중요: 바깥에서 삐져나오는 거 차단 */
+    scroll-behavior: smooth;
+    grid-column: 1 / -1;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+    min-height: 30rem;
+}
+
+.order-list .spring:first-child {
+    position: sticky;
+    top: 0;
+    background: #010852d9;
+    z-index: 20;
+    color: #FFFFFF;
+    padding: 1rem 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.order-list .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    table-layout: fixed;
+
+
+}
+
+.order-list .thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    background: #f8f9fa;
+    z-index: 10;
+}
+
+.order-list .thead .names {
+    border-bottom: 0.125rem solid #667eea;
+}
+
+.order-list .thead th {
+    padding: 1.2rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #495057;
+    text-align: center;
+    background: #f8f9fa;
+}
+
+.order-list .thead th:first-child {
+    padding-left: 2rem;
+}
+
+.order-list .thead th:last-child {
+    padding-right: 2rem;
+}
+
+
+.order-list .tbody {
+    display: block;
+    max-height: 22rem;
+    overflow-y: auto;
+    width: 100%;
+    background: #ffffff;
+    scrollbar-gutter: stable;
+}
+
+.order-list .tbody tr {
+
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.order-list .tbody::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.order-list .tbody::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.order-list .tbody::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 0.625rem;
+}
+
+.order-list .tbody .list-colum {
+    border-bottom: 0.0625rem solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.order-list .tbody .list-colum:hover {
+    background: #f6f6f6;
+    box-shadow: 0 0.25rem 0.75rem rgba(102, 126, 234, 0.15);
+    transform: translateY(-0.0625rem);
+}
+
+.order-list .tbody td {
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    color: #495057;
+    text-align: center;
+    vertical-align: middle;
+}
+.order-list .tbody .size {
+    padding : 1.2rem 0.8rem ;
+}
+.order-list .tbody td:first-child {
+    font-weight: 600;
+}
+
+.order-list .tbody > .list-colum>.image-wrapper > img {
+    width: 4rem;
+}
+.order-list .tbody > .list-colum >.itemName {
+    color: #4e8bbc;
+    font-weight: 700;
+}
+.order-list .tbody > .list-colum > td:last-child {
+        font-weight: 600;
+}
+.order-list .tbody > .list-colum > td:last-child >button {
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.625rem;
+    color: #fefefe;
+    background-color: #79bdf3;
+}
+.order-list .tbody > .list-colum > td:last-child >button:hover{
+    opacity: 0.8;
+}
