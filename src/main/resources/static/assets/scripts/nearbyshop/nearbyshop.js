@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    Loading.show('지도로딩중');
+        Loading.show('지도로딩중');
 
     // 1. 필수 요소 확인 (에러 방지)
     let mapContainer = document.getElementById('map-background');

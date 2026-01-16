@@ -63,6 +63,12 @@ public class OwnerMemberService {
                 : RegisterResult.FAILURE;
     }
     @Transactional
+    public RegisterResult removeMember(/* */) {
+         return null;
+    }
+
+
+    @Transactional
     public void updateLogoutTime(String email) {
 
         this.registerMapper.updateLastLogout(email);
