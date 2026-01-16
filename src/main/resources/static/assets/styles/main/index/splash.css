@@ -52,7 +52,7 @@
 }
 
 #splash > .dot-container > .dot.checked{
-    background-color: #ffffff;
+    background-color: #fff;
 }
 
 #splash > .info {
@@ -73,19 +73,19 @@
     font-size: 4rem;
     font-weight: 700;
     text-align: center;
-    color: #ffffff;
+    color: #fff;
 }
 #splash > .info >.description1{
     margin-top: 2rem;
     font-size: 2rem;
     font-weight: 300;
-    color: #ffffff;
+    color: #fff;
 
 }
 #splash > .info >.description2{
     font-size: 2rem;
     font-weight: 300;
-    color: #ffffff;
+    color: #fff;
 
 }
 

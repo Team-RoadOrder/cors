@@ -88,7 +88,8 @@ public class OwnerGraphService {
      * 최근 결제 리스트 (최신순 5건)
      */
     public List<PaymentListVo> getRecentPayments(int shopId) {
-        return ownerGraphMapper.selectRecentPayments(shopId, 5);
+//        return ownerGraphMapper.selectRecentPayments(shopId, 5); : 전체 기록 목저으로 주석처리
+        return ownerGraphMapper.selectRecentPayments(shopId);
     }
 
     /**

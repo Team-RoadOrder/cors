@@ -37,7 +37,7 @@ body > .description {
 
 /* 프로젝트 각 항목 (카드 스타일) */
 .project li {
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid #eaeaea;
     border-radius: 12px; /* 좀 더 부드러운 곡선 */
     padding: 2rem 2.5rem; /* 좌우 패딩을 좀 더 넉넉하게 */

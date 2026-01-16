@@ -47,7 +47,7 @@
 /* 선택된 라디오 버튼 스타일 */
 #popularBrand > .form-container > .selection > .item > .label:has(>.radio:checked) {
     background-color: black;
-    color: #ffffff;
+    color: #fff;
     border: none;
 }
 
