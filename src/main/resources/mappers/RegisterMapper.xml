@@ -40,6 +40,12 @@
         SET `last_logout_at` = NOW()
         WHERE `email` = #{email}
     </update>
+    <update id="updateMember">
+        UPDATE `cors`.`users`
+        SET `name` = #{member.name},
+            `level` = #{member.level}
+        WHERE `email` = #{member.email}
+    </update>
     <delete id="delete">
         DELETE FROM `cors`.`users`
         WHERE `email` = #{user.email}

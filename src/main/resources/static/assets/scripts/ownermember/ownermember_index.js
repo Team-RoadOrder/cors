@@ -172,23 +172,22 @@ function showEditModal(element) {
                 </select>
             </div>
             <div style="background:#fff5f5; padding:1rem; border-radius:6px; border:1px dashed #feb2b2; margin-top:1rem;">
-                <label style="display:block; margin-bottom:0.5rem; font-weight:700; color:#e53e3e;">본인 확인</label>
-                <input type="password" name="currentPassword" placeholder="본인 계정 비밀번호" style="width:100%; padding:0.6rem; border:1px solid #feb2b2; border-radius:4px;" required>
+                <label style="display:block; margin-bottom:0.5rem; font-weight:700; color:#e53e3e;">비밀번호 확인</label>
+                <input type="password" name="currentPassword" placeholder="사원 계정 비밀번호" style="width:100%; padding:0.6rem; border:1px solid #feb2b2; border-radius:4px;" required>
             </div>
         </form>
     `;
 
-    openModal("임직원 정보 수정", editContent, {
+    openModal("권한그룹", editContent, {
         confirmText: '수정 완료',
         onConfirm: () => {
             const form = document.getElementById('editMemberForm');
             if(!form.currentPassword.value) {
-                openModal("인증 필요", "<p>수정을 위해 본인 비밀번호를 입력해주세요.</p>", { confirmText: "확인" });
+                openModal("인증 필요", "<p >수정을 위해 사원의 비밀번호를 입력해주세요.</p>", { confirmText: "확인" });
                 return;
             }
 
             const formData = new FormData();
-            formData.append('usertype', 'owner');
             formData.append('email', form.email.value);
             formData.append('name', form.name.value);
             formData.append('level', form.level.value);
@@ -205,7 +204,7 @@ function showEditModal(element) {
                             confirmText: "확인", onConfirm: () => location.reload()
                         });
                     } else {
-                        openModal("수정 실패", "<p>비밀번호가 틀렸거나 수정 권한(하극상 방지)이 없습니다.</p>", { confirmText: "확인" });
+                        openModal("수정 실패", "<p>비밀번호가 틀렸거나 수정 권한이 없습니다.</p>", { confirmText: "확인" });
                     }
                 }
             };

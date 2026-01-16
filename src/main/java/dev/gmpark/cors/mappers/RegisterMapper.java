@@ -20,6 +20,8 @@ public interface RegisterMapper {
 
     int insertMember(RegisterEntity member);
 
+    int updateMember(@Param("member") RegisterEntity member);
+
     List<RegisterEntity> selectMembersByOwner(@Param("ownerEmail") String ownerEmail,
                                               @Param("level") Integer level,
                                               @Param("keyword") String keyword);

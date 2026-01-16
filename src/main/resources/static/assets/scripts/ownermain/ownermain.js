@@ -1,43 +1,62 @@
-// 페이지 로드 시 일어나는 일들 ,,,,  모든 Input 사이즈 조절   ,
 document.addEventListener('DOMContentLoaded', () => {
     checkEmptyState();
-    // (2) '삭제하기' 버튼을 눌러서 상품이 지워졌을 때를 대비해 이벤트 리스너 추가
-    // (지금은 HTML에서 삭제 동작이 구현되지 않았지만, 나중에 삭제 로직 끝에 checkEmptyState()를 호출해야 함)
+
     const inputs = document.querySelectorAll('.item-list .product input');
     inputs.forEach(input => {
         resizeInput(input);
         input.addEventListener('input', () => resizeInput(input));
     });
+
     loadList();
+
     // ============================================================
-    // [추가] URL 파라미터 체크 후 모달 띄우기
+    // [수정] URL 파라미터 체크 로직 (if문 분리 및 안전장치 추가)
     // ============================================================
     const urlParams = new URLSearchParams(window.location.search);
     const alertType = urlParams.get('alert');
 
-    if (alertType === 'noshop') {
-        openModal("WARN",
-            `<p style="text-align:center; font-weight:bold;">매장 정보가 등록되지 않았습니다.</p>
-             <p style="text-align:center;">상품을 등록하려면 먼저<br>[매장정보수정]을 완료해주세요.</p>`,
-            {
-                confirmText: '확인',
-                onConfirm: () => {
-                    // 확인 버튼 누르면 -> 매장 정보 수정 버튼을 강제로 클릭시켜서 입력창 열어주기!
-                    const infoBtn = document.getElementById('infoUpdateBtn');
-                    if(infoBtn) infoBtn.click();
+    if (alertType) { // alertType이 존재할 때만 실행
 
-                    // (선택사항) 해당 위치로 스크롤 이동
-                    const shopInfoSection = document.getElementById('shop-info');
-                    if(shopInfoSection) shopInfoSection.scrollIntoView({ behavior: 'smooth' });
+        // 1. noshop 일 때
+        if (alertType === 'noshop') {
+            openModal("WARN",
+                `<p style="text-align:center; font-weight:bold;">매장 정보가 등록되지 않았습니다.</p>
+                 <p style="text-align:center;">상품을 등록하려면 먼저<br>[매장정보수정]을 완료해주세요.</p>`,
+                {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        const infoBtn = document.getElementById('infoUpdateBtn');
+                        const shopInfoSection = document.getElementById('shop-info');
+
+                        // 버튼 클릭 트리거
+                        if(infoBtn) infoBtn.click();
+
+                        // 스크롤 이동
+                        if(shopInfoSection) {
+                            shopInfoSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
                 }
-            }
-        );
+            );
+        }
+        // 2. noauth 일 때 (else if로 분리해야 함!)
+        else if (alertType === 'noauth') {
+            openModal("WARN",
+                `<p style="text-align:center; font-weight:bold;">권한이 없습니다.</p>
+                 <p style="text-align:center;">최고 관리자에게 문의하여 주세요.</p>`,
+                {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                    }
+                }
+            );
+        }
+
+        // 3. 처리가 끝난 후 URL에서 파라미터 제거 (깔끔하게)
         const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         window.history.replaceState({path: newUrl}, '', newUrl);
     }
-
 });
-
 
 // ==========================================
 // 2. 이미지 업로드 미리보기 기능
@@ -98,7 +117,6 @@ const formInputs = document.querySelectorAll('#form input:not([type="file"])');
 
 if (infoUpdateBtn && form) {
         infoUpdateBtn.addEventListener('click', () => {
-
             // 현재 상태가 '읽기 전용'인지 확인
             const isReadonly = formInputs[0].hasAttribute('readonly');
 
@@ -155,6 +173,9 @@ if (infoUpdateBtn && form) {
                         switch (response.result) {
                             case 'FAILURE':
                                 openModal("FAILURE", `<p>매장 정보 수정에 실패하였습니다. 입력 정보를 다시 확인해주세요.</p>`, {confirmText: '확인'});
+                                break;
+                            case 'NO_AUTH':
+                                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
                                 break;
                             case 'SUCCESS':
                                 openModal("SUCCESS", `<p>매장 정보가 성공적으로 수정되었습니다.</p>`, {

@@ -98,7 +98,10 @@ public class OwnerMainController {
             response.put("result", "FAILURE");
             return response;
         }
-
+        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
         // 2. 서비스 호출 (저장 로직)
         String result = ownerMainService.saveShopInfo(sessionUser, shopInfo);
 
@@ -163,7 +166,7 @@ public class OwnerMainController {
                                                @RequestParam(value = "status", required = false) String status,
                                                @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser){
         Map<String,Object> response = new HashMap<>();
-        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+        if( sessionUser.getLevel() == 1) {
             response.put("result", "NO_AUTH");
             return response;
         }

@@ -43,6 +43,26 @@ public class OwnerMemberService {
         return this.registerMapper.selectMembersByOwner(ownerEmail, level, keyword);
     }
     @Transactional
+    public RegisterResult modifyMember(String email, String name, Integer level, String currentPassword) {
+        RegisterEntity dbMember = this.registerMapper.selectByEmail(email);
+
+        // [수정 1] matches 사용 (순서: 평문, 암호화된문자열)
+        if (!encoder.matches(currentPassword, dbMember.getPassword())) {
+            return RegisterResult.FAILURE; // 비밀번호 불일치
+        }
+
+        if (!OwnerMemberValidator.validateName(name)) {
+            return RegisterResult.FAILURE;
+        }
+
+        dbMember.setName(name);
+        dbMember.setLevel(level);
+
+        return this.registerMapper.updateMember(dbMember) > 0
+                ? RegisterResult.SUCCESS
+                : RegisterResult.FAILURE;
+    }
+    @Transactional
     public void updateLogoutTime(String email) {
 
         this.registerMapper.updateLastLogout(email);

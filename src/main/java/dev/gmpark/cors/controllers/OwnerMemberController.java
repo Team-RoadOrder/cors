@@ -35,6 +35,10 @@
             if( sessionUser == null) {
               return new ModelAndView("redirect:/login");
             }
+            if ( sessionUser.getLevel()==2 || sessionUser.getLevel() == 1) {
+                modelAndView.setViewName("redirect:/owner?alert=noauth"); // 예시
+                return modelAndView;
+            }
             // 1. 서비스 호출 (이제 변수들이 선언되어서 빨간줄이 사라집니다)
             List<RegisterEntity> members = this.ownerMemberService.getMembers(sessionUser.getEmail(), level, keyword);
             // 2. 조회된 목록을 View로 전달
@@ -44,6 +48,11 @@
             // modelAndView.addObject("keyword", keyword);
             modelAndView.setViewName("ownermember/ownermember");
             return modelAndView;
+
+
+            // 검색기능을 새로 파는게맞음 이 방식으로는 안될듯함
+
+
         }
 
 
@@ -63,6 +72,26 @@
             response.put("status", result.name().toUpperCase());
             return response;
         }
+        @RequestMapping(value = "/member", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public Map<String, Object> patchMember(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
+                                               @RequestParam(value = "email") String email,
+                                               @RequestParam(value = "name") String name,
+                                               @RequestParam(value = "level") int level,
+                                               @RequestParam(value = "currentPassword") String currentPassword) { // [수정 2] 오타 수정
 
+            RegisterResult result = this.ownerMemberService.modifyMember(email, name, level, currentPassword);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("result", result.name());
+
+            return response;
+        }
+        @RequestMapping(value = "/member", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public Map<String, Object> deleteMember(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
+                                                @RequestParam(value = "email") String targetEmail) {
+                    return  null;
+        }
 
     }
