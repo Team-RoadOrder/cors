@@ -55,7 +55,7 @@
     border-radius: 1rem;
     padding: 1rem 3rem;
     background: #000000;
-    color: #ffffff;
+    color: #fff;
     font-weight: 600;
     cursor: pointer;
 }
@@ -64,7 +64,7 @@
     border: 1px solid rgb(211, 211, 211);
     border-radius: 1rem;
     font-weight: 600;
-    background :#ffffff;
+    background : #fff;
 }
 
 #shop-header> .profile >.count >.style:before {

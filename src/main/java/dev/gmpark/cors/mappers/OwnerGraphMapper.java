@@ -22,7 +22,8 @@ public interface OwnerGraphMapper {
     Integer selectWeeklyOrderCount(@Param("shopId") int shopId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     // 금주 결제 리스트
-    List<PaymentListVo> selectRecentPayments(@Param("shopId") int shopId, @Param("limit") int limit);
+//    List<PaymentListVo> selectRecentPayments(@Param("shopId") int shopId, @Param("limit") int limit); : 전체기록 목적으로 주석처리
+    List<PaymentListVo> selectRecentPayments(@Param("shopId") int shopId);
 
     // 매출 상위 제품
     List<TopProductVo> selectTopProducts(@Param("shopId") int shopId, @Param("limit") int limit);

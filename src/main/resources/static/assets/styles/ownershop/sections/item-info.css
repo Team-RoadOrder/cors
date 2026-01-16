@@ -141,7 +141,7 @@
 
 /* 옵션 드롭다운 스타일 */
 #item-info .item-list .list .input-group .select option {
-    background: #ffffff;
+    background: #fff;
     color: #2d3748;
     padding: 0.5rem;
 }

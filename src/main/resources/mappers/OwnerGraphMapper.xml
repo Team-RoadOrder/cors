@@ -79,7 +79,6 @@
         LEFT JOIN `cors`.`users` u ON o.user_email = u.email
         WHERE oi.shop_id = #{shopId}
         ORDER BY o.created_at DESC
-        LIMIT #{limit}
     </select>
 
     <!-- 매출 상위 제품 조회 -->
