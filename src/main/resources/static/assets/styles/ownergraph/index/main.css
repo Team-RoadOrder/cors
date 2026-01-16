@@ -10,15 +10,15 @@
     min-height: calc(100vh - 4rem);
 }
 
-.content {
-    padding: 0 3rem 1rem 3rem; /* 상단 패딩 축소 (2rem -> 1rem) */
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    height: calc(100vh - 4rem);
-}
+/*.content {*/
+/*    padding: 0 3rem 1rem 3rem; */
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 1rem;*/
+/*    width: 100%;*/
+/*    box-sizing: border-box;*/
+/*    height: calc(100vh - 4rem);*/
+/*}*/
 
 .page-title {
     width: 100%;
@@ -66,7 +66,7 @@
     /* 기존 스타일 제거 및 구분선 추가 */
     background-color: transparent;
     border: none;
-    border-right: 0.0625rem solid #ddd; /* 1px */
+    /*border-right: 0.0625rem solid #ddd; !* 1px *!*/
     border-radius: 0;
     box-shadow: none;
 }
@@ -106,7 +106,7 @@
 
 .product-item {
     background-color: #f9f9f9;
-    border: 0.0625rem solid #eee; /* 1px */
-    border-radius: 0.25rem; /* 4px */
+    border: 0.0625rem solid #eee;
+    border-radius: 0.25rem;
     height: 100%;
 }
