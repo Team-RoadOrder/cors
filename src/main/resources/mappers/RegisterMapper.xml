@@ -50,7 +50,6 @@
         DELETE FROM `cors`.`users`
         WHERE `email` = #{user.email}
     </delete>
-
     <select id="selectByEmailAndPasswordUser" resultType="dev.gmpark.cors.entities.RegisterEntity">
         SELECT `name`           AS `name`
              , `store_name`     AS `storeName`

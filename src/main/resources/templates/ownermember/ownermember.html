@@ -130,8 +130,8 @@
                         <th:block th:if="${logout != null}"
                                   th:with="diffMin=${T(java.time.Duration).between(logout, now).toMinutes()},
                                      isOnline=${diffMin <= 60}">
-                                <span th:if="${isOnline}" style="color: #1890ff; font-weight: 500;" th:text="${diffMin == 0 ? '방금 전' : diffMin + '분 전'}"></span>
-                                <span th:if="${!isOnline}" style="color: #999;">오프라인</span>
+                            <span th:if="${isOnline}" style="color: #1890ff; font-weight: 500;" th:text="${diffMin == 0 ? '방금 전' : diffMin + '분 전'}"></span>
+                            <span th:if="${!isOnline}" style="color: #999;">오프라인</span>
                         </th:block>
                     </td>
                     <td>
@@ -141,8 +141,8 @@
                             <span th:if="${member.level == 3}" class="status-badge active master">마스터</span>
                             <span th:if="${member.level == 2}" class="status-badge active master">중간관리자</span>
                             <span th:if="${member.level == 1}" class="status-badge active master">사원</span>
-<!--                            <span th:if="${member.level != 1 && isOnline}" class="status-badge active">활성화</span>
-                            <span th:if="${member.level != 1 && !isOnline}" class="status-badge inactive">비활성화</span>-->
+                            <!--                            <span th:if="${member.level != 1 && isOnline}" class="status-badge active">활성화</span>
+                                                        <span th:if="${member.level != 1 && !isOnline}" class="status-badge inactive">비활성화</span>-->
                         </div>
                     </td>
                     <td>

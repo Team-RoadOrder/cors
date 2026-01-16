@@ -212,7 +212,15 @@
 .admin-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
+.admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: 7.5%; } /* 이름 */
+.admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 22%; } /* 이메일 */
+.admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: 7.5%; } /* 권한 */
+.admin-table th:nth-child(4), .admin-table td:nth-child(4) { width: 15%; } /* 입사일 */
+.admin-table th:nth-child(5), .admin-table td:nth-child(5) { width: 15%; } /* 마지막접속 */
+.admin-table th:nth-child(6), .admin-table td:nth-child(6) { width: 14%; } /* 상태 */
+.admin-table th:nth-child(7), .admin-table td:nth-child(7) { width: 10%; } /* 관리 */
 
 .admin-table th {
     background-color: #fff;
@@ -225,16 +233,16 @@
 
 .admin-table th:first-child,
 .admin-table td:first-child {
-    padding-left: 3.5rem;
+    padding: 0 2rem;
 }
 
 .admin-table th:last-child,
 .admin-table td:last-child {
-    padding-right: 3.5rem;
+    padding: 0 2rem;
 }
 
 .admin-table td {
-    padding: 1.25rem 0.625rem;
+    padding: 1.25rem 0.0625rem;
     border-bottom: 0.0625rem solid #adb5bd;
     text-align: center;
     vertical-align: middle;

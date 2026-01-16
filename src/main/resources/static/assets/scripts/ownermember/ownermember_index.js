@@ -43,6 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const searchInput = document.querySelector('.search-input');
+
+    // 실시간 검색 이벤트
+    if (searchInput) {
+        searchInput.addEventListener('input', filterTable);
+
+        // 검색창 엔터 시 서버로 넘어가는 기본 동작 방지
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') e.preventDefault();
+        });
+    }
+
+
     /* --- [개선된 기능: 테이블 행 클릭 시 선택 로직] --- */
     const tableBody = document.querySelector('.admin-table tbody');
     if (tableBody) {
@@ -67,6 +80,50 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
+ * 한글 초성 추출 함수
+ */
+function getInit(str) {
+    const cho = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+    let result = "";
+    for(let i=0; i<str.length; i++) {
+        const code = str.charCodeAt(i) - 44032;
+        if(code > -1 && code < 11172) result += cho[Math.floor(code / 588)];
+        else result += str.charAt(i);
+    }
+    return result;
+}
+
+/**
+ * 실시간 검색 필터링 함수
+ */
+function filterTable() {
+    const searchInput = document.querySelector('.search-input');
+    const keyword = searchInput.value.toLowerCase();
+    const rows = document.querySelectorAll('.member-row');
+    const keywordInit = getInit(keyword); // 입력값의 초성
+
+    rows.forEach(row => {
+        const name = row.getAttribute('data-name') || "";
+        const email = row.getAttribute('data-email') || "";
+
+        // 1. 일반 텍스트 포함 여부 (이메일 등)
+        const isMatch = name.toLowerCase().includes(keyword) || email.toLowerCase().includes(keyword);
+
+        // 2. 초성 일치 여부 (김갑수 -> ㄱㄱㅅ)
+        const nameInit = getInit(name);
+        const isInitMatch = nameInit.includes(keywordInit);
+
+        // 결과에 따라 행 표시/숨김
+        if (isMatch || isInitMatch) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
+
+/**
  * 상단 '- 삭제' 버튼 클릭 시 호출되는 함수
  */
 function handleDeleteSelected() {
@@ -78,35 +135,34 @@ function handleDeleteSelected() {
     deleteMember(selectedMemberEmail, selectedMemberName);
 }
 
-/* --- [2. 사원 추가: 서버 응답 완벽 대응] --- */
-/* --- [2. 사원 추가: 권한 레벨 수정 완료] --- */
+/* --- [2. 사원 추가: 서버 응답 완벽 대응,권한 레벨 수정 완료] --- */
 function showAddModal() {
     const addContent = `
         <form id="addMemberForm" class="modal-form">
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">이메일 계정</label>
-                <input type="email" name="email" placeholder="example@email.com" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;" required>
+                <input type="email" name="email" placeholder="example@email.com" style="width:100%; padding:0.6rem; border:0.0625rem solid #ddd; border-radius:0.25rem;" required>
             </div>
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">이름</label>
-                <input type="text" name="name" placeholder="실명을 입력하세요" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;" required>
+                <input type="text" name="name" placeholder="실명을 입력하세요" style="width:100%; padding:0.6rem; border:0.0625rem solid #ddd; border-radius:0.25rem;" required>
             </div>
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">권한 설정</label>
-                <select name="level" id="memberLevel" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;">
+                <select name="level" id="memberLevel" style="width:100%; padding:0.6rem; border:0.0625rem solid #ddd; border-radius:0.25rem;">
                     <option value="2">중간관리자</option>
                     <option value="1" selected>사원</option> 
                 </select>
             </div>
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">연락처</label>
-                <input type="tel" name="phone" placeholder="010-0000-0000" oninput="autoHyphen(this)" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;" required>
+                <input type="tel" name="phone" placeholder="010-0000-0000" oninput="autoHyphen(this)" style="width:100%; padding:0.6rem; border:0.0625rem solid #ddd; border-radius:0.25rem;" required>
             </div>
             <input type="hidden" name="address" value="자동지정">
             <input type="hidden" name="addressDetail" value="자동지정">
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">초기 비밀번호</label>
-                <input type="text" name="password" id="memberPassword" value="cors123!" readonly style="width:100%; padding:0.6rem; border:1px solid #eee; border-radius:4px; background:#f5f5f5; color:#666;">
+                <input type="password" name="password" id="memberPassword"  style="width:100%; padding:0.6rem; border:0.0625rem solid #eee; border-radius:0.25rem; background:#f5f5f5; color:#666;">
             </div>
         </form>
     `;
@@ -153,7 +209,6 @@ function showAddModal() {
     });
 }
 
-/* --- [3. 사원 수정: PATCH 데이터 직접 Append 방식] --- */
 function showEditModal(element) {
     const { email, name, level } = element.dataset;
     const editContent = `
@@ -215,43 +270,74 @@ function showEditModal(element) {
 }
 
 /* --- [4. 사원 삭제: 선택 기반 및 본인 차단 강화 버전] --- */
-function deleteMember(email, name) {
-    // 1. [보안] 로그인한 본인 계정 삭제 시도 차단
-    // sessionUser 이메일과 비교 로직 (Thymeleaf 등을 통해 서버에서 주입 권장)
-    if (email === selectedMemberEmail && name === selectedMemberName) {
-        // 전역변수와 비교하여 삭제 프로세스 진행
+/**
+ * 구성원 삭제 함수
+ * @param {string} email
+ * @param {string} name
+ * @param {string} loginUserEmail
+ */
+function deleteMember(email, name, loginUserEmail) {
+    // 1. 클라이언트 단 본인 삭제 방지
+    if (email === loginUserEmail) {
+        openModal("삭제 불가", `
+            <div style="text-align: center; padding: 0.625rem;">
+                <p style="color: #e53e3e; font-weight: bold;">본인 계정은 삭제할 수 없습니다.</p>
+                <p style="font-size: 0.9rem; color: #666;">폐업 또는 계정 탈퇴 메뉴를 이용해 주세요.</p>
+            </div>`, { confirmText: "확인" });
+        return;
     }
 
-    // 2. 삭제 확인 모달
-    openModal("계정 삭제 확인",
-        `<div style="text-align: center;">
-            <p style="color: #e53e3e; font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem;">⚠️ 영구 삭제 주의</p>
-            <p><b>[${name} / ${email}]</b></p>
-            <p>이 계정을 정말로 삭제하시겠습니까?<br>삭제 후에는 <b>복구가 불가능합니다.</b></p>
-         </div>`, {
-            confirmText: '영구 삭제',
-            onConfirm: () => {
-                const xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status >= 200 && xhr.status < 400) {
-                            const data = JSON.parse(xhr.responseText);
-                            const finalStatus = (data.result || data.status || "").toString().toUpperCase();
+    // 2. 관리자 UI 스타일의 모달 컨텐츠 구성
+    const modalContent = `
+        <div style="margin-top: 0.625rem;">
+            <table style="width: 100%; border-collapse: collapse; border: 0.0625rem solid #eee; font-size: 0.95rem;">
+                <tr>
+                    <th style="width: 35%; background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이름</th>
+                    <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${name}</td>
+                </tr>
+                <tr>
+                    <th style="background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이메일</th>
+                    <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${email}</td>
+                </tr>
+            </table>
+               <p style="margin-top: 0.9375rem; font-size: 0.85rem; color: #666; text-align: center;">
+            ※  삭제된 임직원 정보는 복구할 수 없습니다. 삭제를 진행하시겠습니까?
+        </p>
+        </div>
+    `;
 
-                            if (finalStatus === 'SUCCESS') {
-                                location.reload();
-                            } else {
-                                openModal("삭제 실패", "<p>본인 계정이거나 상급자 계정은 삭제할 수 없습니다.</p>", { confirmText: "확인" });
-                            }
+    // 3. 모달 오픈 및 삭제 요청
+    openModal("구성원 영구 삭제", modalContent, {
+        confirmText: '삭제 실행',
+        cancelText: '취소',
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            // 컨트롤러의 DELETE /member 경로와 매칭
+            xhr.open('DELETE', `/owner/member?email=${encodeURIComponent(email)}`);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        const response = JSON.parse(xhr.responseText);
+
+                        if (response.result === 'SUCCESS') {
+                            // 성공 시 즉시 리로드하여 목록 갱신
+                            location.reload();
+                        } else {
+                            // 서비스 단에서 실패 리턴 시 (예: 본인 삭제, 권한 없음 등)
+                            let errorMsg = "삭제 처리에 실패했습니다.";
+                            if (response.result === 'FAILURE') errorMsg = "권한이 없거나 삭제할 수 없는 대상입니다.";
+
+                            openModal("오류 발생", `<p style="text-align:center;">${errorMsg}</p>`, { confirmText: "확인" });
                         }
+                    } else {
+                        openModal("서버 오류", "<p style=\"text-align:center;\">서버와 통신 중 오류가 발생했습니다.</p>", { confirmText: "확인" });
                     }
-                };
-                // 쿼리 스트링으로 email 전달 (컨트롤러 @RequestParam 대응)
-                xhr.open('DELETE', `/owner/member?email=${encodeURIComponent(email)}`);
-                xhr.send();
-            },
-            cancelText: '취소'
-        });
+                }
+            };
+            xhr.send();
+        }
+    });
 }
 
 /**

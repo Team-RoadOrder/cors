@@ -31,6 +31,7 @@ public class OwnerMemberService {
         }
         member.setPassword(encoder.encode(member.getPassword()));
 
+
         return this.registerMapper.insertMember(member) > 0
                 ? RegisterResult.SUCCESS
                 : RegisterResult.FAILURE;
@@ -63,14 +64,25 @@ public class OwnerMemberService {
                 : RegisterResult.FAILURE;
     }
     @Transactional
-    public RegisterResult removeMember(/* */) {
-         return null;
-    }
+    public RegisterResult removeMember(String ownerEmail,String targetEmail ) {
+        // 본인 삭제 방지 (화면에 없더라도 API 직접 호출 등을 차단)
+//        if (ownerEmail.equals(targetEmail)) {
+//            return RegisterResult.FAILURE;
+//        }
+        //삭제 대상조회
+        RegisterEntity targetMember = this.registerMapper.selectByEmail(targetEmail);
 
+        //내 멤버가 아니면 삭제 불가 :관리자가 특정 직원/멤버를 해고/삭제
+        if (targetMember == null || !targetMember.getOwnerEmail().equals(ownerEmail)) {
+            return RegisterResult.FAILURE;
+        }
+        return this.registerMapper.delete(targetMember) > 0
+                ? RegisterResult.SUCCESS
+                : RegisterResult.FAILURE;
+    }
 
     @Transactional
     public void updateLogoutTime(String email) {
-
         this.registerMapper.updateLastLogout(email);
     }
 

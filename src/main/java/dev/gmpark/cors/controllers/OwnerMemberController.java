@@ -87,11 +87,15 @@
 
             return response;
         }
+
         @RequestMapping(value = "/member", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
         @ResponseBody
         public Map<String, Object> deleteMember(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
                                                 @RequestParam(value = "email") String targetEmail) {
-                    return  null;
+            RegisterResult result = this.ownerMemberService.removeMember(sessionUser.getEmail(),targetEmail);
+            Map<String, Object> response = new HashMap<>();
+            response.put("result", result.name());
+            return  response;
         }
 
     }
