@@ -13,7 +13,10 @@
         FROM `cors`.`orders` o
         JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
-          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+       <![CDATA[
+      AND o.created_at >= #{startDate}
+      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        ]]>
           AND o.status = 'PAID'
         GROUP BY DATE_FORMAT(o.created_at, '%Y-%m-%d')
         ORDER BY date ASC
@@ -28,7 +31,10 @@
         FROM `cors`.`orders` o
         JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
-          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+             <![CDATA[
+      AND o.created_at >= #{startDate}
+      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        ]]>
           AND o.status = 'PAID'
         GROUP BY DATE_FORMAT(o.created_at, '%Y-%m')
         ORDER BY date ASC
@@ -40,7 +46,10 @@
         FROM `cors`.`orders` o
         JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
-          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+            <![CDATA[
+      AND o.created_at >= #{startDate}
+      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        ]]>
           AND o.status = 'PAID'
     </select>
 
@@ -50,7 +59,10 @@
         FROM `cors`.`orders` o
         JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
-          AND o.created_at BETWEEN #{startDate} AND #{endDate}
+           <![CDATA[
+      AND o.created_at >= #{startDate}
+      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        ]]>
           AND o.status = 'PAID'
     </select>
 
