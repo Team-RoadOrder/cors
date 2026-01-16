@@ -54,18 +54,22 @@
             <div class="filter-group">
                 <div class="custom-select-container role-select-wrapper">
                     <div class="select-trigger">
-                        <span th:text="${param.level == null || param.level[0] == '0' ? '전체보기' : (param.level[0] == '2' ? '관리자' : '사원')}">전체보기</span>
+                        <span th:text="${param.level == null || param.level[0] == '0' ? '전체보기' : (param.level[0] == '2' ? '중간관리자' : (param.level[0] == '1' ? '사원' : '전체보기'))}">전체보기</span>
                         <img src="/assets/images/ownermember/arrow-down.png" alt="" class="arrow-icon">
                     </div>
+
                     <div class="custom-options">
                         <div class="custom-option" data-value="0" th:classappend="${param.level == null || param.level[0] == '0'} ? 'selected'">전체보기</div>
-                        <div class="custom-option" data-value="2" th:classappend="${param.level != null && param.level[0] == '2'} ? 'selected'">관리자</div>
-                        <div class="custom-option" data-value="3" th:classappend="${param.level != null && param.level[0] == '3'} ? 'selected'">사원</div>
+
+                        <div class="custom-option" data-value="2" th:classappend="${param.level != null && param.level[0] == '2'} ? 'selected'">중간관리자</div>
+
+                        <div class="custom-option" data-value="1" th:classappend="${param.level != null && param.level[0] == '1'} ? 'selected'">사원</div>
                     </div>
+
                     <select class="hidden-select" name="level">
                         <option value="0" th:selected="${param.level == null || param.level[0] == '0'}">전체보기</option>
-                        <option value="2" th:selected="${param.level != null && param.level[0] == '2'}">관리자</option>
-                        <option value="3" th:selected="${param.level != null && param.level[0] == '3'}">사원</option>
+                        <option value="2" th:selected="${param.level != null && param.level[0] == '2'}">중간관리자</option>
+                        <option value="1" th:selected="${param.level != null && param.level[0] == '1'}">사원</option>
                     </select>
                 </div>
             </div>
@@ -101,19 +105,19 @@
                     <td>
                         <div class="custom-select-container inner-select-wrapper" onclick="event.stopPropagation()">
                             <div class="select-trigger">
-                                <span th:if="${member.level == 1}">최고관리자</span>
-                                <span th:if="${member.level == 2}">관리자</span>
-                                <span th:if="${member.level == 3}">사원</span>
+                                <span th:if="${member.level == 3}">최고관리자</span>
+                                <span th:if="${member.level == 2}">중간관리자</span>
+                                <span th:if="${member.level == 1}">사원</span>
                             </div>
                             <div class="custom-options">
-                                <div class="custom-option" data-value="1">최고관리자</div>
-                                <div class="custom-option" data-value="2">관리자</div>
-                                <div class="custom-option" data-value="3">사원</div>
+                                <div class="custom-option" data-value="3">최고관리자</div>
+                                <div class="custom-option" data-value="2">중간관리자</div>
+                                <div class="custom-option" data-value="1">사원</div>
                             </div>
                             <select class="hidden-select">
-                                <option value="1" th:selected="${member.level == 1}">최고관리자</option>
+                                <option value="3" th:selected="${member.level == 3}">최고관리자</option>
                                 <option value="2" th:selected="${member.level == 2}">관리자</option>
-                                <option value="3" th:selected="${member.level == 3}">사원</option>
+                                <option value="1" th:selected="${member.level == 1}">사원</option>
                             </select>
                         </div>
                     </td>
@@ -133,7 +137,9 @@
                         <div th:with="now=${T(java.time.LocalDateTime).now()},
                                       logout=${member.lastLogOutAt},
                                       isOnline=${logout != null && T(java.time.Duration).between(logout, now).toMinutes() <= 60}">
-                            <span th:if="${member.level == 1}" class="status-badge active master">마스터</span>
+                            <span th:if="${member.level == 3}" class="status-badge active master">마스터</span>
+                            <span th:if="${member.level == 2}" class="status-badge active master">중간관리자</span>
+                            <span th:if="${member.level == 1}" class="status-badge active master">사원</span>
                             <span th:if="${member.level != 1 && isOnline}" class="status-badge active">활성화</span>
                             <span th:if="${member.level != 1 && !isOnline}" class="status-badge inactive">비활성화</span>
                         </div>

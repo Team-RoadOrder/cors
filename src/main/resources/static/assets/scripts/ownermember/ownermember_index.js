@@ -3,16 +3,6 @@ let selectedMemberEmail = null;
 let selectedMemberName = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    /* --- [사장님 전용: 로그아웃 주소 강제 전환 로직] --- */
-    // 팀원의 코드나 공통 헤더를 수정하지 않고, JS로 로그아웃 링크를 가로채 사장님 전용 경로로 보냅니다.
-    const logoutBtn = document.getElementById('logout');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // 팀원이 만든 기존 /logout 동작 차단
-            console.log("사장님 전용 로그아웃 로직 실행 (DB 업데이트 시도)");
-            location.href = '/owner/logout'; // 사장님이 만든 컨트롤러 경로로 강제 이동
-        });
-    }
 
     /* --- [1. 커스텀 셀렉트 UI 로직] --- */
     document.addEventListener('click', (e) => {
@@ -89,6 +79,7 @@ function handleDeleteSelected() {
 }
 
 /* --- [2. 사원 추가: 서버 응답 완벽 대응] --- */
+/* --- [2. 사원 추가: 권한 레벨 수정 완료] --- */
 function showAddModal() {
     const addContent = `
         <form id="addMemberForm" class="modal-form">
@@ -103,8 +94,8 @@ function showAddModal() {
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">권한 설정</label>
                 <select name="level" id="memberLevel" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;">
-                    <option value="2">관리자</option>
-                    <option value="3" selected>사원</option>
+                    <option value="2">중간관리자</option>
+                    <option value="1" selected>사원</option> 
                 </select>
             </div>
             <div class="modal-input-group" style="margin-bottom: 1rem;">
@@ -115,7 +106,7 @@ function showAddModal() {
             <input type="hidden" name="addressDetail" value="자동지정">
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">초기 비밀번호</label>
-                <input type="text" name="password" id="memberPassword" value="cors1234!" readonly style="width:100%; padding:0.6rem; border:1px solid #eee; border-radius:4px; background:#f5f5f5; color:#666;">
+                <input type="text" name="password" id="memberPassword" value="cors123!" readonly style="width:100%; padding:0.6rem; border:1px solid #eee; border-radius:4px; background:#f5f5f5; color:#666;">
             </div>
         </form>
     `;
@@ -138,7 +129,7 @@ function showAddModal() {
             formData.append('password', form.password.value);
             formData.append('address', form.address.value);
             formData.append('addressDetail', form.addressDetail.value);
-            formData.append('usertype', 'owner'); // 통합 로그인을 위해 usertype 고정
+            formData.append('usertype', 'owner');
 
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
@@ -166,7 +157,7 @@ function showAddModal() {
 function showEditModal(element) {
     const { email, name, level } = element.dataset;
     const editContent = `
-        <form id="editMemberForm" class="modal-form">
+       <form id="editMemberForm" class="modal-form">
             <input type="hidden" name="email" value="${email}">
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">이름</label>
@@ -175,9 +166,9 @@ function showEditModal(element) {
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">권한 변경</label>
                 <select name="level" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;">
-                    <option value="1" ${level === '1' ? 'selected' : ''}>최고관리자(위임)</option>
+                    <option value="3" ${level === '3' ? 'selected' : ''}>최고관리자(위임)</option>
                     <option value="2" ${level === '2' ? 'selected' : ''}>관리자</option>
-                    <option value="3" ${level === '3' ? 'selected' : ''}>사원</option>
+                    <option value="1" ${level === '1' ? 'selected' : ''}>사원</option>
                 </select>
             </div>
             <div style="background:#fff5f5; padding:1rem; border-radius:6px; border:1px dashed #feb2b2; margin-top:1rem;">

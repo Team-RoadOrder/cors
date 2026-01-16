@@ -81,6 +81,7 @@ $loginForm.addEventListener('submit', (e)=> {
         } else {
             const title ="Error";
             const content = `<p>로그인에 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`;
+
             const options = {
                 confirmText: '확인',
                 onConfirm: () => {

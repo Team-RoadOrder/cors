@@ -129,31 +129,52 @@ public class OwnerMainController {
     }
     @RequestMapping(value = "/owner/patch-item", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> patchItem( ShopItemEntity shopItem){
-
-        CommonResult result = this.ownerMainService.modify(shopItem);
+    public Map<String, Object> patchItem( ShopItemEntity shopItem,
+                                          @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser){
         Map<String, Object> response = new HashMap<>();
+        if( sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
+        CommonResult result = this.ownerMainService.modify(shopItem);
         response.put("result", result.name());
         return response;
+
+        /*레벨이 2거나1인경우에는 권한없음으로  ownermain.js에 로직짜기 */
     }
     @RequestMapping(value = "/owner/delete-item", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String,Object> deleteItem(ShopItemEntity shopItem){
-        CommonResult result = this.ownerMainService.delete(shopItem.getId());
+    public Map<String,Object> deleteItem(ShopItemEntity shopItem,
+                                         @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser){
         Map<String,Object> response = new HashMap<>();
+        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
+        CommonResult result = this.ownerMainService.delete(shopItem.getId());
+
         response.put("result",result.name() );
         return response;
+        /*레벨이 2거나1인경우에는 권한없음으로  ownermain.js에 로직짜기 */
     }
     @RequestMapping(value = "/owner/patch-reservation", method = RequestMethod.PATCH,produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String,Object> patchReservation(@RequestParam(value = "reservationId", required = false, defaultValue = "0") int reservationId,
-                                               @RequestParam(value = "status", required = false) String status){
-        CommonResult result = this.ownerMainService.updateReservationStatus(reservationId, status);
+                                               @RequestParam(value = "status", required = false) String status,
+                                               @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser){
         Map<String,Object> response = new HashMap<>();
+        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
+        CommonResult result = this.ownerMainService.updateReservationStatus(reservationId, status);
+
         response.put("result", result.name());
         return response;
+        /*레벨이 1인경우에만 권한없음으로  ownermain.js에 로직짜기 */
 
     }
+
 
 
 }

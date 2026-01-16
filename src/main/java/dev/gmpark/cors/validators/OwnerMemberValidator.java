@@ -1,6 +1,6 @@
 package dev.gmpark.cors.validators;
 
-import dev.gmpark.cors.entities.OwnerMemberEntity;
+import dev.gmpark.cors.entities.RegisterEntity;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -21,7 +21,7 @@ public class OwnerMemberValidator {
     /**
      * 임직원 데이터 전체 유효성 검사
      */
-    public static boolean validate(@NonNull OwnerMemberEntity member) {
+    public static boolean validate(@NonNull RegisterEntity member) {
         return validateEmail(member.getEmail()) &&
                 validateName(member.getName()) &&
                 validatePhone(member.getPhone()) &&
@@ -46,17 +46,11 @@ public class OwnerMemberValidator {
     }
 
     public static boolean validatePassword(String password) {
-        // 1. 비밀번호가 없으면 통과
         if (password == null || password.isEmpty()) return true;
 
-        // 2. [핵심] 이미 암호화된 비밀번호($2a$로 시작)는 검사를 하지 않고 바로 통과시킵니다.
         if (password.startsWith("$2a$")) return true;
 
-        // 3. 평문(cors1234!)일 때만 기존 규칙대로 검사합니다.
-        if (!password.matches(PASSWORD_REGEX) || !ValidatorUtils.isLengthInBetween(password, 6, 50)) {
-            return false;
-        }
-        return password.matches(".*[a-zA-Z].*") && password.matches(".*\\d.*");
+        return password.matches(PASSWORD_REGEX) && ValidatorUtils.isLengthInBetween(password, 6, 50);
     }
 
     public static boolean validateAddress(String address, String addressDetail) {

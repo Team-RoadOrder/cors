@@ -397,6 +397,9 @@ const changeStatus = ( a, b ) => {
             case 'FAILURE':
                 openModal("FAILURE", `<p>예약 확정에 실패하였습니다.</p>`, {confirmText: '확인'});
                 break;
+            case 'NO_AUTH':
+                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                break;
             case 'SUCCESS':
                 openModal("SUCCESS", `<p>예약 정보가 성공적으로 변경되었습니다.</p>`, {
                     confirmText: '확인',
@@ -487,6 +490,9 @@ const deleteProduct = (btn) => {
             case 'FAILURE':
                 openModal("FAILURE", `<p>상품정보를 삭제하는데 실패하였습니다.</p>`, {confirmText: '확인'});
                 break;
+            case 'NO_AUTH':
+                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                break;
             case 'SUCCESS':
                 openModal("SUCCESS", `<p>상품이 성공적으로 삭제되었습니다.</p>`, {
                     confirmText: '확인',
@@ -510,6 +516,7 @@ const saveProduct = (btn) => {
     formData.append('id', form['id'].value);
     formData.append('itemName', form['itemName'].value);
     formData.append('size', form['size'].value);
+    formData.append('price', form['price'].value.replace(/,/g, ''));
     formData.append('price', form['price'].value);
     formData.append('style', form['style'].value);
     formData.append('mainCategory', form['mainCategory'].value);
@@ -533,6 +540,9 @@ const saveProduct = (btn) => {
           case 'FAILURE':
               openModal("FAILURE", `<p>상품정보를 수정하는데 실패하였습니다.</p>`, {confirmText: '확인'});
               break;
+            case 'NO_AUTH':
+                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                break;
           case 'SUCCESS':
               openModal("SUCCESS", `<p>상품이 성공적으로 수정되었습니다.</p>`, {
                   confirmText: '확인',

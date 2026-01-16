@@ -3,6 +3,7 @@ package dev.gmpark.cors.services;
 
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.RegisterMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,13 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class LoginService {
     private final RegisterMapper registerMapper;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    @Autowired
-    public LoginService(RegisterMapper registerMapper) {
-        this.registerMapper = registerMapper;
-    }
     public RegisterEntity CheckLogin(String email, String password) {
         if(email.isEmpty() || password.isEmpty()) {
             return null;
@@ -35,5 +33,10 @@ public class LoginService {
             return null;
         }
         return dbUser;
+    }
+    public RegisterEntity getUserByEmail(String email) {
+        // 비밀번호 확인 없이 이메일만으로 유저 정보를 가져옵니다.
+        // (직원이 로그인했을 때, 사장님의 정보를 가져오기 위해 사용됨)
+        return this.registerMapper.selectByEmail(email);
     }
 }

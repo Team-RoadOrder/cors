@@ -45,8 +45,11 @@ public class OwnerShopController {
             // URL 뒤에 파라미터를 붙여서 리다이렉트
             return "redirect:/owner?alert=noshop";
         }
+        /*레벨이 2거나1인경우에는 권한없음으로  ownermain.js에 로직짜기 */
         model.addAttribute("shop", shopInfo);
         return "ownershop/ownershop";
+
+
     }
 
     // [수정] POST 요청 처리 부분

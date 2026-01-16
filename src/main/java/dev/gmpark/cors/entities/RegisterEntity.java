@@ -2,6 +2,8 @@ package dev.gmpark.cors.entities;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @NoArgsConstructor // 매개변수가 없는 생성자를 만들어라
 @AllArgsConstructor // 모든 매개변수를 가지는 생성자를 만들어라
@@ -21,7 +23,10 @@ public class RegisterEntity {
     private String address;
     private String addressDetail;
     private String gender;
-    private int level;   // 0은 사용자 //  1~3 관리자
+    private int level;
+    private String ownerEmail;   //새로생김
+    private LocalDateTime lastLogOutAt; //새로생김
+    private LocalDateTime createdAt;
 }
 /*
 create table `cors`.`users`
@@ -38,7 +43,10 @@ style          varchar(20)  null,
 address        varchar(255) null,
 address_detail varchar(255) null,
 gender         varchar(10)  null,
-level          int  default(3) null
+level          int  default(3) null,
+owner_email        varchar(40)  null,
+last_logout_at  datetime  null,
+`created_at` DATETIME DEFAULT NOW() COMMENT '계정 생성일(입사일)';
         );
 CREATE SCHEMA `cors`;
 create table `cors`.`email_tokens`
