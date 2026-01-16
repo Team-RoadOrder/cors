@@ -123,16 +123,17 @@
                     </td>
                     <td th:text="${#temporals.format(member.createdAt, 'yyyy.MM.dd')}">2026.01.14</td>
 
-                    <td th:with="now=${T(java.time.LocalDateTime).now()},
-                                  logout=${member.lastLogOutAt},
-                                  isOnline=${logout != null && T(java.time.Duration).between(logout, now).toMinutes() <= 60}">
-                        <span th:if="${!isOnline}" th:style="'color: #999;'">오프라인</span>
-                        <span th:if="${isOnline}"
-                              th:with="diffMin=${T(java.time.Duration).between(logout, now).toMinutes()}"
-                              th:style="'color: #1890ff; font-weight: 500;'"
-                              th:text="${diffMin == 0 ? '방금 전' : diffMin + '분 전'}"></span>
-                    </td>
+                    <td th:with="now=${T(java.time.LocalDateTime).now()}, logout=${member.lastLogOutAt}">
 
+                        <span th:if="${logout == null}" style="color: #bbb;">접속 기록 없음</span>
+
+                        <th:block th:if="${logout != null}"
+                                  th:with="diffMin=${T(java.time.Duration).between(logout, now).toMinutes()},
+                                     isOnline=${diffMin <= 60}">
+                                <span th:if="${isOnline}" style="color: #1890ff; font-weight: 500;" th:text="${diffMin == 0 ? '방금 전' : diffMin + '분 전'}"></span>
+                                <span th:if="${!isOnline}" style="color: #999;">오프라인</span>
+                        </th:block>
+                    </td>
                     <td>
                         <div th:with="now=${T(java.time.LocalDateTime).now()},
                                       logout=${member.lastLogOutAt},

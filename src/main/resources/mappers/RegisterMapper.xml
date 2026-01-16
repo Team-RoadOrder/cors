@@ -22,7 +22,7 @@
     </insert>
     <insert id="insertMember" parameterType="dev.gmpark.cors.entities.RegisterEntity">
         INSERT INTO `cors`.`users` ( `email`,`password`,`name`,`phone`,`address`,`address_detail`,`usertype`,`level`,`owner_email`,`last_logout_at`,`created_at`      )
-        VALUES ( #{email},#{password},#{name},#{phone},#{address},#{addressDetail},#{usertype},#{level},#{ownerEmail},IFNULL(#{lastLogOutAt}, NOW()),NOW() )
+        VALUES ( #{email},#{password},#{name},#{phone},#{address},#{addressDetail},#{usertype},#{level},#{ownerEmail},#{lastLogOutAt},NOW() )
     </insert>
     <update id="update">
         UPDATE `cors`.`users`
