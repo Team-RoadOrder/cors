@@ -1,6 +1,7 @@
 package dev.gmpark.cors.services;
 
 import dev.gmpark.cors.dtos.PaymentItemDto;
+import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.OrderEntity;
 import dev.gmpark.cors.entities.OrderItemEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
@@ -39,8 +40,8 @@ public class OrderService {
     }
 
     @Transactional
-    public CommonResult processSingleOrder(RegisterEntity user, Long itemId, String size, String request) {
-        ShopItemVo item = this.itemService.getItemById(itemId);
+    public CommonResult processSingleOrder(RegisterEntity user, SingleOrderDto dto) {
+        ShopItemVo item = this.itemService.getItemById(dto.getItemId());
         if (item == null) {
             return CommonResult.FAILURE;
         }
@@ -53,18 +54,18 @@ public class OrderService {
                 .userEmail(user.getEmail())
                 .totalPrice(totalPrice)
                 .status("PAID")
-                .receiverName(user.getName())
-                .receiverPhone(user.getPhone())
-                .address(user.getAddress())
-                .addressDetail(user.getAddressDetail())
-                .request(request)
+                .receiverName(dto.getReceiverName() != null ? dto.getReceiverName() : user.getName())
+                .receiverPhone(dto.getReceiverPhone() != null ? dto.getReceiverPhone() : user.getPhone())
+                .address(dto.getAddress() != null ? dto.getAddress() : user.getAddress())
+                .addressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail() : user.getAddressDetail())
+                .request(dto.getRequest())
                 .build();
 
         List<OrderItemEntity> items = new ArrayList<>();
         items.add(OrderItemEntity.builder()
-                .itemId(itemId)
+                .itemId(dto.getItemId())
                 .shopId(item.getShopId())
-                .size(size)
+                .size(dto.getSize())
                 .quantity(1)
                 .price(item.getPrice())
                 .build());
@@ -73,8 +74,8 @@ public class OrderService {
     }
 
     @Transactional
-    public CommonResult processCartOrder(RegisterEntity user, List<Long> cartIds) {
-        List<CartVo> cartItems = this.cartService.getCartItemsByIds(cartIds);
+    public CommonResult processCartOrder(RegisterEntity user, SingleOrderDto dto) {
+        List<CartVo> cartItems = this.cartService.getCartItemsByIds(dto.getCartIds());
         if (cartItems.isEmpty()) {
             return CommonResult.FAILURE;
         }
@@ -102,17 +103,17 @@ public class OrderService {
                 .userEmail(user.getEmail())
                 .totalPrice(totalPrice)
                 .status("PAID")
-                .receiverName(user.getName())
-                .receiverPhone(user.getPhone())
-                .address(user.getAddress())
-                .addressDetail(user.getAddressDetail())
-                .request("요청사항 없음")
+                .receiverName(dto.getReceiverName() != null ? dto.getReceiverName() : user.getName())
+                .receiverPhone(dto.getReceiverPhone() != null ? dto.getReceiverPhone() : user.getPhone())
+                .address(dto.getAddress() != null ? dto.getAddress() : user.getAddress())
+                .addressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail() : user.getAddressDetail())
+                .request(dto.getRequest())
                 .build();
 
         CommonResult orderResult = this.createOrder(order, orderItems);
         
         if (orderResult == CommonResult.SUCCESS) {
-            this.cartService.deleteCartItems(cartIds);
+            this.cartService.deleteCartItems(dto.getCartIds());
         }
         
         return orderResult;
