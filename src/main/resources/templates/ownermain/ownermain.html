@@ -194,71 +194,56 @@
             </div>
 
             <div class="order-list">
-                <div class="spring"> 구매내역 확인(7)</div>
+                <div class="spring" th:text="|구매내역 확인(${orders != null ? #arrays.length(orders) : 0})|"> 구매내역 확인(0)</div>
                 <div class="spring hidden"> </div>
-                <div class="empty  hidden">
+
+                <div class="empty" th:if="${orders == null or #arrays.isEmpty(orders)}">
                     구매 내역이 없습니다.
                 </div>
-                <table class="table">
+
+                <table class="table" th:unless="${orders == null or #arrays.isEmpty(orders)}">
                     <thead class="thead">
-                         <tr class="names">
-                             <th>구매자</th>
-                             <th>이미지</th>
-                             <th >상품명</th>
-                             <th>사이즈</th>
-                             <th>수량</th>
-                             <th>가격</th>
-                             <th>연락처</th>
-                             <th>배송지</th>
-                             <th></th>
-                             <th>상태</th>
-                         </tr>
+                    <tr class="names">
+                        <th>구매자</th>
+                        <th>이미지</th>
+                        <th>상품명</th>
+                        <th>사이즈</th>
+                        <th>수량</th>
+                        <th>가격</th>
+                        <th>연락처</th>
+                        <th>배송지</th>
+                        <th></th> <th>상태</th>
+                    </tr>
                     </thead>
                     <tbody class="tbody">
-                      <tr class="list-colum">
-                          <td class="name">박규민</td>
-                          <td class="image-wrapper" ><img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb"></td>
-                          <td class="itemName">벌룬핏 생지데님</td>
-                          <td >M</td>
-                          <td>1</td>
-                          <td>20,000원</td>
-                          <td>01080068384</td>
-                          <td colspan="2">대구시 달성군 화암로 120</td>
-                          <td><button>완료</button></td>
-                      </tr>
-                      <tr class="list-colum">
-                          <td class="name">박규민</td>
-                          <td class="image-wrapper" ><img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb"></td>
-                          <td class="itemName">벌룬핏 생지데님</td>
-                          <td >M</td>
-                          <td>1</td>
-                          <td>20,000원</td>
-                          <td>01080068384</td>
-                          <td colspan="2">대구시 달성군 화암로 120</td>
-                          <td><button>완료</button></td>
-                      </tr>
-                      <tr class="list-colum">
-                          <td class="name">박규민</td>
-                          <td class="image-wrapper" ><img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb"></td>
-                          <td class="itemName">벌룬핏 생지데님</td>
-                          <td >M</td>
-                          <td>1</td>
-                          <td>20,000원</td>
-                          <td>01080068384</td>
-                          <td colspan="2">대구시 달성군 화암로 120</td>
-                          <td><button>완료</button></td>
-                      </tr>
-                      <tr class="list-colum">
-                          <td class="name">박규민</td>
-                          <td class="image-wrapper" ><img src="/assets/images/my/thumb.png" alt="썸네일" class="thumb"></td>
-                          <td class="itemName">벌룬핏 생지데님</td>
-                          <td >M</td>
-                          <td>1</td>
-                          <td>20,000원</td>
-                          <td>01080068384</td>
-                          <td colspan="2">대구시 달성군 화암로 120</td>
-                          <td><button>완료</button></td>
-                      </tr>
+                    <tr class="list-colum" th:each="order : ${orders}">
+                        <td class="name" th:text="${order.receiverName}">박규민</td>
+
+                        <td class="image-wrapper">
+                            <img th:if="${order.imagePath != null}"
+                                 th:src="@{/images/{path}(path=${order.imagePath})}"
+                                 alt="썸네일" class="thumb">
+                            <img th:unless="${order.imagePath != null}"
+                                 src="/assets/images/ownermain/item-list/one-1.webp"
+                                 alt="기본썸네일" class="thumb">
+                        </td>
+
+                        <td class="itemName" th:text="${order.itemName}">벌룬핏 생지데님</td>
+
+                        <td th:text="${order.size}">M</td>
+
+                        <td th:text="${order.quantity}">1</td>
+
+                        <td class="price" th:text="${#numbers.formatInteger(order.price, 0, 'COMMA') + '원'}">20,000원</td>
+
+                        <td class="phone" th:text="${order.receiverPhone.replaceAll('(\d{3})(\d{4})(\d{4})', '$1-$2-$3')}">
+                            010-8006-8384
+                        </td>
+
+                        <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail}|">대구시 달성군 화암로 120</td>
+
+                        <td><button type="button">완료</button></td>
+                    </tr>
                     </tbody>
                 </table>
                 <div class="spring"> </div>

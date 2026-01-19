@@ -131,6 +131,8 @@
 .order-list .tbody > .list-colum >.itemName {
     color: #4e8bbc;
     font-weight: 700;
+    line-height: 1.4;
+    word-break: keep-all;
 }
 .order-list .tbody > .list-colum > td:last-child {
         font-weight: 600;
@@ -143,4 +145,21 @@
 }
 .order-list .tbody > .list-colum > td:last-child >button:hover{
     opacity: 0.8;
+}
+.order-list .tbody > .list-colum > td.address {
+    text-align: left;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.4;
+    word-break: keep-all;
+}
+.order-list .tbody > .list-colum > td.phone {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+
+}
+.order-list .tbody > .list-colum > td.price {
+    font-size: 0.8rem;
 }

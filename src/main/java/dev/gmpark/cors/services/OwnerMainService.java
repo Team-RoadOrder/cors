@@ -3,10 +3,12 @@ package dev.gmpark.cors.services;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
+import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor; // 이걸 쓰면 코드가 깔끔해집니다
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ public class OwnerMainService {
     private final ShopInfoMapper shopInfoMapper;
     private final OwnerShopMapper ownerShopMapper;
     private final ReservationMapper reservationMapper;
+    private final OrderMapper orderMapper;
 
     // 설정 파일에서 경로 가져오기
     @Value("${file.upload-dir}")
@@ -136,4 +139,9 @@ public class OwnerMainService {
                ? CommonResult.SUCCESS
                : CommonResult.FAILURE;
     }
+
+    public OrderHistoryVo[] getOrdersByShopId(int shopId) {
+        return this.orderMapper.getAllOrdersByShopId(shopId);
+    }
+
 }

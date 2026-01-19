@@ -72,6 +72,7 @@ public class OwnerMainController {
         } else {
             model.addAttribute("reservations", List.of()); // 빈 리스트 전달
         }
+        model.addAttribute("orders", this.ownerMainService.getOrdersByShopId(shopInfo.getShopId()));
 
         return "ownermain/ownermain";
     }

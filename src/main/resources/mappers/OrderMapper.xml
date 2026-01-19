@@ -46,4 +46,25 @@
           AND OI.`item_id` = #{itemId}
           AND O.`status` = 'PAID'
     </select>
+    <select id="getAllOrdersByShopId" resultType="dev.gmpark.cors.vos.OrderHistoryVo" >
+        SELECT
+            `t2`.`user_email` AS `userEmail`,
+            `t3`.`item_name` AS `itemName`,
+            `t1`.`quantity` AS `quantity`,
+            `t2`.`receiver_name` AS `receiverName`,
+            `t2`.`receiver_phone` AS `receiverPhone`,
+            `t2`.`address` AS `address`,
+            `t2`.`address_detail` AS `addressDetail`,
+            `t1`.`size`     AS `size` ,
+            `t1`.`price`    AS `price`,
+            `t2`.`created_at` AS `createdAt`,
+            (SELECT `img`.`image_path`
+             FROM `cors`.`shop_item_images` AS `img`
+             WHERE `img`.`product_id` = `t3`.`id` LIMIT 1) AS `imagePath`
+        FROM `cors`.`order_items` AS `t1`
+                 LEFT JOIN `cors`.`orders` AS `t2` ON `t1`.order_id = `t2`.id
+                 LEFT JOIN `cors`.`shop_items` AS `t3` ON `t1`.`item_id` = `t3`.`id`
+        WHERE `t3`.`shop_id` = #{shopId}
+        ORDER BY `createdAt`
+    </select>
 </mapper>

@@ -15,4 +15,6 @@ public interface OrderMapper {
     //특정 상품 구매 완료 조회
     int selectCompleteOrderCount(@Param("itemId")Long ItemId,@Param("userEmail")String userEmail);
     OrderHistoryVo[] getAllOrders(String userEmail);
+
+    OrderHistoryVo[] getAllOrdersByShopId(@Param("shopId") int shopId);
 }
