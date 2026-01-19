@@ -4,6 +4,7 @@
     overflow-y: auto;
     scroll-behavior: smooth;
 }
+
 .item-list > .empty {
     margin: 2rem 0 0 3.4rem;
     font-size: 1.3rem;
@@ -16,14 +17,13 @@
 
 .item-list::-webkit-scrollbar-track {
     background: transparent;
-    margin-top: 60px;
-    margin-bottom: 10px;
+    margin-top: 3.75rem;
+    margin-bottom: 0.625rem;
 }
 
-/* 4. 스크롤바 막대(손잡이) 디자인 */
 .item-list::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* 색상 */
-    border-radius: 10px;    /* 둥글게 */
+    background-color: #ccc;
+    border-radius: 0.625rem;
 }
 
 .item-list .spring:first-child {
@@ -39,25 +39,24 @@
     font-size: 1.2rem;
     font-weight: 500;
 }
-.item-list .product {
 
+.item-list .product {
     display: flex;
-    flex-direction: row; /* 가로 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 12px; /* 이미지와 텍스트 사이 간격 */
-    justify-content: space-between; /* 전체 공간 활용 */
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
     position: relative;
     padding: 1rem;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 0.0625rem solid #eaeaea;
 }
 
-/* 이미지 wrapper (크기 및 배경 유지) */
 .item-list .image-wrapper {
     background-color: rgb(243, 244, 247);
     border-radius: 0.5rem;
-    width: 80px; /* 고정 너비 설정 */
-    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
-    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,78 +64,71 @@
 }
 
 .item-list .image {
-    width: 100%; /* wrapper 크기에 맞춤 */
+    width: 100%;
     height: 100%;
-    object-fit: contain; /* 이미지 비율 유지 */
+    object-fit: contain;
 }
 
-/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
 .item-list .product .itemTitle {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+    flex-grow: 1;
+    min-width: 0;
     gap: 0.5rem;
 }
 
-/* 상품명 스타일 */
 .item-list .product .itemTitle .title {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #000;
-    margin-bottom: 2px;
+    margin-bottom: 0.125rem;
 }
 
-/* 사이즈 스타일 */
 .item-list .product .itemTitle .description {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #666;
 }
+
 .item-list .product .itemTitle .price {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #666;
     font-weight: 600;
-
 }
 
-/* 배송 상태 및 날짜 영역 (오른쪽 끝 정렬) */
 .item-list .product .itemStatus {
     display: flex;
-    flex-direction: column; /* 날짜와 상태를 세로로 정렬 */
-    align-items: flex-end; /* 텍스트를 오른쪽 끝으로 정렬 */
-    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
-    font-size: 13px;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
     text-align: right;
 }
 
-/* 날짜 스타일 */
 .item-list .product .itemStatus .type {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #999;
-    margin-bottom: 2px;
+    margin-bottom: 0.125rem;
     display: flex;
-    gap: 4px;
+    gap: 0.25rem;
     justify-content: flex-end;
 }
 
-/* 배송완료 / 스타일올리기 텍스트 영역 */
 .item-list .product .itemStatus .list-column {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     cursor: pointer;
-
 }
 
-/* '배송완료' 텍스트 스타일 */
-.item-list .product .itemStatus .list-column > .color{
-    color: #555; /* 상태 텍스트 색상 */
-    margin-bottom: 2px;
-    display: flex; align-items: center; justify-content: flex-end;
+.item-list .product .itemStatus .list-column > .color {
+    color: #555;
+    margin-bottom: 0.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
-/* '스타일올리기' 텍스트 스타일 */
-.item-list .product .itemStatus .list-column >.button-container > .res-btn {
+.item-list .product .itemStatus .list-column > .button-container > .res-btn {
     text-decoration: none;
     padding: 0.2rem 0.4rem;
     font-size: 0.9rem;
@@ -145,11 +137,13 @@
     margin-top: 0.3rem;
     border-radius: 0.5rem;
 }
-.item-list .product .itemStatus .list-column >.button-container >.res-btn:hover {
+
+.item-list .product .itemStatus .list-column > .button-container > .res-btn:hover {
     color: #f5f5f5;
     background: #a6a6a6;
 }
-.item-list .product .itemStatus .list-column >.button-container > .del-btn {
+
+.item-list .product .itemStatus .list-column > .button-container > .del-btn {
     text-decoration: none;
     padding: 0.2rem 0.4rem;
     font-size: 0.9rem;
@@ -158,11 +152,13 @@
     margin-top: 0.3rem;
     border-radius: 0.5rem;
 }
-.item-list .product .itemStatus .list-column >.button-container >.del-btn:hover {
+
+.item-list .product .itemStatus .list-column > .button-container > .del-btn:hover {
     color: #f5f5f5;
     background: #b11919;
 }
-.item-list .product .itemStatus .list-column >.button-container >  .save-btn {
+
+.item-list .product .itemStatus .list-column > .button-container > .save-btn {
     display: none;
     background: #2196f3;
     color: white;
@@ -170,13 +166,10 @@
     border-radius: 0.5rem;
     margin-top: 0.3rem;
 }
-.item-list .product .itemStatus .list-column >.button-container > .save-btn:hover {
-    background: #4e8bbc;
 
+.item-list .product .itemStatus .list-column > .button-container > .save-btn:hover {
+    background: #4e8bbc;
 }
-/* =========================================
-   [수정] Input 태그 스타일 최적화
-   ========================================= */
 
 .item-list .product input {
     background: transparent;
@@ -189,34 +182,32 @@
     font-weight: inherit;
     color: inherit;
     width: auto;
-    min-width: 10px;
+    min-width: 0.625rem;
     max-width: 100%;
     box-sizing: content-box;
     transition: border-bottom 0.2s;
 }
 
-/* 오른쪽 정렬이 필요한 인풋들 (카테고리, 색상 등) */
 .item-list .product .itemStatus input {
     text-align: right;
 }
 
-/* 수정 모드 진입 시 (readonly 풀림) */
 .item-list .product input:not([readonly]) {
     background-color: rgba(60, 155, 234, 0.05);
-    padding: 0 2px;
+    padding: 0 0.125rem;
     color: #6e6d6d !important;
-    border: none!important;
+    border: none !important;
     outline: none;
 }
 
-/* 수정 모드일 때 마우스 커서 */
 .item-list .product input:not([readonly]):hover {
     cursor: text;
 }
+
 .item-list .product input[readonly] {
     cursor: default;
 }
-/* 숫자 인풋의 위/아래 화살표(스핀 버튼) 제거 */
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;

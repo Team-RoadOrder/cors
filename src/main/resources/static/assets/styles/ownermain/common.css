@@ -4,11 +4,19 @@ a[href] {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     min-height: 100%;
     margin: 0;
     margin-inline : 0;
     overflow-x: hidden;
     padding: 0;
+}
+
+body > .box {
+    width: 42.25rem;
 }
 
 html {

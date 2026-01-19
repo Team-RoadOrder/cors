@@ -95,18 +95,15 @@
     color: #a0a0a0;
 }
 
-/* 수정 모드(readonly가 풀렸을 때) 스타일 */
 #form input:not(:read-only) {
-    /*border-bottom: 2px solid #2196f3; !* 파란색 밑줄 *!*/
     border: none!important;
     outline: none !important;
-    background-color: rgba(72, 143, 202, 0.05); /* 아주 연한 파란 배경 */
-    cursor: text; /* 마우스 커서 모양 변경 */
-    padding-bottom: 5px; /* 밑줄과 글자 사이 간격 */
+    background-color: rgba(72, 143, 202, 0.05);
+    cursor: text;
+    padding-bottom: 0.3125rem;
 
 }
 
-/* (선택) 수정 모드에서 포커스(클릭) 했을 때 */
 #form input:not(:read-only):focus {
-    border-bottom: 2px solid #f44336; /* 클릭하면 빨간색 등으로 변경 강조 */
+    border-bottom: 0.125rem solid #f44336;
 }

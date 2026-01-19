@@ -21,21 +21,20 @@
 
 .res-list::-webkit-scrollbar-track {
     background: transparent;
-    margin-top: 60px;
-    margin-bottom: 10px;
+    margin-top: 3.75rem;
+    margin-bottom: 0.625rem;
 }
 
-/* 4. 스크롤바 막대(손잡이) 디자인 */
 .res-list::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* 색상 */
-    border-radius: 10px;    /* 둥글게 */
+    background-color: #ccc;
+    border-radius: 0.625rem;
 }
 
 .res-list .spring:first-child {
     position: sticky;
     top: 0;
-    background: #FFFFFF; /* 배경색 필수 (투명하면 뒤에 글씨 비침) */
-    z-index: 10;         /* 다른 내용물보다 위에 뜨도록 */
+    background: #FFFFFF;
+    z-index: 10;
 }
 .res-list .spring {
     color: #212121;
@@ -47,12 +46,12 @@
 .res-list .product {
     position: relative;
     display: flex;
-    flex-direction: row; /* 가로 정렬 */
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 12px; /* 이미지와 텍스트 사이 간격 */
-    justify-content: space-between; /* 전체 공간 활용 */
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
     padding: 3rem 1.5rem 1.5rem 1.5rem;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 0.0625rem solid #eaeaea;
 }
 .res-list .user-info {
     width: 100%;
@@ -72,21 +71,20 @@
 .res-list .user-info .user{
     position: absolute;
     right: 2rem;
-    top: 0.4rem;
+    top: 0.25rem;
 }
 .res-list .user-info .tel {
     position: absolute;
     right: 2rem;
-    top: 1.3rem;
+    top: 0.8125rem;
 }
 
-/* 이미지 wrapper (크기 및 배경 유지) */
 .res-list .image-wrapper {
     background-color: rgb(243, 244, 247);
     border-radius: 0.5rem;
-    width: 80px; /* 고정 너비 설정 */
-    height: 80px; /* 고정 높이 설정 (aspect-ratio 대신) */
-    flex-shrink: 0; /* 공간이 부족해도 줄어들지 않도록 */
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,30 +92,27 @@
 }
 
 .res-list .image {
-    width: 100%; /* wrapper 크기에 맞춤 */
+    width: 100%;
     height: 100%;
-    object-fit: contain; /* 이미지 비율 유지 */
+    object-fit: contain;
 }
 
-/* 상품명 및 사이즈 영역 (왼쪽 정렬) */
 .res-list .product .itemTitle {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-    min-width: 0; /* flex item 내부의 텍스트 오버플로우 방지 */
+    flex-grow: 1;
+    min-width: 0;
 }
 
-/* 상품명 스타일 */
 .res-list .product .itemTitle .title {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #000;
-    margin-bottom: 2px;
+    margin-bottom: 0.125rem;
 }
 
-/* 사이즈 스타일 */
 .res-list .product .itemTitle .description {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #666;
 }
 
@@ -126,10 +121,9 @@
     flex-direction: column;
     gap: 0.2rem;
     flex-shrink: 0;
-    font-size: 13px;
+    font-size: 0.8125rem;
     text-align: right;
 }
-
 
 .res-list .product .itemStatus > .fix-btn {
     text-decoration: none;
