@@ -23,7 +23,7 @@
         <img src="/assets/images/ownermain/arrow-left.png" alt="닫기" class="toggle-icon"/>
     </button>
     <nav id="nav" class="open">
-        <div class="info">매장관리 페이지</div>
+<!--        <div class="info">매장관리 페이지</div>-->
         <div class="profile">
             <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
                  alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
@@ -194,7 +194,7 @@
             </div>
 
             <div class="order-list">
-                <div class="spring" th:text="|구매내역 확인(${orders != null ? #arrays.length(orders) : 0})|"> 구매내역 확인(0)</div>
+                <div class="spring" th:text="|판매내역 확인(${orders != null ? #arrays.length(orders) : 0})|"> 구매내역 확인(0)</div>
                 <div class="spring hidden"> </div>
 
                 <div class="empty" th:if="${orders == null or #arrays.isEmpty(orders)}">

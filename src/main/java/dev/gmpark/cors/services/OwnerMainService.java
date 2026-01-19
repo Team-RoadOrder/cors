@@ -144,4 +144,8 @@ public class OwnerMainService {
         return this.orderMapper.getAllOrdersByShopId(shopId);
     }
 
+    //관리자 프로필사진목적
+    public Object getShop(String email) {
+        return this.shopInfoMapper.selectShopByUserEmail(email);
+    }
 }

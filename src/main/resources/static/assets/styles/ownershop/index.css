@@ -6,7 +6,7 @@
 
 
 .sections {
-    padding: 3rem 5rem 3rem 7rem;
+    padding: 2rem 7rem 3rem 7rem;
     min-height: calc(100vh - 4.375rem);
     width: 100%;
     display: flex;
@@ -27,6 +27,7 @@
 
 .sections > .header > .title {
     font-size: 2rem;
+    padding: 1rem 0;
     font-weight: 700;
     color: #222;
     margin: 0;
@@ -80,11 +81,9 @@
     padding: 0.6rem;
     position: absolute;
     z-index: 9999 !important;
-
     bottom: calc(100% + 0.7rem);
     left: 50%;
     transform: translateX(-50%);
-
     font-size: 0.75rem !important;
     font-weight: 400;
     line-height: 1.4;
@@ -178,11 +177,8 @@
     padding: 0.6rem;
     position: absolute;
     z-index: 9999 !important;
-
-
     bottom: calc(100% - 0.625rem);
     right: 1rem;
-
     font-size: 0.75rem !important;
     font-weight: 400;
     line-height: 1.4;
@@ -216,8 +212,9 @@
     flex-direction: row;
     gap: 0.75rem;
     justify-content: flex-end;
-    margin-top: auto;
-    margin-bottom: 3rem;
+    /*margin-top: auto;*/
+    margin-top: -18rem;
+    /*margin-bottom: 3rem;*/
     width: 75rem;
 }
 

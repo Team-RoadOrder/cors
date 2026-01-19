@@ -4,7 +4,7 @@
 @import "./index/ownermember_modal.css";
 
 .sections {
-    padding: 3rem 10rem 3rem 2.5rem;
+    padding: 1.5rem 10rem 3rem 2.5rem;
     min-height: calc(100vh - 4.375rem);
     width: 100%;
     display: flex;
@@ -43,6 +43,7 @@
     font-size: 0.875rem;
     outline: none;
     background-color: #fff;
+    margin-bottom: -1rem;
 }
 
 .search-icon {

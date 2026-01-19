@@ -5,7 +5,7 @@
 
 
 .sections {
-    padding: 3rem 5rem 3rem 7rem;
+    padding: 1.25rem 5rem 3rem 7rem;
     min-height: calc(100vh - 4.375rem);
     width: 100%;
     display: flex;
