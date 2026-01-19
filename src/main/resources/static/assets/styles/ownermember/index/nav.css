@@ -18,14 +18,13 @@
 
 #nav .info {
     width: 17.1375rem;
-
     text-align: center;
     position: fixed;
     left: 0;
     top: 2rem;
     padding-bottom: 1rem;
     font-weight: 700;
-    border-bottom: 0.0625rem solid #eaeaea ;
+    border-bottom: 0.0625rem solid #eaeaea;
 }
 #nav > .profile >.profile-img {
     width: 8rem;

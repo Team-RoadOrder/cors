@@ -4,11 +4,19 @@ a[href] {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     min-height: 100%;
     margin: 0;
-    margin-inline : 0;
+    margin-inline: 0;
     overflow-x: hidden;
     padding: 0;
+}
+
+body > .box {
+    width: 42.25rem;
 }
 
 html {
@@ -20,22 +28,26 @@ html {
     font-weight: 400;
 }
 
+
+
 ul {
     list-style-type: none;
     margin-block: 0;
     margin-inline: 0;
     padding-inline: 0;
 }
+
 button {
-     background: none;
-     border: none;
-     box-shadow: none;
-     appearance: none;
-     -webkit-appearance: none;
-     -moz-appearance: none;
-     margin: 0;
-     padding: 0;
-     font: inherit;
-     cursor: pointer;
-     outline: none;
- }
+    background: none;
+    border: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+}
+

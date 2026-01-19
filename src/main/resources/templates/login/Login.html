@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang = "ko"  xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -9,56 +9,60 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <script defer src="/assets/scripts/common.js"></script>
     <script defer src="/assets/scripts/login/login.js"></script>
-    <link href="/assets/images/login/favicon.png" rel="icon" >
+    <link href="/assets/images/login/favicon.png" rel="icon">
 </head>
 <body>
-
-<section class="login-form" >
-    <a href="/login" class="box" id="logo">
-        <div>
-        <img src="/assets/images/main/img.png" alt="" class="site-logo">
-        </div>
-    </a>
-    <form id="loginForm" autocomplete="off">
-        <!--<div class="int-area">
-            <input type="text" name="id" id="id" required>
-            <label for="id">아이디</label>
-        </div>-->
-        <div class="int-area">
-            <input type="text" name="email" id="email" required>
-            <label for="email">이메일</label>
-        </div>
-        <div class="int-area">
-            <input type="password" name="password" id="password" required>
-            <label for="password">비밀번호</label>
-        </div>
-        <div class="btn-area">
-            <button type="submit" id="btn">로그인</button>
-        </div>
-    </form>
-    <div class="container">
+<section class="welcome-section">
+    <h1>Welcome</h1>
+    <p>아래로 스크롤하여 로그인하세요</p>
+</section>
+<section class="login-layout-container">
+    <div class="login-form">
+        <a href="/login" class="box" id="logo">
+            <div>
+                <img src="/assets/images/main/img.png" alt="" class="site-logo">
+            </div>
+        </a>
+        <form id="loginForm" autocomplete="off">
+            <!--<div class="int-area">
+                <input type="text" name="id" id="id" required>
+                <label for="id">아이디</label>
+            </div>-->
+            <div class="int-area">
+                <input type="text" name="email" id="email" required>
+                <label for="email">이메일</label>
+            </div>
+            <div class="int-area">
+                <input type="password" name="password" id="password" required>
+                <label for="password">비밀번호</label>
+            </div>
+            <div class="btn-area">
+                <button type="submit" id="btn">로그인</button>
+            </div>
+        </form>
+        <div class="container">
     <span class="caption">
         <a href="/register"> 회원가입 </a>
     </span>
-
-    <span class="caption">
+            <span class="caption">
         <a href="/findpw"> 비밀번호 재설정</a>
     </span>
-    <div class="caption sns">
-        <a href="" target="_self" th:href="@{https://kauth.kakao.com/oauth/authorize (response_type='code', client_id=${kakaoClientId}, redirect_uri = ${kakaoRedirectUri})}">
-        <img src="/assets/images/login/kakao.png" alt="" >
-        </a>
-        <a href="" target="_self" th:href="@{https://nid.naver.com/oauth2.0/authorize (response_type='code', client_id = ${naverClientId}, redirect_uri = ${naverRedirectUri}, state = 'study')}">
-        <img src="/assets/images/login/naver.png" alt="" >
-        </a>
-        <span class="sns">소셜계정으로 로그인</span>
-        <span class="text">카카오톡</span>
-        <span class="text naver">네이버</span>
-    </div>
+            <div class="caption sns">
+                <a href="" target="_self"
+                   th:href="@{https://kauth.kakao.com/oauth/authorize (response_type='code', client_id=${kakaoClientId}, redirect_uri = ${kakaoRedirectUri})}">
+                    <img src="/assets/images/login/kakao.png" alt="">
+                </a>
+                <a href="" target="_self"
+                   th:href="@{https://nid.naver.com/oauth2.0/authorize (response_type='code', client_id = ${naverClientId}, redirect_uri = ${naverRedirectUri}, state = 'study')}">
+                    <img src="/assets/images/login/naver.png" alt="">
+                </a>
+                <span class="sns">소셜계정으로 로그인</span>
+                <span class="text">카카오톡</span>
+                <span class="text naver">네이버</span>
+            </div>
+        </div>
     </div>
 </section>
-
-
 </body>
 </html>
 
