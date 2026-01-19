@@ -1,246 +1,429 @@
+/* 기본 레이아웃 설정 */
+body {
+  background-color: #f0f0f0; /* 전체 배경 회색 */
+}
+
+
 .container {
-  width: 50%;
-  margin: 0 auto; /* 중앙 정렬 */
+  width: 1200px; /* 전체 너비 고정 */
+  margin: 0 auto;
+  padding-top: 120px;
+  padding-bottom: 100px;
 }
 
-.section {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
+.checkout-layout {
+  display: flex;
+  gap: 20px; /* 좌우 섹션 간격 */
+  align-items: flex-start; /* 상단 정렬 */
+}
+
+/* 왼쪽 섹션 (입력 폼 영역) */
+.left-section {
+  flex: 1; /* 남은 공간 차지 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 박스 간 간격 */
+}
+
+/* 오른쪽 섹션 (요약 및 결제 버튼 영역) */
+.right-section {
+  width: 400px; /* 고정 너비 */
+}
+
+/* 스티키 처리 (스크롤 시 따라오게) */
+.sticky-summary {
+  position: sticky;
+  top: 140px; /* 헤더 높이 고려 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 공통 박스 스타일 */
+.checkout-box, .summary-box {
+  background: #fff; /* 박스 배경 흰색 */
+  border-radius: 12px; /* 둥근 모서리 */
+  padding: 24px; /* 내부 여백 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 살짝 그림자 */
+}
+
+.checkout-box h3, .summary-box h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-h2 span {
+.box-header h3 {
+  margin-bottom: 0;
+}
+
+.btn-change-address {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
   font-size: 13px;
-  color: #666;
-  margin-left: 5px;
-}
-
-.To, .phone, .adr{
-  display: flex;
-  margin: 0.5rem;
-}
-
-.To > span, .phone > span, .adr > span {
-  width: 6rem;
-  color: #909090;
-}
-
-.name, .phoneNumber, .myAddress{
-  padding: 0;
-  margin: 0;
-}
-
-.please{
-    appearance: none;         /* 표준 */
-    /* 기본 스타일 초기화 */
-    border: 1px solid #eaeaea; /* 원하는 테두리로 설정 (없애려면 none) */
-    background: white;      /* 원하는 배경색으로 설정 (없애려면 none/transparent) */
-    padding: 1rem 1.2rem;      /* 원하는 패딩 설정 */
-    border-radius: 0.5rem;       /* 둥근 모서리 제거 */
-    font-family: inherit;   /* 폰트 상속 */
-    cursor: pointer;        /* 마우스 커서 설정 */
-    width: 100%;
-    margin-bottom: 1.2rem;
-}
-
-.please:focus {
-    outline: 1px solid #eaeaea;
-}
-
-/* 스크롤 영역 추가 */
-.products-wrapper {
-  max-height: 400px; /* 원하는 높이로 조절 가능 */
-  overflow-y: auto;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-}
-
-/* 스크롤바 스타일링 (선택 사항) */
-.products-wrapper::-webkit-scrollbar {
-  width: 8px;
-}
-.products-wrapper::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 4px;
-}
-.products-wrapper::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-}
-
-.product {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-}
-
-.product:last-child {
-  border-bottom: none;
-}
-
-.arrowImg {
-    position: absolute;
-    width: 1.3rem;
-    height: 1.3rem;
-    top: 15rem;
-    right: 30rem;
-}
-
-.product > .productImage {
-  background-color: inherit;
-  width: 5rem;
-  aspect-ratio: 1 / 1;
-  border-radius: 6px;
-  margin-right: 15px;
-}
-
-.info {
-  flex: 1;
-}
-
-.title {
-  font-weight: 600;
-}
-
-.desc {
-  font-size: 13px;
-  color: #666;
-}
-
-.price {
-  font-weight: bold;
-}
-
-.delivery, .coupon {
-  margin-top: 15px;
-}
-
-button {
-  border: none;
-  background: #eee;
-  padding: 6px 10px;
-  border-radius: 5px;
   cursor: pointer;
+  border-radius: 4px;
+  color: #555;
 }
 
-button:disabled {
-  color: #aaa;
+.btn-change-address:hover {
+  background: #f9f9f9;
+  color: #333;
 }
 
-.total {
+/* 왼쪽 섹션 내부 스타일 */
+.box-content .row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
-  border-top: 1px solid #eee;
-  padding-top: 10px;
+  margin-bottom: 15px;
 }
 
-.total span {
-  font-weight: bold;
-  font-size: 16px;
+.box-content .row:last-child {
+  margin-bottom: 0;
 }
 
-.points-box {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.points-box input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.use-btn {
-  background: #111;
-  color: #fff;
-  font-size: 13px;
-}
-
-.points-info {
-  margin-top: 6px;
-  font-size: 13px;
+.box-content .label {
+  width: 100px;
   color: #666;
-}
-
-.payment-option {
-  margin-top: 15px;
-}
-
-.label-purple {
-  color: #6b3dfa;
-  font-size: 13px;
-  margin-left: 4px;
-}
-
-.account-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8f8f8;
-  border-radius: 6px;
-  padding: 8px;
-  margin-top: 6px;
-}
-
-.account-box select {
-  border: none;
-  background: transparent;
+  font-weight: 500;
   font-size: 14px;
 }
 
-.benefit {
+.box-content .input-field {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.box-content .input-field:focus {
+  border-color: #333;
+}
+
+/* 전화번호 입력 그룹 */
+.phone-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.phone-group .phone-part {
+  flex: 1;
+  text-align: center;
+}
+
+.phone-group .dash {
+  color: #aaa;
+  font-weight: bold;
+}
+
+/* 주소 입력 필드 그룹 */
+.address-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 입력 필드 및 버튼 스타일 */
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+
+.input-group button {
+  padding: 10px 15px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.input-group button:disabled {
+  background: #eee;
+  color: #aaa;
+  cursor: default;
+}
+
+.select-request {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.input-request {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.info-text {
+  font-size: 13px;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* 결제 수단 스타일 */
+.payment-methods {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.method-item {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  background: #fff;
+  transition: all 0.2s;
+}
+
+.method-item:hover {
+  border-color: #aaa;
+}
+
+.method-item:has(input:checked) {
+  border-color: #222;
+  background-color: #222;
+  color: #fff;
+  font-weight: bold;
+}
+
+.method-item input {
+  display: none;
+}
+
+.payment-detail {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.payment-detail select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.benefit-text {
+  font-size: 13px;
   color: #6b3dfa;
+  margin-top: 8px;
   font-weight: 500;
 }
 
-.notice {
+
+/* 오른쪽 섹션 내부 스타일 */
+.order-items-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding-right: 5px; /* 스크롤바 여백 */
+}
+
+/* 스크롤바 커스텀 */
+.order-items-list::-webkit-scrollbar {
+  width: 6px;
+}
+.order-items-list::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 3px;
+}
+
+.order-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 15px 0;
+}
+
+.order-item:first-child {
+  padding-top: 0;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.item-shop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}
+
+.item-shop img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.item-main {
+    display: flex;
+    gap: 15px;
+}
+
+.item-image img {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.item-detail {
+    flex: 1;
+}
+
+.item-detail .item-name {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.item-detail .item-option {
   font-size: 12px;
   color: #888;
-  margin-top: 10px;
-  line-height: 1.4;
+  margin-bottom: 8px;
 }
 
-.method-list h4 {
+.item-price-qty {
+  display: flex;
+  justify-content: space-between;
   font-size: 14px;
-  margin-top: 15px;
-}
-
-.method-list ul {
-  margin-top: 5px;
-  padding-left: 18px;
-  font-size: 13px;
-  color: #555;
-  line-height: 1.6;
-}
-
-.summary table {
-  width: 100%;
-  font-size: 14px;
-  color: #444;
-}
-
-.summary td {
-  padding: 4px 0;
-}
-
-.summary .total-row td {
   font-weight: bold;
-  border-top: 1px solid #ddd;
-  padding-top: 8px;
+  color: #222;
 }
 
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  background: #111;
-  color: #fff;
-  font-size: 16px;
-  border-radius: 6px;
+.price-summary .price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.price-summary .price-row.total {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-top: 15px;
+  margin-bottom: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+}
+
+.price-summary .total-price {
+  color: #f15746; /* 포인트 컬러 */
+}
+
+.agreement-box {
+  padding: 20px;
+  background: #fff;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
   cursor: pointer;
+  color: #333;
+}
+
+.check-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #222;
+}
+
+.btn-payment {
+  width: 100%;
+  padding: 20px;
+  background: #222;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-payment:hover {
+  background: #444;
+}
+
+.btn-payment:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 헤더 스타일 복구 */
+#header {
+    background-color: rgb(216, 232, 243);
+}
+#header .nav a {
+    color: #000;
+}
+#header #logo {
+    filter: invert(0%) brightness(0%);
+}
+#header .nav .selected a {
+    color: rgb(82,141,216);
+}
+#header .icon-menu .icon path {
+    filter: invert(0%) brightness(0%);
+}
+#header #searchInput {
+    filter: invert(0%) brightness(0%);
+}
+#header #loginBtn,
+#header #logoutBtn {
+    color: #000;
 }

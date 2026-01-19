@@ -1,68 +1,71 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const paymentButton = document.getElementById('paymentButton');
-    const requestSelect = document.getElementById('please');
-    const isCartOrderInput = document.getElementById('isCartOrder');
+document.addEventListener("DOMContentLoaded", function() {
+    const dialog = document.getElementById("dialog");
+    const modal = dialog.querySelector(".modal");
+    const closeBtn = dialog.querySelector(".close");
+    const btnSearchAddress = document.getElementById("btn-search-address");
+    const addressInput = document.getElementById("address_input");
+    const addressDetailInput = document.getElementById("address_detail_input");
 
-    if (paymentButton) {
-        paymentButton.addEventListener('click', () => {
-            const request = requestSelect.value;
-            const isCartOrder = isCartOrderInput.value === 'true';
-            
-            let url = '';
-            let data = {};
-
-            if (isCartOrder) {
-                // 장바구니 주문
-                const productElements = document.querySelectorAll('.product');
-                const cartIds = [];
-                productElements.forEach(el => {
-                    const cartId = el.dataset.cartId;
-                    if (cartId) cartIds.push(cartId);
-                });
-                
-                url = '/cart/order';
-                data = { cartIds: cartIds }; // request는 현재 CartOrderDto에 없으므로 추가 필요할 수 있음
-            } else {
-                // 단일 상품 주문
-                const productElement = document.querySelector('.product');
-                const itemId = productElement.dataset.itemId;
-                const size = productElement.dataset.size;
-                
-                url = '/pay';
-                data = {
-                    itemId: itemId,
-                    size: size,
-                    request: request
-                };
-            }
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', url);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.result === 'SUCCESS') {
-                            openModal("성공", `<p>결제가 완료되었습니다.</p>`, {
-                                confirmText: '확인',
-                                onConfirm: () => {
-                                    location.href = '/my'; // 마이페이지로 이동
-                                }
-                            });
-                        } else {
-                            openModal("오류", `<p>${response.message || '결제에 실패했습니다.'}</p>`, {
-                                confirmText: '확인'
-                            });
-                        }
-                    } else {
-                        openModal("오류", `<p>서버 통신 중 오류가 발생했습니다.</p>`, {
-                            confirmText: '확인'
-                        });
-                    }
+    function loadAddress() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                let addr = '';
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
                 }
-            };
-            xhr.send(JSON.stringify(data));
+                addressInput.value = addr;
+                addressDetailInput.focus();
+                dialog.style.display = 'none';
+            },
+            width : '100%',
+            height : '100%'
+        }).embed(modal);
+        dialog.style.display = 'block';
+    }
+
+    if (btnSearchAddress) {
+        btnSearchAddress.addEventListener("click", loadAddress);
+    }
+    
+    if (addressInput) {
+        addressInput.addEventListener("click", loadAddress);
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            dialog.style.display = 'none';
+        });
+    }
+
+    // 배송 요청사항 직접 입력 처리
+    const selectRequest = document.querySelector(".select-request");
+    const inputRequest = document.querySelector(".input-request");
+
+    if (selectRequest && inputRequest) {
+        selectRequest.addEventListener("change", function() {
+            if (this.value === "direct") {
+                inputRequest.style.display = "block";
+                inputRequest.focus();
+            } else {
+                inputRequest.style.display = "none";
+                inputRequest.value = "";
+            }
+        });
+    }
+
+    // 결제 동의 체크박스 처리
+    const agreeCheckbox = document.getElementById("agreeAll");
+    const paymentButton = document.getElementById("paymentButton");
+
+    if (agreeCheckbox && paymentButton) {
+        // 초기 상태 설정
+        paymentButton.disabled = !agreeCheckbox.checked;
+
+        agreeCheckbox.addEventListener("change", function() {
+            paymentButton.disabled = !this.checked;
         });
     }
 });

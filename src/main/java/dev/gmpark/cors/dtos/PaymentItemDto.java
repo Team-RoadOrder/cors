@@ -14,4 +14,15 @@ public class PaymentItemDto {
     private Long price;
     private String imagePath;
     private Long cartId; // 장바구니에서 왔을 경우 사용
+    private int shopId;
+    private String shopName;
+    private String shopProfileImage;
+
+    public String getShopProfileImage() {
+        return shopProfileImage;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
 }

@@ -5,145 +5,221 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>결제 페이지</title>
   <link rel="stylesheet" href="/assets/styles/common.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles/payment/pay.css">
   <link rel="stylesheet" href="/assets/styles/payment/common.css">
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script defer src="/assets/scripts/common.js"></script>
   <script defer src="/assets/scripts/payment/payment.js"></script>
 </head>
 <body>
+<th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
+
+<div id="dialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+    <a class="close" href="#" style="position: absolute; top: 20px; right: 20px; z-index: 10000;">
+        <img alt="X" class="image" src="/assets/images/register/close.png" style="width: 30px; height: 30px;">
+    </a>
+    <div class="modal" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32rem; height: 32.375rem; background: #fff;"></div>
+</div>
 
 <div class="container">
+  <div class="checkout-layout">
 
-  <div class="section">
-    <h2>배송 주소 <button type="button" class="addressButton">주소 변경</button></h2>
+    <!-- 왼쪽 섹션 -->
+    <div class="left-section">
 
-    <div class="address">
-      <div class="To">
-        <span>받는 분</span>
-        <p class="name" th:text="${user.name}">홍길동</p>
-      </div>
-      <div class="phone">
-        <span>연락처</span>
-        <p class="phoneNumber" th:text="${user.phone}">010-1234-5678</p>
-      </div>
-      <div class="adr">
-        <span>주소</span>
-        <p class="myAddress" th:text="${user.address} + ' ' + ${user.addressDetail}">[12345]대구광역시 중구 ...</p>
-      </div>
-      <label for="please">
-      <select class="please" name="please" id="please">
-        <option value="please">요청사항 없음</option>
-        <option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
-        <option value="경비실에 맡겨 주세요">경비실에 맡겨 주세요</option>
-        <option value="파손 위험 상품입니다. 배송시 주의해주세요">파손 위험 상품입니다. 배송시 주의해주세요</option>
-        <option value="direct">직접입력</option>
-      </select>
-          <img src="/assets/images/payment/arrow.png" alt="화살표" class="arrowImg">
-      </label>
-    </div>
-
-
-  <div class="section">
-    <h2 th:text="'주문 상품 및 쿠폰 총 ' + ${#lists.size(items)} + '건'">주문 상품 및 쿠폰 <span>총 1건</span></h2>
-
-    <!-- 스크롤 영역으로 감싸기 -->
-    <div class="products-wrapper">
-      <div class="product" th:each="item : ${items}"
-           th:data-item-id="${item.itemId}"
-           th:data-size="${item.size}"
-           th:data-cart-id="${item.cartId}">
-        <img class="productImage" th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" alt="상품 이미지">
-        <img class="productImage" th:if="${item.imagePath == null}" src="/assets/images/default.png" alt="기본 이미지">
-        <div class="info">
-          <p class="title" th:text="${item.itemName}">New Balance 509 Black Gray</p>
-          <p class="desc">
-              <span th:text="${item.color}">뉴발란스 509 블랙 그레이</span><br>
-              <span th:text="${item.size}">255</span> / 수량: <span th:text="${item.quantity}">1</span>
-          </p>
+      <!-- 1. 주문 고객 -->
+      <section class="checkout-box">
+        <h3>주문 고객</h3>
+        <div class="box-content">
+          <div class="row">
+            <span class="label">이름</span>
+            <input type="text" class="input-field" placeholder="이름을 입력하세요">
+          </div>
+          <div class="row">
+            <span class="label">연락처</span>
+            <div class="phone-group">
+              <input type="text" class="input-field phone-part" maxlength="3">
+              <span class="dash">-</span>
+              <input type="text" class="input-field phone-part" maxlength="4">
+              <span class="dash">-</span>
+              <input type="text" class="input-field phone-part" maxlength="4">
+            </div>
+          </div>
+          <div class="row">
+            <span class="label">이메일</span>
+            <input type="email" class="input-field" placeholder="이메일을 입력하세요">
+          </div>
         </div>
-        <div class="price" th:text="${item.price * item.quantity} + '원'">163,000원</div>
+      </section>
+
+      <!-- 2. 배송지 정보 -->
+      <section class="checkout-box">
+        <div class="box-header">
+          <h3>배송지 정보</h3>
+          <button type="button" class="btn-change-address" id="btn-search-address">주소 찾기</button>
+        </div>
+        <div class="box-content">
+          <div class="row">
+            <span class="label">받는 분</span>
+            <input type="text" class="input-field" placeholder="받는 분 성함">
+          </div>
+          <div class="row">
+            <span class="label">연락처</span>
+            <div class="phone-group">
+              <input type="text" class="input-field phone-part" maxlength="3">
+              <span class="dash">-</span>
+              <input type="text" class="input-field phone-part" maxlength="4">
+              <span class="dash">-</span>
+              <input type="text" class="input-field phone-part" maxlength="4">
+            </div>
+          </div>
+          <div class="row" style="align-items: flex-start;">
+            <span class="label" style="margin-top: 10px;">주소</span>
+            <div class="address-group">
+              <input type="text" class="input-field" id="address_input" placeholder="기본 주소" readonly style="cursor: pointer;">
+              <input type="text" class="input-field" id="address_detail_input" placeholder="상세 주소를 입력하세요">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. 배송 요청사항 -->
+      <section class="checkout-box">
+        <h3>배송 요청사항</h3>
+        <div class="box-content">
+          <select class="select-request" name="request">
+            <option value="please">배송 시 요청사항을 선택해주세요</option>
+            <option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+            <option value="경비실에 맡겨 주세요">경비실에 맡겨 주세요</option>
+            <option value="파손 위험 상품입니다. 배송시 주의해주세요">파손 위험 상품입니다. 배송시 주의해주세요</option>
+            <option value="direct">직접 입력</option>
+          </select>
+          <input type="text" class="input-request" placeholder="요청사항을 입력해주세요" style="display: none; margin-top: 10px; width: 100%;">
+        </div>
+      </section>
+
+      <!-- 4. 쿠폰 / 포인트 -->
+      <section class="checkout-box">
+        <h3>쿠폰 / 포인트</h3>
+        <div class="box-content">
+          <div class="coupon-area">
+            <h4 style="font-size: 14px; margin-bottom: 8px; color: #555;">쿠폰</h4>
+            <div class="input-group">
+              <input type="text" placeholder="쿠폰 번호 입력" disabled>
+              <button type="button" disabled>적용</button>
+            </div>
+            <p class="info-text">사용 가능한 쿠폰이 없습니다.</p>
+          </div>
+          <div class="point-area" style="margin-top: 20px;">
+            <h4 style="font-size: 14px; margin-bottom: 8px; color: #555;">포인트</h4>
+            <div class="input-group">
+              <input type="number" placeholder="0">
+              <button type="button">전액 사용</button>
+            </div>
+            <p class="info-text">보유 포인트: <strong>5,020P</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. 결제 수단 -->
+      <section class="checkout-box">
+        <h3>결제 수단</h3>
+        <div class="box-content">
+          <div class="payment-methods">
+            <label class="method-item">
+              <input type="radio" name="paymentMethod" value="account" checked>
+              <span>계좌 간편결제</span>
+            </label>
+            <label class="method-item">
+              <input type="radio" name="paymentMethod" value="card">
+              <span>카드 간편결제</span>
+            </label>
+            <label class="method-item">
+              <input type="radio" name="paymentMethod" value="general">
+              <span>일반 결제</span>
+            </label>
+          </div>
+
+          <!-- 계좌 결제 선택 시 상세 옵션 -->
+          <div class="payment-detail account-detail">
+            <select>
+              <option>국민은행 ****45</option>
+              <option>신한은행 ****12</option>
+            </select>
+            <p class="benefit-text">계좌 결제 시 1% 적립 혜택!</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 오른쪽 섹션 -->
+    <div class="right-section">
+      <div class="sticky-summary">
+
+        <!-- 주문 정보 (상품 목록) -->
+        <section class="summary-box">
+          <h3>주문 정보</h3>
+          <div class="order-items-list">
+            <div class="order-item" th:each="item : ${items}">
+              <div class="item-main">
+                  <div class="item-image">
+                      <img th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" alt="상품 이미지">
+                  </div>
+                  <div class="item-detail">
+                    <p class="item-name" th:text="${item.itemName}">상품명</p>
+                    <p class="item-option" th:text="${item.color} + ' / ' + ${item.size}">옵션</p>
+                    <div class="item-price-qty">
+                      <span th:text="${item.quantity} + '개'">1개</span>
+                      <span class="price" th:text="${item.price * item.quantity} + '원'">10,000원</span>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 최종 결제 금액 -->
+        <section class="summary-box price-summary">
+          <h3>최종 결제 금액</h3>
+          <div class="price-row">
+            <span>상품 금액</span>
+            <span th:text="${totalProductPrice} + '원'">10,000원</span>
+          </div>
+          <div class="price-row">
+            <span>배송비</span>
+            <span th:text="${deliveryFee} + '원'">3,000원</span>
+          </div>
+          <div class="price-row">
+            <span>할인/포인트</span>
+            <span>- 0원</span>
+          </div>
+          <div class="price-row total">
+            <span>총 결제 금액</span>
+            <span class="total-price" th:text="${totalPrice} + '원'">13,000원</span>
+          </div>
+        </section>
+
+        <!-- 결제 확인 및 동의 -->
+        <section class="summary-box agreement-box">
+          <label class="check-label">
+            <input type="checkbox" id="agreeAll">
+            <span>주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</span>
+          </label>
+        </section>
+
+        <!-- 결제 버튼 -->
+        <button type="button" class="btn-payment" id="paymentButton">
+          <span th:text="${totalPrice} + '원 결제하기'">13,000원 결제하기</span>
+        </button>
+
       </div>
     </div>
 
-    <div class="delivery">
-      <h3>배송방법</h3>
-      <label><input type="radio" name="delivery" checked> 빠른배송 (내일 도착 예정)</label><br>
-      <label><input type="radio" name="delivery"> 창고보관 (배송 예약)</label>
-    </div>
-
-    <div class="coupon">
-      <h3>할인쿠폰</h3>
-      <button disabled>사용 가능한 쿠폰이 없습니다</button>
-    </div>
-
-    <div class="total">
-      <p>결제금액</p>
-      <span th:text="${totalProductPrice} + '원'">171,200원</span>
-    </div>
-  </div>
-
-
-  <div class="section">
-    <h2>포인트</h2>
-    <div class="points-box">
-      <input type="number" placeholder="0">
-      <button class="use-btn">최대 사용</button>
-    </div>
-    <p class="points-info">보유 포인트: <strong>5,020P</strong></p>
-  </div>
-
-
-  <div class="section">
-    <h2>결제 방법</h2>
-
-    <div class="payment-option">
-      <label><input type="radio" name="pay" checked> 계좌 간편결제 <span class="label-purple">1% 적립</span></label>
-      <div class="account-box">
-        <select>
-          <option>국민은행 ****45</option>
-        </select>
-        <span class="benefit">1,720P 적립</span>
-      </div>
-    </div>
-
-    <div class="payment-option">
-      <label><input type="radio" name="pay"> 카드 간편결제</label>
-    </div>
-
-    <div class="payment-option">
-      <label><input type="radio" name="pay"> 일반 결제</label>
-    </div>
-
-    <p class="notice">
-      계좌 간편결제는 계좌 등록 후 결제 가능하며, 납부 방식에 따라 일부 결제 수수료가 발생할 수 있습니다.
-    </p>
-
-    <div class="method-list">
-      <h4>결제 혜택</h4>
-      <ul>
-        <li>체크카드: 특정 카드 포인트 적립</li>
-        <li>네이버페이: 최대 2% 적립</li>
-        <li>토스페이: 결제 시 랜덤 혜택</li>
-        <li>삼성페이: 멤버십 포인트 적립</li>
-        <li>카카오페이: 청구할인</li>
-      </ul>
-    </div>
-  </div>
-
-
-  <div class="section summary">
-    <h2>최종 주문정보</h2>
-    <table>
-      <tr><td>구매가</td><td th:text="${totalProductPrice} + '원'">163,000원</td></tr>
-      <tr><td>배송비</td><td th:text="${deliveryFee} + '원'">3,200원</td></tr>
-      <tr><td>포인트 사용</td><td>0원</td></tr>
-      <tr class="total-row"><td>총 결제금액</td><td th:text="${totalPrice} + '원'">171,200원</td></tr>
-    </table>
   </div>
 
   <input type="hidden" id="isCartOrder" th:value="${isCartOrder}">
-  <button type="button" class="submit-btn" id="paymentButton">결제하기</button>
-
 </div>
 
 </body>

@@ -167,3 +167,26 @@
   color: #fff;
   border-color: #000;
 }
+
+#header {
+    background-color: rgb(216, 232, 243);
+}
+#header .nav a {
+    color: #000;
+}
+#header #logo {
+    filter: invert(0%) brightness(0%);
+}
+#header .nav .selected a {
+    color: rgb(82,141,216);
+}
+#header .icon-menu .icon path {
+    filter: invert(0%) brightness(0%);
+}
+#header #searchInput {
+    filter: invert(0%) brightness(0%);
+}
+#header #loginBtn,
+#header #logoutBtn {
+    color: #000;
+}
