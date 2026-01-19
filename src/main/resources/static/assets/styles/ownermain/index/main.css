@@ -9,16 +9,21 @@
 }
 
 .sections {
-    flex-grow: 1;
+    padding: 2rem 10rem 3rem 10rem;
+    min-height: calc(100vh - 4.375rem);
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    box-sizing: border-box;
+    align-items: flex-start;
 }
+
+
 #items {
     display: grid;
     grid-template-columns: 1fr 1fr;
     flex-grow: 1;
-    width: 65rem;
+    width: 70rem;
     height: 40rem;
     gap: 1rem;
     margin-top: 2rem;
