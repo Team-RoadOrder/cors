@@ -25,6 +25,30 @@ html, body {
     align-items: center;
     background-color: white;
     z-index: 1;
+    color: #fefefe;
+}
+.welcome-section video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    object-position: center 30%;
+    z-index: -1;
+    transition: all 0.5s ease;
+}
+
+@media (min-width: 75rem) {
+    .welcome-section video {
+        filter: grayscale(10%);
+
+    }
+}
+@media (min-width: 50rem) {
+    .welcome-section video {
+        filter: grayscale(10%);
+    }
 }
 .login-layout-container {
     position: fixed;

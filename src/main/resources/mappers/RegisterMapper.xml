@@ -47,6 +47,11 @@
             `level` = #{member.level}
         WHERE `email` = #{member.email}
     </update>
+    <update id="updatePassword">
+        UPDATE `cors`.`users`
+        SET `password` = #{password}
+        WHERE `email` = #{email}
+    </update>
     <delete id="delete">
         DELETE FROM `cors`.`users`
         WHERE `email` = #{user.email}

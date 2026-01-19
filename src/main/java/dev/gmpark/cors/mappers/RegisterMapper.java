@@ -16,6 +16,8 @@ public interface RegisterMapper {
 
     int update(@Param(value = "user") RegisterEntity user);
 
+    int updatePassword( @Param("email") String email, @Param("password") String password );
+
     int delete(@Param(value = "user") RegisterEntity user);
 
     int insertMember(RegisterEntity member);
