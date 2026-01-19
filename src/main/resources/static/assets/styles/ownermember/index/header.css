@@ -41,7 +41,7 @@
 #owner-header > .tools > .notice::after {
     content: '';
     display: block;
-    background-image: url("../../images/icon2.png");
+    background-image: url("/assets/images/ownermain/icon2.png");
     position: absolute;
     width: 1.2rem;
     height: 1.2rem;

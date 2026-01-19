@@ -1,13 +1,16 @@
 
 // 헤더 스크롤 했을때 색바꾸기
-document.addEventListener('scroll', function() {
-    const header = document.getElementById('header');
-    if (window.scrollY > 0) {
-        header.classList.add('scroll-active');
-    } else {
-        header.classList.remove('scroll-active');
-    }
-});
+const header = document.getElementById('header');
+
+if (header) {
+    document.addEventListener('scroll', function() {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll-active');
+        } else {
+            header.classList.remove('scroll-active');
+        }
+    });
+}
 // 검색창에 있는 헤더를 위한
 const searchIcon = document.querySelector('.glass');
 const searchInput = document.getElementById('searchInput');
