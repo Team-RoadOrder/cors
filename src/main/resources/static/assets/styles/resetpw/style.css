@@ -70,6 +70,22 @@ body{
     transition-delay: 75ms;
     transition-property: background-color, color;
 }
+.int-area input:focus + label,
+.int-area input:valid + label,
+.int-area input:read-only + label{
+    top: 0;
+    font-size: 0.9rem;
+    color: #8c8c8c;
+}
+/* #code 아이디를 가진 input이 disabled 상태일 때 라벨 색상 변경 */
+.int-area input#code:disabled + label {
+    color: #8f8f8f !important; /* 기본 라벨 색상인 진한 회색으로 변경 */
+    /* 만약 약간 흐린 회색을 원하시면 color: #8c8c8c !important; 를 사용하세요 */
+}
+.int-area input#code2:disabled + label {
+    color: #8f8f8f !important; /* 기본 라벨 색상인 진한 회색으로 변경 */
+    /* 만약 약간 흐린 회색을 원하시면 color: #8c8c8c !important; 를 사용하세요 */
+}
 
 .int-area input {
     width: 100%;
