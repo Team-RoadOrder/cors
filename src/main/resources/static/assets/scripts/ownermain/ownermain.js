@@ -21,7 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (alertType === 'noshop') {
             openModal("WARN",
                 `<p style="text-align:center; font-weight:bold;">매장 정보가 등록되지 않았습니다.</p>
-                 <p style="text-align:center;">상품을 등록하려면 먼저<br>[매장정보수정]을 완료해주세요.</p>`,
+                 <p style="text-align:center;"><span style="color: red">상품등록</span> 을 하려면 먼저<br>[매장정보수정]을 완료해주세요.</p>`,
+                {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        const infoBtn = document.getElementById('infoUpdateBtn');
+                        const shopInfoSection = document.getElementById('shop-info');
+
+                        // 버튼 클릭 트리거
+                        if(infoBtn) infoBtn.click();
+
+                        // 스크롤 이동
+                        if(shopInfoSection) {
+                            shopInfoSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                }
+            );
+        }
+        if (alertType === 'nograph') {
+            openModal("WARN",
+                `<p style="text-align:center; font-weight:bold;">매장 정보가 등록되지 않았습니다.</p>
+                 <p style="text-align:center;"><span style="color: blue">매출흐름</span>을 확인하려면 <br>[매장정보수정]을 완료해주세요.</p>`,
                 {
                     confirmText: '확인',
                     onConfirm: () => {

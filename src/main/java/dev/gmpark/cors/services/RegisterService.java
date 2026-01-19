@@ -12,9 +12,11 @@ import dev.gmpark.cors.results.register.VerifyEmailResult;
 import dev.gmpark.cors.validators.EmailTokenValidator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +27,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 @Service
 public class RegisterService {
@@ -32,6 +35,12 @@ public class RegisterService {
     private final JavaMailSender mailSender;    // 메일 발송을 위한 의존성
     private final SpringTemplateEngine templateEngine; //HTML 파일을 템플릿 엔진으로 해석해서 문자열로 반환받기 위한 의존성
     private final EmailTokenMapper emailTokenMapper;
+    @Value("${custom.property.kakao-client-id}")
+    private String kakaoClientId;
+    @Value("${custom.property.naver-client-id}")
+    private String naverClientId;
+    @Value("${custom.property.naver-client-secret}")
+    private String naverClientSecret;
     @Autowired
     public RegisterService(RegisterMapper registerMapper, JavaMailSender mailSender, SpringTemplateEngine templateEngine, EmailTokenMapper emailTokenMapper) {
         this.registerMapper = registerMapper;
@@ -39,16 +48,28 @@ public class RegisterService {
         this.templateEngine = templateEngine;
         this.emailTokenMapper = emailTokenMapper;
     }
+
      @Transactional
      public RegisterResult register(RegisterEntity register, EmailTokenEntity emailToken) {
+         boolean isSocialRegister = register.getSocialTypeCode() != null && register.getSocialId() != null;
          if (register == null || register.getName() == null || register.getName().isEmpty()
                  || register.getEmail() == null || register.getEmail().isEmpty()
-                 || register.getPassword() == null || register.getPassword().isEmpty()
+                 // || register.getPassword() == null ... (비밀번호 검사는 아래에서 별도로 함)
                  || register.getUsertype() == null || register.getUsertype().isEmpty()
                  || register.getPhone() == null || register.getPhone().isEmpty()
                  || register.getAddress() == null || register.getAddress().isEmpty()
                  || register.getAddressDetail() == null || register.getAddressDetail().isEmpty()) {
              return RegisterResult.FAILURE;
+         }
+         if (isSocialRegister) {
+             // 소셜 가입이면: 비밀번호를 입력받지 않았으므로 랜덤한 값으로 설정 (DB NOT NULL 제약 조건 해결)
+             // 사용자는 이 비밀번호를 모르므로 이메일 로그인 시도는 실패하게 됨 (보안상 안전)
+             register.setPassword(UUID.randomUUID().toString());
+         } else {
+             // 일반 가입이면: 비밀번호 필수 체크
+             if (register.getPassword() == null || register.getPassword().isEmpty()) {
+                 return RegisterResult.FAILURE;
+             }
          }
          if( emailToken == null ||
                  !EmailTokenValidator.validateEmail(emailToken.getEmail()) ||

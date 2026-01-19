@@ -40,7 +40,7 @@ public class OwnerGraphController {
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
         if (shopInfo == null) {
             // 샵 정보가 없으면 적절한 처리 (예: 등록 페이지로 리다이렉트)
-            modelAndView.setViewName("redirect:/owner/shop"); // 예시
+            modelAndView.setViewName("redirect:/owner?alert=nograph");
             return modelAndView;
         }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1">
@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/register/index.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script defer src="/assets/scripts/common.js"></script>
     <script defer src="/assets/scripts/register/address.js"></script>
     <script defer src="/assets/scripts/register/register.js"></script>
-    <script defer src="/assets/scripts/common.js"></script>
+
     <link href="/assets/images/login/favicon.png" rel="icon"  ></head>
 <body>
+
 <div id="dialog">
     <a class="close" href="#">
         <img alt="X" class="image" src="/assets/images/register/close.png">
@@ -28,8 +30,10 @@
         <input type="radio" id="owner" name="usertype" value="owner" >
         <label for="owner" class="tab">OWNER</label>
     </div>
-
+    <input type="hidden" id="globalSocialId" th:value="${socialId}">
+    <input type="hidden" id="globalSocialTypeCode" th:value="${socialTypeCode}">
     <form novalidate id="customerForm" class="signup-form" autocomplete="off">
+
         <div class="int-area">
             <input type="email" id="email" name="email" required placeholder="" minlength="5" maxlength="50">
             <label for="email">이메일</label>
@@ -66,9 +70,17 @@
             <input required autocomplete="off" class="contact-third" maxlength="4" minlength="4" name="contactThird" placeholder="0000" spellcheck="false" type="text">
         </div>-->
 
-        <div class="int-area">
+        <!--<div class="int-area">
             <input type="tel" id="phone" name="phone" maxlength="11" minlength="11" required placeholder="">
             <label for="phone">전화 번호</label>
+        </div>-->
+        <label class="group-label">전화 번호</label>
+        <div class="phone-input">
+            <input type="text" id="custPhone1" name="phone1" maxlength="3" class="phone-part" required>
+            <span class="dash">-</span>
+            <input type="text" id="custPhone2" name="phone2" maxlength="4" class="phone-part" required>
+            <span class="dash">-</span>
+            <input type="text" id="custPhone3" name="phone3" maxlength="4" class="phone-part" required>
         </div>
         <div class="style-hashtag-area">
             <label>스타일(선호)</label>
@@ -148,9 +160,13 @@
             <label for="confirm2">비밀번호 확인</label>
         </div>
 
-        <div class="int-area">
-            <input type="tel" id="phone2" name="phone" maxlength="11" minlength="11" required placeholder="">
-            <label for="phone2">전화 번호</label>
+        <label class="group-label">전화 번호</label>
+        <div class="phone-input">
+            <input type="text" id="ownerPhone1" name="phone1" maxlength="3" class="phone-part" required>
+            <span class="dash">-</span>
+            <input type="text" id="ownerPhone2" name="phone2" maxlength="4" class="phone-part" required>
+            <span class="dash">-</span>
+            <input type="text" id="ownerPhone3" name="phone3" maxlength="4" class="phone-part" required>
         </div>
         <div class="int-area">
             <input type="text" id="address_owner" name="address" required placeholder="">

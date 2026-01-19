@@ -32,6 +32,7 @@
                                       @RequestParam(value = "level", required = false) Integer level,
                                       @RequestParam(value = "keyword", required = false) String keyword,
                                       ModelAndView modelAndView) {
+
             if( sessionUser == null) {
               return new ModelAndView("redirect:/login");
             }

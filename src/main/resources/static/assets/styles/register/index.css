@@ -505,3 +505,37 @@ body {
 .style-hashtag-area > label.active {
     color: #000000;
 }
+
+.phone-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+    width: 100%;
+}
+
+.phone-input .phone-part {
+    width: 30%; /* 3등분 */
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #fff;
+    color: #4d4d4d;
+    font-size: 1.2rem;
+    padding: 10px 0;
+    text-align: center;
+    outline: none;
+    font-family: "Gowun Dodum", sans-serif;
+    border-radius: 0;
+}
+
+.phone-input .phone-part:focus {
+    border-bottom: 2px solid var(--basis-font-color);
+    color: var(--basis-font-color);
+}
+
+/* 하이픈(-) 스타일 */
+.phone-input .dash {
+    color: #939393;
+    font-weight: bold;
+}

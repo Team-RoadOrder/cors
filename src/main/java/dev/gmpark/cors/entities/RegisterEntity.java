@@ -27,6 +27,8 @@ public class RegisterEntity {
     private String ownerEmail;   //새로생김
     private LocalDateTime lastLogOutAt; //새로생김
     private LocalDateTime createdAt;
+    private String socialTypeCode;
+    private String socialId;
 }
 /*
 create table `cors`.`users`
@@ -47,7 +49,14 @@ level          int  default(3) null,
 owner_email        varchar(40)  null,
 last_logout_at  datetime  null,
 `created_at` DATETIME DEFAULT NOW() COMMENT '계정 생성일(입사일)';
+`social_type_code` VARCHAR(10)  NULL     DEFAULT NULL,
+`social_id`        VARCHAR(50)  NULL     DEFAULT NULL,
+CONSTRAINT FOREIGN KEY (`social_type_code`) REFERENCES `cors`.`social_types` (`code`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+CONSTRAINT UNIQUE (`social_type_code`, `social_id`)
         );
+
 CREATE SCHEMA `cors`;
 create table `cors`.`email_tokens`
         (

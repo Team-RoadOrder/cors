@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
+import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping(value = "/")
@@ -26,9 +27,16 @@ public class RegisterController  extends AbstractGeneralController {
         this.registerService = registerService;
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET, produces =
-            MediaType.APPLICATION_JSON_VALUE)
-    public String getRegister() {
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String getRegister(Model model,
+                              @RequestParam(value = "socialId", required = false) String socialId,
+                              @RequestParam(value = "socialTypeCode", required = false) String socialTypeCode) {
+
+        if (socialId != null && socialTypeCode != null) {
+            model.addAttribute("socialId", socialId);
+            model.addAttribute("socialTypeCode", socialTypeCode);
+        }
+
         return "register/register";
     }
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces =
@@ -41,13 +49,7 @@ public class RegisterController  extends AbstractGeneralController {
         } catch (TransactionalException e) {
             result = e.result;
         }
-/*
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("result", result.name());
-        return responseBody;*/
         return prepareJsonResponse(result);
-
-
     }
     @RequestMapping(value = "/register/email" , method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

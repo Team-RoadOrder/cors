@@ -27,9 +27,48 @@ const $ownerCodeInput = ownerForm.querySelector('input[name="code"]');
 const $ownerSaltInput = ownerForm.querySelector('input[name="salt"]');
 /** @type {HTMLButtonElement} */
 const $ownerVerifyButton = ownerForm.querySelector('button[name="verifyButton"]');
+/** @type {HTMLInputElement} */
+const $globalSocialId = document.getElementById('globalSocialId');
+/** @type {HTMLInputElement} */
+const $globalSocialTypeCode = document.getElementById('globalSocialTypeCode');
+
+const socialIdVal = $globalSocialId ? $globalSocialId.value : '';
+const socialTypeVal = $globalSocialTypeCode ? $globalSocialTypeCode.value : '';
+const isSocialRegister = socialIdVal !== '' && socialTypeVal !== '';
+
+if (isSocialRegister) {
+    openModal("SNS-REGISTER", "<p>소셜계정으로 회원가입이 진행됩니다.</p>", { confirmText: '확인',onConfirm: () => {} });
+    const $custPw = customerForm.querySelector('input[name="password"]');
+    const $custConfirm = customerForm.querySelector('input[name="confirm"]');
+    if ($custPw) $custPw.closest('.int-area').style.display = 'none';
+    if ($custConfirm) $custConfirm.closest('.int-area').style.display = 'none';
+
+    // 4. 비밀번호 입력창 숨기기 (Owner)
+    const $ownerPw = ownerForm.querySelector('input[name="password"]');
+    const $ownerConfirm = ownerForm.querySelector('input[name="confirm"]');
+    if ($ownerPw) $ownerPw.closest('.int-area').style.display = 'none';
+    if ($ownerConfirm) $ownerConfirm.closest('.int-area').style.display = 'none';
+}
 
 
-let isEmailVerified = false;
+const autoTabIds = [
+    { curr: 'custPhone1', next: 'custPhone2', len: 3 },
+    { curr: 'custPhone2', next: 'custPhone3', len: 4 },
+    { curr: 'ownerPhone1', next: 'ownerPhone2', len: 3 },
+    { curr: 'ownerPhone2', next: 'ownerPhone3', len: 4 }
+];
+
+autoTabIds.forEach(obj => {
+    const currEl = document.getElementById(obj.curr);
+    const nextEl = document.getElementById(obj.next);
+    if(currEl && nextEl) {
+        currEl.addEventListener('keyup', function() {
+            if(this.value.length >= obj.len) {
+                nextEl.focus();
+            }
+        });
+    }
+});
 
 //해시태그
 const selectedStyles = new Set();
@@ -419,8 +458,19 @@ customerForm.addEventListener('submit',(e) => {
     const form = customerForm;
     const emailRegex = /^(?=.{8,50}$)([\da-zA-Z_.]{4,25})@([\da-z\-]+\.)?([\da-z\-]{2,})\.([a-z]{2,15}\.)?([a-z]{2,3})$/g;
     const nameRegex = /^[가-힣A-Za-z]{2,10}$/;
+    const p1 = customerForm.querySelector('[name="phone1"]').value;
+    const p2 = customerForm.querySelector('[name="phone2"]').value;
+    const p3 = customerForm.querySelector('[name="phone3"]').value;
+    const combinedPhone = p1 + p2 + p3;
+
     const phoneRegex = /^\d{11}$/;
     const passwordRegex = /^[\da-zA-Z`~!@#$%^&*()\-_=+\[{\]}\\|;:'",<.>\/?]{6,50}$/g;
+
+    const emailValue = customerForm['email'].value;
+    if (!emailValue) {
+        openModal("ValidationError", "<p>이메일을 입력해 주세요</p>", { confirmText: '확인',onConfirm: () => {} });
+        return;
+    }
 
     if (!isEmailVerified) {
         e.preventDefault();
@@ -439,25 +489,30 @@ customerForm.addEventListener('submit',(e) => {
         return;
     }
 
-    const password = form['password'].value;
-    if (!passwordRegex.test(password)) {
-        openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {} });
-        form['password'].focus();
-        return;
-    }
+    if (!isSocialRegister) {
+        const password = form['password'].value;
+        if (!passwordRegex.test(password)) {
+            openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {} });
+            form['password'].focus();
+            return;
+        }
 
-    if (password !== form['confirm'].value) {
-        openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {}});
-        form['confirm'].focus();
-        return;
+        if (password !== form['confirm'].value) {
+            openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {}});
+            form['confirm'].focus();
+            return;
+        }
     }
-
-    if (!phoneRegex.test(form['phone'].value)) {
+    if (!phoneRegex.test(combinedPhone)) {
         openModal("ValidationError", "<p>유효한 전화번호 11자리(숫자만)를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {}});
         form['phone'].focus();
         return;
     }
-
+    if (!form['style'].value.trim()) {
+        openModal("ValidationError", "<p>스타일을 입력해주세요. 선호하는 상품을 추천받지못할수도있습니다.</p>", { confirmText: '확인',onConfirm: () => {} });
+        form['address'].focus();
+        return;
+    }
     if (!form['address'].value.trim()) {
         openModal("ValidationError", "<p>주소를 입력해 주세요. '입력하기' 버튼을 눌러 검색할 수 있습니다.</p>", { confirmText: '확인',onConfirm: () => {} });
         form['address'].focus();
@@ -505,10 +560,14 @@ customerForm.addEventListener('submit',(e) => {
     formData.append('name', customerForm['name'].value);
     formData.append('password', customerForm['password'].value);
     formData.append('style', customerForm['style'].value);
-    formData.append('phone', customerForm['phone'].value);
+    formData.append('phone', combinedPhone);
     formData.append('address', customerForm['address'].value);
     formData.append('addressDetail', customerForm['addressDetail'].value);
     formData.append('gender', customerForm['gender'].value);
+    if (isSocialRegister) {
+        formData.append('socialId', socialIdVal);
+        formData.append('socialTypeCode', socialTypeVal);
+    }
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
 
@@ -544,6 +603,10 @@ ownerForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = ownerForm;
     const nameRegex = /^[가-힣A-Za-z]{2,10}$/;
+    const p1 = ownerForm.querySelector('[name="phone1"]').value;
+    const p2 = ownerForm.querySelector('[name="phone2"]').value;
+    const p3 = ownerForm.querySelector('[name="phone3"]').value;
+    const combinedPhone = p1 + p2 + p3;
     const phoneRegex = /^\d{11}$/;
     const passwordRegex = /^[\da-zA-Z`~!@#$%^&*()\-_=+\[{\]}\\|;:'",<.>\/?]{6,50}$/g;
     const storeNameRegex = /^[가-힣A-Za-z0-9]{2,20}$/;
@@ -568,22 +631,22 @@ ownerForm.addEventListener('submit', (e) => {
         return;
     }
 
-    const password = form['password'].value;
-    if (!passwordRegex.test(password)) {
-        openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {
-                form['password'].focus();
-            } });
-        return;
+    if (!isSocialRegister) {
+        const password = form['password'].value;
+        if (!passwordRegex.test(password)) {
+            openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {} });
+            form['password'].focus();
+            return;
+        }
+
+        if (password !== form['confirm'].value) {
+            openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {}});
+            form['confirm'].focus();
+            return;
+        }
     }
 
-    if (password !== form['confirm'].value) {
-        openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {
-                form['confirm'].focus();
-            }});
-        return;
-    }
-
-    if (!phoneRegex.test(form['phone'].value)) {
+    if (!phoneRegex.test(combinedPhone)) {
         openModal("ValidationError", "<p>유효한 전화번호 11자리(숫자만)를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {
                 form['phone'].focus();
             }});
@@ -649,9 +712,13 @@ ownerForm.addEventListener('submit', (e) => {
     formData.append('storeName', ownerForm['storeName'].value);
     formData.append('businessNum', ownerForm['businessNum'].value);
     formData.append('password', ownerForm['password'].value);
-    formData.append('phone', ownerForm['phone'].value);
+    formData.append('phone',combinedPhone);
     formData.append('address', ownerForm['address'].value);
     formData.append('addressDetail', ownerForm['addressDetail'].value);
+    if (isSocialRegister) {
+        formData.append('socialId', socialIdVal);
+        formData.append('socialTypeCode', socialTypeVal);
+    }
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
 

@@ -113,6 +113,9 @@ body{
     margin-top : 2.3rem;
     text-align: center;
 }
+.caption a:hover{
+    opacity: 0.7;
+}
 .caption a {
     font-size: 1rem;
     color: #4d4d4d;
@@ -126,4 +129,23 @@ body{
     gap: 0.5rem;
     position: absolute;
     right: 0.3rem;
+}
+.caption.sns > .sns{
+    transform: translateY(-1.4rem) translateX(-2.5rem);;
+    position: absolute;
+    font-size: 0.7rem;
+    width: 9rem;
+    color: #ffff;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-weight: 700;
+}
+.caption.sns > .text {
+   transform: translateY(2rem) translateX(0.1rem);;
+    position: absolute;
+    font-size: 0.5rem;
+}
+.caption.sns > .text.naver {
+    transform: translateY(2rem) translateX(2.9rem);
+    position: absolute;
+    font-size: 0.5rem;
 }

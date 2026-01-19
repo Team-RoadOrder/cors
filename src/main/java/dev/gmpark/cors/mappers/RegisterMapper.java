@@ -26,5 +26,6 @@ public interface RegisterMapper {
                                               @Param("level") Integer level,
                                               @Param("keyword") String keyword);
     void updateLastLogout(@Param("email") String email);
-
+    RegisterEntity selectUserBySocial(@Param("socialId") String socialId,
+                                      @Param("socialTypeCode") String socialTypeCode);
 }
