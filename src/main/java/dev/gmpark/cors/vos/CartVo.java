@@ -4,6 +4,8 @@ import dev.gmpark.cors.entities.CartEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @SuperBuilder
 @Getter
 @Setter
@@ -16,4 +18,5 @@ public class CartVo extends CartEntity {
     private String itemColor;
     private Long itemPrice;
     private String itemImage;
+    private List<String> availableSizes; // 사용 가능한 사이즈 목록
 }

@@ -247,7 +247,33 @@ if (buyButton) {
     buyButton.addEventListener('click', () => {
         if (currentSelectedSize) {
             const itemId = new URLSearchParams(window.location.search).get('id');
-            location.href = `/pay?itemId=${itemId}&size=${currentSelectedSize}`;
+            const formData = new FormData();
+            formData.append('itemId', itemId);
+            formData.append('size', currentSelectedSize);
+            formData.append('quantity', 1);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/cart');
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.result === 'SUCCESS') {
+                            // 장바구니 추가 성공 시 장바구니 페이지로 이동
+                            location.href = '/cart';
+                        } else {
+                            openModal("ERROR", `<p>${response.message || '구매 처리에 실패했습니다.'}</p>`, {
+                                confirmText: '확인'
+                            });
+                        }
+                    } else {
+                        openModal("ERROR", `<p>오류가 발생했습니다.</p>`, {
+                            confirmText: '확인'
+                        });
+                    }
+                }
+            };
+            xhr.send(formData);
         } else openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, { confirmText: '확인' });
     });
 }
@@ -317,7 +343,7 @@ const toggleLikeItem = (shopId, itemId) => {
         }
         const data = JSON.parse(xhr.responseText);
         if (data.result === "FAILURE_SESSION") {
-            openModal("로그인 필요", `<p>로그인이 필요합니다.</p>`, {
+            openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
                 confirmText: '확인',
                 onConfirm: () => location.href = '/login'
             });

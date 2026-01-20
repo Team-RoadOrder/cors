@@ -3,6 +3,8 @@ package dev.gmpark.cors.dtos;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class PaymentItemDto {
@@ -17,6 +19,7 @@ public class PaymentItemDto {
     private int shopId;
     private String shopName;
     private String shopProfileImage;
+    private List<String> availableSizes; // 사용 가능한 사이즈 목록
 
     public String getShopProfileImage() {
         return shopProfileImage;

@@ -53,4 +53,18 @@
     <select id="selectCartCount" resultType="int">
         SELECT COUNT(*) FROM `cors`.`carts` WHERE `user_email` = #{userEmail}
     </select>
+
+    <!-- 중복 확인용 -->
+    <select id="selectCartItem" resultType="dev.gmpark.cors.entities.CartEntity">
+        SELECT * FROM `cors`.`carts`
+        WHERE `user_email` = #{userEmail} AND `item_id` = #{itemId} AND `size` = #{size}
+        LIMIT 1
+    </select>
+
+    <!-- 수량 업데이트용 -->
+    <update id="updateCartQuantity">
+        UPDATE `cors`.`carts`
+        SET `quantity` = `quantity` + #{quantity}
+        WHERE `id` = #{id}
+    </update>
 </mapper>

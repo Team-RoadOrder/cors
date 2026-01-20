@@ -56,6 +56,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // 이메일 도메인 선택 처리
+    const emailSelect = document.getElementById("email_select");
+    const emailDomain = document.getElementById("email_domain");
+
+    if (emailSelect && emailDomain) {
+        emailSelect.addEventListener("change", function() {
+            if (this.value === "direct") {
+                emailDomain.readOnly = false;
+                emailDomain.value = "";
+                emailDomain.focus();
+            } else {
+                emailDomain.readOnly = true;
+                emailDomain.value = this.value;
+            }
+        });
+    }
+
     // 전화번호 자동 포커스 이동
     const phoneInputs = document.querySelectorAll('.phone-group input');
     phoneInputs.forEach((input, index) => {
@@ -67,6 +84,103 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+
+    // 구매자와 동일 버튼 처리
+    const btnSameAsOrderer = document.getElementById("btn-same-as-orderer");
+    if (btnSameAsOrderer) {
+        btnSameAsOrderer.addEventListener("click", function() {
+            // 주문자 정보 가져오기
+            const ordererName = document.getElementById("orderer_name").value;
+            const ordererPhone1 = document.getElementById("orderer_phone_1").value;
+            const ordererPhone2 = document.getElementById("orderer_phone_2").value;
+            const ordererPhone3 = document.getElementById("orderer_phone_3").value;
+
+            // 받는 분 정보에 넣기
+            document.getElementById("receiver_name").value = ordererName;
+            
+            const receiverPhoneInputs = document.querySelectorAll("#receiver_phone_group input");
+            if (receiverPhoneInputs.length === 3) {
+                receiverPhoneInputs[0].value = ordererPhone1;
+                receiverPhoneInputs[1].value = ordererPhone2;
+                receiverPhoneInputs[2].value = ordererPhone3;
+            }
+        });
+    }
+
+    // 수량 조절 및 가격 업데이트 로직
+    const orderItemsList = document.querySelector('.order-items-list');
+    if (orderItemsList) {
+        orderItemsList.addEventListener('click', function(e) {
+            // 수량 감소
+            if (e.target.classList.contains('btn-qty-minus')) {
+                const qtyInput = e.target.parentElement.querySelector('.item-qty-input');
+                let currentQty = parseInt(qtyInput.value);
+                if (currentQty > 1) {
+                    currentQty--;
+                    qtyInput.value = currentQty;
+                    updateItemPrice(e.target.closest('.item-detail'), currentQty);
+                    updateTotalPrice();
+                }
+            } 
+            // 수량 증가
+            else if (e.target.classList.contains('btn-qty-plus')) {
+                const qtyInput = e.target.parentElement.querySelector('.item-qty-input');
+                let currentQty = parseInt(qtyInput.value);
+                currentQty++;
+                qtyInput.value = currentQty;
+                updateItemPrice(e.target.closest('.item-detail'), currentQty);
+                updateTotalPrice();
+            }
+            // 아이템 추가 (+) 버튼
+            else if (e.target.classList.contains('btn-add-item')) {
+                const currentItem = e.target.closest('.order-item');
+                const newItem = currentItem.cloneNode(true);
+                
+                // 복제된 아이템 초기화
+                newItem.removeAttribute('data-cart-id'); // 장바구니 ID 제거
+                newItem.setAttribute('data-is-new', 'true'); // 새 아이템 표시
+                
+                // 수량 1로 초기화
+                const qtyInput = newItem.querySelector('.item-qty-input');
+                qtyInput.value = 1;
+                
+                // 가격 초기화
+                const priceElement = newItem.querySelector('.price');
+                const unitPrice = parseInt(priceElement.dataset.unitPrice);
+                priceElement.textContent = unitPrice.toLocaleString() + '원';
+                
+                // 리스트에 추가
+                orderItemsList.appendChild(newItem);
+                updateTotalPrice();
+            }
+        });
+    }
+
+    function updateItemPrice(itemDetail, qty) {
+        const priceElement = itemDetail.querySelector('.price');
+        const unitPrice = parseInt(priceElement.dataset.unitPrice);
+        priceElement.textContent = (unitPrice * qty).toLocaleString() + '원';
+    }
+
+    function updateTotalPrice() {
+        let totalProductPrice = 0;
+        const itemDetails = document.querySelectorAll('.item-detail');
+        
+        itemDetails.forEach(detail => {
+            const qty = parseInt(detail.querySelector('.item-qty-input').value);
+            const unitPrice = parseInt(detail.querySelector('.price').dataset.unitPrice);
+            totalProductPrice += (unitPrice * qty);
+        });
+
+        const deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
+        const totalPrice = totalProductPrice + deliveryFee;
+
+        document.getElementById('summary-product-price').textContent = totalProductPrice.toLocaleString() + '원';
+        document.getElementById('summary-delivery-fee').textContent = deliveryFee.toLocaleString() + '원';
+        document.getElementById('summary-total-price').textContent = totalPrice.toLocaleString() + '원';
+        document.getElementById('btn-payment-text').textContent = totalPrice.toLocaleString() + '원 결제하기';
+    }
+
 
     // 결제 동의 체크박스 처리
     const agreeCheckbox = document.getElementById("agreeAll");
@@ -118,9 +232,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 서버로 전송할 데이터 구성
             const urlParams = new URLSearchParams(window.location.search);
-            const itemId = urlParams.get('itemId');
-            const size = urlParams.get('size');
-            
+            let itemId = urlParams.get('itemId');
+            let size = urlParams.get('size');
+            let quantity = 1; // 기본값
+
             // 장바구니 ID 수집
             const cartIdInputs = document.querySelectorAll('.cart-id-hidden');
             let cartIds = [];
@@ -128,10 +243,52 @@ document.addEventListener("DOMContentLoaded", function() {
                 cartIds.push(parseInt(input.value));
             });
 
+            // 아이템 정보 수집
+            let cartQuantities = {};
+            let newItems = [];
+            const orderItems = document.querySelectorAll('.order-item');
+            
+            orderItems.forEach(item => {
+                const cartId = item.dataset.cartId;
+                const isNew = item.dataset.isNew === 'true';
+                const currentItemId = item.dataset.itemId || itemId; // data-item-id가 없으면 URL 파라미터 사용
+                const qtyInput = item.querySelector('.item-qty-input');
+                const sizeSelect = item.querySelector('.item-size-select');
+                
+                const currentQty = parseInt(qtyInput.value);
+                const currentSize = sizeSelect ? sizeSelect.value : size;
+
+                if (cartId && !isNew) {
+                    // 기존 장바구니 아이템
+                    cartQuantities[cartId] = currentQty;
+                } else if (isNew || (!cartId && currentItemId)) {
+                    // 새로 추가된 아이템 또는 단일 상품 주문
+                    // 단일 상품 주문의 경우 첫 번째 아이템도 여기 포함될 수 있음 (cartId가 없으므로)
+                    // 하지만 단일 상품 주문의 첫 번째 아이템은 위에서 itemId, size, quantity 변수로 처리됨.
+                    // 중복 처리를 방지하기 위해 로직 정리가 필요함.
+                    
+                    if (!cartId && !isNew && itemId) {
+                        // 단일 상품 주문의 원본 아이템 -> quantity 변수 업데이트
+                        quantity = currentQty;
+                        size = currentSize;
+                    } else {
+                        // 진짜로 추가된 아이템
+                        newItems.push({
+                            itemId: parseInt(currentItemId),
+                            size: currentSize,
+                            quantity: currentQty
+                        });
+                    }
+                }
+            });
+
             const orderData = {
                 itemId: itemId ? parseInt(itemId) : null,
                 size: size,
+                quantity: quantity,
                 cartIds: cartIds.length > 0 ? cartIds : null,
+                cartQuantities: Object.keys(cartQuantities).length > 0 ? cartQuantities : null,
+                newItems: newItems.length > 0 ? newItems : null,
                 request: request,
                 receiverName: receiverName,
                 receiverPhone: receiverPhone,

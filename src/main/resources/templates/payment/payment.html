@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>결제 페이지</title>
+  <title>주문 결제</title>
   <link rel="stylesheet" href="/assets/styles/common.css">
   <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/styles/payment/pay.css">
@@ -23,8 +23,18 @@
 </div>
 
 <!-- 결제 완료 화면 (초기에는 숨김) -->
-<div id="paymentCompleteModal" style="display: none; width: 100%; min-height: 60vh; justify-content: center; align-items: center;">
-    <div style="background: #fff; padding: 60px; border-radius: 12px; text-align: center; width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #eee;">
+<div id="paymentCompleteModal" style="display: none; width: 100%; min-height: 60vh; justify-content: center; align-items: center; flex-direction: column;">
+    <!-- 스텝 인디케이터 추가 (타이틀 제거) -->
+    <div class="page-header" style="margin-bottom: 40px; width: 1200px; margin: 0 auto 40px auto;">
+        <!-- 타이틀 제거됨 -->
+        <div class="steps">
+            <span class="step">1</span>
+            <span class="step">2</span>
+            <span class="step active">3</span>
+        </div>
+    </div>
+
+    <div style="padding: 60px; border-radius: 12px; text-align: center; width: 500px;">
         <h2 style="margin-bottom: 20px; font-size: 28px; color: #333; font-weight: bold;">결제 완료</h2>
         <p style="margin-bottom: 40px; color: #666; font-size: 18px;">주문이 성공적으로 완료되었습니다.</p>
         <button type="button" id="btnGoToOrders" style="background: #222; color: #fff; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; font-weight: bold; transition: background 0.3s;">
@@ -34,6 +44,15 @@
 </div>
 
 <div class="container" id="paymentContainer">
+  <div class="page-header">
+    <h1>주문 결제</h1>
+    <div class="steps">
+        <span class="step">1</span>
+        <span class="step active">2</span>
+        <span class="step">3</span>
+    </div>
+  </div>
+
   <div class="checkout-layout">
 
     <!-- 왼쪽 섹션 -->
@@ -45,24 +64,31 @@
         <div class="box-content">
           <div class="row">
             <span class="label">이름</span>
-            <input type="text" class="input-field" placeholder="이름을 입력하세요">
+            <input type="text" class="input-field" id="orderer_name" placeholder="이름을 입력하세요" th:value="${user != null ? user.name : ''}">
           </div>
           <div class="row">
             <span class="label">연락처</span>
-            <div class="phone-group">
-              <input type="text" class="input-field phone-part" maxlength="3">
+            <div class="phone-group" th:with="cleanPhone=${user != null && user.phone != null ? #strings.replace(user.phone, '-', '') : ''}">
+              <input type="text" class="input-field phone-part" id="orderer_phone_1" maxlength="3" th:value="${cleanPhone.length() >= 3 ? #strings.substring(cleanPhone, 0, 3) : cleanPhone}">
               <span class="dash">-</span>
-              <input type="text" class="input-field phone-part" maxlength="4">
+              <input type="text" class="input-field phone-part" id="orderer_phone_2" maxlength="4" th:value="${cleanPhone.length() >= 7 ? #strings.substring(cleanPhone, 3, 7) : ''}">
               <span class="dash">-</span>
-              <input type="text" class="input-field phone-part" maxlength="4">
+              <input type="text" class="input-field phone-part" id="orderer_phone_3" maxlength="4" th:value="${cleanPhone.length() > 7 ? #strings.substring(cleanPhone, 7) : ''}">
             </div>
           </div>
           <div class="row">
             <span class="label">이메일</span>
-            <div class="email-group">
-              <input type="text" class="input-field email-part" placeholder="이메일">
+            <div class="email-group" th:with="emailArr=${user != null && user.email != null ? #strings.arraySplit(user.email, '@') : null}">
+              <input type="text" class="input-field email-part" id="email_id" placeholder="이메일" th:value="${emailArr != null && emailArr.length > 0 ? emailArr[0] : ''}">
               <span class="at">@</span>
-              <input type="text" class="input-field email-part">
+              <input type="text" class="input-field email-part" id="email_domain" th:value="${emailArr != null && emailArr.length > 1 ? emailArr[1] : ''}">
+              <select class="input-field email-select" id="email_select" style="margin-left: 5px; width: 120px;">
+                  <option value="direct">직접 입력</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="hanmail.net">hanmail.net</option>
+              </select>
             </div>
           </div>
         </div>
@@ -72,6 +98,7 @@
       <section class="checkout-box">
         <div class="box-header">
           <h3>배송지 정보</h3>
+          <button type="button" class="btn-change-address" id="btn-same-as-orderer">구매자와 동일</button>
         </div>
         <div class="box-content">
           <div class="row">
@@ -183,19 +210,31 @@
         <section class="summary-box">
           <h3>주문 정보</h3>
           <div class="order-items-list">
-            <div class="order-item" th:each="item : ${items}">
+            <div class="order-item" th:each="item : ${items}" th:data-cart-id="${item.cartId}" th:data-item-id="${item.itemId}">
               <div class="item-main">
                   <div class="item-image">
                       <img th:if="${item.imagePath != null}" th:src="@{/images/{path}(path=${item.imagePath})}" alt="상품 이미지">
                   </div>
                   <div class="item-detail">
                     <p class="item-name" th:text="${item.itemName}">상품명</p>
-                    <p class="item-option" th:text="${item.color} + ' / ' + ${item.size}">옵션</p>
-                    <div class="item-price-qty">
-                      <span th:text="${item.quantity} + '개'">1개</span>
-                      <span class="price" th:text="${item.price * item.quantity} + '원'">10,000원</span>
+                    <div class="item-option-row" style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px; height: 30px;">
+                        <span th:text="${item.color}" style="display: flex; align-items: center; height: 100%;">색상</span>
+                        <span style="display: flex; align-items: center; height: 100%;">/</span>
+                        <select class="item-size-select" style="padding: 4px 8px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; min-width: 60px; height: 28px;">
+                            <option th:each="s : ${item.availableSizes}" th:value="${s}" th:text="${s}" th:selected="${s == item.size}"></option>
+                        </select>
+                    </div>
+                    <div class="item-price-qty" style="display: flex; align-items: center; justify-content: space-between;">
+                      <div class="qty-control" style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px;">
+                          <button type="button" class="btn-qty-minus" style="width: 24px; height: 24px; background: #fff; border: none; cursor: pointer; font-size: 14px; color: #555;">-</button>
+                          <input type="text" class="item-qty-input" th:value="${item.quantity}" readonly style="width: 30px; height: 24px; border: none; text-align: center; font-size: 13px; color: #333; outline: none;">
+                          <button type="button" class="btn-qty-plus" style="width: 24px; height: 24px; background: #fff; border: none; cursor: pointer; font-size: 14px; color: #555;">+</button>
+                      </div>
+                      <span class="price" th:data-unit-price="${item.price}" th:text="${item.price * item.quantity} + '원'">10,000원</span>
                     </div>
                   </div>
+                  <!-- + 버튼 추가 -->
+                  <button type="button" class="btn-add-item" style="margin-left: 10px; width: 24px; height: 24px; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">+</button>
               </div>
             </div>
           </div>
@@ -206,11 +245,11 @@
           <h3>최종 결제 금액</h3>
           <div class="price-row">
             <span>상품 금액</span>
-            <span th:text="${totalProductPrice} + '원'">10,000원</span>
+            <span id="summary-product-price" th:text="${totalProductPrice} + '원'">10,000원</span>
           </div>
           <div class="price-row">
             <span>배송비</span>
-            <span th:text="${deliveryFee} + '원'">3,000원</span>
+            <span id="summary-delivery-fee" th:text="${deliveryFee} + '원'">3,000원</span>
           </div>
           <div class="price-row">
             <span>할인/포인트</span>
@@ -218,7 +257,7 @@
           </div>
           <div class="price-row total">
             <span>총 결제 금액</span>
-            <span class="total-price" th:text="${totalPrice} + '원'">13,000원</span>
+            <span class="total-price" id="summary-total-price" th:text="${totalPrice} + '원'">13,000원</span>
           </div>
         </section>
 
@@ -232,7 +271,7 @@
 
         <!-- 결제 버튼 -->
         <button type="button" class="btn-payment" id="paymentButton">
-          <span th:text="${totalPrice} + '원 결제하기'">13,000원 결제하기</span>
+          <span id="btn-payment-text" th:text="${totalPrice} + '원 결제하기'">13,000원 결제하기</span>
         </button>
 
       </div>
