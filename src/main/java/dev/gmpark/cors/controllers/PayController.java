@@ -63,6 +63,7 @@ public class PayController {
         modelAndView.addObject("deliveryFee", deliveryFee);
         modelAndView.addObject("totalPrice", totalPrice);
         modelAndView.addObject("isCartOrder", (cartIds != null && !cartIds.isEmpty()));
+        modelAndView.addObject("cartIds", cartIds); // 장바구니 ID 목록도 뷰로 전달
 
         modelAndView.setViewName("payment/payment");
         return modelAndView;
@@ -80,7 +81,18 @@ public class PayController {
         }
 
         try {
-            CommonResult result = this.orderService.processSingleOrder(sessionUser, dto.getItemId(), dto.getSize(), dto.getRequest());
+            CommonResult result;
+            // 장바구니 주문인 경우
+            if (dto.getCartIds() != null && !dto.getCartIds().isEmpty()) {
+                result = this.orderService.processCartOrder(sessionUser, dto);
+            } 
+            // 단일 상품 주문인 경우
+            else if (dto.getItemId() != null && dto.getSize() != null) {
+                result = this.orderService.processSingleOrder(sessionUser, dto);
+            } else {
+                result = CommonResult.FAILURE;
+                response.put("message", "주문 정보가 올바르지 않습니다.");
+            }
             response.put("result", result.name());
         } catch (Exception e) {
             e.printStackTrace();

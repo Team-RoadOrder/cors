@@ -86,6 +86,8 @@ body {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  width: 50%; /* 핵심: 섹션의 절반(중앙)까지만 영역을 잡음 */
+  box-sizing: border-box;
 }
 
 .box-content .row:last-child {
@@ -97,6 +99,7 @@ body {
   color: #666;
   font-weight: 500;
   font-size: 14px;
+  flex-shrink: 0; /* 라벨 너비 고정 (찌그러짐 방지) */
 }
 
 .box-content .input-field {
@@ -108,6 +111,7 @@ body {
   color: #333;
   outline: none;
   transition: border-color 0.2s;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
 }
 
 .box-content .input-field:focus {
@@ -120,14 +124,37 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
 }
 
 .phone-group .phone-part {
   flex: 1;
   text-align: center;
+  max-width: none; /* 내부 input은 꽉 차게 */
+  width: 60px; /* 전화번호 입력창 너비 줄임 */
 }
 
 .phone-group .dash {
+  color: #aaa;
+  font-weight: bold;
+}
+
+/* 이메일 입력 그룹 */
+.email-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
+}
+
+.email-group .email-part {
+  flex: 1;
+  text-align: center;
+  max-width: none;
+}
+
+.email-group .at {
   color: #aaa;
   font-weight: bold;
 }
@@ -138,6 +165,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
 }
 
 /* 입력 필드 및 버튼 스타일 */
@@ -178,6 +206,7 @@ body {
   font-size: 14px;
   outline: none;
   cursor: pointer;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
 }
 
 .input-request {
@@ -186,6 +215,7 @@ body {
   border-radius: 6px;
   font-size: 14px;
   outline: none;
+  max-width: 100%; /* 부모(row)가 50%이므로 여기선 100%로 채움 */
 }
 
 .info-text {
@@ -302,20 +332,20 @@ body {
 }
 
 .item-main {
-    display: flex;
-    gap: 15px;
+  display: flex;
+  gap: 15px;
 }
 
 .item-image img {
-    width: 80px;
-    height: 80px;
-    border-radius: 6px;
-    object-fit: cover;
-    border: 1px solid #eee;
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #eee;
 }
 
 .item-detail {
-    flex: 1;
+  flex: 1;
 }
 
 .item-detail .item-name {
@@ -406,24 +436,29 @@ body {
 
 /* 헤더 스타일 복구 */
 #header {
-    background-color: rgb(216, 232, 243);
+  background-color: rgb(216, 232, 243);
 }
 #header .nav a {
-    color: #000;
+  color: #000;
 }
 #header #logo {
-    filter: invert(0%) brightness(0%);
+  filter: invert(0%) brightness(0%);
 }
 #header .nav .selected a {
-    color: rgb(82,141,216);
+  color: rgb(82,141,216);
 }
 #header .icon-menu .icon path {
-    filter: invert(0%) brightness(0%);
+  filter: invert(0%) brightness(0%);
 }
 #header #searchInput {
-    filter: invert(0%) brightness(0%);
+  filter: invert(0%) brightness(0%);
 }
 #header #loginBtn,
 #header #logoutBtn {
-    color: #000;
+  color: #000;
+}
+
+/* 주소 입력 필드만 예외적으로 100% 너비 사용 */
+.box-content .row:has(.address-group) {
+  width: 100%;
 }

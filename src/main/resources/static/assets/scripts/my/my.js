@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 1. URL 파라미터 확인
     const urlParams = new URLSearchParams(window.location.search);
-    const openTab = urlParams.get('open');
+    const openTab = urlParams.get('menu'); // 'open' 대신 'menu' 파라미터 사용 (MyController와 일치)
 
 
     if (openTab) {
