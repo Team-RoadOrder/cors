@@ -23,12 +23,12 @@
 <!--헤더에 호버하면 나타나는 메뉴 -->
 
 <main id="main" >
-    <img src="../assets/images/MY/waviness.png" class="image" alt="메인이미지" th:src="@{${shopInfo.backgroundImage}}"/>
+    <img src="/assets/images/MY/waviness.png" class="image" alt="메인이미지" th:src="@{${shopInfo.backgroundImage}}"/>
 
 
     </main> <!-- 헤더뒤에 배경 -->
 <div class="box" id="shop-header">
-    <img src="../assets/images/reservation/brand.jpeg" class="logo" alt="" th:src="@{${shopInfo.profileImage}}"/>
+    <img src="/assets/images/reservation/brand.jpeg" class="logo" alt="" th:src="@{${shopInfo.profileImage}}"/>
     <div class="profile">
         <div class="title" th:text="${shopInfo.shopName}">Waviness</div>
         <span class="description" th:text="${shopInfo.shopCategory}" >웨이비니스</span>

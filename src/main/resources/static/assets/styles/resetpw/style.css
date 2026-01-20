@@ -165,7 +165,14 @@ body{
     /*font-family: "Gowun Dodum", sans-serif;*/
     font-weight: 600;
 }
+.int-area input:focus {
+    border-bottom: 2px solid #23B1FA;
+}
 
+/* 포커스 시 라벨 색상도 테마 색상으로 맞춤 (선택사항) */
+.int-area input:focus + label {
+    color: #23B1FA !important;
+}
 
 a[href] {
     color: inherit;

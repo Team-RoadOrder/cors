@@ -10,7 +10,7 @@
 <header class="box" id="header" th:fragment="customer-header" th:with="isSigned = ${session.sessionUser != null}">
     <div class="left">
         <a href="/main" class="box" id="logo">
-            <img src="/assets/images/main/img.png" alt="" class="logo">
+            <img src="/assets/images/main/img.png" alt="" class="logo" draggable="false">
             <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
         </a>
         <ul class="nav">
@@ -26,12 +26,12 @@
                         </li>
                         <!--th:href="@{/item/(shopId=${item.shopId}, id=${item.itemId})}">-->
                         <li class="item">
-                            <a href="./NEARBYSHOP/nearbyshop.html" class="link">
+                            <a href="/nearby-shop" class="link">
                                 Nearby Shops
                             </a>
                         </li>
                         <li class="item">
-                            <a href="./RECOMMENDEDSHOP/recommendedshop.html" class="link">
+                            <a href="/recommended-shops" class="link">
                                 recommended shops
                             </a>
                         </li>
@@ -50,7 +50,7 @@
             </li>
             <li class="item"><a href="./INFO/info.html">INFO</a></li>
             <li class="item"><a href="/shops">RESERVATION</a></li>
-            <li class="item"><a href="./ITEMLIST/itemlist.html">PRODUCT</a></li>
+            <li class="item"><a href="/itemList">PRODUCT</a></li>
             <li class="item"><a href="/my">MY PAGE</a></li>
         </ul>
     </div>

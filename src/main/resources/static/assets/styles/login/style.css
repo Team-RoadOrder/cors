@@ -25,8 +25,20 @@ html, body {
     align-items: center;
     background-color: white;
     z-index: 1;
-    color: #fefefe;
+    color: #fefefec9;
+
 }
+
+.welcome-section .welcome-img {
+        position: absolute;
+        filter: invert(100%) brightness(200%);
+        opacity: 0.8;
+
+}
+.welcome-section .welcome-img img {
+    width: 30rem;
+}
+
 .welcome-section video {
     position: absolute;
     top: 0;
@@ -38,18 +50,49 @@ html, body {
     z-index: -1;
     transition: all 0.5s ease;
 }
-
-@media (min-width: 75rem) {
-    .welcome-section video {
-        filter: grayscale(10%);
-
-    }
+.welcome-section #scroll-down-btn {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 20%;
+    outline: none;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0.25rem 1.8rem rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
 }
-@media (min-width: 50rem) {
-    .welcome-section video {
-        filter: grayscale(10%);
-    }
+
+
+.welcome-section #scroll-down-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    transform: translateX(-50%) scale(1.1);
 }
+.welcome-section .text {
+    font-size: 1.2rem;
+    transform: translateY(4rem);
+
+}
+/* 내부 이미지 */
+.welcome-section #scroll-down-btn img {
+    width: 1.2rem;
+    height: auto;
+    opacity: 0.7;
+    user-select: none;
+    pointer-events: none;
+
+}
+
 .login-layout-container {
     position: fixed;
     top: 0;
@@ -112,7 +155,6 @@ html, body {
     color: #4d4d4d;
     font-size: 1.2rem;
     outline: none;
-
 }
 .int-area input:first-child {
     margin-bottom: 0.5rem;
@@ -202,4 +244,68 @@ html, body {
     transform: translateY(2rem) translateX(2.9rem);
     position: absolute;
     font-size: 0.5rem;
+}
+
+
+
+@media (min-width: 20rem) {
+    .welcome-section video {
+        filter: grayscale(10%);
+    }
+    .welcome-section .welcome-img {
+        position: absolute;
+        transform: translateY(-8rem); /* 작은 화면에서는 위로 올림 */
+        filter: invert(100%) brightness(200%);
+        opacity: 0.8;
+
+    }
+    .welcome-section .welcome-img img {
+        width: 20rem;
+    }
+    .welcome-section .text {
+            transform: translateY(-9rem);
+        font-size: 0.9rem;
+    }
+
+}
+
+@media (min-width: 50rem) {
+    .welcome-section video {
+        filter: grayscale(10%);
+    }
+    .welcome-section .welcome-img {
+        position: absolute;
+        transform: translateY(0); /* 여기서 다시 0으로 원상복구! */
+        filter: invert(100%) brightness(200%);
+        opacity: 0.8;
+
+    }
+    .welcome-section .welcome-img img {
+        width: 24rem;
+    }
+    .welcome-section .text {
+        transform: translateY(2rem);
+        font-size: 1rem;
+    }
+}
+@media (min-width: 75rem) {
+    .welcome-section video {
+        filter: grayscale(10%);
+    }
+    .welcome-section .welcome-img {
+        position: absolute;
+
+        filter: invert(100%) brightness(200%);
+        opacity: 0.8;
+
+    }
+    .welcome-section .welcome-img img {
+        width: 28rem;
+    }
+    .welcome-section .text {
+        transform: translateY(4rem);
+        letter-spacing: 0.1rem;
+        font-size: 1.1rem;
+    }
+
 }

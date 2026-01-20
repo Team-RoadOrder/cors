@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
         locale: "ko",           // 한국어 설정
         // 여기에 더 많은 커스터마이징 옵션을 추가할 수 있습니다.
         // 예: minDate: "today" (오늘 이전 날짜 선택 불가)
+        minDate: "today",
         position: "below"
     });
     renderItems();

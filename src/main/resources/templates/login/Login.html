@@ -13,15 +13,20 @@
 </head>
 <body>
 <section class="welcome-section">
-    <h1>Welcome</h1>
-    <p>아래로 스크롤하여 로그인하세요</p>
-    <video class="visible"
-            src="/assets/images/login/video.mp4"
-            autoplay
-            loop
-            muted
-            playsinline
-    ></video>
+    <!--<h1>CORS</h1>
+    <h1>
+        connecting style to roadshop</h1>
+    <p>scroll to login</p>-->
+    <div class="welcome-img">
+        <img src="/assets/images/main/img.png" alt="" class="site-logo">
+        <!--<img src="/assets/images/ownermain/logo2.png" alt="" class="logo">-->
+    </div>
+    <p class="text">아래로 스크롤하여 로그인하세요</p>
+    <!--<p class="text">scroll to login</p>-->
+    <video class="visible" src="/assets/images/login/video.mp4" autoplay loop muted playsinline></video>
+    <button id="scroll-down-btn" type="button" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'});">
+        <img src="/assets/images/login/doubledown.png" alt="내려가기" draggable="false">
+    </button>
 </section>
 <section class="login-layout-container">
     <div class="login-form">

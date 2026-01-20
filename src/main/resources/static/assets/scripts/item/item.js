@@ -239,7 +239,7 @@ window.addEventListener('click', (e) => { if (e.target === modal) modal.style.di
 if (confirmButton) {
     confirmButton.addEventListener('click', () => {
         if (currentSelectedSize) { selectOptionText.textContent = currentSelectedSize; modal.style.display = 'none'; }
-        else openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, { confirmText: '확인' });
+        else openModal("ERROR", `<p>사이즈를 먼저 선택해주세요</p>`, { confirmText: '확인' });
     });
 }
 
@@ -881,3 +881,133 @@ function renderReviewList(reviews) {
         container.insertAdjacentHTML('beforeend', itemHtml);
     });
 }
+
+const reserveItem = () => {
+    if (!currentSelectedSize) {
+        openModal("알림", "<p>사이즈를 먼저 선택해주세요.</p>", { confirmText: '확인' });
+        return;
+    }
+
+    const productName = document.querySelector('.productName')?.innerText || '상품명 없음';
+
+    const itemId = new URLSearchParams(window.location.search).get('id');
+
+    const shopIdInput = document.querySelector('input[name="shopId"]');
+    const shopId = shopIdInput ? shopIdInput.value : null;
+
+    if (!shopId || !itemId) {
+        openModal("ERROR", "<p>상품 정보를 불러올 수 없습니다.</p>", { confirmText: '확인' });
+        return;
+    }
+
+    const modalContent = `
+        <style>
+            .reserve-modal-wrap { text-align: left; padding: 0.5rem; }
+            .reserve-info-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+            .reserve-info-row .label { font-weight: bold; color: #555; }
+            .reserve-info-row .value { font-weight: bold; color: #000; }
+            .calendar-container { display: flex; justify-content: center; margin-top: 1rem; }
+            .flatpickr-calendar.inline { box-shadow: none; border: 1px solid #eee; }
+        </style>
+        
+        <div class="reserve-modal-wrap">
+            <div class="reserve-info-row">
+                <span class="label">상품명</span>
+                <span class="value">${productName}</span>
+            </div>
+            <div class="reserve-info-row">
+                <span class="label">선택 사이즈</span>
+                <span class="value" style="color: #333; font-size: 1.1em;">${currentSelectedSize}</span>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem; font-weight:bold; color:#333;">방문 예정 시간 선택</div>
+            
+            <input type="hidden" id="modalDateInput">
+            
+            <div class="calendar-container">
+                <div id="modal-inline-calendar"></div>
+            </div>
+        </div>
+      
+    `;
+    openModal("방문 예약", modalContent, {
+        confirmText: '예약 확정',
+        cancelText: '취소',
+        onConfirm: () => {
+
+            const dateValue = document.getElementById('modalDateInput').value;
+
+            if (!dateValue) {
+                setTimeout(() => {
+                    openModal("알림", "<p>방문 날짜와 시간을 선택해야 합니다.</p>", {
+                        confirmText: '확인',
+                        onConfirm: () => reserveItem() // 다시 예약창 띄우기
+                    });
+                }, 200);
+                return;
+            }
+
+            sendReservationRequest(shopId, itemId, currentSelectedSize, dateValue);
+        },
+        onCancel: () => {
+        }
+    });
+
+    setTimeout(() => {
+        flatpickr("#modal-inline-calendar", {
+            inline: true,             // 인라인 모드 (달력이 바로 보임)
+            enableTime: true,         // 시간 선택 활성화
+            dateFormat: "Y-m-d H:i",  // 저장될 포맷
+            minDate: "today",         // 오늘 이전 선택 불가
+            locale: "ko",             // 한국어
+            minuteIncrement: 30,      // 30분 단위
+            onChange: function(selectedDates, dateStr, instance) {
+                // 달력 선택 시 hidden input에 값 매핑
+                const input = document.getElementById('modalDateInput');
+                if(input) input.value = dateStr;
+            }
+        });
+    }, 0);
+};
+
+// [추가] 예약 데이터 전송 함수 (AJAX)
+const sendReservationRequest = (shopId, itemId, size, dateStr) => {
+    const dataObj = {
+        shopId: Number(shopId),
+        visitDate: dateStr.replace(' ', 'T'),
+        items: [
+            {
+                itemId: Number(itemId),
+                size: size
+            }
+        ]
+    };
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/reservation/post-items');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+        if (xhr.status >= 200 && xhr.status < 400) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.result === 'SUCCESS') {
+                openModal("예약 성공", `<p>예약이 확정되었습니다.<br>마이페이지에서 내역을 확인하세요.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => { location.href = '/my?open=reservation'; }
+                });
+            } else if (response.result === 'FAILURE_SESSION') {
+                openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
+                    confirmText: '로그인',
+                    onConfirm: () => { location.href = '/login'; }
+                });
+            } else {
+                openModal("오류", `<p>예약 실패: ${response.message || '다시 시도해주세요.'}</p>`, { confirmText: '확인' });
+            }
+        } else {
+            openModal("통신 오류", `<p>서버와 통신 중 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+        }
+    };
+    xhr.send(JSON.stringify(dataObj));
+};

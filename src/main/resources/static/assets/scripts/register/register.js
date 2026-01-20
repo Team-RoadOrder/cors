@@ -417,6 +417,8 @@ function updateForm() {
     const resetTargetForm = ($form, type) => {
         $form.reset();
         isEmailVerified = false;
+        selectedStyles.clear();
+        updateUI();
 
         if (type === 'customer') {
             $customerEmailInput.disabled = false;
@@ -449,6 +451,7 @@ function updateForm() {
         resetTargetForm(customerForm, 'customer');
     }
 }
+
 customerRadio.addEventListener('change', updateForm);
 ownerRadio.addEventListener('change', updateForm);
 /*라디오 버튼을 눌러 옵션 변경시 작성내용 초기화되어야함*/

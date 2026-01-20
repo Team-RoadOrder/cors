@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="/assets/styles/item/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="/assets/images/login/favicon.png" rel="icon">
     <script defer src="/assets/scripts/common.js"></script>
     <script defer src="/assets/scripts/item/item.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script defer src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
@@ -431,7 +434,8 @@
             </div>
         </div>
         <div class="buying">구매하기</div>
-        <a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>
+        <!--<a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>-->
+        <a class="reservation" th:onclick="|reserveItem()|">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
             <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장
@@ -440,7 +444,7 @@
         <div class="delivery">
             <p class="deliveryInformation">배송 정보</p>
             <div class="deliveryImage">
-                <img src="../assets/images/item/delivery.png" alt="deliveryIcon">
+                <img src="/assets/images/item/delivery.png" alt="deliveryIcon">
                 <div class="deliveryContainer">
                     <p class="deliveryText1"><b>브랜드배송</b> 3,000원</p>
                     <p class="deliveryText2">입점한 브랜드에서 직접 택배 배송</p>
@@ -480,8 +484,11 @@
                 </div>
             </div>
         </div>
-        <div class="ad"><img src="../assets/images/item/ad.png" alt="ad" class="ad"></div>
+        <div class="ad"><img src="/assets/images/item/ad.png" alt="ad" class="ad"></div>
     </div>
 </div>
+
+
 </body>
 </html>
+
