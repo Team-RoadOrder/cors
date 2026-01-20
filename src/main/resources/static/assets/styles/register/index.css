@@ -539,3 +539,170 @@ body {
     color: #939393;
     font-weight: bold;
 }
+
+/*대화면 1920 px 이상*/
+@media screen and (max-width: 100rem) {
+    .site-logo-welcome {
+        width: 25rem; /* 30rem -> 25rem 축소 */
+    }
+}
+
+/*일반노트북*/
+@media screen and (max-width: 80rem) {
+
+}
+/*  노트북/데스크탑 (1024px 이상) */
+@media (max-width: 64rem) {
+    .site-logo-welcome {
+        width: 20rem; /* 30rem -> 25rem 축소 */
+    }
+}
+/* 태블릿 세로 (768px 이상) */
+@media (max-width: 48rem) {
+
+}
+/*스마트폰*/
+/*스마트폰 (32rem / 약 512px 이하)*/
+@media screen and (max-width: 32rem) {
+
+    /* 1. Body & Container: 전체 여백 축소 */
+    body {
+        /* 상하 패딩 40px -> 20px로 축소 */
+        padding: 20px 0;
+        background: url("/assets/images/login/white-back.jpg") no-repeat center/cover;
+        box-sizing: border-box;
+    }
+
+    .register-form {
+        padding: 1rem;
+        width: 90%;
+        background-color: transparent;
+        border-radius: 0.8rem;
+    }
+
+    /* 2. 제목 (H2): 크기 및 여백 축소 */
+    .register-form h2 {
+        font-size: 1.6rem; /* 2rem -> 1.6rem */
+        margin-bottom: 20px; /* 30px -> 20px */
+    }
+
+    /* 3. 입력창 (Input): 높이와 폰트 줄임 */
+    .int-area {
+        margin-top: 15px; /* 필드 간격 20px -> 15px */
+    }
+
+    .int-area input {
+        width: 100%;
+        padding: 20px 10px 3px;
+        background: transparent;
+        border: none;
+        border-bottom: 0.13rem solid #d1d1d1;
+        color: #4d4d4d;
+        font-size: 1.2rem;
+        outline: none;
+    }
+
+    .int-area button {
+        top: 0.2rem;
+        height: 2rem; /* 2rem -> 1.8rem */
+        font-size: 0.9rem; /* 0.9rem -> 0.8rem */
+        border-radius: 15px;
+    }
+
+    /* 5. 라벨 (Label): 위치 및 크기 조정 */
+    .int-area label {
+        top: 12px; /* 15px -> 12px */
+        left: 5px;
+        font-size: 1rem; /* 1.2rem -> 1rem */
+    }
+
+    /* 플로팅 됐을 때 라벨 */
+    .int-area input:focus + label,
+    .int-area input:valid + label,
+    .int-area input:read-only + label {
+        top: -2px;
+        font-size: 0.8rem; /* 0.9rem -> 0.8rem */
+    }
+
+    /* 6. 하단 큰 버튼 (가입하기 등) */
+    .btn-area {
+        margin-top: 25px;
+    }
+
+    .btn-area button {
+        height: 45px; /* 50px -> 45px */
+        font-size: 1rem; /* 1.1rem -> 1rem */
+        border-radius: 20px;
+    }
+
+    /* 7. 탭 (Customer/Owner) */
+    .user-type {
+        margin-bottom: 20px;
+    }
+    .user-type .tab {
+        padding: 8px 0; /* 10px -> 8px */
+        font-size: 1rem; /* 1.1rem -> 1rem */
+    }
+
+    /* 8. 그룹 라벨 (전화번호, 성별 등 제목) */
+    .group-label {
+        font-size: 0.85rem; /* 0.9rem -> 0.85rem */
+        margin-top: 20px;
+        margin-bottom: 8px;
+    }
+
+    /* 9. 전화번호 입력칸 */
+    .phone-input {
+        gap: 0.3rem;
+    }
+    .phone-input .phone-part {
+        font-size: 1rem; /* 1.2rem -> 1rem */
+        padding: 8px 0;
+    }
+
+    /* 10. 성별 & 체크박스 (Radio/Checkbox) */
+    .gender {
+        gap: 15px;
+        margin-top: 5px;
+    }
+    .gender label, .checkboxes label {
+        font-size: 0.95rem; /* 1.1rem -> 0.95rem */
+    }
+
+    /* 체크박스/라디오 버튼 자체 크기 축소 */
+    .gender input[type="radio"],
+    .checkboxes input[type="checkbox"] {
+        width: 18px; /* 20px -> 18px */
+        height: 18px;
+        margin-right: 8px;
+    }
+    /* 체크 표시 위치 미세 조정 */
+    .checkboxes input[type="checkbox"]::after {
+        left: 5px; top: 1px;
+        width: 3px; height: 8px;
+    }
+
+    /* 11. 해시태그 & 이미지 선택 */
+    .style-hashtag-area {
+        margin-top: 15px;
+    }
+    .hashtag-btn {
+        padding: 6px 12px; /* 버튼 크기 축소 */
+        font-size: 0.9rem;
+    }
+    .tag-item {
+        padding: 4px 10px;
+        font-size: 0.9rem;
+    }
+    .imageSelect .button-label {
+        padding: 12px;
+        font-size: 1rem;
+    }
+    .hashtag-options {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+}
+

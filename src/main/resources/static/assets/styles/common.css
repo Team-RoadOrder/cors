@@ -1,4 +1,6 @@
-/* 초기 상태: 투명하고 텍스트가 흰색인 헤더 */
+* {
+    box-sizing: border-box;
+}
 #header {
     background-color: transparent; /* 배경을 투명하게 설정 */
     transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
@@ -209,6 +211,184 @@
     stroke: white; /* 아이콘 테두리 색상 (필요시) */
 }
 
+
+
+@media screen and (max-width: 80rem) {
+
+}
+
+@media (max-width: 75rem) {
+        #header .logo {
+         width: 9rem; /* 로고 더 축소 */
+         top: -0.3rem
+     }
+
+     #header > .left > .nav {
+         font-size: 1.1rem; /* 폰트 축소 */
+         gap: 1.5rem; /* 간격 더 좁힘 */
+         margin-left: 3.8rem;
+
+         padding: 2.1rem;
+     }
+
+     #header .icon-menu {
+         right: 10%; /* 오른쪽 여백을 줄여서 메뉴 공간 확보 */
+         gap: 10px; /* 아이콘 간격 축소 */
+         top: 2.5rem;
+
+     }
+
+     #header #loginBtn,
+     #header #logoutBtn {
+         font-size: 1.1rem; /* 로그인 버튼 폰트도 축소 */
+     }
+    #header .glass {
+        display: none;
+    }
+    #header #searchInput {
+        display: none;
+    }
+}
+
+@media (max-width: 48rem) {
+    #header .logo {
+        width: 7rem; /* 로고 더 축소 */
+        top:0.7rem;
+        left: 1rem;
+    }
+
+    #header > .left > .nav {
+        font-size: 0.9rem; /* 폰트 축소 */
+        gap: 1rem;/* 간격 더 좁힘 */
+        margin-left: 3.8rem;
+        padding: 2.1rem;
+    }
+
+    #header .icon-menu {
+        right: 10%; /* 오른쪽 여백을 줄여서 메뉴 공간 확보 */
+        gap: 10px; /* 아이콘 간격 축소 */
+        top: 2.5rem;
+    }
+
+    #header #loginBtn,
+    #header #logoutBtn {
+        font-size: 0.9rem;
+
+    }
+}
+
+
+
+
+/*스마트폰*/
+@media screen and (max-width: 40rem) {
+    #header {
+        display: none;
+    }
+
+}
+#mobile-header {
+    display: none;
+
+}
+#mobile-header .mobile-logo > .logo {
+    filter: invert(100%) brightness(200%);
+    /*opacity: 0.8;*/
+    width: 8rem;
+    transform: translateY(0.3rem) translateX(-0.3rem);
+}
+#mobile-header > #mobile-nav-menu {
+    display: none;
+}
+
+@media screen and (max-width: 40rem) {
+    #mobile-header {
+
+        display: flex;
+        flex-direction: row;
+        position: fixed;
+        top: 0;
+        width: 95%;
+        max-width: 40rem;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 4.5rem;
+        margin-top: 1rem;
+        /*background-color: transparent;*/
+        z-index: 999;
+        transition: background-color 0.3s ease;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0.25rem 1.8rem rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-header-content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1.5rem; /* 좌우 내부 여백으로 아이콘 위치 조절 */
+    }
+    #menu-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        padding: 5px 10px;
+        transform: translateY(0.25rem);
+        /*filter: invert(100%) brightness(300%);*/
+
+        transition: transform 0.3s ease-in-out; /* 부드러운 전환 효과 */
+
+    }
+    #menu-toggle img {
+        width: 2rem;
+    }
+    #menu-toggle:hover {
+
+        transform: translateY(0.25rem) scale(1.15);
+    }
+    #menu-toggle.active {
+        transform: rotate(90deg);
+    }
+
+    #menu-toggle.active:hover {
+        transform: rotate(90deg) scale(1.1);
+    }
+    #mobile-header.scroll-active {
+        width: 95%;
+
+        transition: background-color 0.3s ease;
+        border-radius: 1rem;
+        background: rgba(244, 244, 244, 0.8);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0.25rem 1.8rem rgba(0, 0, 0, 0.1);
+    }
+    #mobile-header.scroll-active .mobile-logo > .logo {
+        width: 8rem;
+        filter: invert(0%) ;
+        /*transform: translateY(0.3rem) translateX(-0.3rem);*/
+        opacity: 0.8;
+    }
+    #mobile-header.scroll-active #menu-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: transform 0.3s ease-in-out; /* 부드러운 전환 효과 */
+        filter: none;
+        filter: invert(100%) brightness(300%);
+    }
+
+}
+
+
 /* 장바구니 카운트 스타일 */
 .cart-count {
     position: absolute;
@@ -344,10 +524,59 @@
     background-color: #0056b3;
 }
 
+/* =========================================
+   모바일 (32rem / 512px 이하) 대응
+   - 모달 크기 최적화 및 여백 축소
+   ========================================= */
+@media screen and (max-width: 32rem) {
+
+    /* 1. 모달 박스: 화면을 더 넓게 쓰도록 조정 */
+    #CustomModal .modal-box {
+        width: 90%;       /* 좌우 여백을 최소화하여 꽉 차게 */
+        max-width: none;  /* PC용 최대 너비 제한 해제 */
+        max-height: 85vh; /* 위아래 여백을 조금 더 확보 */
+        border-radius: 0.5rem; /* 둥근 모서리 살짝 축소 */
+    }
+
+    /* 2. 헤더: 높이와 폰트 줄이기 */
+    #CustomModal .header {
+        padding: 10px 15px; /* 여백 축소 (기존 15px 20px) */
+        font-size: 1rem;    /* 글자 크기 축소 (기존 1.1rem) */
+    }
+
+    #CustomModal .header .close-btn {
+        font-size: 1.4rem;  /* 닫기 버튼 크기 축소 */
+    }
+
+    /* 3. 본문: 여백을 줄여 더 많은 내용 표시 */
+    #CustomModal .content {
+        padding: 15px;      /* 내부 여백 축소 (기존 20px) */
+        font-size: 0.95rem; /* 본문 글자 크기 최적화 */
+    }
+
+    /* 본문 내 제목 태그들도 사이즈 조절 */
+    #CustomModal .content h2,
+    #CustomModal .content h3 {
+        font-size: 1.1rem;
+        margin-top: 10px;
+    }
+
+    #CustomModal .footer {
+        padding: 10px 15px; /* 여백 축소 */
+        gap: 8px;           /* 버튼 사이 간격 좁힘 */
+    }
+
+    #CustomModal .modal-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
 
 
-
-/* 로딩영역 */
 
 
 

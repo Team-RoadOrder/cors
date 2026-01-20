@@ -44,3 +44,10 @@
     background-repeat: no-repeat;
     display: inline-block;
 }
+
+@media screen and (max-width: 40rem) {
+    #main .image {
+        display: none;
+    }
+
+}

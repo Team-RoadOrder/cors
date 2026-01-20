@@ -124,6 +124,15 @@ html, body {
     transform: translateX(-50%);
     filter: invert(20%);
 }
+.site-logo-welcome {
+    position: absolute;
+    width: 30rem;
+    aspect-ratio: 1 / 1;
+    top: -16rem;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: invert(20%);
+}
 #logo {
     position: absolute;
     left: 50%;
@@ -309,3 +318,106 @@ html, body {
     }
 
 }
+
+
+
+
+
+/*대화면 1920 px 이상*/
+@media screen and (max-width: 100rem) {
+    .site-logo-welcome {
+        width: 25rem; /* 30rem -> 25rem 축소 */
+    }
+}
+
+/*일반노트북*/
+@media screen and (max-width: 80rem) {
+
+}
+/*  노트북/데스크탑 (1024px 이상) */
+@media (max-width: 64rem) {
+    .site-logo-welcome {
+        width: 20rem; /* 30rem -> 25rem 축소 */
+    }
+}
+/* 태블릿 세로 (768px 이상) */
+@media (max-width: 48rem) {
+
+}
+/*스마트폰*/
+@media screen and (max-width: 32rem) {
+    .login-layout-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100%;
+        background: url("/assets/images/login/white-back.jpg") no-repeat center/cover;
+        transform: translateY(100%);
+        z-index: 10;
+        box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+    }
+    .login-form {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: transparent;
+        padding: 13rem 3rem 3rem;
+        border-radius: 1rem;
+        z-index: 11;
+    }
+
+    .site-logo {
+        position: absolute;
+        width: 15rem;
+        aspect-ratio: 1 / 1;
+        top: -13rem;
+        left: 50%;
+        transform: translateX(-50%);
+        filter: invert(20%);
+    }
+    #logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .login-form h1 {
+        font-size: 2rem;
+        color: #312f2f;
+        margin-bottom:50px;
+        text-align: center;
+    }
+
+    .int-area
+    {
+        position: relative;
+        width: 20rem;
+
+    }
+    .int-area input {
+        width: 100%;
+        padding: 20px 10px 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 0.13rem solid #d1d1d1;
+        color: #4d4d4d;
+        font-size: 1.2rem;
+        outline: none;
+    }
+    .caption.sns > .sns{
+        transform: translateY(-1.4rem) translateX(-2.5rem);;
+        position: absolute;
+        font-size: 0.7rem;
+        width: 9rem;
+        color: #9c9c9c;
+        font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+        font-weight: 700;
+    }
+
+}
+

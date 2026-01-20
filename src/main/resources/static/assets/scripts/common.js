@@ -27,6 +27,25 @@ if (searchIcon && searchInput) {
         }
     });
 }
+const mobileHeader = document.getElementById('mobile-header');
+
+if (mobileHeader) {
+    document.addEventListener('scroll', function() {
+        if (window.scrollY > 0) {
+
+            mobileHeader.classList.add('scroll-active');
+        } else {
+            mobileHeader.classList.remove('scroll-active');
+        }
+    });
+}
+const menuToggle = document.getElementById('menu-toggle');
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+
+        menuToggle.classList.toggle('active');
+    });
+}
 
 // =========================================================
 // openModal 함수 (애니메이션, duration 옵션 및 클린업 로직 통합)

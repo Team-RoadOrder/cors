@@ -189,3 +189,75 @@ a[href] {
     display: flex;
     gap: 1.5rem;
 }
+
+@media screen and (max-width: 32rem) {
+    body{
+        font-family: "Gowun Dodum", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("/assets/images/login/white-back.jpg") no-repeat center center fixed;
+        background-size: cover;
+
+    }
+    .login-form {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: transparent;
+        padding: 13rem 3rem 3rem;
+        border-radius: 1rem;
+        z-index: 11;
+    }
+    .site-logo {
+        position: absolute;
+        width: 15rem;
+        aspect-ratio: 1/1;
+        top: 1rem;
+
+        filter: invert(20%);
+        right: 5.5rem;
+    }
+    .int-area
+    {
+        position: relative;
+        width: 20rem;
+
+    }
+    .int-area input {
+        width: 100%;
+        padding: 20px 10px 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 0.13rem solid #d1d1d1;
+        color: #4d4d4d;
+        font-size: 1.2rem;
+        outline: none;
+    }
+
+    .int-area button {
+        position: absolute;
+        right: 0;
+        top: 0.5rem;
+        width: 20%;
+        height: 2rem;
+        background-color: #23B1FA;
+        border: none;
+        color: #fefefe;
+        font-size: 0.9rem;
+        font-weight: bold;
+        font-family: "Gowun Dodum", sans-serif;
+        border-radius: 25px;
+        cursor: pointer;
+
+    }
+    .container {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+        justify-content: center;
+    }
+
+}
+

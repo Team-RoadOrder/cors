@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title></title>
 </head>
 <body>
@@ -48,7 +49,6 @@
                     </ul>
                 </div>
             </li>
-            <li class="item"><a href="./INFO/info.html">INFO</a></li>
             <li class="item"><a href="/shops">RESERVATION</a></li>
             <li class="item"><a href="/itemList">PRODUCT</a></li>
             <li class="item"><a href="/my">MY PAGE</a></li>
@@ -82,6 +82,30 @@
     <!-- glass를 클릭했을때 검색창이 나타나게 한다 -->
 </header>
 
+
+<header id="mobile-header" th:fragment="customer-mobile-header" >
+    <div class="mobile-header-content">
+        <a href="/main" class="mobile-logo">
+            <img th:src="@{/assets/images/main/img.png}" alt="" class="logo" draggable="false">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+
+        <button id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav-menu">
+            <img th:src="@{/assets/images/main/hamburger.png}"  alt=""> </button>
+    </div>
+
+    <nav id="mobile-nav-menu" class="mobile-nav" aria-hidden="true">
+        <ul>
+            <li class="about">About me</li>
+            <li class="skills">Skills</li>
+            <li class="archive">Archiving</li>
+            <li class="projects">Projects</li>
+        </ul>
+    </nav>
+</header>
+<footer th:fragment="customer-mobile-footer" th:with="isSigned= ${session.sessionUser != null }" >
+
+</footer>
 <!--owner header-->
 <header id="owner-header" th:fragment="owner-header" th:with="isSigned = ${session.sessionUser != null}">
     <a href="/owner"> <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
