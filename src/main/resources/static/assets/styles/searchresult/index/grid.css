@@ -1,9 +1,11 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    padding: 1rem;
-    align-items: stretch;
-    gap: 1rem; /* 그리드 아이템 사이의 간격 추가 */
+    grid-template-columns: repeat(3, 1fr);
+    padding: 1rem 0;
+    align-items: start;
+    row-gap: 3rem;
+    column-gap: 1.5rem;
+    margin-top: 2rem;
 }
 
 .grid a {
@@ -11,46 +13,112 @@
     color: inherit;
     display: flex;
     flex-direction: column;
-    border: 1px solid #eee; /* 테두리 추가 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    overflow: hidden; /* 이미지가 테두리를 벗어나지 않도록 */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
     transition: box-shadow 0.3s;
+    background-color: transparent; /* 배경색 투명하게 변경 */
+    position: relative;
+    height: 100%; /* 높이를 100%로 설정하여 그리드 셀 높이에 맞춤 */
 }
 
-.grid a:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 호버 시 그림자 효과 */
+/* PC 화면에서만 호버 효과 적용 */
+@media (hover: hover) {
+
+
+    .grid a:hover .image-wrapper img {
+        transform: scale(1.05);
+    }
 }
 
 .grid .image-wrapper {
     width: 100%;
-    height: 25rem; /* 이미지 컨테이너 높이 고정 */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
+    position: relative;
+    background-color: transparent; /* 배경색 투명하게 변경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* 이미지가 줄어들지 않도록 설정 */
 }
 
 .grid .image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 이미지가 컨테이너에 꽉 차도록 */
+    object-fit: contain;
     display: block;
-    transition: transform 0.3s; /* 호버 시 이미지 확대 효과 */
-}
-
-.grid a:hover .image-wrapper img {
-    transform: scale(1.05);
+    transition: transform 0.3s ease;
+    transform-origin: center center;
 }
 
 .grid .text-wrapper {
-   text-align: right;
+    text-align: left;
     display: flex;
     flex-direction: column;
-    padding: 1rem; /* 패딩 조정 */
+    padding: 1.2rem;
+    flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+    justify-content: space-between; /* 내용 분산 */
+    background-color: transparent; /* 배경색 투명하게 변경 */
+    position: relative;
+    z-index: 1;
+    min-height: 100px; /* 최소 높이 설정하여 텍스트 영역 확보 */
 }
-.grid .text-wrapper .title{
-    font-size: 0.9rem; /* 폰트 크기 조정 */
-    font-weight: bold;
+
+.grid .text-wrapper .title {
+    font-size: 1rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
+    color: #333;
+    line-height: 1.4;
+    /* 말줄임 처리 강화 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 두 줄까지만 표시 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2.8em; /* 두 줄 높이 고정 (line-height * 2) */
 }
+
 .grid .text-wrapper .price {
-    font-size: 0.8rem;
-    color: #2f3438;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #222;
+    margin-top: auto; /* 가격을 항상 바닥에 붙임 */
+}
+
+/* 반응형 미디어 쿼리 */
+
+/* 태블릿 (1024px 이하) - 1열로 변경 */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(1, 1fr); /* 2열 -> 1열로 변경 */
+        row-gap: 4rem;
+        column-gap: 1.5rem;
+    }
+
+    /* 1열일 때 이미지 크기가 너무 커지는 것을 방지하려면 max-height를 줄이거나 조절 가능 */
+    /* 현재는 aspect-ratio 1/1이라 가로가 꽉 차면 세로도 커짐 */
+}
+
+/* 모바일 (600px 이하) */
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(1, 1fr);
+        row-gap: 5rem;
+    }
+
+    .grid .text-wrapper {
+        padding: 1.5rem;
+    }
+
+    .grid .text-wrapper .title {
+        font-size: 1.1rem;
+        height: auto;
+        -webkit-line-clamp: 2;
+    }
+
+    .grid .text-wrapper .price {
+        font-size: 1.2rem;
+    }
 }

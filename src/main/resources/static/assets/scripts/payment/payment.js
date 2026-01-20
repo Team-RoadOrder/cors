@@ -107,6 +107,40 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // 결제 수단 탭 전환 처리
+    const paymentMethodGroups = document.querySelectorAll('input[name="paymentMethodGroup"]');
+    const simplePaymentContent = document.querySelector('.simple-payment-content');
+    const generalPaymentContent = document.querySelector('.general-payment-content');
+
+    if (paymentMethodGroups.length > 0) {
+        paymentMethodGroups.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'simple') {
+                    // 간편결제 선택 시
+                    if (simplePaymentContent) simplePaymentContent.style.display = 'block';
+                    if (generalPaymentContent) generalPaymentContent.style.display = 'none';
+                } else {
+                    // 일반결제 선택 시
+                    if (simplePaymentContent) simplePaymentContent.style.display = 'none';
+                    if (generalPaymentContent) generalPaymentContent.style.display = 'block';
+                }
+            });
+        });
+        
+        // 초기 상태 설정 (간편결제가 기본 선택되어 있다고 가정)
+        // HTML에서 checked 속성으로 제어하지만, JS로 확실하게 처리
+        const checkedGroup = document.querySelector('input[name="paymentMethodGroup"]:checked');
+        if (checkedGroup) {
+            if (checkedGroup.value === 'simple') {
+                if (simplePaymentContent) simplePaymentContent.style.display = 'block';
+                if (generalPaymentContent) generalPaymentContent.style.display = 'none';
+            } else {
+                if (simplePaymentContent) simplePaymentContent.style.display = 'none';
+                if (generalPaymentContent) generalPaymentContent.style.display = 'block';
+            }
+        }
+    }
+
     // 수량 조절 및 가격 업데이트 로직
     const orderItemsList = document.querySelector('.order-items-list');
     if (orderItemsList) {
@@ -230,6 +264,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            // 결제 수단 수집
+            let paymentMethod = 'CARD'; // 기본값
+            const paymentGroup = document.querySelector('input[name="paymentMethodGroup"]:checked').value;
+            
+            if (paymentGroup === 'simple') {
+                // 간편결제 로직 (카드 등록 여부 확인 등)
+                // 여기서는 일단 'SIMPLE_CARD'로 가정하거나, 등록된 카드가 없으면 알림
+                // 현재 UI상 카드 등록 버튼만 있으므로, 실제로는 카드 등록이 선행되어야 함.
+                // 임시로 'SIMPLE_PAY'로 설정
+                paymentMethod = 'SIMPLE_PAY';
+            } else {
+                // 일반결제
+                const generalMethod = document.querySelector('input[name="generalPaymentMethod"]:checked');
+                if (generalMethod) {
+                    paymentMethod = generalMethod.value;
+                }
+            }
+
             // 서버로 전송할 데이터 구성
             const urlParams = new URLSearchParams(window.location.search);
             let itemId = urlParams.get('itemId');
@@ -262,10 +314,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     // 기존 장바구니 아이템
                     cartQuantities[cartId] = currentQty;
                 } else if (isNew || (!cartId && currentItemId)) {
-                    // 새로 추가된 아이템 또는 단일 상품 주문
-                    // 단일 상품 주문의 경우 첫 번째 아이템도 여기 포함될 수 있음 (cartId가 없으므로)
-                    // 하지만 단일 상품 주문의 첫 번째 아이템은 위에서 itemId, size, quantity 변수로 처리됨.
-                    // 중복 처리를 방지하기 위해 로직 정리가 필요함.
                     
                     if (!cartId && !isNew && itemId) {
                         // 단일 상품 주문의 원본 아이템 -> quantity 변수 업데이트
@@ -293,7 +341,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 receiverName: receiverName,
                 receiverPhone: receiverPhone,
                 address: address,
-                addressDetail: addressDetail
+                addressDetail: addressDetail,
+                paymentMethod: paymentMethod, // 결제 수단 추가
+                usedPoint: 0, // 포인트 사용량 (추후 구현)
+                usedCouponId: null // 쿠폰 ID (추후 구현)
             };
 
             fetch('/pay', {

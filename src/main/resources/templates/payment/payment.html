@@ -25,7 +25,7 @@
 <!-- 결제 완료 화면 (초기에는 숨김) -->
 <div id="paymentCompleteModal" style="display: none; width: 100%; min-height: 60vh; justify-content: center; align-items: center; flex-direction: column;">
     <!-- 스텝 인디케이터 추가 (타이틀 제거) -->
-    <div class="page-header" style="margin-bottom: 40px; width: 1200px; margin: 0 auto 40px auto;">
+    <div class="page-header" style="margin-bottom: 40px; width: 100%; max-width: 1200px; margin: 0 auto 40px auto;">
         <!-- 타이틀 제거됨 -->
         <div class="steps">
             <span class="step">1</span>
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <div style="padding: 60px; border-radius: 12px; text-align: center; width: 500px;">
+    <div style="padding: 60px; border-radius: 12px; text-align: center; width: 500px; max-width: 90%;">
         <h2 style="margin-bottom: 20px; font-size: 28px; color: #333; font-weight: bold;">결제 완료</h2>
         <p style="margin-bottom: 40px; color: #666; font-size: 18px;">주문이 성공적으로 완료되었습니다.</p>
         <button type="button" id="btnGoToOrders" style="background: #222; color: #fff; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; font-weight: bold; transition: background 0.3s;">
@@ -170,32 +170,66 @@
       <section class="checkout-box">
         <h3>결제 수단</h3>
         <div class="box-content">
-          <div class="payment-methods">
-            <label class="method-item">
-              <input type="radio" name="paymentMethod" value="account" checked>
-              <span>계좌 간편결제</span>
-            </label>
-            <label class="method-item">
-              <input type="radio" name="paymentMethod" value="card">
-              <span>카드 간편결제</span>
-            </label>
-            <label class="method-item">
-              <input type="radio" name="paymentMethod" value="general">
-              <span>일반 결제</span>
-            </label>
-            <label class="method-item">
-              <input type="radio" name="paymentMethod" value="general">
-              <span>무통장 입금</span>
-            </label>
-          </div>
+          <div class="payment-methods-container">
 
-          <!-- 계좌 결제 선택 시 상세 옵션 -->
-          <div class="payment-detail account-detail">
-            <select>
-              <option>국민은행 ****45</option>
-              <option>신한은행 ****12</option>
-            </select>
-            <p class="benefit-text">계좌 결제 시 1% 적립 혜택!</p>
+            <!-- 간편결제 -->
+            <div class="payment-method-group">
+                <label class="method-header">
+                    <input type="radio" name="paymentMethodGroup" value="simple" checked>
+                    <span class="method-title">간편결제</span>
+                </label>
+                <div class="method-content simple-payment-content">
+                    <!-- 등록된 카드가 있는 경우 (예시) -->
+                    <!--
+                    <div class="registered-card">
+                        <img src="/assets/images/payment/card.png" alt="Card" class="card-icon">
+                        <div class="card-info">
+                            <span class="bank-name">국민은행</span>
+                            <span class="card-number">**** **** **** **12</span>
+                        </div>
+                    </div>
+                    -->
+
+                    <!-- 등록된 카드가 없는 경우 (카드 추가 버튼) -->
+                    <div class="add-card-btn">
+                        <span class="plus-icon">+</span>
+                        <span class="add-text">카드 등록</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 일반결제 -->
+            <div class="payment-method-group">
+                <label class="method-header">
+                    <input type="radio" name="paymentMethodGroup" value="general">
+                    <span class="method-title">일반결제</span>
+                </label>
+                <div class="method-content general-payment-content" style="display: none;">
+                    <div class="general-methods-grid">
+                        <label class="general-method-item">
+                            <input type="radio" name="generalPaymentMethod" value="CARD" checked>
+                            <span>신용/체크카드</span>
+                        </label>
+                        <label class="general-method-item">
+                            <input type="radio" name="generalPaymentMethod" value="NAVER_PAY">
+                            <img src="/assets/images/payment/naverpay.png" alt="네이버페이" class="pay-icon">
+                        </label>
+                        <label class="general-method-item">
+                            <input type="radio" name="generalPaymentMethod" value="KAKAO_PAY">
+                            <img src="/assets/images/payment/kakaopay.png" alt="카카오페이" class="pay-icon">
+                        </label>
+                        <label class="general-method-item">
+                            <input type="radio" name="generalPaymentMethod" value="TOSS_PAY">
+                            <img src="/assets/images/payment/tosspay.png" alt="토스페이" class="pay-icon">
+                        </label>
+                        <label class="general-method-item">
+                            <input type="radio" name="generalPaymentMethod" value="V_BANK">
+                            <span>무통장입금</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
           </div>
         </div>
       </section>

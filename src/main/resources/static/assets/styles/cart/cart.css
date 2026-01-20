@@ -6,7 +6,7 @@ body {
 .container {
   width: 1200px; /* 전체 너비 고정 */
   margin: 0 auto;
-  padding-top: 120px;
+  padding-top: 180px; /* 헤더와 겹치지 않도록 여백 증가 */
   padding-bottom: 100px;
 }
 
@@ -16,6 +16,41 @@ body {
   margin-bottom: 20px;
   font-size: 24px;
   font-weight: bold;
+}
+
+/* 페이지 헤더 (타이틀 + 단계 표시) */
+.page-header {
+  display: flex;
+  justify-content: space-between; /* 양 끝 정렬 */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin-bottom: 0; /* 기존 margin 제거 */
+}
+
+.steps {
+  display: flex;
+  gap: 10px;
+  margin-left: auto; /* 오른쪽 끝으로 밀기 */
+}
+
+.step {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.step.active {
+  background-color: #222; /* 활성화된 단계 색상 */
 }
 
 .cart-layout {
@@ -37,7 +72,7 @@ body {
 /* 스티키 처리 */
 .sticky-summary {
   position: sticky;
-  top: 140px;
+  top: 180px; /* 헤더 높이 고려하여 조정 */
 }
 
 /* 공통 박스 스타일 */
@@ -46,6 +81,25 @@ body {
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 장바구니 박스 높이 고정 및 스크롤 처리 */
+.cart-box {
+  min-height: 39rem; /* 최소 높이 설정 */
+  max-height: 39rem; /* 최대 높이 설정 (스크롤 생성을 위해) */
+  overflow-y: auto; /* 내용이 넘치면 세로 스크롤 생성 */
+}
+
+/* 스크롤바 스타일링 (선택 사항) */
+.cart-box::-webkit-scrollbar {
+  width: 8px;
+}
+.cart-box::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+.cart-box::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
 }
 
 .summary-box h3 {
@@ -186,7 +240,8 @@ body {
 .item-qty-price {
   margin-top: 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* 오른쪽 정렬로 변경 (123 오른쪽으로 붙이기) */
+  gap: 20px; /* 간격 추가 */
   align-items: center;
   font-size: 14px;
   font-weight: bold;
@@ -321,4 +376,76 @@ body {
 #header #loginBtn,
 #header #logoutBtn {
     color: #000;
+}
+
+/* 반응형 미디어 쿼리 추가 */
+@media (max-width: 1240px) {
+  .container {
+    width: 95%; /* 1200px 이하에서는 95% 너비 사용 */
+  }
+}
+
+@media (max-width: 1024px) {
+  .cart-layout {
+    flex-direction: column; /* 세로 배치로 변경 */
+  }
+
+  .cart-left-section {
+    width: 100%;
+  }
+
+  .cart-right-section {
+    width: 100%; /* 오른쪽 섹션도 100% 너비 */
+  }
+
+  .sticky-summary {
+    position: static; /* 스티키 해제 */
+  }
+
+  .cart-box {
+    max-height: 500px; /* 모바일에서도 높이 제한 설정 */
+    min-height: auto;
+    overflow-y: auto; /* 스크롤 활성화 */
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding-top: 140px; /* 헤더 높이 고려하여 상단 여백 조정 */
+  }
+
+  .cart-item {
+    flex-direction: row; /* 가로 배치로 변경 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px;
+  }
+
+  .item-check {
+    padding-top: 0;
+    margin-bottom: 0;
+    align-self: center; /* 체크박스 중앙 정렬 */
+  }
+
+  .item-image img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .item-info {
+    width: auto;
+    flex: 1; /* 남은 공간 차지 */
+  }
+
+  .item-qty-price {
+    flex-direction: row;
+    justify-content: space-between; /* 양끝 정렬 */
+    width: 100%;
+    margin-top: 5px;
+    gap: 0;
+  }
+
+  /* 모바일에서 스텝 인디케이터 숨김 */
+  .steps {
+    display: none;
+  }
 }

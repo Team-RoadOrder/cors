@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Black+Han+Sans&family=Gowun+Dodum&family=Lavishly+Yours&family=Nanum+Brush+Script&family=Yellowtail&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Black+Han+Sans&family=Gowun+Dodum&family=Lavishly+Yours&family=Nanum+Brush+Script&family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&family=Yellowtail&display=swap');
+
 #inner >.item >.text-container >.title {
     font-family: 'Roboto', sans-serif;
     font-size: 3rem;
@@ -14,32 +15,50 @@
 }
 #inner >.item {
     padding: 4rem 0 1rem 0;
+    overflow: hidden;
+    position: relative;
 }
+
+/* 가로 스크롤 슬라이더 스타일 */
 #inner .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
     margin-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
+
+#inner .grid::-webkit-scrollbar {
+    display: none;
+}
+
 #inner .grid .box {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 350px;
+    scroll-snap-align: start;
+    flex-shrink: 0;
 }
+
 #inner .grid .image {
     width: 100%;
-    height: 18rem; /* 고정 높이 */
-    object-fit: contain; /* 이미지가 잘리지 않고 전체가 보이도록 설정 */
+    height: 25rem;
+    object-fit: contain;
     border-radius: 10px;
-
-    background-color: #fff; /* 여백 배경색 */
+    background-color: #f8f8f8;
 }
+
 #inner .grid >.box >.info {
     padding: 0.5rem 0;
 }
+
 #inner .grid >.box >.info > .title {
     font-family: 'Gowun Dodum', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 800;
     padding: 0.2rem 0;
     display: block;
@@ -47,11 +66,93 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 #inner .grid >.box >.info > .subtitle {
     font-family: 'Gowun Dodum', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #a0a0a0;
     display: flex;
     justify-content: space-between;
+}
+
+/* 슬라이드 네비게이션 버튼 스타일 */
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+}
+
+.slider-nav:hover {
+    background-color: #fff;
+}
+
+.slider-nav.prev {
+    left: 10px;
+}
+
+.slider-nav.next {
+    right: 10px;
+}
+
+/* 반응형 미디어 쿼리 (모바일/태블릿) */
+@media (max-width: 1024px) {
+    #inner >.item >.text-container >.title {
+        font-size: 2.5rem;
+    }
+
+    #inner >.item >.text-container >.description {
+        font-size: 1.6rem;
+    }
+
+    #inner .grid {
+        gap: 3rem; /* 간격 넓게 유지 */
+    }
+
+    #inner .grid .box {
+        width: 90vw; /* min-width 대신 width로 고정하여 이미지 크기 강제 */
+        min-width: 90vw;
+        scroll-snap-align: center; /* 중앙 정렬 */
+    }
+
+    #inner .grid .image {
+        height: 40rem; /* 이미지 높이 크게 유지 */
+        object-fit: contain; /* 이미지 비율 유지하며 잘리지 않게 설정 */
+        width: 100%; /* 부모 너비에 맞춤 */
+        background-size: contain; /* 배경 이미지일 경우 대비 */
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: transparent; /* 배경색 투명하게 설정 */
+    }
+
+    #inner .grid >.box >.info {
+        text-align: center;
+    }
+
+    #inner .grid >.box >.info > .title {
+        font-size: 1.6rem; /* 폰트 크게 */
+        white-space: normal;
+    }
+
+    #inner .grid >.box >.info > .subtitle {
+        font-size: 1.3rem; /* 폰트 크게 */
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .slider-nav {
+        display: none;
+    }
 }

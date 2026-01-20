@@ -10,13 +10,16 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding-top: 120px; /* 헤더 겹침 방지 */
 }
 
 body > .box {
-    width: 71.25rem;
+    width: 100%;
+    max-width: 71.25rem;
 }
 body > #inner {
-    width: 65rem;
-
-
+    width: 100%;
+    max-width: 65rem;
+    box-sizing: border-box;
+    padding: 0 1rem; /* 좌우 여백 추가 */
 }
