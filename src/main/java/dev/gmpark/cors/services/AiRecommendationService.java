@@ -69,7 +69,6 @@ public class AiRecommendationService {
                     finalSimMatrix[i][j] = (WEIGHT_CONTENT * contentSim[i][j]) + (WEIGHT_COLLAB * collabSim[i][j]);
                 }
             }
-
             log.info("🎉 [AI] 하이브리드 모델 로딩 완료!");
 
         } catch (Exception e) {

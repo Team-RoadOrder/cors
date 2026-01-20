@@ -14,4 +14,8 @@ public interface CartMapper {
     int deleteCartItem(@Param("id") Long id);
     List<CartVo> selectCartItemsByIds(@Param("ids") List<Long> ids);
     int selectCartCount(@Param("userEmail") String userEmail);
+    
+    // 추가된 메서드
+    CartEntity selectCartItem(@Param("userEmail") String userEmail, @Param("itemId") Long itemId, @Param("size") String size);
+    int updateCartQuantity(@Param("id") Long id, @Param("quantity") int quantity);
 }

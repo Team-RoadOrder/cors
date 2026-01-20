@@ -637,3 +637,45 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+/* 스텝 인디케이터 스타일 */
+.page-header {
+    display: flex;
+    align-items: center;
+    position: relative; /* 자식 요소 절대 위치 기준 */
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+
+.page-header h1 {
+    margin-bottom: 0 !important;
+    margin-right: 20px;
+    /* 왼쪽 정렬 유지 */
+}
+
+.steps {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute; /* 중앙 정렬을 위해 절대 위치 사용 */
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -0.1rem;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ddd; /* 기본 회색 배경 */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.step.active {
+    background-color: #007bff; /* 활성화 시 파란색 배경 */
+}
