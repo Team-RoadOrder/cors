@@ -18,6 +18,8 @@
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
+</th:block>
 
 <input type="hidden" id="sessionUserEmail" th:if="${sessionUser != null}" th:value="${sessionUser.email}">
 <main id="main">
@@ -44,6 +46,49 @@
                                              class="sub1"></a>
             </th:block>
         </div>
+        <!--모바일-->
+        <div id="buying-wrapper-M">
+            <div class="product">
+<!--                <p class="buyText">상품이름</p>-->
+                <span class="productName" th:text="${item.itemName}">상품명</span>
+                <span class="detail-category" th:text="${item.detailCategory}"></span>
+                <p class="buyText">
+                    색상: <span class="koreanProductName" th:text="${item.color}">색상정보</span>
+                </p>
+                <div class="buy">
+                    <span class="buyText">판매가격</span>
+                    <span class="buyNumber"
+                          th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')+ ' 원'}"><b>0원</b></span>
+                </div>
+                <p class="star">★</p>
+                <a href="#"><p class="score"><b>4.9</b></p></a>
+                <a class="reviewButton" href="#"><span class="review">리뷰 <th:block th:text="${reviews.size()}">0</th:block></span></a>
+            </div>
+            <a class="optionLink" href="#">
+                <div class="option">
+                    <div class="selectOption"><b>옵션 선택</b></div>
+                    <span class="underIcon">▼</span>
+                </div>
+            </a>
+            <input type="hidden" id="serverSizeData-M" th:value="${item.size}"/>
+            <div class="modal" id="optionModal-M">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>사이즈 선택</h2>
+                    <div class="size-options" id="sizeGrid-M"></div>
+                    <button class="confirm-size-button" id="confirmSizeButton-M">선택 완료</button>
+                </div>
+            </div>
+            <div class="buying">구매하기</div>
+            <!--<a class="reservation" th:href="@{/reservation/(shopId=${item.shopId})}">예약하기</a>-->
+            <a class="reservation" th:onclick="|reserveItem()|">예약하기</a>
+            <div class="cart_Add">
+                <span class="cart">장바구니담기</span>
+                <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장
+                </button>
+            </div>
+        </div>
+        <!--모바일-->
         <div class="shopName">
             <a th:href="@{/shop/(shopId=${item.shopId})}" class="shop-brand-info">
                 <img class="shopImage" th:src="${shopInfo.profileImage}" src="../assets/images/item/store.webp"
@@ -404,11 +449,12 @@
     </div>
     <div id="buying-wrapper">
         <div class="product">
-            <p class="buyText">상품이름</p>
+<!--            <p class="buyText">상품이름</p>-->
             <span class="productName" th:text="${item.itemName}">상품명</span>
             <span class="detail-category" th:text="${item.detailCategory}"></span>
-            <p class="buyText">색상</p>
-            <p class="koreanProductName" th:text="${item.color}">색상정보</p>
+            <p class="buyText">
+                색상: <span class="koreanProductName" th:text="${item.color}">색상정보</span>
+            </p>
             <div class="buy">
                 <span class="buyText">판매가격</span>
                 <span class="buyNumber"

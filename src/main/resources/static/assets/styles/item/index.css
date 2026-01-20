@@ -599,3 +599,239 @@
 #modal .modal-content-body {
     overflow: hidden !important;
 }
+
+/* 모바일 환경 (430px 이하) 대응 미디어 쿼리 */
+/* 기본 상태 (PC): 모바일 전용 섹션을 숨깁니다. */
+#buying-wrapper-M {
+    display: none;
+}
+
+/* 모바일 환경 (430px 이하) 대응 미디어 쿼리 */
+/* 기본 상태 (PC): 모바일 전용 섹션을 숨깁니다. */
+#buying-wrapper-M {
+    display: none;
+}
+
+@media screen and (max-width: 430px) {
+    /*.productName {*/
+    /*    display: block;*/
+    /*    width: 100%;*/
+    /*    font-size: 1.5rem; !* 기존 사이즈 유지 *!*/
+    /*    font-weight: 700;*/
+    /*    line-height: 1.3;*/
+    /*    word-break: keep-all; !* 단어 단위 줄바꿈 *!*/
+    /*    margin-bottom: 0.3125rem;*/
+    /*}*/
+
+    /*!* 상세 카테고리: 상품명 아래에 위치하도록 block 설정 *!*/
+    /*.detail-category {*/
+    /*    display: block;*/
+    /*    font-size: 0.875rem; !* 기존 사이즈 유지 *!*/
+    /*    color: #888;*/
+    /*    margin-bottom: 1rem;*/
+    /*}*/
+    /* 1. PC용 섹션 숨기기 및 모바일용 섹션 노출 */
+    #buying-wrapper {
+        display: none !important;
+    }
+
+    #buying-wrapper-M {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 1.25rem;
+        padding-bottom: 2rem;
+    }
+
+    /* 2. 주요 요소 공통 너비(95%) 및 중앙 정렬 */
+    #buying-wrapper-M .buying,
+    #buying-wrapper-M .reservation,
+    #buying-wrapper-M .optionLink,
+    #buying-wrapper-M .cart_Add,
+    #buying-wrapper-M .delivery {
+        width: 90% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-bottom: 0.5rem; /* 요소 간 간격 */
+        box-sizing: border-box;
+    }
+
+    /* 3. 구매 및 예약 버튼 높이 확장 */
+    #buying-wrapper-M .buying,
+    #buying-wrapper-M .reservation {
+        height: 3.5rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+    }
+
+    .shopName {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* 모든 요소를 세로 중앙(일직선)으로 정렬 */
+        padding: 1.25rem;    /* 상하좌우 여백을 1.25rem으로 통일 */
+        margin: 0 !important; /* 외부 마진 제거로 패딩과 충돌 방지 */
+        box-sizing: border-box;
+    }
+    .productName {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    .shop-brand-info {
+        display: flex;
+        align-items: center; /* 로고와 텍스트 그룹 높이 정렬 */
+        gap: 0.75rem;
+        height: 3rem;       /* 로고 이미지 높이에 맞춤 */
+    }
+
+    .shopImage {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;     /* 이미지 찌그러짐 방지 */
+    }
+
+    .shop-text-group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 텍스트를 로고 높이 안에서 중앙 정렬 */
+        height: 100%;
+    }
+
+    .shop-text-group .brand-name {
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 1.2;    /* 텍스트 간격 압축 */
+    }
+
+    .shop-text-group .attractive {
+        font-size: 0.75rem;
+        color: #888;
+        line-height: 1.2;
+    }
+
+    .save {
+        display: flex;
+        align-items: center; /* 북마크 아이콘 수평 정렬 */
+        height: 3rem;       /* 좌측 요소들과 높이 통일 */
+    }
+
+    .bookmark {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: block;
+    }
+
+    /* 4. 장바구니/관심상품 버튼 그룹 및 하단 여백 */
+    #buying-wrapper-M .cart_Add {
+        display: flex;
+        gap: 0.75rem;
+        height: 3rem; /* 높이 지정 */
+        margin-bottom: 0.875rem; /* 장바구니 라인 하단에 충분한 여백 추가 */
+    }
+
+    #buying-wrapper-M .cart_Add .cart,
+    #buying-wrapper-M .cart_Add .add {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.3rem;
+    }
+
+    /* 5. 컨테이너 및 이미지 최적화 */
+    .container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0;
+    }
+
+    .splash, .image-wrapper {
+        width: 100% !important;
+    }
+
+    .image-wrapper img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* 6. 사이즈 테이블 가로 스크롤 */
+    .size-table-wrapper {
+        width: 95%;
+        margin: 0 auto 1.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .size-table {
+        min-width: 450px;
+        font-size: 0.8rem;
+    }
+
+    /* 7. 추천 상품 그리드 2열 */
+    .recommended-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+        padding: 0 0.625rem;
+    }
+    .modal {
+        padding: 0 1.25rem; /* 모달 외곽 여백 */
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .modal-content {
+        width: 90%; /* 모달창 너비 축소 */
+        max-width: 20rem;
+        padding: 2rem 1.5rem;
+        border-radius: 1rem;
+        position: relative;
+    }
+
+    .modal-content h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+
+    /* 사이즈 그리드 (버튼들) 정렬 */
+    .size-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 모바일에서 3열 배치 */
+        gap: 0.625rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .size-options .size {
+        width: 100%;
+        height: 3rem;
+        font-size: 0.9rem;
+        border-radius: 0.5rem;
+        margin: 0; /* 기존 마진 제거 */
+    }
+
+    /* 모달 하단 확인 버튼 */
+    .confirm-size-button {
+        width: 100%;
+        height: 3.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+    }
+
+    /* 닫기(X) 버튼 위치 조정 */
+    .modal-content .close {
+        top: 15px;
+        right: 15px;
+        font-size: 1.5rem;
+    }
+}

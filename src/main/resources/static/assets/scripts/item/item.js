@@ -201,22 +201,28 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // 사이즈선택, 장바구니
-const sizeDataInput = document.getElementById('serverSizeData');
+// 사이즈선택, 장바구니
+// [수정] 모바일용 데이터(serverSizeData-M)도 함께 찾도록 수정
+const sizeDataInput = document.getElementById('serverSizeData') || document.getElementById('serverSizeData-M');
 let sizes = [];
 if (sizeDataInput && sizeDataInput.value) sizes = sizeDataInput.value.split(',').map(s => s.trim());
 
+// [수정] PC와 모바일 요소를 모두 선택할 수 있도록 querySelectorAll과 closest 로직을 최소한으로 적용
 const modal = document.getElementById('optionModal');
-const openBtn = document.querySelector('.optionLink');
-const closeBtn = document.querySelector('.close');
+const modalM = document.getElementById('optionModal-M');
+const openBtns = document.querySelectorAll('.optionLink');
+const closeBtns = document.querySelectorAll('.close');
 const sizeGrid = document.getElementById('sizeGrid');
-const confirmButton = document.getElementById('confirmSizeButton');
-const buyButton = document.querySelector('.buying');
-const cartButton = document.querySelector('.cart_Add .cart');
-const selectOptionText = document.querySelector('.selectOption b');
+const sizeGridM = document.getElementById('sizeGrid-M');
+const confirmButtons = document.querySelectorAll('.confirm-size-button');
+const buyButtons = document.querySelectorAll('.buying');
+const cartButtons = document.querySelectorAll('.cart_Add .cart');
+const selectOptionTexts = document.querySelectorAll('.selectOption b');
 let currentSelectedSize = null;
 
-function renderSizeButtons() {
-    sizeGrid.innerHTML = '';
+function renderSizeButtons(targetGrid, wrapper) {
+    if (!targetGrid) return;
+    targetGrid.innerHTML = '';
     sizes.forEach(size => {
         const button = document.createElement('button');
         button.classList.add('size');
@@ -224,34 +230,64 @@ function renderSizeButtons() {
         button.dataset.size = size;
         if (size === currentSelectedSize) button.classList.add('selected');
         button.addEventListener('click', (e) => {
-            document.querySelectorAll('.size').forEach(btn => btn.classList.remove('selected'));
+            // [수정] 클릭한 구역 내의 버튼들만 selected 클래스 제어
+            wrapper.querySelectorAll('.size').forEach(btn => btn.classList.remove('selected'));
             e.target.classList.add('selected');
             currentSelectedSize = e.target.dataset.size;
         });
-        sizeGrid.appendChild(button);
+        targetGrid.appendChild(button);
     });
 }
 
-if (openBtn) { openBtn.addEventListener('click', (e) => { e.preventDefault(); renderSizeButtons(); modal.style.display = 'flex'; }); }
-if (closeBtn) closeBtn.addEventListener('click', () => modal.style.display = 'none');
-window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+// [수정] if (openBtn) 대신 모든 버튼에 대해 처리 (모바일 포함)
+openBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const wrapper = btn.closest('#buying-wrapper, #buying-wrapper-M');
+        const targetGrid = wrapper.querySelector('.size-options');
+        const targetModal = wrapper.querySelector('.modal');
 
-if (confirmButton) {
-    confirmButton.addEventListener('click', () => {
-        if (currentSelectedSize) { selectOptionText.textContent = currentSelectedSize; modal.style.display = 'none'; }
-        else openModal("ERROR", `<p>사이즈를 먼저 선택해주세요</p>`, { confirmText: '확인' });
+        renderSizeButtons(targetGrid, wrapper);
+        if (targetModal) targetModal.style.display = 'flex';
     });
-}
+});
 
-if (buyButton) {
-    buyButton.addEventListener('click', () => {
+// [수정] 모든 닫기 버튼 대응
+closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const targetModal = btn.closest('.modal');
+        if (targetModal) targetModal.style.display = 'none';
+    });
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === modal || e.target === modalM) {
+        e.target.style.display = 'none';
+    }
+});
+
+// [수정] 확인 버튼 클릭 시 모든 텍스트 동기화
+confirmButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (currentSelectedSize) {
+            selectOptionTexts.forEach(txt => txt.textContent = currentSelectedSize);
+            btn.closest('.modal').style.display = 'none';
+        } else {
+            openModal("ERROR", `<p>사이즈를 먼저 선택해주세요</p>`, { confirmText: '확인' });
+        }
+    });
+});
+
+// [수정] 구매/장바구니 버튼들 (querySelectorAll로 변경하여 모든 버튼 대응)
+buyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
         if (currentSelectedSize) {
             const itemId = new URLSearchParams(window.location.search).get('id');
             const formData = new FormData();
             formData.append('itemId', itemId);
             formData.append('size', currentSelectedSize);
             formData.append('quantity', 1);
-            
+
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/cart');
             xhr.onreadystatechange = () => {
@@ -259,27 +295,20 @@ if (buyButton) {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         const response = JSON.parse(xhr.responseText);
                         if (response.result === 'SUCCESS') {
-                            // 장바구니 추가 성공 시 장바구니 페이지로 이동
                             location.href = '/cart';
                         } else {
-                            openModal("ERROR", `<p>${response.message || '구매 처리에 실패했습니다.'}</p>`, {
-                                confirmText: '확인'
-                            });
+                            openModal("ERROR", `<p>${response.message || '구매 처리에 실패했습니다.'}</p>`, { confirmText: '확인' });
                         }
-                    } else {
-                        openModal("ERROR", `<p>오류가 발생했습니다.</p>`, {
-                            confirmText: '확인'
-                        });
                     }
                 }
             };
             xhr.send(formData);
         } else openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, { confirmText: '확인' });
     });
-}
+});
 
-if (cartButton) {
-    cartButton.addEventListener('click', (e) => {
+cartButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
         e.preventDefault();
         if (currentSelectedSize) {
             const itemId = new URLSearchParams(window.location.search).get('id');
@@ -294,37 +323,25 @@ if (cartButton) {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         const response = JSON.parse(xhr.responseText);
                         if (response.result === 'SUCCESS') {
-                            // 장바구니 카운트 즉시 업데이트
-                            if (typeof updateCartCount === 'function') {
-                                updateCartCount();
-                            }
-
+                            if (typeof updateCartCount === 'function') updateCartCount();
                             openModal("장바구니 담기 성공", `<p>장바구니에 상품이 담겼습니다.</p>`, {
                                 confirmText: '장바구니로 이동',
-                                cancelText: '계속 쇼핑하기',
+                                cancelText: '계속 쇼핑하기', // <-- 이 줄이 빠졌었습니다!
                                 onConfirm: () => {
                                     location.href = '/cart';
                                 },
                                 onCancel: () => {
-                                    // 계속 쇼핑하기: 아무 동작 안 함 (모달 닫힘)
+                                    // 계속 쇼핑하기 클릭 시 모달만 닫힘 (로직 추가 필요 없음)
                                 }
                             });
-                        } else {
-                            openModal("ERROR", `<p>${response.message || '장바구니 담기에 실패했습니다.'}</p>`, {
-                                confirmText: '확인'
-                            });
                         }
-                    } else {
-                        openModal("ERROR", `<p>오류가 발생했습니다.</p>`, {
-                            confirmText: '확인'
-                        });
                     }
                 }
             };
             xhr.send(formData);
         } else openModal("ERROR", `<p>사이즈를 선택해주세요</p>`, { confirmText: '확인' });
     });
-}
+});
 
 // --- 관심상품,관심매장
 const toggleLikeItem = (shopId, itemId) => {
