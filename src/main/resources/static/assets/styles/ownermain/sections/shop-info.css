@@ -43,6 +43,8 @@
 
 #shop-info .button:hover { background: #212121; }
 
+
+
 /* 하단 액션 버튼 그룹 컨테이너 */
 .info-action-container {
     position: absolute;
@@ -63,8 +65,12 @@
     min-width: 8rem;
 }
 
-.info-action-container .button.shopDelete:hover { background: #f44336; }
-
+.info-action-container #cancelBtn:hover {
+    background: #fb4965 !important;
+}
+.edit-mode-btn:hover {
+    background-color: #1280ed !important; /* 좀 더 진한 파란색 */
+}
 /* 매장 정보 폼 디자인 */
 #form { flex: 1; }
 #form input {

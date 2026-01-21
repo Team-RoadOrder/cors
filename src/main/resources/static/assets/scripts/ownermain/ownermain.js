@@ -1,3 +1,6 @@
+let originProfileSrc = '';
+let originBgSrc = '';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     //추가
@@ -7,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'res-list': document.querySelector('.res-list'),
         'order-list': document.querySelector('.order-list')
     };
+
+    const profileImg = document.getElementById('profileImg');
+    const bgImageDisplay = document.getElementById('backgroundImage');
+
+    if (profileImg) originProfileSrc = profileImg.src;
+    if (bgImageDisplay) originBgSrc = bgImageDisplay.src;
 
     function handleMobileTabs() {
         if (window.innerWidth <= 512) {
@@ -202,6 +211,7 @@ if (infoUpdateBtn && form ) {
 
                 infoUpdateBtn.textContent = '수정완료'; // 버튼 글자 변경
                 infoUpdateBtn.style.backgroundColor = '#2196f3'; // 버튼 색 강조
+                infoUpdateBtn.classList.add('edit-mode-btn');
                 formInputs[0].focus(); // 첫 번째 칸에 포커스
                 shopDeleteBtn.style.display = 'none';
                 cancelBtn.style.display = 'block';
@@ -248,7 +258,6 @@ if (infoUpdateBtn && form ) {
                                 openModal("FAILURE", `<p>매장 정보 수정에 실패하였습니다. 입력 정보를 다시 확인해주세요.</p>`, {confirmText: '확인'});
                                 break;
                             case 'NO_AUTH':
-
                                 openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
                                 break;
                             case 'SUCCESS':
@@ -261,9 +270,9 @@ if (infoUpdateBtn && form ) {
                                             input.style.borderBottom = 'none';
                                         });
 
-                                        // 버튼 원래대로 복구
                                         infoUpdateBtn.textContent = '매장정보수정';
-                                        infoUpdateBtn.style.backgroundColor = '';}
+                                        infoUpdateBtn.style.backgroundColor = '';
+                                        infoUpdateBtn.classList.remove('edit-mode-btn');}
                                 });
                                 break;
                             default:
@@ -281,6 +290,8 @@ if (infoUpdateBtn && form ) {
             }
         });
 }
+
+
 if (cancelBtn) {
     cancelBtn.addEventListener('click', () => {
         // 1. 폼에 입력된 변경사항을 초기값(HTML에 렌더링된 값)으로 리셋
@@ -290,7 +301,8 @@ if (cancelBtn) {
         formInputs.forEach(input => {
             input.setAttribute('readonly', true);
         });
-
+        if (profileImg) profileImg.src = originProfileSrc;
+        if (bgImageDisplay) bgImageDisplay.src = originBgSrc;
         // 3. 버튼 가시성 원상복구
         cancelBtn.style.display = 'none';        // 취소 버튼 숨김
         shopDeleteBtn.style.display = 'block';   // 삭제 버튼 다시 보임
@@ -298,6 +310,7 @@ if (cancelBtn) {
         // 4. 메인 수정 버튼 텍스트 및 스타일 초기화
         infoUpdateBtn.textContent = '매장정보 수정';
         infoUpdateBtn.style.backgroundColor = '';
+        infoUpdateBtn.classList.remove('edit-mode-btn');
     });
 }
 /* ==========================================
