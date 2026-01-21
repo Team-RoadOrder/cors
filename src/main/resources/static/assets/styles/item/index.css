@@ -612,7 +612,7 @@
     display: none;
 }
 
-@media screen and (max-width: 430px) {
+@media screen and (max-width: 32rem) {/*수정*/
     /*.productName {*/
     /*    display: block;*/
     /*    width: 100%;*/
@@ -785,7 +785,7 @@
     .modal {
         padding: 0 1.25rem; /* 모달 외곽 여백 */
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center; /*수정*/
     }
 
     .modal-content {

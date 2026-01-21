@@ -1,7 +1,7 @@
 @import "./index/header.css";
 @import "./index/nav.css";
 @import "./index/main.css";
-
+@import "./index/owner.css";
 
 
 .sections {
@@ -330,12 +330,149 @@ td {
 
 
 
-@media (max-width: 75rem) {
-    .top-section {
-        flex-direction: column;
+/* 32rem (512px) 이하 모바일 대응 */
+@media (max-width: 32rem) {
+    /* 1. 불필요한 UI 제거 */
+    #header, #nav, #toggleNav, .admin-header {
+        display: none !important;
     }
 
+    /* 2. 배경 흰색 고정 및 전체 중앙 정렬 */
+    body { background-color: #fff !important;}
+
+    #main {
+        margin-top: 0;
+        margin-left: 0;
+       padding: 1rem 7.5rem 7.5rem 7.5rem;
+        background-color: #fff !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .sections {
+        padding: 0 !important;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: none !important;
+    }
+
+    /* 3. 섹션 보더 및 배경 제거 */
+    .dashboard-layout, .graph-container, .status-container, .bottom-section, .weekStatus, .weekList {
+        width: 100% !important;
+        border: none !important;
+        box-shadow: none !important;
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* 4. [중요] 차트와 금주 현황 사이 간격 대폭 축소 */
+    .top-section {
+        display: flex;
+        border:none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.25rem; /* 차트와 텍스트 사이 간격을 4px 수준으로 최소화 */
+    }
+
+    .graph-container {
+        padding-bottom: 0;
+        margin-bottom: 0 !important;
+        min-height: 15rem;
+    }
+
+    .chart-area {
+        height: 15rem !important; /* 240px */
+        width: 100%;
+        padding: 0.5rem 0 0 !important; /* 하단 패딩을 0으로 설정하여 밀착 */
+    }
+
+    .graph-header {
+        padding: 0.75rem 0 0.25rem !important;
+    }
+
+    /* 금주 현황 내부 (매출 vs 주문수) 간격 설정 */
+    .status-items {
+        display: flex !important;
+        justify-content: center !important; /* 중앙 정렬 */
+        gap: 2rem !important; /* 2개 항목 사이의 간격 (원하는 만큼 조절) */
+        width: 100% !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    .status-card {
+        flex: 1 !important; /* 동일한 너비 배분 */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 텍스트 중앙 정렬 */
+    }
+
+    /* 수치 가독성 높이기 */
+    .status-card .value {
+        font-size: 1.2rem !important;
+        white-space: nowrap; /* 줄바꿈 방지 */
+    }
+
+    /* 5. 금주 결제 리스트 세로 스크롤 */
+    .weekList {
+        width: 100% !important;
+        padding: 0.5rem 0 !important;
+    }
+
+    .table-wrapper {
+        max-height: 12.5rem !important; /* 200px */
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    table {
+        width: 100% !important;
+        font-size: 0.7rem !important;
+        table-layout: fixed;
+    }
+
+    th, td {
+        padding: 0.5rem 0.25rem !important;
+    }
+
+    /* 6. 상품 그리드 (1줄 3개 배치) */
     .product-grid {
-        grid-template-columns: repeat(3, 1fr);
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+        width: 100%;
+    }
+
+    .product-card .img-box {
+        aspect-ratio: 3 / 4 !important;
+        border-radius: 0.25rem; /* 4px */
+        width: 100%;
+    }
+
+    /* 7. 텍스트 사이즈 상세 조정 */
+    .p-name {
+        font-size: 0.65rem !important;
+        margin-top: 0.3125rem; /* 5px */
+        text-align: center;
+        height: 2.4em;
+        overflow: hidden;
+    }
+
+    .p-price {
+        font-size: 0.6rem !important;
+        padding: 0.125rem 0.25rem !important;
+    }
+
+    .rank-badge {
+        font-size: 0.55rem !important;
+        padding: 0.0625rem 0.1875rem !important;
+        top: 0.1875rem;
+        left: 0.1875rem;
     }
 }

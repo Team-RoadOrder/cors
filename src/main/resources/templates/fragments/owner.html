@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+</head>
+<body>
+
+<nav id="owner-bottom-nav" th:fragment="owner-bottom-nav" th:with="isSigned = ${session.sessionUser != null}">
+
+    <div class="glass-container">
+        <a href="/owner/member" class="nav-item" id="nav-member">
+            <img src="/assets/images/ownermain/user.png" alt="권한부여">
+        </a>
+
+        <a href="/owner/graph" class="nav-item" id="nav-graph">
+            <img src="/assets/images/ownermain/graph.png" alt="매출흐름">
+        </a>
+
+        <a href="/owner" class="nav-item central-logo" id="nav-dashboard">
+            <div class="logo-circle">
+                <img src="/assets/images/register/img.png" alt="대시보드">
+            </div>
+        </a>
+
+        <a href="/logout" class="nav-item" th:if="${isSigned}" id="nav-logout">
+            <img src="/assets/images/ownermain/login.png" alt="로그인">
+        </a>
+
+        <a href="/owner/shop" class="nav-item" id="nav-shop">
+            <img src="/assets/images/ownermain/shopping.png" alt="상품등록">
+        </a>
+    </div>
+
+</nav>
+
+</body>
+</html>
