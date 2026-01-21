@@ -10,12 +10,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 120px; /* 헤더 겹침 방지 */
+    padding-top: 0; /* 헤더 겹침 방지 제거 (비디오를 맨 위로 올리기 위해) */
 }
 
 body > .box {
     width: 100%;
-    max-width: 71.25rem;
+    /* max-width: 71.25rem; 제거 */
 }
 body > #inner {
     width: 100%;

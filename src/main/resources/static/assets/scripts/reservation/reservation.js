@@ -1,12 +1,43 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // 모바일 여부 확인 (화면 너비 기준)
+    const isMobile = window.innerWidth <= 1024;
+
     flatpickr("#date", {
         enableTime: true,       // 시간 선택 활성화 (datetime-local)
         dateFormat: "Y-m-d H:i", // 날짜 및 시간 형식
         locale: "ko",           // 한국어 설정
-        // 여기에 더 많은 커스터마이징 옵션을 추가할 수 있습니다.
-        // 예: minDate: "today" (오늘 이전 날짜 선택 불가)
         minDate: "today",
-        position: "below"
+        disableMobile: "true", // 모바일 기기에서도 flatpickr UI 사용
+        static: !isMobile, // 웹에서는 static: true (입력창 아래 고정), 모바일에서는 false (모달처럼 띄움)
+        onReady: function(selectedDates, dateStr, instance) {
+            // 모바일일 때만 확인 버튼 추가
+            if (isMobile) {
+                const confirmContainer = document.createElement("div");
+                confirmContainer.className = "flatpickr-confirm-container";
+                
+                const confirmBtn = document.createElement("button");
+                confirmBtn.type = "button";
+                confirmBtn.className = "flatpickr-confirm-btn";
+                confirmBtn.innerText = "확인";
+                
+                confirmBtn.addEventListener("click", function() {
+                    instance.close(); // 캘린더 닫기
+                });
+
+                confirmContainer.appendChild(confirmBtn);
+                instance.calendarContainer.appendChild(confirmContainer);
+            }
+        },
+        onOpen: function(selectedDates, dateStr, instance) {
+            // 모바일 환경일 때 스크롤 방지
+            if (window.innerWidth <= 1024) {
+                document.body.style.overflow = 'hidden';
+            }
+        },
+        onClose: function(selectedDates, dateStr, instance) {
+            // 배경 스크롤 복구
+            document.body.style.overflow = '';
+        }
     });
     renderItems();
 });

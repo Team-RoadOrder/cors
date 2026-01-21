@@ -65,3 +65,69 @@
 
 
 }
+
+/* flatpickr 공통 스타일 수정 (화살표 제거) */
+.flatpickr-calendar::before,
+.flatpickr-calendar::after {
+    border: none !important; /* 화살표 보더 제거 */
+    display: none !important; /* 화살표 자체를 숨김 */
+}
+
+/* 반응형 미디어 쿼리 추가 */
+@media (max-width: 1024px) {
+    #reservation {
+        width: 100%; /* 너비 100%로 변경 */
+        position: static; /* sticky 해제 */
+        padding-bottom: 6rem; /* 푸터에 가려지지 않도록 하단 여백 추가 */
+    }
+
+    #reservation form {
+        padding-left: 0; /* 왼쪽 패딩 제거 */
+        align-items: center; /* 가운데 정렬 */
+    }
+
+    #date {
+        width: 90%; /* 모바일에서 너비 조정 */
+    }
+
+    /* flatpickr 모바일 스타일 조정 */
+    .flatpickr-calendar {
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        position: fixed !important;
+        z-index: 9999 !important;
+        margin-top: 0 !important; /* 기존 마진 제거 */
+    }
+
+    /* 모바일에서 달력 뒤 배경 흐리게 처리 (선택사항) */
+    .flatpickr-calendar.open::before {
+        content: '';
+        position: fixed;
+        top: -100vh; /* 화면 위쪽으로 충분히 확장 */
+        left: -100vw; /* 화면 왼쪽으로 충분히 확장 */
+        width: 300vw; /* 화면 너비의 3배 */
+        height: 300vh; /* 화면 높이의 3배 */
+        background: rgba(0,0,0,0.5);
+        z-index: -1;
+        pointer-events: auto; /* 배경 클릭 시 닫히도록 하려면 JS 추가 필요할 수 있음 */
+    }
+
+    /* 확인 버튼 스타일 */
+    .flatpickr-confirm-container {
+        text-align: center;
+        padding: 10px;
+        border-top: 1px solid #e6e6e6;
+    }
+
+    .flatpickr-confirm-btn {
+        background-color: #000;
+        color: #fff;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+}

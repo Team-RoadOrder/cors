@@ -187,3 +187,27 @@
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
 }
+
+/* 반응형 미디어 쿼리 (모바일/태블릿) */
+@media (max-width: 1024px) { /* 768px -> 1024px로 변경 */
+    #item .item-container {
+        grid-template-columns: 1fr; /* 1열로 변경 */
+    }
+
+    #item .list a {
+        padding-left: 10px; /* 패딩 복구 */
+    }
+
+    #item .image {
+        width: 6rem; /* 이미지 크기 약간 줄임 */
+        height: 6rem;
+    }
+
+    #item .item-info .firstLine .name {
+        font-size: 1.1rem;
+    }
+
+    #item .option-list {
+        padding: 0 1rem 1.5rem 1rem;
+    }
+}
