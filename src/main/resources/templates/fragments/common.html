@@ -83,7 +83,7 @@
 </header>
 
 
-<header id="mobile-header" th:fragment="customer-mobile-header" >
+<header id="mobile-header" th:fragment="customer-mobile-header-scroll-active" >
     <div class="mobile-header-content">
         <a href="/main" class="mobile-logo">
             <img th:src="@{/assets/images/main/img.png}" alt="" class="logo" draggable="false">
@@ -96,6 +96,26 @@
 
     <nav id="mobile-nav-menu" class="mobile-nav" aria-hidden="true">
         <ul>
+            <li class="about">SHOPS</li>
+            <li class="skills">ITEMS</li>
+            <li class="archive">RECOMMENDED</li>
+            <li class="projects">NEARBY</li>
+        </ul>
+    </nav>
+</header>
+<header id="mobile-header-no-scroll-active" th:fragment="customer-mobile-header" >
+    <div class="mobile-header-content">
+        <a href="/main" class="mobile-logo">
+            <img th:src="@{/assets/images/main/img.png}" alt="" class="logo" draggable="false">
+            <!--<img class="site-logo" src="//contents.sixshop.com/uploadedFiles/117177/default/image_1675222214609.png" alt="logo">-->
+        </a>
+
+        <button id="menu-toggle-no-active" aria-expanded="false" aria-controls="mobile-nav-menu">
+            <img th:src="@{/assets/images/main/hamburger.png}"  alt=""> </button>
+    </div>
+
+    <nav id="mobile-nav-menu-no-active" class="mobile-nav" aria-hidden="true">
+        <ul>
             <li class="about">About me</li>
             <li class="skills">Skills</li>
             <li class="archive">Archiving</li>
@@ -103,8 +123,22 @@
         </ul>
     </nav>
 </header>
-<footer th:fragment="customer-mobile-footer" th:with="isSigned= ${session.sessionUser != null }" >
 
+<footer id="mobile-footer" th:fragment="customer-mobile-footer" th:with="isSigned= ${session.sessionUser != null }" >
+    <div class="container">
+        <a th:href="@{/search-result(keyword=${searchKeyword})}">
+        <img  th:src="@{/assets/images/main/search-icon.svg}" alt="">
+        </a>
+        <a th:href="@{/cart}">
+        <img  th:src="@{/assets/images/main/cart-icon.svg}" alt="">
+        </a>
+        <a th:href="@{/my}">
+        <img th:src="@{/assets/images/main/my-icon.svg}" alt="">
+        </a>
+        <a th:href="@{/logout}">
+        <img class="log-out" th:src="@{/assets/images/main/logout-icon.svg}" alt="">
+        </a>
+    </div>
 </footer>
 <!--owner header-->
 <header id="owner-header" th:fragment="owner-header" th:with="isSigned = ${session.sessionUser != null}">
