@@ -80,12 +80,20 @@
         box-sizing: border-box;
     }
 
+    #form input:not([readonly]) {
+        position: static !important;
+        width: 100% !important;
+        margin-bottom: 0.8rem !important;
+        border: none !important;
+        background: rgba(72, 143, 202, 0.05) !important;
+    }
     #form input {
         position: static !important;
         width: 100% !important;
         margin-bottom: 0.8rem !important;
         border: none !important;
         background: transparent !important;
+
     }
 
     .info-action-container {
