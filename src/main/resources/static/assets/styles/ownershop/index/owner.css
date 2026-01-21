@@ -1,0 +1,99 @@
+#owner-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 32rem) {
+    #owner-header,
+    #nav,
+    #toggleNav,
+    .admin-header {
+        display: none !important;
+    }
+
+    #main {
+        margin-left: 0 !important;
+        padding: 0.625rem !important;
+        padding-bottom: 6.25rem !important;
+    }
+
+    #owner-bottom-nav {
+        display: block !important;
+        position: fixed;
+        bottom: 1.25rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 30rem;
+        z-index: 10000;
+    }
+
+    .glass-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.625rem 0.3125rem;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(1.25rem);
+        -webkit-backdrop-filter: blur(1.25rem);
+        border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+        border-radius: 3.125rem;
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-item {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-item img {
+        width: 2.1rem;
+        height: 2.1rem;
+        object-fit: contain;
+        filter: invert(61%) sepia(16%) saturate(1281%) hue-rotate(183deg) brightness(97%) contrast(92%);
+        transition: transform 0.5s ease-in-out, filter 0.3s ease;
+    }
+
+    .nav-item.active img {
+        filter: invert(45%) sepia(90%) saturate(1500%) hue-rotate(195deg) brightness(85%) contrast(100%) !important;
+        transform: scale(1.1);
+    }
+
+    .nav-item.rotate img {
+        transform: rotate(360deg) scale(1.1);
+    }
+
+    .central-logo {
+        position: relative;
+        top: 0;
+        margin-top: 0;
+    }
+
+    .central-logo .logo-circle {
+        width: 4rem;
+        height: 4rem;
+        background-color: #7DA4E8;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0.25rem solid #fff;
+        box-shadow: 0 0.25rem 0.9375rem rgba(125, 164, 232, 0.4);
+        overflow: hidden;
+    }
+
+    .central-logo .logo-circle img {
+        width: 5rem !important;
+        height: 5rem !important;
+        object-fit: contain;
+        filter: brightness(0) invert(1) !important;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+    }
+
+    .central-logo:active .logo-circle {
+        transform: scale(0.95);
+        transition: transform 0.1s;
+    }
+}
