@@ -14,7 +14,10 @@
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
-
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
+</th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
+</th:block>
 <div id="dialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
     <a class="close" href="#" style="position: absolute; top: 20px; right: 20px; z-index: 10000;">
         <img alt="X" class="image" src="/assets/images/register/close.png" style="width: 30px; height: 30px;">

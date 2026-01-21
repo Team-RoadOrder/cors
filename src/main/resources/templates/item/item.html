@@ -20,10 +20,12 @@
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
 <th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
 </th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
+</th:block>
 
 <input type="hidden" id="sessionUserEmail" th:if="${sessionUser != null}" th:value="${sessionUser.email}">
 <main id="main">
-    <img src="../assets/images/my/waviness.png" th:src="${shopInfo.backgroundImage}" class="image" alt="메인이미지">
+    <img src="/assets/images/my/waviness.png" th:src="${shopInfo.backgroundImage}" class="image" alt="메인이미지">
 </main>
 <div class="background"></div>
 <div class="container">

@@ -14,8 +14,10 @@
     <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
-<!-- 헤더부분 , 로고와 네비바가 들어감 -->
-<th:block th:replace="~{/fragments/common.html :: customer-header}">
+<th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
+</th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
 </th:block>
 <div class="container">
   <div class="page-header">

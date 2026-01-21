@@ -29,23 +29,54 @@ if (searchIcon && searchInput) {
 }
 const mobileHeader = document.getElementById('mobile-header');
 
+const menuToggle = document.getElementById('menu-toggle');
+const mobileNavMenu = document.getElementById('mobile-nav-menu');
+if (menuToggle && mobileNavMenu) {
+    menuToggle.addEventListener('click', () => {
+        // classList.toggle을 사용하여 active 클래스를 넣었다 뺐다 함
+        menuToggle.classList.toggle('active');     // 버튼 X 모양 변경
+        mobileNavMenu.classList.toggle('active');  // 메뉴판 보이기/숨기기
+    });
+}
 if (mobileHeader) {
     document.addEventListener('scroll', function() {
         if (window.scrollY > 0) {
-
+            // 2-1. 헤더 배경색 변경 (이건 유지)
             mobileHeader.classList.add('scroll-active');
+
+            // 2-2. [핵심 수정] 스크롤 내리면 메뉴와 버튼을 무조건 '비활성화(remove)' 함
+            // 절대로 add나 toggle을 쓰면 안 됨
+            if (mobileNavMenu) mobileNavMenu.classList.remove('active'); // 메뉴 숨김
+            if (menuToggle) menuToggle.classList.remove('active');       // 버튼 원복
+
         } else {
+            // 스크롤이 맨 위로 갔을 때 헤더 배경 투명하게 복구
             mobileHeader.classList.remove('scroll-active');
         }
     });
 }
-const menuToggle = document.getElementById('menu-toggle');
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
+const mobileNavMenuNoActive = document.getElementById('mobile-nav-menu-no-active');
+const menuToggleNoActive = document.getElementById('menu-toggle-no-active');
 
-        menuToggle.classList.toggle('active');
+// 1. 클릭 이벤트: 켜고 끄기 (Toggle)
+if (menuToggleNoActive && mobileNavMenuNoActive) {
+    menuToggleNoActive.addEventListener('click', () => {
+        // 버튼 회전 효과 토글
+        menuToggleNoActive.classList.toggle('active');
+        // 메뉴판 보이기/숨기기 토글 (CSS에서 .active 제어)
+        mobileNavMenuNoActive.classList.toggle('active');
+    });
+    document.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            // 스크롤이 발생하면 메뉴와 버튼의 active 클래스를 제거(초기화)
+            if (mobileNavMenuNoActive) mobileNavMenuNoActive.classList.remove('active');
+            if (menuToggleNoActive) menuToggleNoActive.classList.remove('active');
+        }
     });
 }
+
+// 2. 스크롤 이벤트: 무조건 끄기 (Reset)
+
 
 // =========================================================
 // openModal 함수 (애니메이션, duration 옵션 및 클린업 로직 통합)
