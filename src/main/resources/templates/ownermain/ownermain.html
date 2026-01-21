@@ -79,8 +79,10 @@
                     <input readonly required class="input" id="tel" maxlength="20" minlength="3" name="shopTel" type="text" th:value="${shop.shopTel}">
                 </label>
             </form>
-
-            <button type="button" class="button shopInfo" id="infoUpdateBtn">매장정보수정</button>
+            <div class="info-action-container">
+                <button type="button" class="button withdraw-btn" id="shopDeleteBtn">매장 삭제</button>
+                <button type="button" class="button shopInfo" id="shopUpdateBtn">매장정보 수정</button>
+            </div>
         </section>
 
         <section id="items">

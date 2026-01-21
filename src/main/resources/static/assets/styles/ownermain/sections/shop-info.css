@@ -10,6 +10,7 @@
     overflow: hidden;
     box-sizing: border-box;
 }
+
 #shop-info .background-image-box {
     flex: 1;
     width: 100%;
@@ -23,6 +24,7 @@
     object-position: center;
 }
 
+/* 기본 버튼 스타일 (상단 대표사진수정용) */
 #shop-info .button {
     position: absolute;
     top: 9rem;
@@ -34,22 +36,41 @@
     color: #fff;
     font-size: 1rem;
     font-weight: 300;
-}
-#shop-info .button:hover {
-    background: #212121;
-}
-#form {
-    flex: 1;
-}
-#shop-info .button.shopInfo {
-    top: 21rem;
+    border: none;
+    cursor: pointer;
 }
 
+#shop-info .button:hover { background: #212121; }
+
+/* [해결 포인트] 하단 액션 버튼 그룹 컨테이너 */
+.info-action-container {
+    position: absolute;
+    top: 21rem;      /* 정보 영역 우측 하단 고정 */
+    right: 3rem;
+    display: flex;   /* 버튼을 가로로 나란히 */
+    gap: 0.8rem;     /* 버튼 사이 간격 */
+    z-index: 20;     /* 다른 요소에 가려지지 않게 높임 */
+}
+
+/* 컨테이너 내부 버튼 개별 스타일 (absolute 해제 및 보임 보장) */
+.info-action-container .button {
+    position: relative !important; /* 부모 컨테이너 내에서 상대 위치 사용 */
+    top: auto !important;          /* 기존 9rem 무시 */
+    right: auto !important;        /* 기존 3rem 무시 */
+    background: #616161;           /* 버튼 색상 이미지 준수 */
+    margin: 0;
+    display: inline-block;
+    min-width: 8rem;               /* 버튼 최소 너비 확보 */
+}
+
+.info-action-container .button.shopDelete:hover { background: #f44336; }
+
+/* 폼 디자인 (디자인 훼손 없이 유지) */
+#form { flex: 1; }
 #form input {
     appearance: none;
     -webkit-appearance: none;
-    border: none;
-    outline: none;
+    border: none; outline: none;
     background-color: transparent;
     padding: 0;
     margin: 0;
@@ -69,7 +90,6 @@
     position: absolute;
     left: 3rem;
     top: 17rem;
-
 }
 #form input[name="shopType"] {
     font-size: 0.9rem;
@@ -96,14 +116,12 @@
 }
 
 #form input:not(:read-only) {
-    border: none!important;
+    border: none !important;
     outline: none !important;
     background-color: rgba(72, 143, 202, 0.05);
     cursor: text;
     padding-bottom: 0.3125rem;
-
 }
-
 #form input:not(:read-only):focus {
     border-bottom: 0.125rem solid #f44336;
 }
