@@ -1,6 +1,7 @@
 @import "./index/header.css";
 @import "./index/nav.css";
 @import "./index/main.css";
+@import "./index/owner.css";
 @import "./index/ownermember_modal.css";
 
 .sections {
@@ -75,7 +76,7 @@
     display: inline-block;
     vertical-align: middle;
     user-select: none;
-    background-color: #fff;
+    /*background-color: #fff;*/
     border-radius: 0.25rem;
 }
 
@@ -294,4 +295,156 @@
     background-color: #f0f7ff !important;
     outline: 2px solid #007bff;
     outline-offset: -2px;
+}
+
+
+/* 기본적으로 숨김 */
+.mobile-guide-overlay {
+    display: none;
+}
+
+@media (max-width: 32rem) {
+    /* 1. 배경 및 전체 레이아웃 초기화 */
+    body {
+        background-color: #fff !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 1. 배경 및 전역 설정: 목업처럼 흰색 배경 고정 */
+    body {
+        background-color: #fff !important;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 전체 컨텐츠 가로 중앙 정렬 */
+    }
+
+    /* 불필요한 데스크톱 UI 요소 제거 */
+    #header, #nav, #toggleNav, .admin-title, .filter-group, .btn-group, .manage-btns {
+        display: none !important;
+    }
+
+    /* 2. 메인 컨텐츠 영역: 너비를 100%로 확보하여 중앙 정렬 기반 마련 */
+    #main {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+        display: flex;
+        justify-content: center; /* 내부 컨텐츠 중앙 정렬 */
+        background-color: #fff !important;
+    }
+
+    .sections {
+        padding: 2rem 0 !important; /* 상단 여백 확보 */
+        width: 100%;
+        max-width: 100%; /* 너비 초과 방지 */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 내부 요소들(검색창, 테이블) 중앙 정렬 */
+        border: none !important;
+        box-sizing: border-box;
+    }
+
+    /* 3. 검색창 설정: 잘리지 않도록 box-sizing과 width 조정 */
+    .admin-header {
+        border-bottom: none !important;
+        padding: 0 1.25rem 2rem 1.25rem !important; /* 양옆 패딩으로 잘림 방지 */
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center;
+        box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+    }
+
+    .search-box {
+        width: 100% !important; /* 부모(admin-header)의 패딩 내에서 꽉 차게 */
+        max-width: 28rem; /* 너무 퍼지지 않게 최대치 설정 */
+        position: relative;
+    }
+
+    .search-input {
+        width: 100% !important;
+        padding: 0.8rem 3rem 0.8rem 1rem !important; /* 오른쪽 아이콘 공간 확보 */
+        border-radius: 0.5rem !important;
+        border: 1px solid #adb5bd !important;
+        font-size: 0.95rem !important;
+        box-sizing: border-box; /* 인풋 너비 계산 오류 방지 */
+    }
+
+    .search-icon {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+        position: absolute;
+        top: 50% !important;
+        right: 1rem !important;
+        transform: translateY(-50%) !important; /* 아이콘 수직 중앙 정렬 */
+        margin: 0 !important;
+    }
+
+    /* 4. 테이블 설정: 중앙 배치 및 불필요한 열 제거 */
+    .table-wrapper {
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .admin-table {
+        width: 100% !important;
+        border-collapse: collapse;
+        margin: 0 0.5rem 0 0.5rem;
+        white-space: nowrap;
+        table-layout: auto !important /* 열 너비 고정으로 가독성 확보 */
+    }
+
+    /* 목업 기준: 이름, 이메일, 권한, 입사일 외 모두 숨김 */
+    .admin-table th:nth-child(6), .admin-table td:nth-child(6),
+    .admin-table th:nth-child(7), .admin-table td:nth-child(7) {
+        display: none !important;
+    }
+
+    .admin-table th {
+        background-color: #f2f2f2 !important;
+        padding: 0.8rem 0.4rem !important;
+        font-size: 0.85rem !important;
+        color: #333;
+        border-top:0.0625rem solid #eee;
+    }
+
+    .admin-table td {
+        padding: 1rem 0.4rem !important;
+        font-size: 0.8rem !important;
+        text-align: center;
+        border-bottom: 0.0625rem solid #eee !important;
+        word-break: break-all; /* 이메일 길어질 경우 대비 */
+    }
+
+    /* 5. 비네팅 오버레이 및 하단 버튼 */
+    .mobile-guide-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 10000;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 25%, rgba(0,0,0,0.7) 100%);
+        display: none; /* JS 제어 */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+    }
+
+    .guide-footer {
+        position: absolute;
+        left: 50%;
+        bottom: 17rem;
+        transform:translate(-50%,-50%);
+        display: flex;
+        gap: 2.5rem;
+    }
+
+    .guide-footer button {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+    }
 }

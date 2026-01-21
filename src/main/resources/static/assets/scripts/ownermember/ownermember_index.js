@@ -3,6 +3,48 @@ let selectedMemberEmail = null;
 let selectedMemberName = null;
 
 document.addEventListener("DOMContentLoaded", () => {
+    /* --- 추가: [A. 모바일 가이드 오버레이 로직] --- (이 위치로 이동) */
+    const overlay = document.getElementById('mobileGuideOverlay');
+    const btnTodayClose = document.getElementById('btnTodayClose');
+    const btnClose = document.getElementById('btnCloseOverlay');
+
+    if (overlay && btnTodayClose && btnClose) {
+        const checkOverlay = () => {
+            const hideExpiry = localStorage.getItem('mobileGuideHideExpiry');
+            const now = new Date().getTime();
+
+            // 32rem(512px) 이하일 때만 작동
+            if (window.innerWidth <= 512) {
+                if (!hideExpiry || now > parseInt(hideExpiry)) {
+                    overlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            } else {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        };
+
+        // 초기 실행
+        checkOverlay();
+
+        // 닫기 버튼
+        btnClose.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        // 오늘 하루 그만보기 (24시간)
+        btnTodayClose.addEventListener('click', () => {
+            const expiryDate = new Date().getTime() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('mobileGuideHideExpiry', expiryDate.toString());
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+
+        // 리사이즈 대응
+        window.addEventListener('resize', checkOverlay);
+    }
 
     /* --- [1. 커스텀 셀렉트 UI 로직] --- */
     document.addEventListener('click', (e) => {
@@ -339,6 +381,7 @@ function deleteMember(email, name, loginUserEmail) {
         }
     });
 }
+
 
 /**
  * 연락처 하이픈 자동 생성 함수

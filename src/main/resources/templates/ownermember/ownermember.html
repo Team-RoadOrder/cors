@@ -102,22 +102,10 @@
                     <td th:text="${member.name}">이름</td>
                     <td th:text="${member.email}">이메일</td>
                     <td>
-                        <div class="custom-select-container inner-select-wrapper" onclick="event.stopPropagation()">
-                            <div class="select-trigger">
+                        <div onclick="event.stopPropagation()">
                                 <span th:if="${member.level == 3}">최고관리자</span>
                                 <span th:if="${member.level == 2}">중간관리자</span>
                                 <span th:if="${member.level == 1}">사원</span>
-                            </div>
-                            <div class="custom-options">
-                                <div class="custom-option" data-value="3">최고관리자</div>
-                                <div class="custom-option" data-value="2">중간관리자</div>
-                                <div class="custom-option" data-value="1">사원</div>
-                            </div>
-                            <select class="hidden-select">
-                                <option value="3" th:selected="${member.level == 3}">최고관리자</option>
-                                <option value="2" th:selected="${member.level == 2}">관리자</option>
-                                <option value="1" th:selected="${member.level == 1}">사원</option>
-                            </select>
                         </div>
                     </td>
                     <td th:text="${#temporals.format(member.createdAt, 'yyyy.MM.dd')}">2026.01.14</td>
@@ -164,5 +152,15 @@
         </div>
     </div>
 </main>
+<div id="mobileGuideOverlay" class="mobile-guide-overlay">
+    <div class="guide-content">
+        <p>임직원의 추가, 삭제는 웹에서 진행가능합니다.</p>
+    </div>
+    <div class="guide-footer">
+        <button type="button" id="btnTodayClose">오늘 하루 그만보기</button>
+        <button type="button" id="btnCloseOverlay">닫기</button>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/owner.html :: owner-bottom-nav}"></th:block>
 </body>
 </html>

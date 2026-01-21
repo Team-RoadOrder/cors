@@ -67,7 +67,7 @@
             <input type="file" name="images" id="imageInput" multiple style="display: none;" accept="image/*">
 <!--            <div class="title">-->
 <!--                <span class="caption">상품이미지</span>-->
-<!--                <span class="count" id="imageCount">(0/5)</span>-->
+                <span class="count" id="imageCount">(0/5)</span>
 <!--            </div>-->
             <div class="main-image-wrapper" onclick="document.getElementById('imageInput').click();"
                  style="cursor: pointer;">
@@ -76,6 +76,7 @@
                 <span class="tooltip">⚠️ 최대 5장까지 등록 가능합니다.</span>
             </div>
             <input type="hidden" name="mainImageIndex" id="mainImageIndex" value="0">
+
             <!--           <div class="sub-image-wrapper">
                            <img class="img" src="/assets/images/shop/quick/2.webp" alt="카메라">
                            <span class="close">x</span>
@@ -242,10 +243,19 @@
     </form>
 </main>
 
-<footer id="footer">
+<!--<footer id="footer">-->
 
-</footer>
-
+<!--</footer>-->
+<div id="mobileGuideOverlay" class="mobile-guide-overlay">
+    <div class="guide-content">
+        <p>상품의 스타일이나 카테고리가 없다면<br> 추천이 누락될 수 있습니다.</p>
+    </div>
+    <div class="guide-footer">
+        <button type="button" id="btnTodayClose">오늘 하루 그만보기</button>
+        <button type="button" id="btnCloseOverlay">닫기</button>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/owner.html :: owner-bottom-nav}"></th:block>
 
 </body>
 </html>
