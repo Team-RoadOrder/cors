@@ -24,7 +24,15 @@ public class ShopListController {
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "sort", required = false, defaultValue = "distance") String sort, // [추가] 정렬 기준 (기본값: distance)
             @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        if( sessionUser == null ) {
+            modelAndView.setViewName("redirect:/login");
+            return modelAndView;
+        }
 
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         int totalCount = this.mainService.getCountAll();
         PageVo pageVo = new PageVo(page, totalCount);
 

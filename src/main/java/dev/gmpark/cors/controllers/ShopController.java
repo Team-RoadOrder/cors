@@ -24,8 +24,19 @@ public class ShopController {
     private final ShopService shopService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getShop(ModelAndView modelAndView,
+    public ModelAndView getShop(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+                        ModelAndView modelAndView,
                        @RequestParam(value = "shopId", required = false, defaultValue = "0") int shopId) {
+
+        if( sessionUser == null ) {
+            modelAndView.setViewName("redirect:/login");
+            return modelAndView;
+        }
+
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
         modelAndView.addObject("shopInfo", shopInfo);
         modelAndView.setViewName("shop/shop");

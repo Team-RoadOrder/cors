@@ -27,6 +27,10 @@ public class RecommendedShopController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         
         String style = sessionUser.getStyle();
         List<String> categories = new ArrayList<>();

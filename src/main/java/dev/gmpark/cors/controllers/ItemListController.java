@@ -26,6 +26,14 @@ public class ItemListController {
             @RequestParam(value = "sort", required = false, defaultValue = "popular") String sort,
             @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
 
+        if (sessionUser == null) {
+            modelAndView.setViewName("redirect:/login");
+            return modelAndView;
+        }
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         int totalCount = this.itemService.getCountAll();
         PageVo pageVo = new PageVo(page, totalCount);
 

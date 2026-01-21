@@ -25,6 +25,11 @@ public class NearbyShopController {
             return modelAndView;
         }
 
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
+
         ShopInfoEntity[] shops = this.mainService.getAllShop(sessionUser.getAddress());
         modelAndView.addObject("sessionUser", sessionUser);
         modelAndView.addObject("shops", shops);

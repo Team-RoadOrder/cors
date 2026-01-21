@@ -31,6 +31,10 @@ public class CartController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/login");
+            return modelAndView;
+        }
         CartVo[] cartList = this.cartService.getCartList(sessionUser.getEmail());
         modelAndView.addObject("cartList", cartList);
         modelAndView.setViewName("cart/cart");

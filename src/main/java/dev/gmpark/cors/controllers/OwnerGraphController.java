@@ -32,6 +32,10 @@ public class OwnerGraphController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
+        if (!"owner".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/main");
+            return modelAndView;
+        }
         if ( sessionUser.getLevel()==2 || sessionUser.getLevel() == 1) {
             modelAndView.setViewName("redirect:/owner?alert=noauth"); // 예시
             return modelAndView;

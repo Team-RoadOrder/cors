@@ -36,6 +36,10 @@
             if( sessionUser == null) {
               return new ModelAndView("redirect:/login");
             }
+            if (!"owner".equalsIgnoreCase(sessionUser.getUsertype())) {
+                modelAndView.setViewName("redirect:/main");
+                return modelAndView;
+            }
             if ( sessionUser.getLevel()==2 || sessionUser.getLevel() == 1) {
                 modelAndView.setViewName("redirect:/owner?alert=noauth"); // 예시
                 return modelAndView;

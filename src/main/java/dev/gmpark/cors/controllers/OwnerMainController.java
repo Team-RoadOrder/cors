@@ -4,8 +4,10 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.services.OwnerMainService; // OwnerMainService 사용
 import dev.gmpark.cors.vos.ReservationItemVo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -20,14 +22,13 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/")
+@RequiredArgsConstructor
 public class OwnerMainController {
 
     private final OwnerMainService ownerMainService; // 서비스 이름 변경
+    private final MyService myService;
 
-    @Autowired
-    public OwnerMainController(OwnerMainService ownerMainService) {
-        this.ownerMainService = ownerMainService;
-    }
+
 
     @RequestMapping(value = "/owner", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public String getOwnerMain(
@@ -178,7 +179,22 @@ public class OwnerMainController {
         /*레벨이 1인경우에만 권한없음으로  ownermain.js에 로직짜기 */
 
     }
+    @RequestMapping(value = "/owner/delete-shop", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> deleteShop(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        if (sessionUser == null || !"owner".equalsIgnoreCase(sessionUser.getUsertype())) {
+            response.put("result", "FAILURE");
+            return response;
+        }
+        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
+        CommonResult result = this.myService.deleteUser(sessionUser);
+        response.put("result", result.name());
 
-
+        return response;
+    }
 
 }

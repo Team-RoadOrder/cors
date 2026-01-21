@@ -602,3 +602,58 @@ const saveProduct = (btn) => {
     xhr.open('PATCH', '/owner/patch-item');
     xhr.send(formData);
 }
+
+// [기존 deleteShop 함수 수정 및 이벤트 리스너 연결]
+
+// 1. 버튼 요소를 가져옵니다.
+const shopDeleteBtn = document.getElementById('shopDeleteBtn');
+
+// 2. 이벤트 리스너를 연결합니다.
+if (shopDeleteBtn) {
+    shopDeleteBtn.addEventListener('click', () => {
+        // 기존 deleteShop 함수 로직을 여기에 넣거나, 함수를 호출합니다.
+
+        openModal("answer", "<p>정말 삭제하시겠습니까?<br>삭제된 매장은 복구할 수 없습니다.</p>", {
+            confirmText: '탈퇴',
+            cancelText: '취소',
+            onConfirm: () => {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.result === 'SUCCESS') {
+                            openModal("SUCCESS", "<p>회원 탈퇴가 완료되었습니다.</p>", {
+                                confirmText: '확인',
+                                onConfirm: () => {
+                                    location.href = '/logout'; // 로그아웃 처리
+                                }
+                            });
+                        }
+                        else if (response.result === 'NO_AUTH') {
+                            openModal("WARN", // WARN이나 FAILURE 모달 사용 권장
+                                `<p style="text-align:center; font-weight:bold;">권한이 없습니다.</p>
+                                 <p style="text-align:center;">최고 관리자에게 문의하여 주세요.</p>`,
+                                {
+                                    confirmText: '확인',
+                                    onConfirm: () => {
+                                        // 권한이 없다고 해서 로그아웃 시킬 필요는 없으므로
+                                        // location.href = '/logout'; 은 제거하거나 주석 처리하는 것이 자연스럽습니다.
+                                    }
+                                });
+                        }
+                        else {
+                            openModal("WARN", "<p>탈퇴 처리에 실패하였습니다.</p>");
+                        }
+                    } else {
+                        openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`);
+                    }
+                };
+
+                xhr.open('DELETE', '/owner/delete-shop');
+                xhr.send();
+            }
+        });
+    });
+}

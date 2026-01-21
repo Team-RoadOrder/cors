@@ -38,6 +38,10 @@ public class ItemController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/main");
+            return modelAndView;
+        }
 
         ShopItemVo item = this.itemService.getItemById(id);
 

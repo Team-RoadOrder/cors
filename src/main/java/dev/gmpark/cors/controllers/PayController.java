@@ -32,7 +32,10 @@ public class PayController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
-
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         List<PaymentItemDto> items = new ArrayList<>();
 
         // 1. 단일 상품 구매

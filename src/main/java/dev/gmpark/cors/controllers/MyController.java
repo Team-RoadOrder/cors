@@ -28,6 +28,11 @@ public class MyController {
         if(sessionUser == null) {
             modelAndView.setViewName("redirect:/login");
         }
+
+        if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
+            modelAndView.setViewName("redirect:/owner");
+            return modelAndView;
+        }
         modelAndView.addObject("sessionUser", sessionUser);
         return modelAndView;
     }
