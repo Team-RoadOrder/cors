@@ -1,7 +1,4 @@
-/**
- * 기존의 모든 로그인 로직(유효성 검사, AJAX, CapsLock)을 보존하며
- * 새로운 스크롤 레이아웃에 맞춰 초기화합니다.
- */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     /** @type{HTMLFormElement} */
@@ -12,16 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const passwordInput = $loginForm['password'];
     const emailInput = $loginForm['email'];
-    const capsLockWarning = document.getElementById('capsLockWarning');
 
-    // 1. CapsLock 감지 로직 (기존 유지)
-    passwordInput.addEventListener('keyup', (e) => {
-        if (e.getModifierState && e.getModifierState('CapsLock')) {
-            capsLockWarning.style.display = 'block';
-        } else {
-            capsLockWarning.style.display = 'none';
-        }
-    });
 
     // 2. 유효성 검사 함수 (기존 로직 및 모달 호출 훼손 없음)
     function validateLoginForm() {
