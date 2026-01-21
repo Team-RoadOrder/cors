@@ -218,7 +218,7 @@
 }
 
 @media (max-width: 75rem) {
-        #header .logo {
+     #header .logo {
          width: 9rem; /* 로고 더 축소 */
          top: -0.3rem
      }

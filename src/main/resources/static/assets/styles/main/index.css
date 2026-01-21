@@ -16,3 +16,131 @@ body {
 body > .box {
     width: 71.25rem;
 }
+
+#mobile-background {
+    display: none;
+}
+
+@media screen and (max-width: 80rem) {
+
+}
+
+@media (max-width: 75rem) {
+
+}
+
+@media (max-width: 48rem) {
+    /* 1. 모바일에서 전체 컨테이너 너비가 화면을 넘어가지 않도록 수정 */
+    body > .box {
+        width: 100%; /* 고정값 48rem 제거 -> 100%로 변경 */
+        max-width: 100%; /* 화면 밖으로 넘치지 않게 제한 */
+        padding: 0 1rem; /* 좌우 여백 */
+        box-sizing: border-box;
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+    #popularBrand > .title {
+        margin-top: 2rem;
+        font-size: 1rem;
+    }
+    #popularBrand > .more {
+        margin-top: 2rem;
+        margin-right: 2rem;
+        font-size: 1rem;
+    }
+    #splash {
+        height: 20rem;
+    }
+    #splash > .info {
+        display: none;
+    }
+    #mobile-background  {
+        display: flex;
+    }
+    #mobile-background img {
+        width:100%;
+    }
+    #quick {
+        display: none;
+    }
+
+    /* 그리드 설정 */
+    #popularBrand > .grid {
+        grid-template-columns: 1fr 1fr 1fr; /* 1열로 보기 */
+        /* 또는 한 줄에 2개씩 보고 싶다면: grid-template-columns: repeat(2, 1fr); */
+    }
+    #popularBrand > .grid > .box {
+        align-items: center; /* 기존 flex-start를 center로 덮어쓰기 */
+    }
+    /* 2. 링크(a) 태그를 블록 요소로 변경하여 크기를 갖게 함 */
+    #popularBrand > .grid > .box > a {
+        display: block;
+    }
+
+    /* 3. 이미지 크기 명시 및 높이 설정 */
+    #popularBrand > .grid > .box > a > .image {
+        width: 7rem; /* 원하시는 크기 */
+        height: 7rem; /* [중요] 높이를 명시적으로 지정해야 배경 이미지가 보임 */
+        /* aspect-ratio: 1/1; <- height를 주면 굳이 없어도 되지만 유지해도 무방 */
+    }
+
+    /* 옵션: 폼 컨테이너 정렬 */
+    #popularBrand > .form-container > .selection {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        /* 또는 가로 스크롤을 원하시면 overflow-x: auto; 등 사용 */
+    }
+    #popularBrand > .form-container > .selection > .item {
+        display: inline-block;
+        width: 100%; /* 아이템이 그리드 칸을 꽉 채우도록 설정 (선택사항) */
+        text-align: center;
+    }
+    #popularShop > .title {
+        margin-top: 2rem;
+        font-size: 1rem;
+    }
+    #popularShop > .more {
+        margin-top: 2rem;
+
+        font-size: 1rem;
+        margin-right: 2rem;
+
+    }
+
+    #popularShop > .list {
+        /* 1. absolute 해제: 원래 흐름대로 배치되도록 변경 */
+        position: static;
+
+        /* 2. 레이아웃 재정의 */
+        display: grid; /* Flex 대신 Grid 추천 (줄바꿈 용이) */
+        grid-template-columns: 1fr 1fr; /* 2열로 보기 */
+        gap: 1rem;
+        padding: 1rem 0;
+        width: 100%; /* 너비 꽉 채우기 */
+    }
+
+    /* 아이템별 스타일 */
+    #popularShop > .list > .item {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #popularShop > .list > .item img {
+
+    }
+
+        /* 이미지 및 텍스트 크기 조정 */
+    #popularShop > .list > .item .logo {
+        width: 100%;
+        max-width: 7rem;
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+
+    #popularShop > .list > .item .text-container .shopName {
+        font-size: 1rem;
+        margin-top: 0.5rem;
+        line-height: 1.5;
+    }
+}
