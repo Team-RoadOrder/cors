@@ -1,4 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    //추가
+    const tabButtons = document.querySelectorAll('.tab-nav-button');
+    const sections = {
+        'item-list': document.querySelector('.item-list'),
+        'res-list': document.querySelector('.res-list'),
+        'order-list': document.querySelector('.order-list')
+    };
+
+    function handleMobileTabs() {
+        if (window.innerWidth <= 512) {
+            // [수정] 저장된 탭 정보 가져오기 (없으면 'item-list'를 기본값으로 사용)
+            const savedTab = localStorage.getItem('activeTab') || 'item-list';
+
+            // 1. 초기화: 모든 섹션 및 버튼 active 제거
+            Object.values(sections).forEach(sec => { if(sec) sec.classList.remove('active'); });
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            // 2. 저장된 탭 활성화
+            const targetBtn = document.querySelector(`.tab-nav-button[data-tab="${savedTab}"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+            if (sections[savedTab]) sections[savedTab].classList.add('active');
+
+            // 3. 버튼 클릭 이벤트
+            tabButtons.forEach(button => {
+                button.onclick = function() {
+                    const targetTab = this.getAttribute('data-tab');
+
+                    // [추가] 클릭한 탭 정보를 localStorage에 저장
+                    localStorage.setItem('activeTab', targetTab);
+
+                    // 클래스 교체 로직
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    Object.values(sections).forEach(sec => { if(sec) sec.classList.remove('active'); });
+                    if (sections[targetTab]) sections[targetTab].classList.add('active');
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+            });
+        } else {
+            Object.values(sections).forEach(sec => { if(sec) sec.classList.remove('active'); });
+        }
+    }
+
+    handleMobileTabs();
+    window.addEventListener('resize', handleMobileTabs);
+
+
     checkEmptyState();
 
     const inputs = document.querySelectorAll('.item-list .product input');

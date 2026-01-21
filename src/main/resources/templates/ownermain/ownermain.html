@@ -84,7 +84,20 @@
                 <button type="button" class="button shopInfo" id="shopUpdateBtn">매장정보 수정</button>
             </div>
         </section>
-
+        <!--추가-->
+        <nav class="tab-navigation">
+            <ul class="tab-nav-list">
+                <li class="tab-nav-item">
+                    <button class="tab-nav-button active" data-tab="item-list">등록 상품 관리</button>
+                </li>
+                <li class="tab-nav-item">
+                    <button class="tab-nav-button" data-tab="res-list">예약 정보 확인</button>
+                </li>
+                <li class="tab-nav-item">
+                    <button class="tab-nav-button" data-tab="order-list">판매 내역 확인</button>
+                </li>
+            </ul>
+        </nav>
         <section id="items">
             <div class="item-list">
                 <div class="spring"> 등록상품 관리</div>
@@ -158,9 +171,11 @@
 
                     <div class="user-info">
                         <span class="date" th:text="${'방문예정일: '+ #temporals.format(res.visitDate, 'yyyy-MM-dd HH:mm')}">2025-11-07 12:43</span>
-                        <span class="user" th:text="${res.userName}">박규민</span>
-                        <br>
-                        <span class="tel" th:text="${res.userTel}">010-0000-0000</span>
+
+                        <div class="user-info-right">
+                            <div class="user" th:text="${res.userName}">박규민</div>
+                            <div class="tel" th:text="${res.userTel}">010-0000-0000</div>
+                        </div>
                     </div>
 
                     <span class="image-wrapper">
@@ -255,6 +270,6 @@
 </main>
 
 <footer id="footer"></footer>
-
+<th:block th:replace="~{/fragments/owner.html :: owner-bottom-nav}"></th:block>
 </body>
 </html>

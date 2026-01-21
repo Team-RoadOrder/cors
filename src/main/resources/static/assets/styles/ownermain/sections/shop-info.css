@@ -1,3 +1,4 @@
+/* --- 매장 정보 (Shop Info) 섹션 --- */
 #shop-info {
     position: relative;
     display: flex;
@@ -24,7 +25,7 @@
     object-position: center;
 }
 
-/* 기본 버튼 스타일 (상단 대표사진수정용) */
+/* 상단 대표사진수정 버튼 */
 #shop-info .button {
     position: absolute;
     top: 9rem;
@@ -42,35 +43,35 @@
 
 #shop-info .button:hover { background: #212121; }
 
-/* [해결 포인트] 하단 액션 버튼 그룹 컨테이너 */
+/* 하단 액션 버튼 그룹 컨테이너 */
 .info-action-container {
     position: absolute;
-    top: 21rem;      /* 정보 영역 우측 하단 고정 */
+    top: 21rem;
     right: 3rem;
-    display: flex;   /* 버튼을 가로로 나란히 */
-    gap: 0.8rem;     /* 버튼 사이 간격 */
-    z-index: 20;     /* 다른 요소에 가려지지 않게 높임 */
+    display: flex;
+    gap: 0.8rem;
+    z-index: 20;
 }
 
-/* 컨테이너 내부 버튼 개별 스타일 (absolute 해제 및 보임 보장) */
 .info-action-container .button {
-    position: relative !important; /* 부모 컨테이너 내에서 상대 위치 사용 */
-    top: auto !important;          /* 기존 9rem 무시 */
-    right: auto !important;        /* 기존 3rem 무시 */
-    background: #616161;           /* 버튼 색상 이미지 준수 */
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    background: #616161;
     margin: 0;
     display: inline-block;
-    min-width: 8rem;               /* 버튼 최소 너비 확보 */
+    min-width: 8rem;
 }
 
 .info-action-container .button.shopDelete:hover { background: #f44336; }
 
-/* 폼 디자인 (디자인 훼손 없이 유지) */
+/* 매장 정보 폼 디자인 */
 #form { flex: 1; }
 #form input {
     appearance: none;
     -webkit-appearance: none;
-    border: none; outline: none;
+    border: none;
+    outline: none;
     background-color: transparent;
     padding: 0;
     margin: 0;
@@ -85,35 +86,10 @@
     width: 17rem;
     font-weight: 500;
 }
-#form input[name="shopTime"] {
-    font-size: 0.9rem;
-    position: absolute;
-    left: 3rem;
-    top: 17rem;
-}
-#form input[name="shopType"] {
-    font-size: 0.9rem;
-    position: absolute;
-    left: 3rem;
-    top: 19rem;
-    color: #a0a0a0;
-}
-#form input[name="shopAddress"] {
-    font-size: 0.9rem;
-    position: absolute;
-    left: 3rem;
-    top: 20.8rem;
-    width: 22rem !important;
-    color: #a0a0a0;
-}
-#form input[name="shopTel"] {
-    font-size: 0.9rem;
-    position: absolute;
-    left: 3rem;
-    top: 22.5rem;
-    width: 10rem;
-    color: #a0a0a0;
-}
+#form input[name="shopTime"] { font-size: 0.9rem; position: absolute; left: 3rem; top: 17rem; }
+#form input[name="shopType"] { font-size: 0.9rem; position: absolute; left: 3rem; top: 19rem; color: #a0a0a0; }
+#form input[name="shopAddress"] { font-size: 0.9rem; position: absolute; left: 3rem; top: 20.8rem; width: 22rem !important; color: #a0a0a0; }
+#form input[name="shopTel"] { font-size: 0.9rem; position: absolute; left: 3rem; top: 22.5rem; width: 10rem; color: #a0a0a0; }
 
 #form input:not(:read-only) {
     border: none !important;
@@ -122,6 +98,51 @@
     cursor: text;
     padding-bottom: 0.3125rem;
 }
-#form input:not(:read-only):focus {
-    border-bottom: 0.125rem solid #f44336;
+#form input:not(:read-only):focus { border-bottom: 0.125rem solid #f44336; }
+
+/* --- [수정 완료] 예약 정보 확인 상단 바 (User Info) 여백 및 정렬 --- */
+
+.res-list .user-info {
+    display: flex !important;
+    /* [해결] justify-content: space-between으로 날짜와 사용자 정보 사이에 최대 여백 확보 */
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 1rem 1.5rem !important;
+    background-color: #010852 !important;
+    margin-bottom: 1.2rem !important; /* 바 하단 컨텐츠와의 여백 확보 */
+    color: #fff !important;
+    box-sizing: border-box !important;
+}
+
+.res-list .user-info .date {
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* [해결] 우측 정보 영역을 세로 배치로 변경하여 이름과 번호 사이 여백 생성 */
+.res-list .user-info-right {
+    display: flex !important;
+    flex-direction: column !important; /* 세로 정렬 */
+    align-items: flex-end !important; /* 우측 정렬 */
+    gap: 0.8rem !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+}
+
+.res-list .user-info .user {
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    margin: 0 !important; /* 기존에 작동하지 않던 margin-bottom은 제거하고 부모의 gap으로 대체 */
+}
+
+.res-list .user-info .tel {
+    font-size: 0.8rem !important;
+    opacity: 0.9 !important;
+}
+
+/* 레이아웃 훼손 방지를 위해 기존 br 태그 숨김 */
+.res-list .user-info br {
+    display: none !important;
 }
