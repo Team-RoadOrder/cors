@@ -96,10 +96,18 @@
 
     <nav id="mobile-nav-menu" class="mobile-nav" aria-hidden="true">
         <ul>
-            <li class="about">SHOPS</li>
-            <li class="skills">ITEMS</li>
+            <a th:href="@{/shops}">
+            <li  class="about">SHOPS</li>
+            </a>
+            <a th:href="@{/itemList}">
+                <li class="skills">ITEMS</li>
+            </a>
+            <a th:href="@{/recommended-shops}">
             <li class="archive">RECOMMENDED</li>
+            </a>
+            <a th:href="@{/nearby-shop}">
             <li class="projects">NEARBY</li>
+            </a>
         </ul>
     </nav>
 </header>
@@ -116,10 +124,18 @@
 
     <nav id="mobile-nav-menu-no-active" class="mobile-nav" aria-hidden="true">
         <ul>
-            <li class="about">About me</li>
-            <li class="skills">Skills</li>
-            <li class="archive">Archiving</li>
-            <li class="projects">Projects</li>
+            <a th:href="@{/shops}">
+                <li  class="about">SHOPS</li>
+            </a>
+            <a th:href="@{/itemList}">
+                <li class="skills">ITEMS</li>
+            </a>
+            <a th:href="@{/recommended-shops}">
+                <li class="archive">RECOMMENDED</li>
+            </a>
+            <a th:href="@{/nearby-shop}">
+                <li class="projects">NEARBY</li>
+            </a>
         </ul>
     </nav>
 </header>
