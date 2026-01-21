@@ -181,12 +181,13 @@ if (bgUpdateBtn && bgInput && bgImageDisplay) {
     // 3. 매장 정보 수정 및 전송 기능 (통합됨)
     // ==========================================
 const infoUpdateBtn = document.getElementById('infoUpdateBtn');
+const shopDeleteBtn = document.getElementById('shopDeleteBtn');
 const form = document.forms['form']; // HTML에 <form name="form"> 확인 필수
-
+const cancelBtn = document.getElementById('cancelBtn');
     // 파일 인풋은 제외하고 텍스트 인풋만 선택 (스타일/readonly 제어용)
 const formInputs = document.querySelectorAll('#form input:not([type="file"])');
 
-if (infoUpdateBtn && form) {
+if (infoUpdateBtn && form ) {
         infoUpdateBtn.addEventListener('click', () => {
             // 현재 상태가 '읽기 전용'인지 확인
             const isReadonly = formInputs[0].hasAttribute('readonly');
@@ -202,7 +203,8 @@ if (infoUpdateBtn && form) {
                 infoUpdateBtn.textContent = '수정완료'; // 버튼 글자 변경
                 infoUpdateBtn.style.backgroundColor = '#2196f3'; // 버튼 색 강조
                 formInputs[0].focus(); // 첫 번째 칸에 포커스
-
+                shopDeleteBtn.style.display = 'none';
+                cancelBtn.style.display = 'block';
             } else {
                 // ------------------------------------
                 // [STEP 2] 수정 완료 -> 서버 전송
@@ -279,7 +281,25 @@ if (infoUpdateBtn && form) {
             }
         });
 }
+if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+        // 1. 폼에 입력된 변경사항을 초기값(HTML에 렌더링된 값)으로 리셋
+        form.reset();
 
+        // 2. 모든 텍스트 인풋을 다시 '읽기 전용'으로 변경
+        formInputs.forEach(input => {
+            input.setAttribute('readonly', true);
+        });
+
+        // 3. 버튼 가시성 원상복구
+        cancelBtn.style.display = 'none';        // 취소 버튼 숨김
+        shopDeleteBtn.style.display = 'block';   // 삭제 버튼 다시 보임
+
+        // 4. 메인 수정 버튼 텍스트 및 스타일 초기화
+        infoUpdateBtn.textContent = '매장정보 수정';
+        infoUpdateBtn.style.backgroundColor = '';
+    });
+}
 /* ==========================================
    Input 너비 자동 조절 스크립트
 ========================================== */
@@ -656,7 +676,7 @@ const saveProduct = (btn) => {
 // [기존 deleteShop 함수 수정 및 이벤트 리스너 연결]
 
 // 1. 버튼 요소를 가져옵니다.
-const shopDeleteBtn = document.getElementById('shopDeleteBtn');
+
 
 // 2. 이벤트 리스너를 연결합니다.
 if (shopDeleteBtn) {
