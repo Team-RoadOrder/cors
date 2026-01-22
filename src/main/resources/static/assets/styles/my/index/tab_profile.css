@@ -13,19 +13,19 @@
 }
 .tab_profile_content .user_membership {
     width: 905px;
-    height: 110px;
+    height: auto;
 }
 
 .tab_profile_content .user_detail{
     padding: 24px;
-    height: 60px;
+    min-height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     width: 100%;
     border: 1px #e6e6e6 solid;
     border-radius: 15px;
-
+    box-sizing: border-box;
 }
 /* 기존 .thumb에 적용된 스타일 중 일부를 .user_thumb으로 이동 */
 .tab_profile_content .user_detail .user_thumb {

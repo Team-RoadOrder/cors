@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
 </head>
 <body>
@@ -22,32 +23,6 @@
         </div>
     </div>
     <div class="shortcut-grid">
-        <!--<ul class="menu">
-            <li class="item">
-                <img src="../assets/images/my/shortcut1.png" alt="" class="image">
-                <span class="text">판매자 등급</span>
-            </li>
-            <li class="item">
-                <img src="../assets/images/my/shortcut2.png" alt="" class="image">
-                <span class="text">0p</span>
-            </li>
-            <li class="item">
-                <img src="../assets/images/my/shortcut3.png" alt="" class="image">
-                <span class="text">쿠폰</span>
-            </li>
-            <li class="item">
-                <img src="../assets/images/my/shortcut4.png" alt="" class="image">
-                <span class="text">리뷰</span>
-            </li>
-            <li class="item">
-                <img src="../assets/images/my/shortcut5.png" alt="" class="image">
-                <span class="text">친구 초대</span>
-            </li>
-            <li class="item">
-                <img src="../assets/images/my/shortcut6.png" alt="" class="image">
-                <span class="text">공지사항</span>
-            </li>
-        </ul>-->
         <div class="my_home_title">
             <h3 class="title">구매내역</h3>
             <label onclick="loadTab('orders', document.querySelectorAll('.menu .item')[0])" class="more" style="cursor:pointer">더보기 </label>
@@ -329,6 +304,21 @@
 <div th:fragment="custom" class="tab_custom_content" >
     <h3 class="tab_title">나의 맞춤 정보</h3>
     <p>개인 맞춤 설정 정보가 여기에 표시됩니다.</p>
+</div>
+
+<div th:fragment="my-nav" class="list">
+    <div class="quick">메뉴이동</div>
+    <button class="item" onclick="loadTab('home', this)" data-tab="home">홈</button>
+    <button class="item" onclick="loadTab('orders', this)" data-tab="orders">구매 내역</button>
+    <button class="item" onclick="loadTab('reservation', this)" data-tab="reservation" >예약 및 픽업상품</button>
+    <button class="item" onclick="loadTab('likes-shop', this)" data-tab="likes-shop">관심 매장</button>
+    <button class="item" onclick="loadTab('likes-item', this)" data-tab="likes-item">관심 상품</button>
+    <button class="item" onclick="loadTab('profile', this)" data-tab="profile">프로필 관리</button>
+    <button class="item"
+            onclick="loadTab('address', this); window.scrollTo({top: window.innerHeight, behavior: 'smooth'});"
+            data-tab="address">
+        배송지 관리
+    </button>
 </div>
 </body>
 </html>

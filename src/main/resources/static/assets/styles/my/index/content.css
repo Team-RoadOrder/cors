@@ -1,3 +1,4 @@
+/* index/content.css */
 .tab-content {
     flex-direction: column;
     justify-content: flex-start;
@@ -5,24 +6,26 @@
     margin-top: 3.5rem;
     display: flex !important;
     width: 100%;
+    max-width: 100%; /* 부모를 넘어가지 않도록 안전장치 추가 */
 }
-
 /*유저 프로필 */
 .tab-content .user_membership {
-    width: 905px;
-    height: 110px;
+    width: 100%; /* 905px -> 100% 변경 */
+    max-width: 905px; /* 최대 너비 설정 */
+    /* height: 110px; -> 높이 고정은 모바일에서 내용이 넘칠 수 있으므로 auto 추천 */
+    height: auto;
 }
 
 .tab-content .user_detail{
     padding: 24px;
-    height: 60px;
+    min-height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     width: 100%;
     border: 1px #e6e6e6 solid;
     border-radius: 15px;
-
+    box-sizing: border-box;
 }
 /* 기존 .thumb에 적용된 스타일 중 일부를 .user_thumb으로 이동 */
 .tab-content .user_detail .user_thumb {
@@ -34,6 +37,7 @@
     display: flex; /* 내부 이미지를 중앙 정렬하고 싶다면 추가 */
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
 /* 이제 .thumb 이미지 자체는 부모에 꽉 차도록 설정 */
@@ -72,12 +76,11 @@
     padding: 11px 14px;
     border-radius: 10px;
 }
-/* 숏컷 그리드 */
 .tab-content .shortcut-grid {
-    width: 905px;
-    height: 110px;
+    width: 100%; /* 905px -> 100% 변경 */
+    max-width: 905px;
+    height: auto; /* 높이 유동적 */
 }
-
 .tab-content .menu{
     padding: 24px;
     height: 60px;
@@ -193,7 +196,6 @@
 .tab-content .recent_purchase .end .link .count {
     font-size: 18px;
     font-weight: 600;
-
 }
 /* 구매내역 아이템들 전체 컨테이너 및 기본 패딩 */
 .tab-content .recent_item .list {
@@ -322,6 +324,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.8rem;
+    width: 100%;
 }
 
 .tab-content .grid .box {
@@ -329,12 +332,13 @@
     align-items: center;
     display: flex;
     margin-bottom: 5rem;
-
+    width: 100%;
 }
 .tab-content .grid .box >.image-wrapper {
     background-color: rgb(243, 244, 247);
     border-radius: 0.5rem;
-    width: 13rem;
+    /*width: 13rem;*/
+    width: 100%;
     aspect-ratio: 1/1;
     display: flex;
     align-items: center;

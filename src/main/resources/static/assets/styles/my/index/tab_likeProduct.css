@@ -1,5 +1,6 @@
 .tab_likeProduct_content {
-    width: 1000px;
+    max-width: 1000px;
+    /*width: 1000px*/;
 }
 .tab_likeProduct_content .tab_title {
     font-size: 26px;
@@ -32,7 +33,6 @@
 
 }
 .tab_likeProduct_content .grid > .box .image {
-    width: 165px;
     aspect-ratio: 1/1;
     background-position: center;
     background-size: contain;

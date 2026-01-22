@@ -1,5 +1,5 @@
 .tab_likeShop_content {
-    width: 1000px;
+    max-width: 1000px;
 }
 .tab_likeShop_content .tab_title {
     font-size: 26px;
@@ -34,7 +34,7 @@
 }
 
 .tab_likeShop_content .grid > .box .image {
-    width: 100%;
+    width: 200px;
     aspect-ratio: 1/1;
     background-position: center;
     background-repeat: no-repeat;

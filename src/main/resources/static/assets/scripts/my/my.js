@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 1. URL 파라미터 확인
     const urlParams = new URLSearchParams(window.location.search);
-    const openTab = urlParams.get('menu'); // 'open' 대신 'menu' 파라미터 사용 (MyController와 일치)
+    const openTab = urlParams.get('open'); // 'open' 대신 'menu' 파라미터 사용 (MyController와 일치)
 
 
     if (openTab) {
@@ -180,7 +180,23 @@ const loadTab = (menuName, element) => {
             // 클릭한 메뉴에 active 클래스 추가
             element.classList.add('active');
         }
+        if (window.innerWidth <= 768) {
+            const targetContainer = document.querySelector("#MY");
+            if (targetContainer) {
+                // 상단 고정 헤더가 있다면 그만큼 덜 올라가게 (예: 60px)
+                const headerOffset = 60;
+                const elementPosition = targetContainer.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+        if (menuName === 'reservation') {
+            filterStatus('대기');
+        }
      };
     const timestamp = new Date().getTime();
     xhr.open('GET', '/my/tab?menu=' + menuName + '&t=' + timestamp);

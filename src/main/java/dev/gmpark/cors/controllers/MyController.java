@@ -24,9 +24,11 @@ public class MyController {
     private final MyService myService;
     @RequestMapping(value = "/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getMy(ModelAndView modelAndView,@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+
         modelAndView.setViewName("my/my");
         if(sessionUser == null) {
             modelAndView.setViewName("redirect:/login");
+            return modelAndView;
         }
 
         if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {

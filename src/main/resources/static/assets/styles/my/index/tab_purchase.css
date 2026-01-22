@@ -1,7 +1,9 @@
 
 .tab_purchase_content {
-    width: 65rem;
+    width: 100%; /* 부모에 맞춤 (기존 65rem 대신) */
+    max-width: 65rem; /* PC에서는 최대 65rem까지만 커짐 */
     margin-bottom: 5rem;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
 }
 
 /* 탭 내부의 제목 스타일 */
@@ -22,7 +24,9 @@
 
 }
 .tab_purchase_content li {
-    width: 301px;
+    flex: 1; /* 남은 공간을 N등분해서 꽉 채움 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    min-width: 0;
 
 }
 .tab_purchase_content .label {

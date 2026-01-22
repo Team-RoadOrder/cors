@@ -12,38 +12,39 @@
 
 @import "common.css";
 
-
 body {
     align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0;
 }
-
 body > .box {
-    width: 81rem;
+    width: 100%;
+
+    padding: 0 1rem;  /* 모바일에서 좌우 여백 확보 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
 }
 
 #MY {
     display: flex;
-    gap: 2rem;
+    flex-direction: row; /* 기본적으로 가로 배치 (데스크탑) */
 
+    width: 100%; /* 부모 너비에 맞춤 */
 }
 
-/* 사이드바 (카테고리) */
 #category {
-    width: 200px;
+    flex: 0 0 200px; /* 너비 200px 고정, 늘어나거나 줄어들지 않음 */
     margin-top: 3.5rem;
-    flex-shrink: 0;
 }
 
 /* [중요] 내용이 들어갈 영역 (기존 #content + #tab-content-area 역할 통합) */
 #dynamic-content {
-    flex-grow: 1;
+
     display: flex;
     flex-direction: column;
     align-items: center; /* 내용 중앙 정렬 */
-    margin-top: 3.5rem;
+    margin-top: 2rem;
     width: 100%;
 }
 
@@ -77,4 +78,345 @@ body >.background{
     background-repeat: no-repeat;
     background-size: cover;
     position: fixed;
+}
+#my-nav {
+    display: none;
+}
+
+@media screen and (max-width: 80rem) {
+
+}
+
+@media (max-width: 75rem) {
+    #main {
+        display: none !important;
+    }
+
+    #category {
+        flex: 0 0 200px; /* 너비 200px 고정, 늘어나거나 줄어들지 않음 */
+        margin-top: 7rem;
+    }
+}
+@media screen and (max-width: 48rem) {
+    #my-nav {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 6rem;
+        width: 100%;
+    }
+
+    #my-nav .list {
+        display: flex;
+        flex-direction: column;
+        width: 100%; /* 혹은 80% 등 원하는 만큼 */
+        max-width: 50rem;
+        align-items: center;
+        padding: 1rem 1rem;
+
+    }
+
+    #my-nav button {
+        font-size: 1.1rem;
+        border: none;
+        font-weight: 400;
+        background: none;
+        width: 100%;
+        padding: 1rem 0 1rem 0.5rem;
+        text-align: left;
+        cursor: pointer;
+    }
+    #my-nav .quick {
+        width: 100%;
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 1rem 0 1rem 0rem;
+    }
+
+    #my-nav button.item {
+        border-bottom: 1px solid #eaeaea;
+    }
+}
+/*마이페이지 홈*/
+@media (max-width: 48rem) {
+
+    #main {
+        display: none !important;
+    }
+    #category {
+        display: none !important;
+    }
+    #dynamic-content {
+        align-items: stretch !important;
+        width: 100%;
+        margin-top: 3.5rem;
+    }
+    #MY {
+        flex-direction: column !important; /* 가로(row) -> 세로(column) 변경 */
+        width: 100% !important;
+        gap: 0 !important; /* 사이드바가 없으므로 간격 제거 */
+        margin: 0 !important;
+    }
+
+    body > .box {
+        width: 100% !important;
+        max-width: 100vw !important; /* 뷰포트 너비를 넘지 않도록 */
+        padding: 0 1rem; /* 좌우 여백 */
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+    .tab-content {
+        width: 100% !important;
+        padding: 0; /* 불필요한 패딩 제거 */
+        overflow-x: hidden; /* 혹시 모를 가로 스크롤 방지 */
+    }
+    .tab-content .user_membership,
+    .tab-content .shortcut-grid {
+        width: 100% !important; /* 고정 px 무시하고 꽉 차게 */
+        max-width: none !important;
+        height: auto !important;
+    }
+
+    /* 4. 유저 상세 정보 (display: none 제거 및 세로 정렬) */
+    .tab-content .user_detail {
+        display: flex !important; /* none에서 flex로 변경 */
+        flex-direction: column;
+        height: auto;
+        padding: 1.5rem;
+        text-align: center;
+        align-items: center;
+    }
+
+    .tab-content .user_info {
+        padding: 10px 0;
+        align-items: center;
+    }
+
+    .tab-content .user_detail .info-buttons {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .tab-content .grid {
+        display: grid; /* 혹시 덮어씌워졌을 수 있으니 명시 */
+        grid-template-columns: 1fr 1fr !important; /* 1열로 변경 */
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+    .tab-content .grid  .box{
+        margin:  0;
+    }
+    .tab-content .grid .box > .image-wrapper {
+        width: 50%;
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+
+    /* 6. 최근 구매내역 리스트 스타일 */
+    .tab-content .recent_item .image-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+    .tab-content .grid .box > .text-container .title {
+         font-size: 0.9rem;
+
+    }
+    .tab-content .recent_item .list .product .itemTitle .title {
+        font-size: 13px;
+    }
+    .tab-content .grid .box {
+        margin-bottom : 0  !important;
+
+    }
+}
+/*마이페이지 구매내역*/
+@media (max-width: 48rem) {
+    .tab_purchase_content {
+        width: 100% !important;
+        padding: 0 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .tab_purchase_content .tab_title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .tab_purchase_content .selection {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .tab_purchase_content .label {
+        padding: 0.625rem 0.3125rem; /* 10px 5px */
+        margin-bottom: 15rem;
+    }
+
+    .tab_purchase_content .label > .number {
+        font-size: 1rem; /* 16px */
+    }
+
+    .tab_purchase_content .label > .title {
+        font-size: 0.75rem; /* 12px */
+    }
+
+    .tab_purchase_content .item .list {
+        padding: 0.75rem 0; /* 12px 0 */
+
+    }
+
+    /* 상품명 말줄임 처리 */
+    .tab_purchase_content .item .list .product .itemTitle .title {
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 10rem; /* 160px */
+    }
+
+    /* 이미지 크기 살짝 축소 (모바일 최적화 선택사항) */
+    .tab_purchase_content .item .image-wrapper {
+        width: 4rem;
+        height: 4rem;
+
+        object-fit: contain;
+    }
+
+    .tab_purchase_content .item .list .product .itemStatus {
+        font-size: 0.9rem;
+    }
+
+    .tab_purchase_content .item .list .product .itemStatus .date {
+        font-size: 0.9rem;
+    }
+    .tab_purchase_content .item {
+        max-height: 35rem; /* 5개 정도 높이 */
+        overflow-y: auto;  /* 스크롤 기능 활성화 */
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        border-top: 1px solid #eee;
+    }
+    .tab_purchase_content .item::-webkit-scrollbar {
+        display: none;
+    }
+}
+/*마이페이지 예약내역*/
+@media (max-width: 48rem) {
+    .tab_reservation_content .tab_title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+    }
+}
+/*마이페이지 관심매장*/
+@media (max-width: 48rem) {
+    .tab_likeShop_content .tab_title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+    }
+    .tab_likeShop_content .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        max-height: 35rem;
+        overflow-y: auto;  /* 스크롤 기능 활성화 */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        border-top: 1px solid #eee;
+    }
+    .tab_likeShop_content .grid > .box .image {
+        width: 100%;
+    }
+    .tab_likeShop_content .grid .box {
+        margin-bottom : 0 ;
+
+    }
+}
+/*마이페이지 관심상품*/
+@media (max-width: 48rem) {
+    .tab_likeProduct_content .tab_title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .tab_likeProduct_content .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        max-height: 35rem;
+        overflow-y: auto;  /* 스크롤 기능 활성화 */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        border-top: 1px solid #eee;
+    }
+    .tab_likeProduct_content .grid .box {
+        margin-bottom : 0 ;
+
+    }
+}
+/*마이페이지 프로필*/
+
+@media (max-width: 48rem) {
+
+    .tab_profile_content .user_membership{
+        width: 100% !important; /* 고정 px 무시하고 꽉 차게 */
+        max-width: none !important;
+        height: auto !important;
+    }
+    .tab_profile_content .user_detail {
+        display: flex ;
+        flex-direction: row;
+        height: auto;
+        padding: 1.5rem;
+        align-items: center;
+    }
+    .tab_profile_content .tab_title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        margin-top: 3rem;
+    }
+    /* 2. 입력 폼 반응형 (너비 100%로 확장) */
+    .unit > .email {
+        width: 100%; /* 너비 꽉 차게 */
+        padding-right: 3.5rem; /* 변경 버튼이 들어올 공간 확보 (글자 겹침 방지) */
+        box-sizing: border-box;
+    }
+
+    /* 3. 변경 버튼 위치 조정 (우측 끝으로 이동) */
+    .unit .button {
+        right: 0; /* 화면 오른쪽 끝 */
+        margin-right: 0;
+        bottom: 1.5rem; /* 라인에 맞춤 */
+    }
+    .tab_profile_content .unit:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/*마이페이지 배송지*/
+@media (max-width: 48rem) {
+    .tab_address_content {
+        margin-bottom: 0;
+    }
+    .tab_address_content .tab_title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        margin-top: 3rem;
+    }
+    .tab_address_content > .standard > .container {
+     width: 95%;
+    }
+    .tab_address_content > .standard > .container .button-container {
+        position: absolute;
+        right: 2rem;
+        top: 2rem;
+        gap: 1rem;
+        display: flex;
+    }
+    .tab_address_content > .standard > .container .button-container > button {
+        border: 1px solid #eaeaea;
+        padding: 0.8rem 1.5rem;
+        background-color: #FFFFFF;
+        border-radius: 0.5rem;
+    }
 }

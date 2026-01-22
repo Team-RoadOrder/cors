@@ -143,4 +143,16 @@ body > .box {
         margin-top: 0.5rem;
         line-height: 1.5;
     }
+
+    #splash {
+        box-sizing: border-box !important;
+    }
+    #splash .dot-container {
+        box-sizing: border-box !important;
+    }
+
+    .dot-container .dot {
+        width: 0.3rem !important;
+        height: 0.3rem !important;
+    }
 }

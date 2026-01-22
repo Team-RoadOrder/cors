@@ -1,6 +1,6 @@
-* {
+/** {
     box-sizing: border-box;
-}
+}*/
 #header {
     background-color: transparent; /* 배경을 투명하게 설정 */
     transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
