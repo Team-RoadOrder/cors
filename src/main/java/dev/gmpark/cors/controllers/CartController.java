@@ -3,11 +3,13 @@ package dev.gmpark.cors.controllers;
 import dev.gmpark.cors.dtos.CartOrderDto;
 import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.results.Result;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.CartService;
 import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.vos.CartVo;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +28,17 @@ public class CartController {
 
     @RequestMapping(value = "/cart", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getCart(ModelAndView modelAndView,
-                                @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+                                @SessionAttribute(value = "sessionUser") RegisterEntity sessionUser) {
         if (sessionUser == null) {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
         if (!"customer".equalsIgnoreCase(sessionUser.getUsertype())) {
-            modelAndView.setViewName("redirect:/login");
+            modelAndView.setViewName("redirect:/owner");
             return modelAndView;
         }
-        CartVo[] cartList = this.cartService.getCartList(sessionUser.getEmail());
+
+        CartVo[] cartList = this.cartService.getCartList(sessionUser);
         modelAndView.addObject("cartList", cartList);
         modelAndView.setViewName("cart/cart");
         return modelAndView;
@@ -43,53 +46,35 @@ public class CartController {
 
     @RequestMapping(value = "/cart", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> addCart(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+    public Map<String, Object> addCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
                                        @RequestParam(value = "itemId") Long itemId,
                                        @RequestParam(value = "size") String size,
                                        @RequestParam(value = "quantity", defaultValue = "1") int quantity) {
         Map<String, Object> response = new HashMap<>();
-        if (sessionUser == null) {
-            response.put("result", CommonResult.FAILURE.name());
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-        Long cartId = this.cartService.addCart(sessionUser.getEmail(), itemId, size, quantity);
-        if (cartId > 0) {
-            response.put("result", CommonResult.SUCCESS.name());
-            response.put("cartId", cartId); // 생성된 ID 반환
-        } else {
-            response.put("result", CommonResult.FAILURE.name());
+        Pair<Result, Long> result = this.cartService.addCart(sessionUser, itemId, size, quantity);
+        
+        response.put("result", result.getLeft().name());
+        if (result.getLeft() == CommonResult.SUCCESS) {
+            response.put("cartId", result.getRight());
         }
         return response;
     }
 
     @RequestMapping(value = "/cart", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> deleteCart(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+    public Map<String, Object> deleteCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
                                           @RequestParam(value = "ids") List<Long> ids) {
         Map<String, Object> response = new HashMap<>();
-        if (sessionUser == null) {
-            response.put("result", CommonResult.FAILURE.name());
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-        
-        boolean result = this.cartService.deleteCartItems(ids);
-        response.put("result", result ? CommonResult.SUCCESS.name() : CommonResult.FAILURE.name());
+        Result result = this.cartService.deleteCartItems(sessionUser, ids);
+        response.put("result", result.name());
         return response;
     }
 
     @RequestMapping(value = "/cart/order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> orderCart(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+    public Map<String, Object> orderCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
                                          @RequestBody CartOrderDto dto) {
         Map<String, Object> response = new HashMap<>();
-        if (sessionUser == null) {
-            response.put("result", CommonResult.FAILURE.name());
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-
         try {
             if (dto.getCartIds() == null || dto.getCartIds().isEmpty()) {
                 response.put("result", CommonResult.FAILURE.name());
@@ -113,13 +98,9 @@ public class CartController {
     
     @RequestMapping(value = "/cart/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> getCartCount(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+    public Map<String, Object> getCartCount(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
-        if (sessionUser == null) {
-            response.put("count", 0);
-            return response;
-        }
-        int count = this.cartService.getCartCount(sessionUser.getEmail());
+        int count = this.cartService.getCartCount(sessionUser);
         response.put("count", count);
         return response;
     }

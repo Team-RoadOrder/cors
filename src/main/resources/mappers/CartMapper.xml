@@ -27,7 +27,9 @@
     </select>
 
     <delete id="deleteCartItem">
-        DELETE FROM `cors`.`carts` WHERE `id` = #{id}
+        DELETE
+        FROM `cors`.`carts`
+        WHERE `id` = #{id}
     </delete>
 
     <select id="selectCartItemsByIds" resultType="dev.gmpark.cors.vos.CartVo">

@@ -167,7 +167,8 @@ public class OrderService {
         CommonResult orderResult = this.createOrder(order, orderItems);
         
         if (orderResult == CommonResult.SUCCESS) {
-            this.cartService.deleteCartItems(dto.getCartIds());
+            // 수정된 부분: deleteCartItems 호출 시 user 파라미터 추가
+            this.cartService.deleteCartItems(user, dto.getCartIds());
         }
         
         return orderResult;
