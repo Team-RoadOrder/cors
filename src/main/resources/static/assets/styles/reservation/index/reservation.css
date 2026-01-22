@@ -41,9 +41,10 @@ header, nav, .header-container {
 #reservation form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding-left: 2.5rem;
 }
+
 
 #date {
     margin-top: 3rem;
@@ -126,9 +127,6 @@ header, nav, .header-container {
     #reservation {
         width: 100%;
         position: relative;
-
-
-
         padding-bottom: 8rem;
         background-color: #fff;
     }

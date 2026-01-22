@@ -1,11 +1,11 @@
-
+/* 카테고리 선택 탭 */
 #category .selection {
     display: flex;
     flex-direction: row;
     gap: 2rem;
-    /* 항상 유지되는 회색 언더라인 (전체 경계선) */
     border-bottom: rgb(240,240,240) solid 1px;
     margin-bottom: 2rem;
+    flex-wrap: wrap; /* 모바일에서 줄바꿈 허용 */
 }
 
 #category .selection .radio {
@@ -18,79 +18,99 @@
     flex-direction: row;
     gap: 1rem;
     justify-content: flex-start;
-    padding-bottom: 1rem; /* 검은색 언더라인 공간 확보를 위해 패딩 추가 */
-    position: relative; /* 캡션의 ::after 기준 위치 설정 */
+    padding-bottom: 1rem;
+    position: relative;
+    cursor: pointer;
 }
+
 #category .selection .label > .caption {
     font-weight: 400;
     font-size: 1.1rem;
+    white-space: nowrap;
 }
-/* 캡션 자체는 텍스트만 보여주므로 그대로 둡니다. */
-/* 선택된 항목에 대한 검은색 언더라인을 캡션의 ::after로 구현합니다. */
+
 #category .selection .label > .caption::after {
     height: 0.125rem;
     background-color: #000000;
     content: '';
-    /* 가상 요소의 위치를 부모 레이블의 하단으로 설정 */
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    /* 기본적으로는 보이지 않게 설정 */
     display: none;
 }
 
-/* radio 버튼이 선택되었을 때, 해당 캡션의 ::after를 보이게 하여 검은색 언더라인 표시 */
 #category .selection .radio:checked + .caption::after {
     display: block;
 }
+
 #category .selection .radio:checked + .caption {
     font-weight: 700;
 }
-/* 레이아웃 관련 기존 CSS는 유지하고, 텍스트 스타일만 구체화합니다. */
 
-/* 기존 코드 유지 */
+
+/* =========================================
+   상품 그리드 스타일 (문제 해결 핵심 부분)
+   ========================================= */
+
 #category .grid {
     display: grid;
+    /* PC: 5열 */
     grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
+    width: 100%; /* 부모 너비에 맞춤 */
+    box-sizing: border-box; /* 패딩 포함 */
 }
 
 #category .grid .box {
-    flex-direction: column;
     display: flex;
-    margin-bottom: 5rem;
-    text-decoration: none; /* a 태그 밑줄 제거 */
-    color: inherit; /* 색상 상속 */
+    flex-direction: column;
+    margin-bottom: 3rem;
+    text-decoration: none;
+    color: inherit;
     gap: 1rem;
-    align-items: center;
-}
+    align-items: flex-start;
 
+    /* ▼▼▼ [핵심 수정 1] 그리드 깨짐 방지 ▼▼▼ */
+    min-width: 0; /* 내용물이 커도 그리드 칸을 강제로 늘리지 않게 함 */
+    width: 100%;  /* 부모 칸에 꽉 차게 */
+    /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
+}
 
 #category .grid .box .image {
-    width:  13rem;      /* 너비 필수 */
-    height: 13rem;        /* 높이 필수! (혹은 aspect-ratio) */
+    /* ▼▼▼ [핵심 수정 2] 고정 크기(13rem) 제거 후 유연하게 변경 ▼▼▼ */
+    width: 100%;   /* 부모(.box) 너비에 맞춰 100% */
+    height: auto;  /* 높이는 비율에 맞게 자동 */
+    aspect-ratio: 1/1; /* 정사각형 비율 유지 (최신 브라우저 지원) */
+
     background-position: center;
-    background-size: cover; /* 혹은 contain */
+    background-size: cover;
     background-repeat: no-repeat;
-    background-color: #eee;
+
     border-radius: 0.625rem;
+    object-fit: contain;
 }
+
 #category .grid > .box .text-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0; /* 텍스트가 길어도 박스를 밀지 않게 설정 */
 }
+
 #category .grid > .box .text-container .title {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 400;
     color: #000000;
     margin-top: 0.5rem;
+
+    /* 말줄임표 처리 */
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
 #category .grid > .box .text-container .price {
@@ -98,4 +118,31 @@
     font-weight: 700;
     color: #000000;
     margin-top: 0.2rem;
+}
+
+/* =========================================
+   모바일 반응형
+   ========================================= */
+@media (max-width: 48rem) {
+    #category .selection {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 탭을 3열로 정렬 */
+        gap: 0.5rem;
+    }
+
+    #category .selection .label {
+        justify-content: center;
+    }
+
+    /* 모바일 그리드 2열 설정 */
+    #category .grid {
+        grid-template-columns: repeat(2, 1fr); /* 2열 */
+        gap: 1rem; /* 간격 */
+    }
+
+    /* 이미지가 확실하게 줄어들도록 재확인 */
+    #category .grid .box .image {
+        width: 100% !important;
+        max-width: 100%;
+    }
 }

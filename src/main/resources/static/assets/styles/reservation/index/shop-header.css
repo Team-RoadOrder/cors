@@ -78,7 +78,7 @@
 }
 
 /* 반응형 미디어 쿼리 추가 */
-@media (max-width: 1024px) {
+@media (max-width: 48rem) {
     #shop-header {
         flex-direction: column; /* 세로 배치 */
         align-items: center; /* 가운데 정렬 */

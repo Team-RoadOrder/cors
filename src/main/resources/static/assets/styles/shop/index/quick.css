@@ -53,3 +53,9 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05),   /* 가깝고 작은 그림자 */
     0 8px 16px rgba(0, 0, 0, 0.1);   /* 멀리 퍼지는 넓고 흐린 그림자 */
 }
+
+@media (max-width: 48rem) {
+    #quick {
+        display: none;
+    }
+}

@@ -42,6 +42,7 @@
     width: 9.5rem;
     aspect-ratio: 1/1;
     border-radius: 1rem;
+    object-fit: contain;
 }
 #popularShop > .list >.item .text-container{
     text-align: center;

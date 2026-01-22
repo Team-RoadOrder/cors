@@ -5,14 +5,33 @@
 @import "index/quick.css";
 @import "index/category.css";
 
+/* 1. 박스 모델 초기화 (가장 중요: 패딩이 너비를 넘치지 않게 함) */
+* {
+    box-sizing: border-box;
+}
 
 body {
     align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0;
+    overflow-x: hidden; /* 가로 스크롤 강제 방지 */
+    width: 100%;
 }
 
+/* PC 버전 기본 너비 설정 */
 body > .box {
     width: 71.25rem;
+    max-width: 100%; /* 화면이 71.25rem보다 작을 때 튀어나감 방지 */
+    padding: 0; /* PC에서는 기본 패딩 없음 (필요 시 추가) */
+}
+
+/* 태블릿 및 모바일 반응형 */
+@media (max-width: 48rem) {
+    body > .box {
+        width: 100%; /* 모바일에서는 화면 꽉 차게 */
+        padding: 0 1.2rem;
+        padding-bottom: 6rem/* 좌우 여백을 주되, box-sizing 덕분에 튀어나가지 않음 */
+    }
 }
