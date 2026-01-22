@@ -126,7 +126,7 @@
 @media (max-width: 48rem) {
     #category .selection {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 탭을 3열로 정렬 */
+        grid-template-columns: repeat(6, 1fr); /* 탭을 3열로 정렬 */
         gap: 0.5rem;
     }
 
