@@ -9,6 +9,7 @@
     border-radius: 999rem;
     height: 110px;
     width: 110px;
+    object-fit: contain; /* 이미지 비율 유지 */
 }
 #shop-header .profile {
     padding-left: 20px;

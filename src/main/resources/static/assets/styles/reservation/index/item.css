@@ -36,6 +36,9 @@
     background-color: rgb(243, 244, 247);
     border-radius: 0.5rem;
     width: 10rem;
+    height: 10rem; /* 높이 고정 */
+    min-width: 10rem; /* 최소 너비 고정 */
+    min-height: 10rem; /* 최소 높이 고정 */
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -43,11 +46,12 @@
     overflow: hidden;
     margin: 1rem;
     z-index: 999;
+    flex-shrink: 0; /* flex 컨테이너 내에서 줄어들지 않도록 설정 */
 }
 #item > .container > .item-row > .label  > .image-wrapper > img {
     width: 100%;
-    background-position: center;
-    background-size: contain;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하며 꽉 채우기 */
     flex-shrink: 0;
 }
 #item > .container > .item-row > .label  > .text-wrapper {
@@ -130,5 +134,14 @@
 
     #item > .container > .item-row > .label {
         width: 100%; /* 라벨 너비 100% */
+    }
+
+    /* 모바일 화면에서 이미지 크기 조정 */
+    #item > .container > .item-row > .label > .image-wrapper {
+        width: 7rem;
+        height: 7rem;
+        min-width: 7rem;
+        min-height: 7rem;
+        margin: 0.8rem;
     }
 }

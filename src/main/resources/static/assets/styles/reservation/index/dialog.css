@@ -1,4 +1,3 @@
-
 #dialog {
     top: 0;
     left: 0;
@@ -7,14 +6,25 @@
     perspective: 30cm;
     background-color: #212121a0;
     opacity: 0;
+
+    /* [수정] 보이지 않을 때 화면에서 아예 감춤 (클릭 방지 핵심) */
+    visibility: hidden;
+
     pointer-events: none;
     transition-duration: 175ms;
-    transition-property: opacity;
+
+    /* [수정] visibility도 부드럽게 변하도록 추가 */
+    transition-property: opacity, visibility;
+
     position: fixed;
     z-index: 1000;
 
     &.visible {
         opacity: 1;
+
+        /* [수정] 클래스가 붙으면 보이게 설정 */
+        visibility: visible;
+
         pointer-events: auto;
 
         > .modal {
@@ -22,6 +32,7 @@
         }
     }
     > .modal {
+        display: flex; /* flex-direction 사용을 위해 추가 */
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
