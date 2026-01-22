@@ -70,11 +70,16 @@
     justify-content: space-between;
 }
 
+/* 슬라이드 컨테이너 (버튼 위치 잡기용) */
+.slider-container {
+    position: relative;
+}
+
 /* 슬라이드 네비게이션 버튼 스타일 (그리드에서는 숨김) */
 .slider-nav {
     display: none;
     position: absolute;
-    top: 50%;
+    top: 38%;
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
@@ -104,13 +109,13 @@
 /* 반응형 미디어 쿼리 (모바일/태블릿) */
 /* 412px 너비의 기기에서도 확실하게 적용되도록 max-width를 넉넉하게 잡거나,
    특정 기기 해상도에 맞춰 조정합니다. 여기서는 768px 이하에서 적용되므로 412px도 포함됩니다. */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
     #inner >.item >.text-container >.title {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
     }
 
     #inner >.item >.text-container >.description {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 
     /* 모바일에서는 가로 스크롤 슬라이더 형태로 변경 */
@@ -138,27 +143,41 @@
     }
 
     #inner .grid .image {
-        height: 25rem;
+        height: 20rem;
         object-fit: contain;
-        width: 100%;
+        width: 60%;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
         background-color: transparent;
+        display: block;      /* 마진 오토가 확실히 먹히도록 블록 요소로 변경 */
+        margin: 0 auto;      /* 상하 0, 좌우 자동(중앙) */
+        align-self: center;
     }
 
     #inner .grid >.box >.info {
-        text-align: center;
-    }
+        text-align: center;    }
 
     #inner .grid >.box >.info > .title {
-        font-size: 1.5rem;
+        font-size: 1rem;
         white-space: normal;
     }
 
     #inner .grid >.box >.info > .subtitle {
-        font-size: 1.2rem;
+        font-size: 0.9rem;
         justify-content: center;
         gap: 0.5rem;
+    }
+
+    /* 아이템 리스트 창 간격 조정 */
+    #inner > .item {
+        padding: 6rem 0 3rem 0;
+    }
+
+
+
+    /* 모바일에서 슬라이드 버튼 표시 */
+    .slider-nav {
+        display: flex;
     }
 }

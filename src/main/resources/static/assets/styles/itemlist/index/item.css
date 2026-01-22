@@ -192,6 +192,7 @@
 @media (max-width: 1024px) { /* 768px -> 1024px로 변경 */
     #item .item-container {
         grid-template-columns: 1fr; /* 1열로 변경 */
+        gap: 2rem; /* 아이템 간격 띄우기 */
     }
 
     #item .list a {
@@ -209,5 +210,10 @@
 
     #item .option-list {
         padding: 0 1rem 1.5rem 1rem;
+    }
+
+    /* 푸터 높이만큼 하단 여백 추가 */
+    #item {
+        padding-bottom: 6rem;
     }
 }

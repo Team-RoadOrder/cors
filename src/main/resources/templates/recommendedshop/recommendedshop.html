@@ -8,6 +8,7 @@
     <link href="/assets/images/login/favicon.png" rel="icon"  >
     <link rel="stylesheet" href="/assets/styles/common.css">
     <script defer src="/assets/scripts/common.js"></script>
+    <script defer src="/assets/scripts/recommendedshop/recommendedshop.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
@@ -31,34 +32,41 @@
 <div id="inner">
     <div class="item">
         <div class="text-container">
-            <span class="title shop">📍  SHOP</span>
+            <span class="title shop">SHOP</span>
             <span class="description">해당카테고리의 인기많은 매장</span>
         </div>
-        <ul class="grid">
-            <li class="box" th:each="shop : ${recommendedShops}">
-                <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
-                    <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
-                </a>
-                <div class="info">
-                <span class="title" th:text="${shop.shopName}">
-                    밥 위에 소복이 쌓인 튀김,텐동집
-                </span>
-                    <div class="subtitle">
-                    <span class="icon" th:text="${shop.shopAddress}">
-                        @전국
+        <div class="slider-container">
+            <button class="slider-nav prev" type="button">&lt;</button>
+            <ul class="grid">
+                <li class="box" th:each="shop : ${recommendedShops}">
+                    <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
+                        <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
+                    </a>
+                    <div class="info">
+                    <span class="title" th:text="${shop.shopName}">
+                        밥 위에 소복이 쌓인 튀김,텐동집
                     </span>
-                        <span class="icon" th:text="'♥ ' + ${shop.likeCount}">
-                        &starf;54만+
-                    </span>
+                        <div class="subtitle">
+                        <span class="icon" th:text="${shop.shopAddress}">
+                            @전국
+                        </span>
+                            <span class="icon" th:text="'♥ ' + ${shop.likeCount}">
+                            &starf;54만+
+                        </span>
+                        </div>
                     </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+            <button class="slider-nav next" type="button">&gt;</button>
+        </div>
     </div>
     <div class="item">
         <div class="text-container">
-            <span class="title product">📍 PRODUCT</span>
+            <span class="title product">PRODUCT</span>
             <span class="description">해당카테고리의 인기많은 제품</span>
+        </div>
+        <div class="slider-container">
+            <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
                 <li class="box" th:each="item : ${popularItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
@@ -79,12 +87,16 @@
                     </div>
                 </li>
             </ul>
+            <button class="slider-nav next" type="button">&gt;</button>
         </div>
     </div>
     <div class="item">
         <div class="text-container">
-            <span class="title all">📍 ALL PRODUCT</span>
+            <span class="title all">ALL PRODUCT</span>
             <span class="description">해당카테고리의 모든 제품</span>
+        </div>
+        <div class="slider-container">
+            <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
                 <li class="box" th:each="item : ${allItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
@@ -105,6 +117,7 @@
                     </div>
                 </li>
             </ul>
+            <button class="slider-nav next" type="button">&gt;</button>
         </div>
     </div>
 

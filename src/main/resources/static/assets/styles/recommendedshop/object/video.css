@@ -46,7 +46,7 @@
 }
 
 /* 모바일 및 태블릿 대응: 비디오 숨김 */
-@media (max-width: 1024px) { /* 768px -> 1024px로 변경 */
+@media (max-width: 48rem) { /* 1024px -> 48rem(768px)로 변경 */
     .video-container {
         display: none !important; /* 강제로 숨김 */
     }
