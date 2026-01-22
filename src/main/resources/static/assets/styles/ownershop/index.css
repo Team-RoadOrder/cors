@@ -216,8 +216,9 @@
     gap: 0.75rem;
     justify-content: flex-end;
     /*margin-top: auto;*/
-    margin-top: -18rem;
-    /*margin-bottom: 3rem;*/
+    padding-right: 8rem;
+    margin-top: -7rem;
+    margin-bottom: 3rem;
     width: 75rem;
 }
 
@@ -301,72 +302,17 @@
         display: flex;
         flex-direction: column;
     }
-
-    /* 3. 상단 카테고리 영역 (목업의 3분할 구현) */
-    .category {
-        order: 1 !important;
-        display: flex !important;
-        flex-direction: row !important;
-        width: 100% !important;
-        height: 12rem !important;
-        margin: 0 !important;
-        /*border-bottom: 0.0625rem solid #f0f0f0;*/
-        background-color: #fff;
-    }
-
-    .category-box {
-        flex: 1 !important;
-        height: 100% !important;
-        border-right: 0.0625rem solid #f0f0f0 !important;
-        background-color: #fff;
-        overflow-y: auto;
-        /* 내부 컨텐츠를 중앙으로 보내기 위한 설정 */
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    .category-box:last-child {
-        border-right: none !important;
-    }
-
-    /* "대분류 선택" 등 안내 메시지 정중앙 배치 */
-    .category-box .message {
-        display: flex !important;
-        /*align-items: center !important;
-        justify-content: center !important;
-        /*text-align: center;*/
-        flex: 1;
-        font-size: 1.15rem !important;
-        color: #bbb !important;
-        padding: 0.5rem !important;
-        white-space: normal;
-        word-break: keep-all;
-    }
-
-    /* 카테고리 리스트 아이템 중앙 정렬 */
-    .category-box .item {
-        width: 100% !important;
-        padding: 0.8rem 0.2rem !important;
-        font-size: 1.25rem !important;
-        color: #888;
-        /*text-align: center !important;  */
-        white-space: nowrap !important;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        box-sizing: border-box;
-    }
-
-    /* 리스트 자체도 중앙 정렬이 필요한 경우 */
-    .category-box .list {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
     #item-info .category {
-        box-shadow: none;
+        background: #FFFFFF;
+        flex: 0 0 300px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-radius: 0.75rem;
+        overflow-y:  auto;
+        scroll-behavior: smooth;
     }
+
 
     /* 4. 상품 정보 입력 영역 */
     .item-list {
