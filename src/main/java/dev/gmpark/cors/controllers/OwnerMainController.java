@@ -5,7 +5,9 @@ import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.MyService;
+import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.services.OwnerMainService; // OwnerMainService 사용
+import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +30,7 @@ public class OwnerMainController {
 
     private final OwnerMainService ownerMainService; // 서비스 이름 변경
     private final MyService myService;
-
+    private final OrderService orderService;
 
 
     @RequestMapping(value = "/owner", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -73,8 +76,18 @@ public class OwnerMainController {
         } else {
             model.addAttribute("reservations", List.of()); // 빈 리스트 전달
         }
-        model.addAttribute("orders", this.ownerMainService.getOrdersByShopId(shopInfo.getShopId()));
+        OrderHistoryVo[] allOrders = ownerMainService.getOrdersByShopId(shopInfo.getShopId());
 
+        List<OrderHistoryVo> pendingOrders = new ArrayList<>();
+        if (allOrders != null) {
+            for (OrderHistoryVo order : allOrders) {
+                if (order.getStatus() == 0) {
+                    pendingOrders.add(order);
+                }
+            }
+        }
+
+        model.addAttribute("orders", pendingOrders);
         return "ownermain/ownermain";
     }
 
@@ -194,6 +207,14 @@ public class OwnerMainController {
         CommonResult result = this.myService.deleteUser(sessionUser);
         response.put("result", result.name());
 
+        return response;
+    }
+    @RequestMapping(value = "/owner/patch-order-status", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> patchOrderItemStatus(@RequestParam(value = "id") Long id, @RequestParam(value = "status") Integer status) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.orderService.updateOrderItem(id, status);
+        response.put("result", result.name());
         return response;
     }
 

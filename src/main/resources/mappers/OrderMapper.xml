@@ -20,6 +20,11 @@
             (#{item.orderId}, #{item.itemId}, #{item.shopId}, #{item.size}, #{item.quantity}, #{item.price})
         </foreach>
     </insert>
+    <update id="updateOrderItemStatus">
+        UPDATE `cors`.`order_items`
+        SET `status` = #{status}
+        WHERE `id` = #{id}
+    </update>
     <select id="getAllOrders" resultType="dev.gmpark.cors.vos.OrderHistoryVo">
         SELECT
             `t1`.`item_id` AS `itemId`,
@@ -48,6 +53,8 @@
     </select>
     <select id="getAllOrdersByShopId" resultType="dev.gmpark.cors.vos.OrderHistoryVo" >
         SELECT
+            `t1`.`id` AS `id`,
+            `t1`.`status` AS `status`,
             `t2`.`user_email` AS `userEmail`,
             `t3`.`item_name` AS `itemName`,
             `t1`.`quantity` AS `quantity`,

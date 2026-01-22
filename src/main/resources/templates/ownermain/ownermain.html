@@ -207,19 +207,22 @@
             </th:block>
         </span>
                 </div>
-
                 <div class="spring"> </div>
             </div>
 
             <div class="order-list">
-                <div class="spring" th:text="|판매내역 확인(${orders != null ? #arrays.length(orders) : 0})|"> 구매내역 확인(0)</div>
-                <div class="spring hidden"> </div>
-
-                <div class="empty" th:if="${orders == null or #arrays.isEmpty(orders)}">
-                    구매 내역이 없습니다.
+                <div class="spring"
+                     th:text="|판매내역 확인(${orders != null ? #lists.size(orders) : 0})|">
+                    구매내역 확인(0)
                 </div>
 
-                <table class="table" th:unless="${orders == null or #arrays.isEmpty(orders)}">
+                <div class="spring hidden"> </div>
+
+                <div class="empty" th:if="${orders == null or #lists.isEmpty(orders)}">
+                    판매 내역이 없습니다. (모두 처리됨)
+                </div>
+
+                <table class="table" th:unless="${orders == null or #lists.isEmpty(orders)}">
                     <thead class="thead">
                     <tr class="names">
                         <th>구매자</th>
@@ -234,7 +237,9 @@
                     </tr>
                     </thead>
                     <tbody class="tbody">
+
                     <tr class="list-colum" th:each="order : ${orders}">
+
                         <td class="name" th:text="${order.receiverName}">박규민</td>
 
                         <td class="image-wrapper">
@@ -260,7 +265,7 @@
 
                         <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail}|">대구시 달성군 화암로 120</td>
 
-                        <td><button type="button">완료</button></td>
+                        <td><button type="button" th:onclick="|updateStatus(${order.getId()}, 1)|">완료</button></td>
                     </tr>
                     </tbody>
                 </table>

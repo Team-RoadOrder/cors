@@ -740,3 +740,43 @@ if (shopDeleteBtn) {
         });
     });
 }
+
+const updateStatus = (id, status) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('status', status);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {
+                confirmText: '확인'
+            });
+            return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        switch (response.result) {
+            case 'FAILURE':
+                openModal("FAILURE", `<p>성공적으로 완료되었습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'NO_AUTH':
+                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>완료되었습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        location.href = '/owner'
+                    }
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+    };
+     xhr.open('PATCH', '/owner/patch-order-status')
+     xhr.send(formData);
+
+}

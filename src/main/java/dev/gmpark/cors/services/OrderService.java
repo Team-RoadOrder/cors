@@ -229,4 +229,16 @@ public class OrderService {
         }
         return items;
     }
+
+    public CommonResult updateOrderItem(long id, int status) {
+        if (id < 1) {
+            return CommonResult.FAILURE;
+        }
+        if (status == 0) {
+            return CommonResult.FAILURE;
+        }
+
+        // Mapper 호출
+        return this.orderMapper.updateOrderItemStatus(id, status) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+    }
 }

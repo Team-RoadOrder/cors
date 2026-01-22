@@ -17,4 +17,5 @@ public interface OrderMapper {
     OrderHistoryVo[] getAllOrders(String userEmail);
 
     OrderHistoryVo[] getAllOrdersByShopId(@Param("shopId") int shopId);
+    int updateOrderItemStatus(@Param("id") Long id, @Param("status") int status);
 }
