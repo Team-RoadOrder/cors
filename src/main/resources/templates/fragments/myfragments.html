@@ -278,6 +278,51 @@
             <label for="telChangeButton" class="button">변경</label>
         </div>
     </form>
+
+    <h4 class="tab_info" style="margin-top: 30px;">선호 스타일 (최대 2개)
+        <span id="currentStyleText" style="font-size: 14px; color: #666; font-weight: normal; margin-left: 10px;"></span>
+        <input type="hidden" id="userStyleRaw" th:value="${sessionUser.style}">
+    </h4>
+    <form class="unit" style="display: block; height: auto; padding-bottom: 20px;">
+        <div class="style-container">
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '1')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="1" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '1')}">
+                <span>미니멀</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '2')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="2" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '2')}">
+                <span>캐주얼</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '3')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="3" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '3')}">
+                <span>스트릿</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '4')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="4" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '4')}">
+                <span>댄디</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '5')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="5" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '5')}">
+                <span>빈티지</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '6')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="6" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '6')}">
+                <span>모던</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '7')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="7" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '7')}">
+                <span>스포티</span>
+            </label>
+            <label class="style-item" th:classappend="${sessionUser.style != null and #strings.contains(sessionUser.style, '8')} ? 'checked-style' : ''">
+                <input type="checkbox" name="style" value="8" th:checked="${sessionUser.style != null and #strings.contains(sessionUser.style, '8')}">
+                <span>페미닌</span>
+            </label>
+        </div>
+        <div class="profile-name" style="margin-top: 15px; position: relative; height: 40px;">
+            <input type="button" id="styleChangeButton" class="checkbox" onclick="changeStyle()">
+            <label for="styleChangeButton" class="button" style="right: 0; bottom: 0; margin-right: 0;">변경</label>
+        </div>
+    </form>
 </div>
 
 <div th:fragment="address" class="tab_address_content">

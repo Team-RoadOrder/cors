@@ -157,6 +157,15 @@ public class MyController {
         response.put("result", result.name());
         return response;
     }
+    @RequestMapping(value = "/my/style", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> patchMyStyle(@RequestParam("style") String newStyle,
+                                            @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.myService.updateUserStyle(sessionUser, newStyle);
+        response.put("result", result.name());
+        return response;
+    }
     @RequestMapping(value = "/my/delete-user", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> deleteMyUser(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
