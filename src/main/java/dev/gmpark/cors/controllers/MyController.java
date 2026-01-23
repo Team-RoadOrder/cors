@@ -2,6 +2,7 @@ package dev.gmpark.cors.controllers;
 
 
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.vos.OrderHistoryVo;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MyController {
     private final MyService myService;
+    private final RegisterMapper registerMapper;
+
     @RequestMapping(value = "/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getMy(ModelAndView modelAndView,@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
 
@@ -35,7 +38,15 @@ public class MyController {
             modelAndView.setViewName("redirect:/owner");
             return modelAndView;
         }
-        modelAndView.addObject("sessionUser", sessionUser);
+        
+        // 최신 유저 정보 조회 (포인트 등 반영)
+        RegisterEntity user = this.registerMapper.selectByEmail(sessionUser.getEmail());
+        if (user != null) {
+            modelAndView.addObject("sessionUser", user);
+        } else {
+            modelAndView.addObject("sessionUser", sessionUser);
+        }
+        
         return modelAndView;
     }
     @RequestMapping(value = "/my/tab", method = RequestMethod.GET)
@@ -43,8 +54,13 @@ public class MyController {
                                       @RequestParam(value = "menu") String menu,
                                       @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
 
-        // 1. 공통 데이터 (유저 정보 등)
-        modelAndView.addObject("sessionUser", sessionUser);
+        // 1. 공통 데이터 (유저 정보 등) - 최신 정보 조회
+        if (sessionUser != null) {
+            RegisterEntity user = this.registerMapper.selectByEmail(sessionUser.getEmail());
+            modelAndView.addObject("sessionUser", user != null ? user : sessionUser);
+        } else {
+            modelAndView.addObject("sessionUser", null);
+        }
 
         // 2. 탭 이름(menu)에 따라 서로 다른 데이터를 DB에서 조회
         if (sessionUser != null) {

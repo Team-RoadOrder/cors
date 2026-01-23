@@ -94,7 +94,7 @@
     <h3 class="tab_title">구매 내역</h3>
     <div class="item reservation" style="display:block">
         <label class="list" th:each="order, stat : ${orders}"
-        th:if="${stat.index < 7 }">
+        th:if="${stat.index < 10 }">
                 <span class="product">
                     <span class="image-wrapper"><img th:src="@{/images/{path}(path=${order.imagePath})}" src="../assets/images/my/shoe1.png" class="image" alt=""></span>
                     <span class="itemTitle">
