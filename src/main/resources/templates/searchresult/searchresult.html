@@ -49,9 +49,14 @@
         </div>
     </a>
 
-    <div th:if="${searchResults == null or searchResults.length == 0}"
+    <div th:if="${(searchResults == null or searchResults.length == 0) and keyword != null and keyword != ''}"
          style="grid-column: 1 / -1; text-align: center; padding: 50px; font-size: 1.2rem; color: #666;">
         '<span th:text="${keyword}" style="font-weight: bold;"></span>'에 대한 검색 결과가 없습니다.
+    </div>
+
+    <div th:if="${keyword == null or keyword == ''}"
+         style="grid-column: 1 / -1; text-align: center; padding: 50px; font-size: 1.2rem; color: #666;">
+        키워드를 통해 검색해주세요.
     </div>
 </div>
 

@@ -145,8 +145,9 @@
         <a th:href="@{/search-result(keyword=${searchKeyword})}">
         <img  th:src="@{/assets/images/main/search-icon.svg}" alt="">
         </a>
-        <a th:href="@{/cart}">
-        <img  th:src="@{/assets/images/main/cart-icon.svg}" alt="">
+        <a th:href="@{/cart}" style="position: relative;">
+            <img  th:src="@{/assets/images/main/cart-icon.svg}" alt="">
+            <span id="mobileCartCount" class="cart-count" style="display: none; position: absolute; top: -5px; right: -5px; background-color: #808080; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; justify-content: center; align-items: center; font-weight: bold;">0</span>
         </a>
         <a th:href="@{/my}">
         <img th:src="@{/assets/images/main/my-icon.svg}" alt="">

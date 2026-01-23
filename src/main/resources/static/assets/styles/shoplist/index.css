@@ -14,7 +14,7 @@ body {
 
 body > .box {
     width: 100%;
-    max-width: 71.25rem;
+
     box-sizing: border-box;
     padding: 0 1rem; /* 좌우 여백 추가 */
 }

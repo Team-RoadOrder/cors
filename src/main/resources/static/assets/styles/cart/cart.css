@@ -411,7 +411,7 @@ body {
 
 @media (max-width: 600px) {
   .container {
-    padding-top: 140px; /* 헤더 높이 고려하여 상단 여백 조정 */
+    padding-top: 55px; /* 헤더 높이 고려하여 상단 여백 조정 */
   }
 
   .cart-item {

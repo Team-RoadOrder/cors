@@ -341,8 +341,12 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
 
 // 장바구니 카운트 업데이트 함수
 function updateCartCount() {
+    // 데스크탑용
     const cartCountElement = document.getElementById('cartCount');
-    if (!cartCountElement) return;
+    // 모바일용
+    const mobileCartCountElement = document.getElementById('mobileCartCount');
+    
+    if (!cartCountElement && !mobileCartCountElement) return;
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', '/cart/count');
@@ -351,11 +355,25 @@ function updateCartCount() {
             if (xhr.status >= 200 && xhr.status < 400) {
                 const response = JSON.parse(xhr.responseText);
                 const count = response.count;
-                if (count > 0) {
-                    cartCountElement.textContent = count;
-                    cartCountElement.style.display = 'block';
-                } else {
-                    cartCountElement.style.display = 'none';
+                
+                // 데스크탑 업데이트
+                if (cartCountElement) {
+                    if (count > 0) {
+                        cartCountElement.textContent = count;
+                        cartCountElement.style.display = 'block';
+                    } else {
+                        cartCountElement.style.display = 'none';
+                    }
+                }
+                
+                // 모바일 업데이트
+                if (mobileCartCountElement) {
+                    if (count > 0) {
+                        mobileCartCountElement.textContent = count;
+                        mobileCartCountElement.style.display = 'flex'; // flex로 변경하여 중앙 정렬
+                    } else {
+                        mobileCartCountElement.style.display = 'none';
+                    }
                 }
             }
         }
