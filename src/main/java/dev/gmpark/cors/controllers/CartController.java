@@ -8,6 +8,7 @@ import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.services.CartService;
 import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.vos.CartVo;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.MediaType;
@@ -44,6 +45,8 @@ public class CartController {
         return modelAndView;
     }
 
+
+
     @RequestMapping(value = "/cart", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> addCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
@@ -59,7 +62,48 @@ public class CartController {
         }
         return response;
     }
+    @Data
+    public static class CartItemRequest {
+        private Long itemId;
+        private String size;
+        private int quantity; // 수량 추가
+    }
 
+    @RequestMapping(value = "/cart/batch-add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> addBatchCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
+                                            @RequestBody List<CartItemRequest> items) {
+
+        Map<String, Object> response = new HashMap<>();
+        if (sessionUser == null) {
+            response.put("result", "FAILURE_SESSION");
+            return response;
+        }
+        if (items == null || items.isEmpty()) {
+            response.put("result", CommonResult.FAILURE.name());
+            return response;
+        }
+
+        int successCount = 0;
+
+        for (CartItemRequest item : items) {
+            int qty = item.getQuantity() > 0 ? item.getQuantity() : 1;
+
+            Pair<Result, Long> result = this.cartService.addCart(sessionUser, item.getItemId(), item.getSize(), qty);
+
+            if (result.getLeft() == CommonResult.SUCCESS) {
+                successCount++;
+            }
+        }
+
+        if (successCount > 0) {
+            response.put("result", CommonResult.SUCCESS.name());
+        } else {
+            response.put("result", CommonResult.FAILURE.name());
+        }
+
+        return response;
+    }
     @RequestMapping(value = "/cart", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> deleteCart(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,

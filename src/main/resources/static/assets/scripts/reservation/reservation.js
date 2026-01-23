@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 const $reservation = document.getElementById("reservation");
 const $button = $reservation.querySelector(':scope > form >.reservate')
+
 $button.addEventListener("click", (e) => {
         e.preventDefault();
         openModal("answer", "<p>정말로 예약을 확정하시겠습니까?</p>", { confirmText: '확인' ,onConfirm: () => {
@@ -53,14 +54,10 @@ $button.addEventListener("click", (e) => {
             } });
 })
 const $cart = $reservation.querySelector(':scope > form >.cart')
- $cart.addEventListener("click", (e) => {
-        e.preventDefault();
-        openModal("alert", "<p>장바구니에 추가되었습니다.</p>", { confirmText: '확인' ,onConfirm: () => {
-                /*emailInput.focus();
-                emailInput.select();*/
-            }});
-
-})
+$cart.addEventListener("click", (e) => {
+    e.preventDefault();
+    sendCart(); // 이제 결과 처리는 sendCart 함수 안에서 다 알아서 합니다.
+});
 
 const sendItems = () => {
     // 1. 필수 데이터 수집
@@ -166,6 +163,84 @@ const sendItems = () => {
     xhr.setRequestHeader('Content-Type', 'application/json'); // JSON 전송 필수 헤더!
     xhr.send(JSON.stringify(dataObj)); // 객체를 문자열로 변환해서 전송
 }
+
+const sendCart = () => {
+    // 1. 체크된 상품들만 가져오기
+    const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+    if (checkedBoxes.length === 0) {
+        openModal("WARN", "<p>장바구니에 담을 상품을 선택해주세요.</p>", { confirmText: '확인' });
+        return;
+    }
+
+    const items = [];
+    let isSizeSelected = true;
+
+    // 2. 데이터 수집
+    checkedBoxes.forEach(checkbox => {
+        const itemRow = checkbox.closest('.item-row');
+        const sizeSelect = itemRow.querySelector('.size-select');
+        const selectedSize = sizeSelect.value;
+
+        if (!selectedSize) {
+            isSizeSelected = false;
+            return;
+        }
+
+        // ★ DTO 필드명(itemId, size, quantity)과 정확히 일치시켜야 함
+        items.push({
+            itemId: Number(checkbox.value),
+            size: selectedSize,
+            quantity: 1 // 수량 기본값 1 (필요하면 UI에서 입력받은 값 사용)
+        });
+    });
+
+    if (!isSizeSelected) {
+        openModal("WARN", "<p>선택하신 상품의 사이즈를 모두 골라주세요.</p>", { confirmText: '확인' });
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/cart/batch-add');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+
+                if (response.result === 'SUCCESS') {
+                    // ★ 여기서 성공 모달을 띄우는 것이 정석입니다.
+                    openModal("SUCCESS", "<p>장바구니에 담겼습니다.<br>장바구니로 이동하시겠습니까?</p>", {
+                        confirmText: '이동',
+                        onConfirm: () => { location.href = '/cart'; },
+                        cancelText: '계속쇼핑',
+                        onCancel: () => {
+                            // 체크박스 해제 (선택사항)
+                            const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+                            checkedBoxes.forEach(box => box.checked = false);
+                        }
+                    });
+                } else if (response.result === 'FAILURE_SESSION') {
+                    openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { location.href = '/login'; }
+                    });
+                } else {
+                    openModal("ERROR", `<p>장바구니 담기에 실패했습니다.</p>`, { confirmText: '확인' });
+                }
+            } else {
+                openModal("ERROR", `<p>서버 통신 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+            }
+        }
+    };
+
+    xhr.send(JSON.stringify(items));
+}
+
+
+
+
+
 
 const renderItems = () => {
     const xhr = new XMLHttpRequest();
