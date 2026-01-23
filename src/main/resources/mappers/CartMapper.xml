@@ -63,10 +63,17 @@
         LIMIT 1
     </select>
 
-    <!-- 수량 업데이트용 -->
+    <!-- 수량 업데이트용 (기존 수량에 더하기) -->
     <update id="updateCartQuantity">
         UPDATE `cors`.`carts`
         SET `quantity` = `quantity` + #{quantity}
+        WHERE `id` = #{id}
+    </update>
+
+    <!-- 수량 업데이트용 (특정 값으로 변경) -->
+    <update id="updateCartQuantityById">
+        UPDATE `cors`.`carts`
+        SET `quantity` = #{quantity}
         WHERE `id` = #{id}
     </update>
 </mapper>

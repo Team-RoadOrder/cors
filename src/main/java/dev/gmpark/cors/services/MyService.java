@@ -79,6 +79,23 @@ public class MyService {
             return CommonResult.FAILURE;
         }
     }
+    public CommonResult updateUserStyle(RegisterEntity sessionUser, String newStyle) {
+        RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
+
+        if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+
+        dbUser.setStyle(newStyle);
+        int rows = this.registerMapper.update(dbUser);
+
+        if (rows > 0) {
+            sessionUser.setStyle(newStyle);
+            return CommonResult.SUCCESS;
+        } else {
+            return CommonResult.FAILURE;
+        }
+    }
     public CommonResult deleteUser(RegisterEntity sessionUser) {
         RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
         if (dbUser == null) {

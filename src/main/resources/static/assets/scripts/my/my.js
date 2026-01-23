@@ -197,12 +197,86 @@ const loadTab = (menuName, element) => {
         if (menuName === 'reservation') {
             filterStatus('대기');
         }
+        // [추가] 프로필 탭일 경우 스타일 체크박스 이벤트 리스너 등록
+        if (menuName === 'profile') {
+            attachStyleCheckboxEvents();
+        }
      };
     const timestamp = new Date().getTime();
     xhr.open('GET', '/my/tab?menu=' + menuName + '&t=' + timestamp);
      xhr.send();
 
 }
+
+// [추가] 스타일 체크박스 이벤트 리스너 등록 함수
+const attachStyleCheckboxEvents = () => {
+    const checkboxes = document.querySelectorAll('.style-item input[type="checkbox"]');
+    
+    // 1. 스타일 매핑 객체 (숫자 -> 텍스트)
+    const styleMap = {
+        '1': '미니멀',
+        '2': '캐주얼',
+        '3': '스트릿',
+        '4': '댄디',
+        '5': '빈티지',
+        '6': '모던',
+        '7': '스포티',
+        '8': '페미닌'
+    };
+
+    // 2. 현재 저장된 스타일 값(예: "1,2")을 가져와서 텍스트로 변환 후 표시
+    const rawStyleInput = document.getElementById('userStyleRaw');
+    const styleTextSpan = document.getElementById('currentStyleText');
+    
+    if (rawStyleInput && styleTextSpan) {
+        const rawVal = rawStyleInput.value; // "1,2" 형태
+        if (rawVal) {
+            const styleNames = rawVal.split(',')
+                .map(s => s.trim())
+                .filter(s => styleMap[s]) // 유효한 키인지 확인
+                .map(s => styleMap[s])    // 이름으로 변환
+                .join(', ');
+            
+            if (styleNames) {
+                styleTextSpan.textContent = `현재: ${styleNames}`;
+            }
+        }
+    }
+
+    // 3. 체크박스 로직 (FIFO 방식)
+    let checkedQueue = [];
+    
+    checkboxes.forEach(cb => {
+        // 초기 상태: 이미 체크된 것들은 큐에 넣고 스타일 적용
+        if(cb.checked) {
+            checkedQueue.push(cb);
+            cb.parentElement.style.cssText = "background-color: #333; border-color: #333; color: white;";
+        }
+        
+        cb.addEventListener('change', function() {
+            if(this.checked) {
+                // 체크 시
+                if (checkedQueue.length >= 2) {
+                    // 이미 2개가 꽉 찼다면, 가장 먼저 체크된(배열의 첫 번째) 요소를 해제
+                    const toRemove = checkedQueue.shift(); 
+                    toRemove.checked = false;
+                    toRemove.parentElement.style.cssText = ""; // 스타일 초기화
+                }
+                
+                // 현재 요소 추가 및 스타일 적용
+                checkedQueue.push(this);
+                this.parentElement.style.cssText = "background-color: #333; border-color: #333; color: white;";
+                
+            } else {
+                // 체크 해제 시
+                // 큐에서 해당 요소 제거
+                checkedQueue = checkedQueue.filter(item => item !== this);
+                this.parentElement.style.cssText = "";
+            }
+        });
+    });
+}
+
 const filterStatus= (statusType) => {
     const rows = document.querySelectorAll('.res-item-row');
     const noDataMsg = document.getElementById('no-reservation-msg');
@@ -333,6 +407,45 @@ const changePhone = (phone) => {
         }
     };
     xhr.open('PATCH', '/my/phone');
+    xhr.send(formData);
+}
+
+const changeStyle = () => {
+    // 체크된 스타일 값들을 가져와서 콤마로 연결 (예: "1,3,5")
+    const selectedStyles = Array.from(document.querySelectorAll('input[name="style"]:checked'))
+        .map(el => el.value)
+        .join(',');
+
+    const formData = new FormData();
+    formData.append('style', selectedStyles);
+
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    openModal("SUCCESS", "<p>스타일이 변경되었습니다.</p>", {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            loadTab('profile', document.querySelector('.menu .item[data-tab="profile"]'));
+                        }
+                    });
+                } else {
+                    openModal("WARN", "<p>변경에 실패했습니다.</p>");
+                }
+            } catch (e) {
+                console.error("JSON 파싱 에러:", e);
+                openModal("ERROR", "<p>응답 데이터 형식이 올바르지 않습니다.</p>");
+            }
+        } else {
+            openModal("ERROR", `<p>서버 통신 오류 (${xhr.status})</p>`);
+        }
+    };
+    xhr.open('PATCH', '/my/style');
     xhr.send(formData);
 }
 
