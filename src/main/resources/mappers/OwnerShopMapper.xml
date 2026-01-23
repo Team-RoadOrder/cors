@@ -391,7 +391,6 @@
         </foreach>
         ORDER BY si.`updated_at` DESC
     </select>
-
     <select id="selectCountAllItems" resultType="_int">
         SELECT COUNT(*) FROM `cors`.`shop_items` WHERE `deleted_at` IS NULL
     </select>

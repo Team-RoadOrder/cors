@@ -25,6 +25,7 @@ public class ItemService {
 
     /*public  getItemById*/
     public ShopItemVo getItemById (Long id ) {
+        // 로직 추가해야함
         return this.ownerShopMapper.selectItemVoById(id);
     }
     public ShopItemEntity[] searchItems(String keyword) {

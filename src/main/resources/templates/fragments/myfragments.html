@@ -15,6 +15,7 @@
             <div class="user_info">
                 <strong class="name" th:text="${sessionUser.name}" >user name</strong>
                 <span class="email" th:text="${sessionUser.email}">kr****@naver.com</span>
+                <span class="point" th:text="${sessionUser.point}">잔여포인트:500  </span>
             </div>
             <div class="info-buttons">
                 <label onclick="loadTab('profile', document.querySelectorAll('.menu .item')[4])" class="btn profile" style="cursor:pointer">프로필 관리</label>
@@ -53,7 +54,7 @@
         </span>
             </label>
             <div th:if="${homeOrders == null or #arrays.isEmpty(homeOrders)}"
-                 style="text-align: center; padding: 20px; color: #999;">
+                 style="    text-align: center; padding: 20px; color: #999;">
                 최근 구매 내역이 없습니다.
             </div>
         </div>

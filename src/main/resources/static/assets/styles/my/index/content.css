@@ -58,6 +58,17 @@
 .tab-content .user_info .email {
     color: #a0a0a0;
 }
+
+.tab-content .user_info .point {
+    color: #7e7e7e;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.tab-content .user_info .point:before {
+    content: '잔여포인트:';
+    font-size: 0.9rem;
+    font-weight: 700;
+}
 .tab-content .user_detail .info-buttons  {
     display: flex;
     flex-direction: row;

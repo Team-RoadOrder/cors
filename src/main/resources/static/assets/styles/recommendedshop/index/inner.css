@@ -129,6 +129,7 @@
         grid-template-columns: none; /* 그리드 컬럼 설정 초기화 */
         padding-left: calc(50vw - 42.5vw); /* 첫 번째 아이템 중앙 정렬을 위한 패딩 (화면 절반 - 아이템 절반) */
         padding-right: calc(50vw - 42.5vw); /* 마지막 아이템 중앙 정렬을 위한 패딩 */
+        padding-bottom: 0;
     }
 
     #inner .grid::-webkit-scrollbar {
@@ -173,7 +174,12 @@
     #inner > .item {
         padding: 6rem 0 3rem 0;
     }
-
+    #inner > .item:first-child {
+        margin-top: 3rem;
+    }
+    #inner > .item:last-child {
+        margin-bottom: 4rem;
+    }
 
 
     /* 모바일에서 슬라이드 버튼 표시 */
