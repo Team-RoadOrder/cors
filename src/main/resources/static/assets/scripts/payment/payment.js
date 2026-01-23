@@ -94,6 +94,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const ordererPhone1 = document.getElementById("orderer_phone_1").value;
             const ordererPhone2 = document.getElementById("orderer_phone_2").value;
             const ordererPhone3 = document.getElementById("orderer_phone_3").value;
+            
+            // 주문자 주소 정보 가져오기 (hidden input에서)
+            const ordererAddress = document.getElementById("orderer_address").value;
+            const ordererAddressDetail = document.getElementById("orderer_address_detail").value;
 
             // 받는 분 정보에 넣기
             document.getElementById("receiver_name").value = ordererName;
@@ -104,6 +108,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 receiverPhoneInputs[1].value = ordererPhone2;
                 receiverPhoneInputs[2].value = ordererPhone3;
             }
+            
+            // 주소 정보 넣기
+            if (addressInput) addressInput.value = ordererAddress;
+            if (addressDetailInput) addressDetailInput.value = ordererAddressDetail;
         });
     }
 

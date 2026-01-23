@@ -94,6 +94,9 @@
               </select>
             </div>
           </div>
+          <!-- 주문자 주소 정보 hidden으로 추가 -->
+          <input type="hidden" id="orderer_address" th:value="${user != null ? user.address : ''}">
+          <input type="hidden" id="orderer_address_detail" th:value="${user != null ? user.addressDetail : ''}">
         </div>
       </section>
 

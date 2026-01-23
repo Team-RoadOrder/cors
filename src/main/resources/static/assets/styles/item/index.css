@@ -101,7 +101,7 @@
 .subImage .sub img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 
@@ -129,7 +129,7 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .shop-text-group {
@@ -471,7 +471,7 @@
     margin-bottom: 0.625rem;
 }
 
-.img-box img { width: 100%; height: 100%; object-fit: cover; }
+.img-box img { width: 100%; height: 100%; object-fit: contain; }
 
 .info-box .name {
     font-size: 0.8125rem;
@@ -554,7 +554,7 @@
 .gallery-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
@@ -712,7 +712,7 @@
         width: 3rem;
         height: 3rem;
         border-radius: 50%;
-        object-fit: cover;
+        object-fit: contain;
         flex-shrink: 0;     /* 이미지 찌그러짐 방지 */
     }
 
@@ -774,6 +774,7 @@
 
     .splash, .image-wrapper {
         width: 100%;
+        align-self: center;
     }
 
     .image-wrapper img {
