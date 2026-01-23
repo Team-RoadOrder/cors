@@ -29,6 +29,7 @@ public class RegisterEntity {
     private LocalDateTime createdAt;
     private String socialTypeCode;
     private String socialId;
+    private int point;
 }
 /*
 create table `cors`.`users`

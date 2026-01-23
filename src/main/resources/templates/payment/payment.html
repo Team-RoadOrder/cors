@@ -153,10 +153,11 @@
           <div class="point-area" style="margin-top: 20px;">
             <h4 style="font-size: 14px; margin-bottom: 8px; color: #555;">포인트</h4>
             <div class="input-group">
-              <input type="number" placeholder="0">
-              <button type="button">전액 사용</button>
+              <input type="number" id="point-input" placeholder="0" min="0" th:max="${user.point}">
+              <button type="button" id="btn-use-all-points">전액 사용</button>
             </div>
-            <p class="info-text">보유 포인트: <strong>5,020P</strong></p>
+            <p class="info-text">보유 포인트: <strong id="user-point" th:text="${#numbers.formatInteger(user.point, 0, 'COMMA')} + 'P'">0P</strong></p>
+            <input type="hidden" id="max-point" th:value="${user.point}">
           </div>
         </div>
       </section>
@@ -282,7 +283,7 @@
           </div>
           <div class="price-row">
             <span>할인/포인트</span>
-            <span>- 0원</span>
+            <span id="summary-discount-price">- 0원</span>
           </div>
           <div class="price-row total">
             <span>총 결제 금액</span>

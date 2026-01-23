@@ -19,4 +19,5 @@ public class SingleOrderDto {
     private String receiverPhone;
     private String address;
     private String addressDetail;
+    private int usedPoints; // 포인트 사용량
 }

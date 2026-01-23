@@ -4,8 +4,10 @@ import dev.gmpark.cors.dtos.PaymentItemDto;
 import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.OrderEntity;
 import dev.gmpark.cors.entities.OrderItemEntity;
+import dev.gmpark.cors.entities.PointHistoryEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.OrderMapper;
+import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.results.register.CommonResult;
 import dev.gmpark.cors.vos.CartVo;
 import dev.gmpark.cors.vos.ShopItemVo;
@@ -25,9 +27,11 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final ItemService itemService;
     private final CartService cartService;
+    private final RegisterMapper registerMapper;
 
     private static final long FREE_DELIVERY_THRESHOLD = 70000;
     private static final long DELIVERY_FEE = 3000;
+    private static final double POINT_EARN_RATE = 0.02; // 1% 적립
 
     @Transactional
     public CommonResult createOrder(OrderEntity order, List<OrderItemEntity> items) {
@@ -85,6 +89,18 @@ public class OrderService {
         long deliveryFee = totalProductPrice >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
         long totalPrice = totalProductPrice + deliveryFee;
 
+        // 포인트 사용 처리
+        int usedPoints = dto.getUsedPoints();
+        if (usedPoints > 0) {
+            if (user.getPoint() < usedPoints) {
+                return CommonResult.FAILURE; // 포인트 부족
+            }
+            totalPrice -= usedPoints;
+            
+            // 포인트 차감
+            this.registerMapper.updatePoint(user.getEmail(), -usedPoints);
+        }
+
         OrderEntity order = OrderEntity.builder()
                 .userEmail(user.getEmail())
                 .totalPrice(totalPrice)
@@ -96,7 +112,33 @@ public class OrderService {
                 .request(dto.getRequest())
                 .build();
 
-        return this.createOrder(order, items);
+        CommonResult result = this.createOrder(order, items);
+        
+        if (result == CommonResult.SUCCESS) {
+            // 포인트 사용 히스토리 저장 (주문 성공 시)
+            if (usedPoints > 0) {
+                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(user.getEmail())
+                        .amount(-usedPoints)
+                        .type("USE")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
+
+            // 포인트 적립 처리 (실 결제 금액 기준)
+            int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
+            if (earnedPoints > 0) {
+                this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
+                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(user.getEmail())
+                        .amount(earnedPoints)
+                        .type("EARN")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
+        }
+        
+        return result;
     }
 
     @Transactional
@@ -153,6 +195,18 @@ public class OrderService {
 
         long totalPrice = totalProductPrice + deliveryFee;
 
+        // 포인트 사용 처리
+        int usedPoints = dto.getUsedPoints();
+        if (usedPoints > 0) {
+            if (user.getPoint() < usedPoints) {
+                return CommonResult.FAILURE; // 포인트 부족
+            }
+            totalPrice -= usedPoints;
+            
+            // 포인트 차감
+            this.registerMapper.updatePoint(user.getEmail(), -usedPoints);
+        }
+
         OrderEntity order = OrderEntity.builder()
                 .userEmail(user.getEmail())
                 .totalPrice(totalPrice)
@@ -169,6 +223,28 @@ public class OrderService {
         if (orderResult == CommonResult.SUCCESS) {
             // 수정된 부분: deleteCartItems 호출 시 user 파라미터 추가
             this.cartService.deleteCartItems(user, dto.getCartIds());
+            
+            // 포인트 사용 히스토리 저장
+            if (usedPoints > 0) {
+                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(user.getEmail())
+                        .amount(-usedPoints)
+                        .type("USE")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
+
+            // 포인트 적립 처리 (실 결제 금액 기준)
+            int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
+            if (earnedPoints > 0) {
+                this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
+                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(user.getEmail())
+                        .amount(earnedPoints)
+                        .type("EARN")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
         }
         
         return orderResult;

@@ -141,6 +141,41 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // 포인트 관련 로직
+    const pointInput = document.getElementById('point-input');
+    const btnUseAllPoints = document.getElementById('btn-use-all-points');
+    const maxPointInput = document.getElementById('max-point');
+    const summaryDiscountPrice = document.getElementById('summary-discount-price');
+    
+    let usedPoints = 0;
+
+    if (pointInput && maxPointInput) {
+        const maxPoints = parseInt(maxPointInput.value);
+
+        pointInput.addEventListener('input', function() {
+            let val = parseInt(this.value);
+            if (isNaN(val)) val = 0;
+            
+            if (val < 0) val = 0;
+            if (val > maxPoints) {
+                val = maxPoints;
+                alert("보유 포인트 이상 사용할 수 없습니다.");
+            }
+            
+            this.value = val;
+            usedPoints = val;
+            updateTotalPrice();
+        });
+
+        if (btnUseAllPoints) {
+            btnUseAllPoints.addEventListener('click', function() {
+                pointInput.value = maxPoints;
+                usedPoints = maxPoints;
+                updateTotalPrice();
+            });
+        }
+    }
+
     // 수량 조절 및 가격 업데이트 로직
     const orderItemsList = document.querySelector('.order-items-list');
     if (orderItemsList) {
@@ -207,10 +242,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         const deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
-        const totalPrice = totalProductPrice + deliveryFee;
+        
+        // 포인트 적용 전 총액
+        let totalPrice = totalProductPrice + deliveryFee;
+        
+        // 포인트 적용 (총액보다 많이 쓸 수 없음)
+        if (usedPoints > totalPrice) {
+            usedPoints = totalPrice;
+            if (pointInput) pointInput.value = usedPoints;
+        }
+        
+        totalPrice -= usedPoints;
 
         document.getElementById('summary-product-price').textContent = totalProductPrice.toLocaleString() + '원';
         document.getElementById('summary-delivery-fee').textContent = deliveryFee.toLocaleString() + '원';
+        
+        if (summaryDiscountPrice) {
+            summaryDiscountPrice.textContent = '- ' + usedPoints.toLocaleString() + '원';
+        }
+        
         document.getElementById('summary-total-price').textContent = totalPrice.toLocaleString() + '원';
         document.getElementById('btn-payment-text').textContent = totalPrice.toLocaleString() + '원 결제하기';
     }
@@ -343,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 address: address,
                 addressDetail: addressDetail,
                 paymentMethod: paymentMethod, // 결제 수단 추가
-                usedPoint: 0, // 포인트 사용량 (추후 구현)
+                usedPoints: usedPoints, // 포인트 사용량
                 usedCouponId: null // 쿠폰 ID (추후 구현)
             };
 

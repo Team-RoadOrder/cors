@@ -169,7 +169,7 @@
 
     <select id="selectReviewLikeCount" resultType="java.lang.Integer">
         SELECT `useful_count` FROM `cors`.`item_reviews`
-        WHERE `id` = #{reviewId}
+        WHERE `id` = #{reviewId}.
     </select>
 
     <select id="selectCommentsByReviewId" resultType="dev.gmpark.cors.entities.ItemReviewCommentEntity">

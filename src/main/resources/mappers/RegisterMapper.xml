@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="dev.gmpark.cors.mappers.RegisterMapper">
     <insert id="insertRegister">
-        INSERT INTO `cors`.`users`(`name`,`store_name`,`business_num`,`usertype`,`email`,`password`,`phone`,`style`,`address`,`address_detail`,`gender`,`last_logout_at`,`created_at`,`social_type_code`,`social_id`)
+        INSERT INTO `cors`.`users`(`name`,`store_name`,`business_num`,`usertype`,`email`,`password`,`phone`,`style`,`address`,`address_detail`,`gender`,`last_logout_at`,`created_at`,`social_type_code`,`social_id`, `point`)
         VALUES (#{register.name},
                 #{register.storeName},
                 #{register.businessNum},
@@ -19,11 +19,21 @@
                 IFNULL(#{register.lastLogOutAt}, NOW()),
                 IFNULL(#{register.createdAt}, NOW()),
                 #{register.socialTypeCode},
-                #{register.socialId})
+                #{register.socialId},
+                #{register.point})
     </insert>
     <insert id="insertMember" parameterType="dev.gmpark.cors.entities.RegisterEntity">
         INSERT INTO `cors`.`users` ( `email`,`password`,`name`,`phone`,`address`,`address_detail`,`usertype`,`level`,`owner_email`,`last_logout_at`,`created_at`      )
         VALUES ( #{email},#{password},#{name},#{phone},#{address},#{addressDetail},#{usertype},#{level},#{ownerEmail},#{lastLogOutAt},NOW() )
+    </insert>
+    <insert id="insertPointHistory">
+        INSERT INTO `cors`.`point_histories` (user_email, amount, type, order_id, created_at)
+        VALUES (#{userEmail},
+                #{amount},
+                #{type},
+                #{orderId},
+                NOW())
+
     </insert>
     <update id="update">
         UPDATE `cors`.`users`
@@ -50,6 +60,11 @@
     <update id="updatePassword">
         UPDATE `cors`.`users`
         SET `password` = #{password}
+        WHERE `email` = #{email}
+    </update>
+    <update id="updatePoint">
+        UPDATE `cors`.`users`
+        SET `point` = `point` + #{point}
         WHERE `email` = #{email}
     </update>
     <delete id="delete">
@@ -89,6 +104,7 @@
              , `created_at`     AS `createdAt`
              , `level`          AS `level`
              , `last_logout_at` AS `lastLogOutAt`
+             , `point`          AS `point`
         FROM `cors`.`users`
         WHERE email = #{email}
         LIMIT 1;
@@ -125,10 +141,22 @@
              , `last_logout_at` AS `lastLogOutAt`
              , `social_id`      AS `socialId`
              , `social_type_code` AS `socialTypeCode`
+             , `point`          AS `point`
         FROM `cors`.`users`
         WHERE `social_id` = #{socialId}
           AND `social_type_code` = #{socialTypeCode}
         LIMIT 1;
+    </select>
+    <select id="selectPointHistory" resultType="java.lang.Integer">
+        SELECT `index`      AS `index`,
+               `created_at` AS `createdAt`,
+               `order_id`   AS `orderId`,
+               `type`       AS `type`,
+               `amount`     AS `amount`,
+               `user_email` AS `userEmail`
+        FROM `cors`.`point_histories`
+        WHERE `user_email` = #{userEmail}
+
     </select>
 
 </mapper>
