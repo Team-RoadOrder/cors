@@ -3,9 +3,15 @@
 @import "./index/main.css";
 @import "./index/owner.css";
 @import "./index/ownermember_modal.css";
-
+#main {
+    margin-top: 4rem;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    flex-grow: 1; /* body 내에서 남은 공간을 모두 차지 */
+    width: 100%;
+}
 .sections {
-    padding: 1.5rem 10rem 3rem 2.5rem;
+    padding: 1.5rem 5rem 3rem 7rem;
     min-height: calc(100vh - 4.375rem);
     width: 100%;
     display: flex;
@@ -18,7 +24,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding: 0 1.5rem;
+    padding: 0;
     border-bottom: 0.0625rem solid #adb5bd;
     width: 100%;
     box-sizing: border-box;
@@ -28,7 +34,6 @@
     font-size: 2rem;
     font-weight: 700;
     color: #333;
-    margin-left: -1rem;
 }
 
 .search-box {
@@ -151,7 +156,6 @@
 /* 펼쳐졌을 때 스타일 */
 .custom-select-container.open .custom-options {
     display: block;
-!important;
 }
 
 .custom-select-container.open .select-trigger {
@@ -262,8 +266,8 @@
 }
 
 .status-badge.master {
-    background-color: #f4dca7 !important;
-    color: #fa3b00 !important;
+    background-color: #f4dca7;
+    color: #fa3b00;
 }
 
 .status-badge.active {
@@ -272,8 +276,8 @@
 }
 
 .status-badge.inactive {
-    background-color: #ffe3e3 !important;
-    color: #c92a2a!important;
+    background-color: #ffe3e3 ;
+    color: #c92a2a;
 }
 
 .btn-edit {
@@ -292,7 +296,7 @@
 }
 /* 선택된 행 강조 스타일만 HTML에 유지 (동적 클래스 대응용) */
 .member-row.selected {
-    background-color: #f0f7ff !important;
+    background-color: #f0f7ff;
     outline: 2px solid #007bff;
     outline-offset: -2px;
 }
@@ -303,128 +307,155 @@
     display: none;
 }
 
-@media (max-width: 32rem) {
-    /* 1. 배경 및 전체 레이아웃 초기화 */
-    body {
-        background-color: #fff !important;
-        margin: 0;
-        padding: 0;
+/* ============================================================
+   [1] 32rem(512px) 이하: 모바일 전용 (375px 접속 시간 노출)
+   ============================================================ */
+@media screen and (max-width: 32rem) {
+    /* 1. 데스크톱 UI 요소 제거 및 그리드 해제 */
+    body #header, body #nav, body #toggleNav, body #owner-header,
+    body .admin-title, body .btn-group, body .filter-group, body .manage-btns {
+        display: none;
     }
 
-    /* 1. 배경 및 전역 설정: 목업처럼 흰색 배경 고정 */
-    body {
-        background-color: #fff !important;
-        margin: 0;
-        padding: 0;
+    body #main {
         display: flex;
         flex-direction: column;
-        align-items: center; /* 전체 컨텐츠 가로 중앙 정렬 */
-    }
-
-    /* 불필요한 데스크톱 UI 요소 제거 */
-    #header, #nav, #toggleNav, .admin-title, .filter-group, .btn-group, .manage-btns {
-        display: none !important;
-    }
-
-    /* 2. 메인 컨텐츠 영역: 너비를 100%로 확보하여 중앙 정렬 기반 마련 */
-    #main {
-        margin: 0 !important;
-        padding: 0 !important;
+        align-items: center;
+        padding-top: 2rem;
         width: 100%;
-        display: flex;
-        justify-content: center; /* 내부 컨텐츠 중앙 정렬 */
-        background-color: #fff !important;
+        margin: 0 auto;
+        grid-template-columns: none;
     }
 
-    .sections {
-        padding: 2rem 0 !important; /* 상단 여백 확보 */
+    body .sections {
         width: 100%;
-        max-width: 100%; /* 너비 초과 방지 */
+        margin: 0 auto;
+        padding: 0 0.5rem; /* 패딩 최소화로 내부 표 공간 확보 */
         display: flex;
         flex-direction: column;
-        align-items: center; /* 내부 요소들(검색창, 테이블) 중앙 정렬 */
-        border: none !important;
+        align-items: center;
         box-sizing: border-box;
     }
 
-    /* 3. 검색창 설정: 잘리지 않도록 box-sizing과 width 조정 */
-    .admin-header {
-        border-bottom: none !important;
-        padding: 0 1.25rem 2rem 1.25rem !important; /* 양옆 패딩으로 잘림 방지 */
-        width: 100% !important;
-        display: flex !important;
+    /* 2. 검색창 중앙 정렬 */
+    body .admin-header {
+        width: 100%;
         justify-content: center;
-        box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+        padding-bottom: 2rem;
+        border: none;
     }
 
-    .search-box {
-        width: 100% !important; /* 부모(admin-header)의 패딩 내에서 꽉 차게 */
-        max-width: 28rem; /* 너무 퍼지지 않게 최대치 설정 */
-        position: relative;
+    body .search-box {
+        width: 95%;
+        max-width: 100%;
     }
 
-    .search-input {
-        width: 100% !important;
-        padding: 0.8rem 3rem 0.8rem 1rem !important; /* 오른쪽 아이콘 공간 확보 */
-        border-radius: 0.5rem !important;
-        border: 1px solid #adb5bd !important;
-        font-size: 0.95rem !important;
-        box-sizing: border-box; /* 인풋 너비 계산 오류 방지 */
+    body .search-input {
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
     }
 
-    .search-icon {
-        width: 1.5rem !important;
-        height: 1.5rem !important;
-        position: absolute;
-        top: 50% !important;
-        right: 1rem !important;
-        transform: translateY(-50%) !important; /* 아이콘 수직 중앙 정렬 */
-        margin: 0 !important;
+    /* 3. [열 최적화] 상태 대신 '마지막 접속' 노출 (총 5개 열) */
+    /* 상태(6번째)와 관리(7번째) 열을 숨김 */
+    body .admin-table th:nth-child(6), body .admin-table td:nth-child(6),
+    body .admin-table th:nth-child(7), body .admin-table td:nth-child(7) {
+        display: none;
     }
 
-    /* 4. 테이블 설정: 중앙 배치 및 불필요한 열 제거 */
-    .table-wrapper {
-        width: 100% !important;
-        display: flex;
-        justify-content: center;
+    /* 4. 표 속성: 언제나 흰색 배경 및 줄바꿈 차단 */
+    body .table-wrapper {
+        width: 100%;
+        overflow-x: hidden;
+        /*background-color: #fff;*/
     }
 
-    .admin-table {
-        width: 100% !important;
+    body .admin-table {
+        width: 100%;
+        table-layout: fixed;
         border-collapse: collapse;
-        margin: 0 0.5rem 0 0.5rem;
+        /*background-color: #fff;*/
+    }
+
+    /* 375px 맞춤 비율 (이름/이메일/권한/입사일/마지막접속) */
+    body .admin-table th:nth-child(1) { width: 22%; }
+    body .admin-table th:nth-child(2) { width: 30%; }
+    body .admin-table th:nth-child(3) { width: 14%; }
+    body .admin-table th:nth-child(4) { width: 18%; }
+    body .admin-table th:nth-child(5) { width: 18%; } /* 마지막접속 노출 */
+
+    body .admin-table th {
+        background-color: #eee;
+        font-size: 0.72rem;
+        padding: 0.8rem 0.1rem;
+        color: #fff;
+        font-weight: 600;
+        border: none;
         white-space: nowrap;
-        table-layout: auto !important /* 열 너비 고정으로 가독성 확보 */
     }
 
-    /* 목업 기준: 이름, 이메일, 권한, 입사일 외 모두 숨김 */
-    .admin-table th:nth-child(6), .admin-table td:nth-child(6),
-    .admin-table th:nth-child(7), .admin-table td:nth-child(7) {
-        display: none !important;
-    }
-
-    .admin-table th {
-        background-color: #f2f2f2 !important;
-        padding: 0.8rem 0.4rem !important;
-        font-size: 0.85rem !important;
-        color: #333;
-        border-top:0.0625rem solid #eee;
-    }
-
-    .admin-table td {
-        padding: 1rem 0.4rem !important;
-        font-size: 0.8rem !important;
+    body .admin-table td {
+        /*background-color: #fff; !* 표 내부 흰색 고정 *!*/
+        font-size: 0.7rem;
+        padding: 1rem 0.1rem;
         text-align: center;
-        border-bottom: 0.0625rem solid #eee !important;
-        word-break: break-all; /* 이메일 길어질 경우 대비 */
+        border-bottom: 1px solid #eee;
+        white-space: nowrap; /* 줄바꿈 절대 방지 */
+        overflow: hidden;
+        text-overflow: ellipsis; /* 넘치면 ... */
+        color: #495057;
     }
 
-    /* 5. 비네팅 오버레이 및 하단 버튼 */
+    body .sections {
+        padding-bottom: 8rem;
+    }
+}
+
+/* ============================================================
+   [2] 32.01rem(513px) ~ 80rem(1280px): 노트북 사각지대 패딩 교정
+   ============================================================ */
+@media screen and (min-width: 32.01rem) and (max-width: 80rem) {
+    body #main {
+        margin: 0 auto;
+        padding: 1.5rem 0; /* 좌우 패딩 제거하여 표 찌그러짐 방지 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        grid-template-columns: none;
+    }
+
+    body .sections {
+        width: 95%; /* 부모 패딩 대신 자식 너비로 간격 조절 */
+        padding: 0;
+        margin: 0 auto;
+    }
+
+    body .admin-table {
+        table-layout: fixed;
+        width: 100%;
+        /*background-color: #fff;*/
+    }
+
+    body .admin-table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85rem;
+        /*background-color: #fff;*/
+    }
+}
+
+/* ============================================================
+   [1] 32rem(512px) 이하: 모바일 전용 (375px 접속 시간 노출)
+   ============================================================ */
+@media screen and (max-width: 32rem) {
+    /* 7. 가이드 오버레이 (비네팅 효과) */
     .mobile-guide-overlay {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         z-index: 10000;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 25%, rgba(0,0,0,0.7) 100%);
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%);
         display: none; /* JS 제어 */
         flex-direction: column;
         justify-content: center;
@@ -446,5 +477,163 @@
         border: none;
         color: rgba(255, 255, 255, 0.8);
         font-size: 0.9rem;
+    }
+
+
+    .guide-content {
+        text-align: center;
+        padding: 0 2rem;
+    }
+    /* 1. 데스크톱 UI 요소 제거 및 그리드 해제 */
+    body #header, body #nav, body #toggleNav, body #owner-header,
+    body .admin-title, body .btn-group, body .filter-group, body .manage-btns {
+        display: none;
+    }
+
+    body #main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 2rem;
+        width: 100%;
+        margin: 0 auto;
+        grid-template-columns: none;
+    }
+
+    body .sections {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 0.5rem; /* 패딩 최소화로 내부 표 공간 확보 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    /* 2. 검색창 중앙 정렬 */
+    body .admin-header {
+        width: 100%;
+        justify-content: center;
+        padding-bottom: 2rem;
+        border: none;
+    }
+
+    body .search-box {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    body .search-input {
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* 3. [열 최적화] 상태 대신 '마지막 접속' 노출 (총 5개 열) */
+    /* 상태(6번째)와 관리(7번째) 열을 숨김 */
+    body .admin-table th:nth-child(6), body .admin-table td:nth-child(6),
+    body .admin-table th:nth-child(7), body .admin-table td:nth-child(7) {
+        display: none;
+    }
+
+    /* 4. 표 속성: 언제나 흰색 배경 및 줄바꿈 차단 */
+    body .table-wrapper {
+        width: 100%;
+        overflow-x: hidden;
+        /*background-color: #fff;*/
+    }
+
+    body .admin-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        /*background-color: #fff;*/
+    }
+
+    /* 375px 맞춤 비율 (이름/이메일/권한/입사일/마지막접속) */
+    body .admin-table th:nth-child(1) { width: 15%; }
+    body .admin-table th:nth-child(2) { width: 35%; }
+    body .admin-table th:nth-child(3) { width: 14%; }
+    body .admin-table th:nth-child(4) { width: 18%; }
+    body .admin-table th:nth-child(5) { width: 18%; } /* 마지막접속 노출 */
+
+    body .admin-table th {
+        background-color: #fff;
+        font-size: 0.72rem;
+        padding: 0.8rem 0.1rem;
+        color: #333;
+        font-weight: 600;
+        border: none;
+    }
+
+    body .admin-table td {
+        /*background-color: #fff; !* 표 내부 흰색 고정 *!*/
+        font-size: 0.7rem;
+        padding: 1rem 0.1rem;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+        white-space: nowrap; /* 줄바꿈 절대 방지 */
+        overflow: hidden;
+        text-overflow: ellipsis; /* 넘치면 ... */
+        color: #495057;
+    }
+
+    body .sections {
+        padding-bottom: 8rem;
+    }
+}
+
+/* ============================================================
+   [2] 32.01rem(513px) ~ 80rem(1280px): 노트북 사각지대 패딩 교정
+   ============================================================ */
+@media screen and (min-width: 32.01rem) and (max-width: 80rem) {
+    body #main {
+        margin: 0 auto;
+        padding: 1.5rem 0; /* 좌우 패딩 제거하여 표 찌그러짐 방지 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        grid-template-columns: none;
+    }
+
+    body .sections {
+        width: 95%; /* 부모 패딩 대신 자식 너비로 간격 조절 */
+        padding: 0;
+        margin: 0 auto;
+    }
+
+    body .admin-table {
+        table-layout: fixed;
+        width: 100%;
+        /*background-color: #fff;*/
+    }
+
+    body .admin-table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.85rem;
+        /*background-color: #fff;*/
+    }
+}
+
+/* ============================================================
+   [3] 80.01rem(1281px) 이상: 데스크톱 대화면
+   ============================================================ */
+@media screen and (min-width: 80.01rem) {
+    body .sections {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 7rem 3rem 3rem;
+
+    }
+
+    body .admin-table {
+        /*background-color: #fff;*/
+    }
+
+    body .admin-table td {
+        /*background-color: #fff;*/
     }
 }

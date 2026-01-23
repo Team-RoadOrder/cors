@@ -5,7 +5,6 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 #item-info .category{
     background: #FFFFFF;
@@ -15,7 +14,6 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 #item-info .item-list .form-title {
     font-size: 1.75rem;
@@ -163,7 +161,6 @@
 #item-info .category {
     background: #FFFFFF;
     flex: 0 0 300px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-radius: 0.75rem;
@@ -186,8 +183,9 @@
 #item-info .category > .category-box > .list > .item {
     padding: 1rem;
     font-size: 1.4rem;
-    font-weight: 300;
+    font-weight: 400;
     color: #a9a9a9;
+    word-break: keep-all;
     cursor: pointer;
 }
 

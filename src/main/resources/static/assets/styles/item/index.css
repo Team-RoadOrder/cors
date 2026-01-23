@@ -597,7 +597,7 @@
 
 
 #modal .modal-content-body {
-    overflow: hidden !important;
+    overflow: hidden;
 }
 
 /* 모바일 환경 (430px 이하) 대응 미디어 쿼리 */
@@ -612,31 +612,48 @@
     display: none;
 }
 
-@media screen and (max-width: 32rem) {/*수정*/
-    /*.productName {*/
-    /*    display: block;*/
-    /*    width: 100%;*/
-    /*    font-size: 1.5rem; !* 기존 사이즈 유지 *!*/
-    /*    font-weight: 700;*/
-    /*    line-height: 1.3;*/
-    /*    word-break: keep-all; !* 단어 단위 줄바꿈 *!*/
-    /*    margin-bottom: 0.3125rem;*/
-    /*}*/
+/*헤더 스크롤시 스플래쉬 영역에서 메뉴스크롤 자동으로 안닫힘*/
 
-    /*!* 상세 카테고리: 상품명 아래에 위치하도록 block 설정 *!*/
-    /*.detail-category {*/
-    /*    display: block;*/
-    /*    font-size: 0.875rem; !* 기존 사이즈 유지 *!*/
-    /*    color: #888;*/
-    /*    margin-bottom: 1rem;*/
-    /*}*/
+@media (min-width: 45rem) {
+    #buying-wrapper-M .buying,
+    #buying-wrapper-M .reservation,
+    #buying-wrapper-M .optionLink,
+    #buying-wrapper-M .cart_Add,
+    #buying-wrapper-M .delivery {
+        height: 4rem;      /* 높이를 조금 더 키움 */
+        width: 80%;        /* 너비를 약간 줄여서 너무 길어지지 않게 조절 */
+        font-size: 1.2rem; /* 글자 크기 조정 */
+    }
+}
+
+
+@media (min-width: 75rem) {
+    #buying-wrapper-M .buying,
+    #buying-wrapper-M .reservation,
+    #buying-wrapper-M .optionLink,
+    #buying-wrapper-M .cart_Add,
+    #buying-wrapper-M .delivery {
+        height: 4.5rem;    /* 더 높게 */
+        width: 70%;        /* 더 슬림하게 */
+        max-width: 600px;  /* 최대 너비 제한 */
+    }
+}
+
+@media screen and (max-width: 80rem) {
+    html, body {
+        height: auto;
+        overflow-y: visible; /* 스크롤 없이 전체 노출 */
+    }
+    html, body>.container{
+        padding:0 0 5rem 0;
+    }
     /* 1. PC용 섹션 숨기기 및 모바일용 섹션 노출 */
     #buying-wrapper {
-        display: none !important;
+        display: none;
     }
 
     #buying-wrapper-M {
-        display: flex !important;
+        display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
@@ -650,17 +667,18 @@
     #buying-wrapper-M .optionLink,
     #buying-wrapper-M .cart_Add,
     #buying-wrapper-M .delivery {
-        width: 90% !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
         margin-bottom: 0.5rem; /* 요소 간 간격 */
         box-sizing: border-box;
+        justify-content: center;
     }
 
-    /* 3. 구매 및 예약 버튼 높이 확장 */
+
     #buying-wrapper-M .buying,
     #buying-wrapper-M .reservation {
-        height: 3.5rem !important;
+        height: 3.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -675,7 +693,7 @@
         justify-content: space-between;
         align-items: center; /* 모든 요소를 세로 중앙(일직선)으로 정렬 */
         padding: 1.25rem;    /* 상하좌우 여백을 1.25rem으로 통일 */
-        margin: 0 !important; /* 외부 마진 제거로 패딩과 충돌 방지 */
+        margin: 0; /* 외부 마진 제거로 패딩과 충돌 방지 */
         box-sizing: border-box;
     }
     .productName {
@@ -748,13 +766,13 @@
 
     /* 5. 컨테이너 및 이미지 최적화 */
     .container {
-        width: 100% !important;
-        margin: 0 !important;
+        width: 100%;
+        margin: 0;
         padding: 0;
     }
 
     .splash, .image-wrapper {
-        width: 100% !important;
+        width: 100%;
     }
 
     .image-wrapper img {
@@ -778,7 +796,7 @@
 
     /* 7. 추천 상품 그리드 2열 */
     .recommended-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         padding: 0 0.625rem;
     }
@@ -816,7 +834,7 @@
         height: 3rem;
         font-size: 0.9rem;
         border-radius: 0.5rem;
-        margin: 0; /* 기존 마진 제거 */
+        margin: 0;
     }
 
     /* 모달 하단 확인 버튼 */
@@ -833,5 +851,75 @@
         top: 15px;
         right: 15px;
         font-size: 1.5rem;
+    }
+
+
+
+    /* 선택자를 구체화하여 우선순위 확보 */
+    #style-write-form div.write-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: stretch;
+        gap: 0;
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 0;
+    }
+
+    /* 모든 버튼 공통: 패딩 제거 및 텍스트 정렬 */
+    #style-write-form div.write-footer .image-preview-btn,
+    #style-write-form div.write-footer button.cancel,
+    #style-write-form div.write-footer button.confirm {
+        height: 2.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 0.1rem;      /* 최소한의 좌우 패딩만 남김 */
+        font-size: 0.8rem;      /* 글자 크기 살짝 조정 */
+        box-sizing: border-box;
+        margin: 0;
+    }
+
+    /* '사진 첨부하기' -> '사진...' 처리 */
+    #style-write-form div.write-footer .image-preview-btn,
+    #style-write-form div.write-footer > button:first-of-type {
+        flex: 1.1;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 0.4rem;
+        margin-right: 0.2rem;
+        padding: 0.0625rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: center;
+    }
+
+    /* 우측 버튼 그룹 (취소, 확인) */
+    #style-write-form div.write-footer .btn-group-right {
+        flex: 2;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end; /* 버튼들을 왼쪽으로 밀착 */
+        gap: 0;
+    }
+
+    #style-write-form div.write-footer button.cancel {
+        flex: 1;
+        background-color: #f1f1f1;
+        color: #666;
+        border: none;
+        border-radius: 0.4rem;
+        margin-left: -0.0625rem;
+    }
+
+    #style-write-form div.write-footer button.confirm {
+        flex: 1;
+        background-color: #79bdf3;
+        color: #fff;
+        border: none;
+        border-radius: 0.4rem;
     }
 }

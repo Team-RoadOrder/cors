@@ -6,16 +6,15 @@
 @import "./index/owner.css";
 
 
-.sections {
-    padding: 2rem 7rem 3rem 7rem;
-    min-height: calc(100vh - 4.375rem);
+body>.mian>.sections {
+    padding:5rem 7rem 3rem 7rem;
+    min-height: calc(100vh - 4rem);
     width: 100%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     align-items: flex-start;
 }
-
 
 .sections > .header {
     display: flex;
@@ -79,16 +78,16 @@
     visibility: hidden;
     width: 15rem;
     background-color: #333333;
-    color: #ffffff !important;
+    color: #ffffff;
     text-align: center;
     border-radius: 0.25rem;
     padding: 0.6rem;
     position: absolute;
-    z-index: 9999 !important;
+    z-index: 9999;
     bottom: calc(100% + 0.7rem);
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.75rem !important;
+    font-size: 0.75rem;
     font-weight: 400;
     line-height: 1.4;
     opacity: 0;
@@ -112,8 +111,8 @@
 
 /* 박스 호버 시 툴팁 등장 */
 .main-image-wrapper:hover .tooltip {
-    visibility: visible !important;
-    opacity: 1 !important;
+    visibility: visible;
+    opacity: 1;
 }
 
 /* 미리보기 이미지 컨테이너 (부모) */
@@ -151,13 +150,13 @@
 }
 
 
-.message {
-    color: #89949e !important;
-    font-family: "Pretendard Variable", sans-serif !important;
-    font-size: 1.25rem !important;
-    font-weight: 700;
+#item-info .category > .category-box > .message {
+    color: #A9a9a9;
+    font-family: "Pretendard Variable", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
     text-align: center;
-    padding: 2rem 0.5rem;
+    padding: 0.625rem 0.5rem;
     word-break: keep-all;
 }
 
@@ -174,15 +173,15 @@
     visibility: hidden;
     width: 16rem;
     background-color: #333333;
-    color: #ffffff !important;
+    color: #ffffff;
     text-align: center;
     border-radius: 0.25rem;
     padding: 0.6rem;
     position: absolute;
-    z-index: 9999 !important;
+    z-index: 9999;
     bottom: calc(100% - 0.625rem);
     right: 1rem;
-    font-size: 0.75rem !important;
+    font-size: 0.75rem;
     font-weight: 400;
     line-height: 1.4;
     opacity: 0;
@@ -205,8 +204,8 @@
 
 
 .input-group .input:hover + .tooltip {
-    visibility: visible !important;
-    opacity: 1 !important;
+    visibility: visible;
+    opacity: 1;
 }
 
 
@@ -260,65 +259,128 @@
     display: block;
 }
 
+
+
+
+/*32.01rem(513px) ~ 80rem(1280px) */
+@media screen and (min-width: 32.01rem) and (max-width: 80rem) {
+
+    body #main {
+        margin: 0 auto;
+        padding: 1.5rem 0; /* 좌우 패딩 제거하여 콘텐츠 찌그러짐 방지 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        grid-template-columns: none;
+    }
+
+    body .sections {
+        width: 95%;
+        padding: 0;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+    #item-images {
+        width: 100%;
+        max-width: 56.5rem;
+        height: auto;
+        min-height: 15rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2%;
+    }
+
+
+    #item-images > .main-image-wrapper {
+        width: 25%;
+        max-width: 10rem;
+        aspect-ratio: 1 / 1;
+        height: auto;
+    }
+
+    /* 상품등록 페이지 특화: 카테고리 영역이 사각지대에서 찌그러지지 않게 */
+    #item-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        max-width: 75rem;
+        gap: 1.5rem;
+    }
+
+    /* 버튼 영역도 중앙 기반으로 정합 */
+    .sections .buttons {
+        width: 100%;
+        max-width: 75rem;
+        justify-content: center;
+        padding-right: 0;
+        margin-top: 2rem;
+    }
+}
+
 @media (max-width: 32rem) {
     /* 1. 기본 레이아웃 및 배경 초기화 */
     body {
-        background-color: #fff !important;
+        background-color: #fff;
 
     }
 
     #main {
-        margin-top: 0 !important;
-        margin-left: 0 !important;
-        padding: 0 !important; /* 모바일 전용 패딩 초기화 */
-        background-color: #fff !important;
+        margin-top: 0;
+        margin-left: 0;
+        padding: 0; /* 모바일 전용 패딩 초기화 */
+        background-color: #fff;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100% !important;
+        width: 100%;
         box-sizing: border-box;
     }
 
     /* 2. 섹션 및 컨테이너 평면화 (그림자/여백 제거) */
     .sections {
-        padding: 0 !important;
-        width: 100% !important;
+        padding: 0;
+        width: 100%;
         max-width: 100%;
         min-height: 100vh;
         background-color: #fff;
         display: flex;
         flex-direction: column;
-        gap: 0 !important;
+        gap: 0;
     }
 
     .dashboard-layout, .graph-container, .status-container, .bottom-section,
     .weekStatus, .weekList, #item-info {
-        width: 100% !important;
-        border: none !important;
-        box-shadow: none !important;
-        background-color: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
         display: flex;
         flex-direction: column;
     }
-    #item-info .category {
+    .sections>#item-info .category {
         background: #FFFFFF;
         flex: 0 0 300px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         border-radius: 0.75rem;
         overflow-y:  auto;
         scroll-behavior: smooth;
+        box-shadow: none;
     }
 
 
     /* 4. 상품 정보 입력 영역 */
     .item-list {
-        order: 2 !important;
-        width: 100% !important;
-        padding: 2rem 1.5rem !important; /* 입력창 좌우 여백 */
+        order: 2;
+        width: 100%;
+        padding: 2rem 1.5rem; /* 입력창 좌우 여백 */
         box-sizing: border-box;
     }
 
@@ -332,29 +394,29 @@
     }
 
     .input-group .input {
-        width: 100% !important;
-        height: 3.5rem !important;
-        background-color: #f8faff !important; /* 목업 특유의 연블루 배경 */
-        border: 1px solid #e9ecef !important;
-        border-radius: 0.5rem !important;
+        width: 100%;
+        height: 3.5rem;
+        background-color: #f8faff; /* 목업 특유의 연블루 배경 */
+        border: 1px solid #e9ecef;
+        border-radius: 0.5rem;
         font-size: 0.95rem;
-        padding: 0 1rem !important;
+        padding: 0 1rem;
     }
 
 
 
     #item-images {
-        order: 3 !important;
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
+        order: 3;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         padding: 0 1.5rem;
-        gap: 1rem !important;
+        gap: 1rem;
         margin-top:-2rem;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
         box-sizing: border-box;
     }
 
@@ -363,17 +425,17 @@
     #item-images { scrollbar-width: none; }
 
 
-    .main-image-wrapper {
+    #item-images > .main-image-wrapper {
         position: relative;
-        width: 4.5rem !important;
-        height: 4.5rem !important;
-        flex-shrink: 0 !important;
-        background-color: #e9ecef !important;
-        border-radius: 1rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin-bottom: 0.5rem !important;
+        width: 4.5rem;
+        height: 4.5rem;
+        flex-shrink: 0;
+        background-color: #e9ecef;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
     }
 
 
@@ -388,10 +450,10 @@
         width: max-content;
         max-width: 14rem;
         background-color: rgba(34, 34, 34, 0.9);
-        color: #fff !important;
+        color: #fff;
         padding: 0.6rem 0.8rem;
         border-radius: 0.4rem;
-        font-size: 0.75rem !important;
+        font-size: 0.75rem;
         line-height: 1.4;
         text-align: center;
         white-space: nowrap;
@@ -419,37 +481,37 @@
 
     /* 버튼 내 캡션 숨기기 */
     .main-image-wrapper .caption {
-        display: none !important;
+        display: none;
     }
 
     /* 3. 하단 서브 이미지들: 가로 1열로 나열 */
     .sub-image-wrapper {
-        display: inline !important;
-        position: relative !important;
+        display: inline;
+        position: relative;
         white-space: nowrap;
-        width: 5.5rem !important;
-        height: 5.5rem !important;
-        flex-shrink: 0 !important;
-        border-radius: 0.8rem !important;
-        overflow: hidden !important;
+        width: 5.5rem;
+        height: 5.5rem;
+        flex-shrink: 0;
+        border-radius: 0.8rem;
+        overflow: hidden;
         padding:0;
-        margin: 0 0.4rem !important;
-        background-color: #f8f9fa !important;
+        margin: 0 0.4rem;
+        background-color: #f8f9fa;
     }
 
     .sub-image-wrapper .img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-        object-position: center !important;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .sub-image-wrapper .close {
-        position: absolute !important;
-        top: 0.3rem !important;
-        right: 0.3rem !important;
+        position: absolute;
+        top: 0.3rem;
+        right: 0.3rem;
         z-index: 10;
-        background-color: rgba(255, 255, 255, 0.8) !important;
+        background-color: rgba(255, 255, 255, 0.8);
         border-radius: 50%;
         width: 1.2rem;
         height: 1.2rem;
@@ -460,14 +522,14 @@
 
     /* 6. 하단 버튼 (위치 최적화 및 높이 수정) */
     .sections .buttons {
-        order: 4 !important;
-        width: 80% !important; /* 너비가 100%가 아니므로 수평 중앙 정렬을 위한 마진 필요 */
+        order: 4;
+        width: 80%; /* 너비가 100%가 아니므로 수평 중앙 정렬을 위한 마진 필요 */
         /* 좌우 마진을 auto로 설정하여 컨테이너 자체를 중앙으로 배치 */
-        margin-left: auto !important;
-        margin-right: auto !important;
-        margin-top: -3rem !important;
-        padding: 0 1.5rem 10rem 1.5rem !important;
-        display: flex !important;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: -3rem;
+        padding: 0 1.5rem 10rem 1.5rem;
+        display: flex;
         align-items: center;      /* 내부 버튼들 수직 중앙 정렬 */
         justify-content: center;   /* 내부 버튼들 수평 중앙 정렬 */
         flex-direction: row;
@@ -478,24 +540,24 @@
     .sections .buttons > button {
         flex: 1;
         /* 목업 비율에 맞춰 버튼 높이를 키움 (기존 1.5rem -> 3.5rem) */
-        height: 3rem !important;
+        height: 3rem;
         border-radius: 0.5rem;
-        font-weight: 500!important; /* 조금 더 강조된 두께 */
-        font-size: 1rem!important;
-        border: none !important;
+        font-weight: 500; /* 조금 더 강조된 두께 */
+        font-size: 1rem;
+        border: none;
         cursor: pointer;
     }
 
     /* 취소하기 버튼 색상 (목업 반영) */
     .sections .buttons > .cancel {
-        background-color: #f44336 !important;
-        color: #fff !important;
+        background-color: #f44336;
+        color: #fff;
     }
 
     /* 등록하기 버튼 색상 (목업 반영) */
     .sections .buttons > .okay {
-        background-color: #4f46e5 !important;
-        color: #fff !important;
+        background-color: #4f46e5;
+        color: #fff;
     }
     /* 7. 가이드 오버레이 (비네팅 효과) */
     .mobile-guide-overlay {
@@ -539,6 +601,15 @@
     #owner-header,
     #nav,
     #toggleNav {
-        display: none !important;
+        display: none;
+    }
+}
+
+/*80.01rem(1281px) 이상: */
+@media screen and (min-width: 80.01rem) {
+    body .sections {
+        max-width: 87.5rem;
+        margin: 0 auto;
+        padding: 3.5rem 7rem 2rem;
     }
 }

@@ -53,12 +53,9 @@
     grid-template-columns: 2fr 1fr;
     /* gap 제거 */
     min-height: 0;
-
     /* 하나로 합치기 */
     background-color: #fff;
-    border: 0.0625rem solid #ddd; /* 1px */
     border-radius: 0.5rem; /* 8px */
-    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.05); /* 0 2px 4px */
     overflow: hidden;
 }
 
@@ -66,7 +63,6 @@
     /* 기존 스타일 제거 및 구분선 추가 */
     background-color: transparent;
     border: none;
-    /*border-right: 0.0625rem solid #ddd; !* 1px *!*/
     border-radius: 0;
     box-shadow: none;
 }
@@ -81,10 +77,8 @@
 
 .bottom-section {
     background-color: #fff;
-    border: 0.0625rem solid #ddd; /* 1px */
     border-radius: 0.5rem; /* 8px */
     padding: 1rem 1.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.05); /* 0 2px 4px */
     display: flex;
     flex-direction: column;
     min-height: 0;

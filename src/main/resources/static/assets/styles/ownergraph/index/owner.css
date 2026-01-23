@@ -2,22 +2,22 @@
     display: none;
 }
 
-@media (max-width: 32rem) {
+@media (max-width: 80rem) {
     #owner-header,
     #nav,
     #toggleNav,
     .admin-header {
-        display: none !important;
+        display: none;
     }
 
     #main {
-        margin-left: 0 !important;
-        padding: 0.625rem !important;
-        padding-bottom: 6.25rem !important;
+        margin-left: 0;
+        padding: 0.625rem;
+        padding-bottom: 6.25rem;
     }
 
     #owner-bottom-nav {
-        display: block !important;
+        display: block;
         position: fixed;
         bottom: 1.25rem;
         left: 50%;
@@ -56,7 +56,7 @@
     }
 
     .nav-item.active img {
-        filter: invert(45%) sepia(90%) saturate(1500%) hue-rotate(195deg) brightness(85%) contrast(100%) !important;
+        filter: invert(45%) sepia(90%) saturate(1500%) hue-rotate(195deg) brightness(85%) contrast(100%);
         transform: scale(1.1);
     }
 
@@ -84,10 +84,10 @@
     }
 
     .central-logo .logo-circle img {
-        width: 5rem !important;
-        height: 5rem !important;
+        width: 5rem;
+        height: 5rem;
         object-fit: contain;
-        filter: brightness(0) invert(1) !important;
+        filter: brightness(0) invert(1);
         transform: translateY(0);
         transition: transform 0.3s ease;
     }
