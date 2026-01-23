@@ -6,7 +6,7 @@
 header, nav, .header-container {
     position: sticky;
     top: 0;
-    z-index: 99999 !important;
+    z-index: 999 !important;
     background-color: #fff;
 }
 
@@ -111,7 +111,7 @@ header, nav, .header-container {
 }
 
 .flatpickr-calendar {
-    z-index: 99999 !important;
+    z-index: 999 !important;
 }
 
 /* =========================================
