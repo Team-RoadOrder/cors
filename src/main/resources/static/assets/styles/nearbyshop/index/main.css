@@ -51,3 +51,324 @@
     }
 
 }
+
+
+/* [구간 1] 1100px(68.75rem) ~ 768px(48rem)
+   : 유리 헤더 3단 정렬, 지도 풀스크린, 카드 너비 최적화(10% 축소) */
+@media screen and (max-width: 68.75rem) {
+    /* 1. 헤더: 슬림 높이 및 글래스모피즘 적용 */
+    header#header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        height: 55px;
+        padding: 0 3%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        position: fixed;
+        width: 100%;
+        z-index: 99999;
+    }
+
+    header#header div#logo,
+    header#header .logo {
+        order: 1;
+        position: relative;
+        z-index: 2005;
+        width: 10rem;
+        filter: invert(100%) brightness(300%);
+        top: -0.5rem;
+        left: -5rem;
+    }
+
+    header#header div.left {
+        order: 2;
+        flex: 1;
+        display: flex;
+        padding: 0;
+        margin-left: -3.5rem;
+        justify-content: center;
+    }
+
+    header#header div.left > ul.nav {
+        display: flex;
+        gap: clamp(0.5rem, 1.5vw, 1.5rem);
+        margin: 0;
+        position: static;
+        padding: 0;
+    }
+
+    header#header ul.nav a,
+    header#header #loginBtn,
+    header#header #logoutBtn {
+        color: #ffffff;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    header#header ul.icon-menu {
+        order: 3;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        top: 0;
+        left: -7rem;
+        margin-right: 1.5rem;
+    }
+
+    header#header div.icon-menu .icon path {
+        fill: #ffffff;
+    }
+
+    /* 2. 지도 영역: 바닥까지 꽉 차게 설정 */
+    main#main { display: none; }
+
+    div#map-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    div#map-background {
+        height: 100%;
+        width: 100%;
+    }
+
+    button#shop-header {
+        position: absolute;
+        top: 6.5rem;
+        right: 2rem;
+        z-index: 1500;
+    }
+
+    /* 3. 하단 카드 리스트 */
+    div#map-wrapper > ul.shop-list {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        position: absolute;
+        bottom: 5rem;
+        top: auto;
+        left: 0;
+        width: 100%;
+        padding: 0 1.5rem 1rem 1.5rem;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        z-index: 1000;
+        white-space: nowrap;
+    }
+
+    div#map-wrapper > ul.shop-list::-webkit-scrollbar { display: none; }
+    div#map-wrapper > ul.shop-list::after {
+        content: '';
+        flex: 0 0 1.5rem; /* 좌측 패딩과 동일한 너비의 투명 공간 */
+        width: 1.5rem;
+        height: 1px;
+        visibility: hidden;
+    }
+
+    body >#map-wrapper > .shop-list > .shop-detail{
+        flex-shrink: 0;
+        display: inline-flex;
+        flex-direction: column;
+        width: 14.5rem;
+        min-width: 11.5rem;
+        scroll-snap-align: center;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 1.2rem;
+        padding: 1rem 0.5rem;
+        transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        align-items: flex-start;
+        cursor: grab;
+        white-space: normal;
+    }
+
+    /* 상단 상호명 및 삼각형 아이콘 정렬 */
+    #map-wrapper .info-header {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    #map-wrapper .firstLine {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 0.5;
+    }
+
+    #map-wrapper .name {
+        font-size: 1.15rem; /* 너비 축소에 맞춰 폰트도 살짝 보정 */
+        font-weight: 700;
+        color: #333;
+        width: auto;
+        margin-right: 8px;
+    }
+
+    #map-wrapper .km {
+        font-size: 0.85rem;
+        color: #7a7a7a;
+        flex-basis: 100%;
+        display: block;
+        margin-top: 4px;
+        order: 2;
+    }
+
+    #map-wrapper .km::before {
+        content: '#';
+        margin-right: 1px;
+    }
+
+    #map-wrapper .toggle-icon {
+        margin-left: 12px;
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    /* [수정] 활성화 상태 카드 너비 축소 (20rem -> 18rem) */
+    li.shop-detail.active {
+        width: 18rem;
+        min-width: 18rem;
+    }
+
+    li.shop-detail .info-body {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    li.shop-detail.active .info-body {
+        max-height: 15rem;
+        opacity: 1;
+        margin-top: 0.8rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 0.8rem;
+    }
+}
+
+/* [구간 2] 768px ~ 640px : 태블릿 구간 */
+@media screen and (max-width: 48rem) {
+    header#header div.left > ul.nav { gap: 0.8rem; }
+    header#header ul.nav a { font-size: 0.95rem; }
+
+    div#map-wrapper { height: 100vh; bottom: 0; }
+    div#map-wrapper > ul.shop-list { bottom: 5rem; }
+
+    /* 태블릿 너비도 약 10% 축소 (15rem -> 13.5rem) */
+    ul.shop-list > li.shop-detail {
+        width: 13.5rem;
+        min-width: 13.5rem;
+        flex-shrink: 0;
+    }
+
+    li.shop-detail.active { width: 16.5rem; min-width: 16.5rem; }
+    button#shop-header { top: 6.5rem; }
+}
+
+/* [구간 3] 640px ~ 375px : 모바일 구간 */
+@media screen and (max-width: 40rem) {
+    header#header { display: none; }
+
+    header#mobile-header {
+        display: flex;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        height: 50px;
+        width: 92%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 10px;
+        border-radius: 1.2rem;
+        z-index: 2000;
+        padding: 0 1.2rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #mobile-header .mobile-logo > .logo {
+        filter: invert(100%) brightness(300%);
+        width: 8rem;
+    }
+
+    button#shop-header {
+        position: absolute;
+        top: 6.5rem;
+        right: 2rem;
+        z-index: 1500;
+    }
+
+    div#map-wrapper { top: 0; bottom: 0; height: 100vh; }
+
+    div#map-wrapper > ul.shop-list {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        position: absolute;
+        bottom: 6.5rem;
+        top: auto;
+        left: 0;
+        width: 100%;
+        padding: 1rem 0;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        z-index: 1000;
+        white-space: nowrap;
+    }
+
+    /* [수정] 모바일 너비도 축소 (60vw -> 54vw) */
+    #map-wrapper > .shop-list > .shop-detail {
+        width: 54vw;
+        min-width: 13.5rem;
+        scroll-snap-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 1.2rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        white-space: normal;
+    }
+
+    li.shop-detail.active {
+        width: 80vw; /* 활성화 시에는 가독성을 위해 넓게 유지 */
+        min-width: 16rem;
+    }
+
+    li.shop-detail .info-body {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    li.shop-detail .info-body > .address{
+        font-size: 0.875rem;
+    }
+
+    li.shop-detail.active .info-body {
+        max-height: 13rem;
+        opacity: 1;
+        margin-top: 0.8rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 0.8rem;
+    }
+}
