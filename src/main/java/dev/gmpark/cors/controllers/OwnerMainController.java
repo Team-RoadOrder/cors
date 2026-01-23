@@ -61,7 +61,16 @@ public class OwnerMainController {
 
             // 나머지는 빈 값이나 안내 문구 채우기
             shopInfo.setShopTime("09:00 ~ 22:00");
-            shopInfo.setShopCategory("카테고리 선택 ex: 미니멀");
+
+            //수정 : 사용자가 카테고리에 대한 입력을 할때 카테고리 선택~부분까지 지워야하는 번거로움이 있음
+            /*
+             * 지금처럼 value에 가이드 문구를 직접 넣으면, 사용자가 실수로 그 문구를 다 지우지 않고
+             * "빈티지 카테고리 선택 ex: 미니멀" 처럼 수정해서 저장할 경우,
+             *  그 불필요한 가이드 텍스트가 그대로 DB에 저장되어 버립니다.
+             * */
+            shopInfo.setShopCategory("");
+//          shopInfo.setShopCategory("카테고리 선택 ex: 미니멀");
+
             shopInfo.setShopTel(sessionUser.getPhone());
 
             // 나중에 저장할 때를 대비해 FK(userEmail) 미리 세팅

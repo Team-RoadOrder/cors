@@ -637,3 +637,135 @@
         /*background-color: #fff;*/
     }
 }
+
+/* [공통] 모달 베이스 - 중앙 정렬 유지 */
+body .member-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10001;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    overflow: hidden;
+}
+
+/* [기본] 모달 컨텐츠 - 데스크톱 기준 (기존보다 더 슬림하게 시작) */
+body .modal-content {
+    background-color: #fff;
+    padding: 1.1rem;
+    border-radius: 0.6rem;
+    width: 85%; /* 화면 꽉 차는 느낌 방지 */
+    max-width: 20rem; /* 기본 너비 자체를 축소 */
+    max-height: 80vh;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   [반응형 구간 1] 43.75rem(700px) 이하 : 전체 20% 압축 시작
+   ============================================================ */
+@media screen and (max-width: 43.75rem) {
+    body .modal-content {
+        padding: 0.9rem;
+        max-width: 17rem; /* 가로 너비 대폭 축소 */
+        border-radius: 0.5rem;
+    }
+
+    body .modal-header {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.4rem;
+    }
+
+    body .modal-header h2 {
+        font-size: 0.9rem;
+    }
+
+    body .modal-input-group,
+    body .input-container {
+        margin-bottom: 0.4rem;
+        gap: 0.2rem;
+    }
+
+    body .modal-input-group label,
+    body .input-container label {
+        font-size: 0.7rem;
+    }
+
+    /* 모든 입력창 가로 85% 통일 및 슬림화 */
+    body .modal-input-group input,
+    body .modal-input-group select,
+    body .input-container input,
+    body .input-container select {
+        width: 85%;
+        padding: 0.45rem;
+        font-size: 0.85rem;
+        border-radius: 0.25rem;
+    }
+
+    /* 비밀번호 확인 강조 영역 압축 */
+    body .input-container.highlight,
+    body .modal-form div[style*="background"] {
+        padding: 0.5rem;
+        margin-top: 0.4rem;
+    }
+
+    body .modal-btns {
+        margin-top: 0.8rem;
+        gap: 0.3rem;
+    }
+
+    body .btn-close,
+    body .btn-submit {
+        padding: 0.55rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* ============================================================
+   [반응형 구간 2] 23.4375rem(375px) 이하 : 초압축 레이아웃
+   ============================================================ */
+@media screen and (max-width: 23.4375rem) {
+    body .modal-content {
+        padding: 0.75rem;
+        max-width: 15rem; /* 화면 중앙에 작게 배치되도록 최소화 */
+        max-height: 75vh;
+    }
+
+    body .modal-input-group,
+    body .input-container {
+        margin-bottom: 0.3rem;
+    }
+
+    body .modal-input-group input,
+    body .input-container input {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
+
+    body .modal-btns {
+        margin-top: 0.6rem;
+    }
+}
+
+/* [사각지대] 낮은 화면 높이 대응 (Landscape 모드 등) */
+@media screen and (max-height: 40rem) {
+    body .modal-content {
+        padding: 0.55rem;
+    }
+    body .modal-input-group {
+        margin-bottom: 0.2rem;
+    }
+    body .modal-header {
+        margin-bottom: 0.3rem;
+        padding-bottom: 0.25rem;
+    }
+    body .modal-header h2 {
+        font-size: 0.8rem;
+    }
+}

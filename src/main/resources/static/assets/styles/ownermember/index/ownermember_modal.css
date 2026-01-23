@@ -1,64 +1,133 @@
-/* 1. 모달 전체 배경 (Overlay) */
-.member-modal {
-    display: none; /* 기본적으로 숨김 */
+body .member-modal {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 뒷배경 어둡게 */
-    z-index: 9999; /* 최상단 배치 */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10001;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
-/* 2. 모달 컨텐츠 박스 */
-.modal-content {
+body .modal-content {
     background-color: #fff;
-    padding: 2.5rem;
-    border-radius: 0.75rem;
-    width: 100%;
-    max-width: 450px; /* 적정 너비 설정 */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    animation: modalFadeIn 0.3s ease-out; /* 부드러운 등장 효과 */
+    padding: 1.2rem;
+    border-radius: 0.6rem;
+    width: 90%;
+    max-width: 22rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease-out;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 등장 애니메이션 */
 @keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
+    from { opacity: 0; transform: translateY(-0.5rem); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 3. 모달 내부 요소 정렬 */
-.modal-header { margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
-.modal-header h2 { font-size: 1.5rem; font-weight: 700; color: #333; }
-
-.input-container { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.input-container label { font-weight: 600; font-size: 0.9rem; color: #666; }
-.input-container input {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 0.4rem;
-    font-size: 1rem;
+body .modal-header {
+    margin-bottom: 0.8rem;
+    border-bottom: 0.0625rem solid #eee;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* 비밀번호 확인 등 강조 영역 */
-.input-container.highlight {
+body .modal-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+body .modal-input-group,
+body .input-container {
+    margin-bottom: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+}
+
+body .modal-input-group label,
+body .input-container label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+/* 모든 입력 요소 가로 너비 85% 제한 및 통일 */
+body .modal-input-group input,
+body .modal-input-group select,
+body .input-container input,
+body .input-container select,
+body .modal-form input[type="password"],
+body .modal-form input[type="text"],
+body .modal-form input[type="email"],
+body .modal-form input[type="tel"] {
+    width: 85%;
+    padding: 0.5rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.3rem;
+    font-size: 0.85rem;
+    box-sizing: border-box;
+    background-color: #fff;
+    outline: none;
+}
+
+/* [수정] 비밀번호 확인 강조 영역 및 내부 인풋 너비 조정 */
+body .input-container.highlight,
+body .modal-form div[style*="background:#fff5f5"],
+body .modal-form div[style*="background-color:#f8f9fa"] {
     background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px dashed #ced4da;
+    padding: 0.6rem;
+    border-radius: 0.4rem;
+    border: 0.0625rem dashed #ced4da;
+    box-sizing: border-box;
+    width: 100%; /* 박스 자체는 전체 너비 */
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-/* 4. 버튼 영역 */
-.modal-btns { display: flex; gap: 0.75rem; margin-top: 2rem; }
-.btn-close, .btn-submit {
+/* 강조 영역 내부의 비밀번호 입력칸 가로 너비 85% 강제 적용 */
+body .input-container.highlight input,
+body .modal-form div[style*="background"] input[type="password"] {
+    width: 85%;
+    border: 0.0625rem solid #ddd; /* 이미지의 붉은 보더를 유지하려면 색상 변경 가능 */
+}
+
+body .modal-btns {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+
+body .btn-close,
+body .btn-submit {
     flex: 1;
-    padding: 0.8rem;
-    border-radius: 0.4rem;
+    padding: 0.6rem;
+    border-radius: 0.3rem;
     font-weight: 600;
     cursor: pointer;
     border: none;
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
-.btn-close { background-color: #eee; color: #666; }
-.btn-submit { background-color: #4e46e5; color: #fff; } /* 팀 메인 컬러로 조정 */
+
+body .btn-close {
+    background-color: #eee;
+    color: #666;
+}
+
+body .btn-submit {
+    background-color: #007bff;
+    color: #fff;
+}
