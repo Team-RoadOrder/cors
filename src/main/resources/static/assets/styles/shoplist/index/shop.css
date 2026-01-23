@@ -48,7 +48,7 @@
     height: 7rem; /* 높이 고정 */
     border-radius: 5px;
     object-fit: contain; /* 이미지 비율 유지하며 잘리지 않게 */
-    background-color: #f8f8f8; /* 빈 공간 배경색 */
+    background-color: transparent;
     flex-shrink: 0; /* 이미지 크기 줄어들지 않게 */
 }
 #shop .shop-list {

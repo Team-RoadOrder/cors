@@ -160,13 +160,7 @@
 <!--owner header-->
 <header id="owner-header" th:fragment="owner-header" th:with="isSigned = ${session.sessionUser != null}">
     <a href="/owner"> <img src="/assets/images/ownermain/logo2.png" alt="" class="logo"></a>
-    <ul class="header-list">
-        <li class="service">서비스/도구</li>
-        <li class="shop">매장관리</li>
-    </ul>
     <div class="tools">
-        <div class="notice">공지사항</div>
-        <div>고객센터</div>
         <a id="logout" href="/logout" th:if="${isSigned == true}" >로그아웃</a>
         <a id="login"  href="/login" th:if="${isSigned == false}" >로그인</a>
     </div>

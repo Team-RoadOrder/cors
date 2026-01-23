@@ -60,7 +60,7 @@ public class OwnerMainService {
             e.printStackTrace();
             return "FAILURE";
         }
-
+                // TODO: 적절하지않은 매장 정보가 들어올지 FAILURE를 반환해야함
         ShopInfoEntity existingShop = shopInfoMapper.selectShopByUserEmail(user.getEmail());
         int result;
         if (existingShop == null) {
@@ -115,7 +115,7 @@ public class OwnerMainService {
         if (dbItem == null) {
             return CommonResult.FAILURE;
         }
-
+        // TODO: 적절하지않은 매장 정보가 들어올지 FAILURE를 반환해야함
         dbItem.setItemName(shopItem.getItemName());
         dbItem.setColor(shopItem.getColor());
         dbItem.setSize(shopItem.getSize());

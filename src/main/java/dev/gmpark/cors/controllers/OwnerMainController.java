@@ -67,7 +67,7 @@ public class OwnerMainController {
              * 지금처럼 value에 가이드 문구를 직접 넣으면, 사용자가 실수로 그 문구를 다 지우지 않고
              * "빈티지 카테고리 선택 ex: 미니멀" 처럼 수정해서 저장할 경우,
              *  그 불필요한 가이드 텍스트가 그대로 DB에 저장되어 버립니다.
-             * */
+                 * */
             shopInfo.setShopCategory("");
 //          shopInfo.setShopCategory("카테고리 선택 ex: 미니멀");
 

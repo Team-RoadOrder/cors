@@ -7,6 +7,7 @@ import dev.gmpark.cors.results.register.SendEmailResult;
 import dev.gmpark.cors.results.register.VerifyEmailResult;
 import dev.gmpark.cors.services.RegisterService;
 import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,12 +19,9 @@ import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping(value = "/")
+@RequiredArgsConstructor
 public class RegisterController  extends AbstractGeneralController {
     private final RegisterService registerService;
-    @Autowired
-    public RegisterController(RegisterService registerService) {
-        this.registerService = registerService;
-    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String getRegister(Model model,

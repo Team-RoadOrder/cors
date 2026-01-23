@@ -25,7 +25,7 @@
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
-            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/brand.jpeg'}"
+            <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/profile.png'}"
                  alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
             <div class="message">클릭시 변경 가능합니다.</div>
 
@@ -53,7 +53,7 @@
         <section id="shop-info">
             <div class="background-image-box" id="background-ImageBox">
                 <img id="backgroundImage"
-                     th:src="${shop.backgroundImage != null ? shop.backgroundImage : '/assets/images/ownermain/img.png'}"
+                     th:src="${shop.backgroundImage != null ? shop.backgroundImage : '/assets/images/ownermain/background.png'}"
                      alt="배경이미지">
             </div>
 

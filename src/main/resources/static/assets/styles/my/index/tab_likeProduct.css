@@ -1,6 +1,6 @@
 .tab_likeProduct_content {
-    max-width: 1000px;
-    /*width: 1000px*/;
+    width: 100%;
+    max-width: 65rem;
 }
 .tab_likeProduct_content .tab_title {
     font-size: 26px;

@@ -1,5 +1,6 @@
 .tab_address_content   {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 65rem; /* PC에서는 최대 65rem까지만 커짐 */
 }
 
 .tab_address_content .tab_title {

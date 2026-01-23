@@ -6,7 +6,7 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.results.register.CommonResult;
-import dev.gmpark.cors.services.OwnerShopService;
+import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.services.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ShopController {
     private final ShopService shopService;
+    private final MyService myService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getShop(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
@@ -38,7 +40,17 @@ public class ShopController {
             return modelAndView;
         }
         ShopInfoEntity shopInfo = this.shopService.getShopInfo(shopId);
+
+        ShopInfoEntity[] likeShops = this.myService.getLikeShops(sessionUser);
+        boolean isLiked = false;
+        if (sessionUser != null && likeShops != null) {
+            final int currentShopId = shopId;
+            isLiked = Arrays.stream(likeShops)
+                    .anyMatch(shop -> shop.getShopId() == currentShopId);
+        }
+
         modelAndView.addObject("shopInfo", shopInfo);
+        modelAndView.addObject("isLiked", isLiked);
         modelAndView.setViewName("shop/shop");
         return modelAndView;
     }

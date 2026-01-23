@@ -105,4 +105,9 @@
     #shop-header .button {
         justify-content: center;
     }
+
+    #shop-header> .profile >.count >.style:before {
+  display: none;
+    }
+
 }

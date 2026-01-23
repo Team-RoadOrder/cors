@@ -70,7 +70,7 @@ function renderItems(items) {
     });
 }
 
-const toggleLikeShop = (shopId) => {
+const toggleLikeShop = (element, shopId) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
     formData.append('shopId', shopId);
@@ -82,28 +82,42 @@ const toggleLikeShop = (shopId) => {
             openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {confirmText: '확인'});
             return;
         }
-        const response = JSON.parse(xhr.responseText);
-        switch (response.result) {
-            case "FAILURE_SESSION":
-                openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
-                    confirmText: '확인',
-                    onConfirm: () => { location.href = '/login'; }
-                });
-                break;
-            case 'FAILURE':
-                openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {confirmText: '확인'});
-                break;
-            case 'SUCCESS':
-                openModal("SUCCESS", `<p>관심매장에 등록되었습니다.</p>`, {
-                    confirmText: '확인',
-                    onConfirm: () => {
-                        location.href="/my?open=likes-shop"
-                    }
-                });
-                break;
-            default:
-                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        try {
+            const response = JSON.parse(xhr.responseText);
+            switch (response.result) {
+                case "FAILURE_SESSION":
+                    openModal("FAILURE_SESSION", `<p>세션이 만료되었습니다. 다시 로그인해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { location.href = '/login'; }
+                    });
+                    break;
+                case 'FAILURE':
+                    openModal("DONT_LIKE", `<p>관심매장 등록을 취소하였습니다</p>`, {
+                        confirmText: '확인', onConfirm: () => {
+                            location.reload()
+                        }
+                    })
+                    element.textContent = '관심 저장';
+                    element.classList.remove('liked');
 
+                    break;
+                case 'SUCCESS':
+                    openModal("LIKE", `<p>관심매장에 등록되었습니다.</p>`, {
+                        confirmText: '확인', onConfirm: () => {
+                            location.reload()
+                     }
+                    })
+                    element.textContent = '저장 취소';
+                    element.classList.add('liked');
+
+                    break;
+                default:
+                    openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+
+            }
+        } catch (e) {
+            console.error(e);
+            openModal("ERROR", `<p>응답 처리 중 오류가 발생했습니다.</p>`);
         }
     }
     xhr.open('POST', '/shop/like')

@@ -1,4 +1,6 @@
 .tab_profile_content {
+    width: 100%;
+    max-width: 65rem; /* PC에서는 최대 65rem까지만 커짐 */
 
 }
 .tab_profile_content .tab_title {

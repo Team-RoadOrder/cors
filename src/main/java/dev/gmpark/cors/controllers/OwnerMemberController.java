@@ -28,7 +28,7 @@
          * 사원 관리 페이지 (목록 조회)
          */
         @RequestMapping(value = "/member", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-        public ModelAndView getMember(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
+        public ModelAndView getMember(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
                                       @RequestParam(value = "level", required = false) Integer level,
                                       @RequestParam(value = "keyword", required = false) String keyword,
                                       ModelAndView modelAndView) {

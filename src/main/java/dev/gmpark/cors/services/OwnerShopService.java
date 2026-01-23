@@ -26,7 +26,10 @@ public class OwnerShopService {
 
     @Transactional
     public CommonResult registerShopItem(ShopItemEntity item, MultipartFile[] images) {
-
+          /* TODO: 적절하지않은 상품정보가 들어올시 FAILURE를 반환해야함,사이즈를 , 로
+              구분하지않는다면 당연히 실패여야할것 스타일이 null이면 실패여야할것 ,
+              가격이 null이면 실패 색상도 null이면 실패,상품이름이 null이어도 실패 ,
+              카테고리정보가 null이어도 실패*/
         if (item.getSize() == null || item.getSize().isBlank()) {
             item.setSize("free");
         }

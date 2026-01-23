@@ -37,15 +37,21 @@
             <span class="style">주소&nbsp;</span>
             <span class="num" th:text="${shopInfo.shopAddress}">565 ></span>
         </div>
-        <div class="button">
+        <!--<div class="button">
         <button class="like" th:onclick="|toggleLikeShop(${shopInfo.shopId}, '확정')|">관심 저장</button>
             <button class="share"><a th:href="@{/reservation/(shopId=${shopInfo.shopId})}" >예약 하기</a></button>
+        </div>-->
+        <div class="button">
+            <button th:unless="${isLiked}" class="like" th:onclick="|toggleLikeShop(this, ${shopInfo.shopId})|">관심 저장</button>
+            <button th:if="${isLiked}" class="like liked" th:onclick="|toggleLikeShop(this, ${shopInfo.shopId})|" >저장 취소</button>
+
+            <button class="share"><a th:href="@{/reservation/(shopId=${shopInfo.shopId})}">예약 하기</a></button>
         </div>
     </div>
 </div> <!--매장 소개 들어갈곳 -->
 <ul class="box" id="quick">
     <li class="item">
-        <a class="link" href="./shop.html">
+        <a class="link" onclick="location.href='/shops?sort=popular'">
                   <span class="icon-wrapper">
                 <img alt="" class="icon" src="/assets/images/shop/quick/1.webp">
                        </span>
@@ -53,57 +59,33 @@
         </a>
     </li>
     <li class="item">
-        <a class="link" href="#">
+        <a class="link" onclick="location.href='/itemList?sort=popular'" >
               <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/2.webp">
+                <img alt="" class="icon" src="/assets/images/shop/quick/2.webp">
                   </span>
             <span class="text">인기상품</span>
         </a>
     </li>
     <li class="item">
-        <a class="link" href="#">
+        <a class="link" th:href="@{/reservation/(shopId=${shopInfo.shopId})}">
                  <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/3.webp">
-                     </span>
-            <span class="text">할인매장</span>
-        </a>
-    </li>
-    <li class="item">
-        <a class="link" href="#">
-                 <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/4.webp">
-                     </span>
-            <span class="text">할인상품</span>
-        </a>
-    </li>
-    <li class="item">
-        <a class="link" href="#">
-                 <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/5.webp">
+                <img alt="" class="icon" src="/assets/images/shop/quick/5.webp">
                      </span>
             <span class="text">예약</span>
         </a>
     </li>
     <li class="item">
-        <a class="link" href="#">
+        <a class="link" href="/my">
                    <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/6.webp">
-                       </span>
-            <span class="text">픽업</span>
-        </a>
-    </li>
-    <li class="item">
-        <a class="link" href="#">
-                   <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/7.webp">
+                <img alt="" class="icon" src="/assets/images/shop/quick/7.webp">
                        </span>
             <span class="text">마이페이지</span>
         </a>
     </li>
     <li class="item">
-        <a class="link" href="#">
+        <a class="link" href="/nearby-shop">
                    <span class="icon-wrapper">
-                <img alt="" class="icon" src="../assets/images/shop/quick/8.webp">
+                <img alt="" class="icon" src="/assets/images/shop/quick/8.webp">
                        </span>
             <span class="text">내주변매장</span>
         </a>

@@ -29,7 +29,7 @@ public class CartController {
 
     @RequestMapping(value = "/cart", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getCart(ModelAndView modelAndView,
-                                @SessionAttribute(value = "sessionUser") RegisterEntity sessionUser) {
+                                @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         if (sessionUser == null) {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
