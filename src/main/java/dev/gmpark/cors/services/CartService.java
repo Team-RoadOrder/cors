@@ -122,4 +122,24 @@ public class CartService {
         }
         return this.cartMapper.selectCartCount(sessionUser.getEmail());
     }
+
+    public Result updateCartQuantity(RegisterEntity sessionUser, Long cartId, int quantity) {
+        if (sessionUser == null) {
+            return CommonResult.FAILURE_SESSION;
+        }
+        if (cartId == null || quantity < 1) {
+            return CommonResult.FAILURE;
+        }
+
+        // 본인의 장바구니 아이템인지 확인
+        List<CartVo> cartItems = this.cartMapper.selectCartItemsByIds(Arrays.asList(cartId));
+        if (cartItems.isEmpty() || !cartItems.get(0).getUserEmail().equals(sessionUser.getEmail())) {
+            return CommonResult.FAILURE;
+        }
+
+        if (this.cartMapper.updateCartQuantityById(cartId, quantity) > 0) {
+            return CommonResult.SUCCESS;
+        }
+        return CommonResult.FAILURE;
+    }
 }

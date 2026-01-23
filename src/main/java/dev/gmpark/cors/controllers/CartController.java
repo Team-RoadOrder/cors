@@ -148,4 +148,21 @@ public class CartController {
         response.put("count", count);
         return response;
     }
+
+    @RequestMapping(value = "/cart", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> updateCartQuantity(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser,
+                                                  @RequestParam(value = "cartId") Long cartId,
+                                                  @RequestParam(value = "quantity") int quantity) {
+        Map<String, Object> response = new HashMap<>();
+        if (sessionUser == null) {
+            response.put("result", CommonResult.FAILURE.name());
+            return response;
+        }
+
+        Result result = this.cartService.updateCartQuantity(sessionUser, cartId, quantity);
+        
+        response.put("result", result.name());
+        return response;
+    }
 }

@@ -44,6 +44,35 @@ const updateItemPrice = ($cartItem, qty) => {
 };
 
 /**
+ * 장바구니 수량 변경 요청
+ * @param {string} cartId 
+ * @param {number} quantity 
+ */
+const updateCartQuantityRequest = (cartId, quantity) => {
+    const xhr = new XMLHttpRequest();
+    // 쿼리 스트링으로 cartId와 quantity 전송
+    const queryString = `cartId=${cartId}&quantity=${quantity}`;
+    
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+        
+        if (xhr.status >= 200 && xhr.status < 400) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.result !== 'SUCCESS') {
+                console.error('수량 업데이트 실패');
+                // 필요하다면 여기서 수량을 다시 원래대로 돌리는 로직 추가
+            }
+        } else {
+            console.error('서버 통신 오류');
+        }
+    };
+    
+    // PATCH 메서드 사용
+    xhr.open('PATCH', `/cart?${queryString}`);
+    xhr.send();
+};
+
+/**
  * 장바구니 삭제 요청
  * @param {string[]} ids 
  * @param {function} onSuccess 
@@ -125,6 +154,9 @@ if ($cartItemsList) {
     $cartItemsList.addEventListener('click', function(e) {
         const $target = e.target;
         const $cartItem = $target.closest('.cart-item');
+        // cartId 가져오기 (체크박스의 value에 cartId가 들어있음)
+        const $checkbox = $cartItem.querySelector('.item-checkbox');
+        const cartId = $checkbox.value; 
 
         if ($target.classList.contains('btn-qty-minus')) {
             const $qtyInput = $cartItem.querySelector('.item-qty-input');
@@ -134,6 +166,11 @@ if ($cartItemsList) {
                 $qtyInput.value = currentQty;
                 updateItemPrice($cartItem, currentQty);
                 calculateTotal();
+                
+                // ★ 서버로 변경된 수량 전송 (이미 저장된 아이템인 경우만)
+                if (cartId) {
+                    updateCartQuantityRequest(cartId, currentQty);
+                }
             }
         }
         else if ($target.classList.contains('btn-qty-plus')) {
@@ -144,6 +181,11 @@ if ($cartItemsList) {
                 $qtyInput.value = currentQty;
                 updateItemPrice($cartItem, currentQty);
                 calculateTotal();
+                
+                // ★ 서버로 변경된 수량 전송 (이미 저장된 아이템인 경우만)
+                if (cartId) {
+                    updateCartQuantityRequest(cartId, currentQty);
+                }
             }
         }
         else if ($target.classList.contains('btn-add-item')) {
@@ -188,8 +230,16 @@ if ($cartItemsList) {
             e.target.value = val;
             
             const $cartItem = e.target.closest('.cart-item');
+            const $checkbox = $cartItem.querySelector('.item-checkbox');
+            const cartId = $checkbox.value;
+
             updateItemPrice($cartItem, parseInt(val));
             calculateTotal();
+
+            // ★ 서버로 변경된 수량 전송
+            if (cartId) {
+                updateCartQuantityRequest(cartId, parseInt(val));
+            }
         }
     });
     

@@ -18,4 +18,5 @@ public interface CartMapper {
     // 추가된 메서드
     CartEntity selectCartItem(@Param("userEmail") String userEmail, @Param("itemId") Long itemId, @Param("size") String size);
     int updateCartQuantity(@Param("id") Long id, @Param("quantity") int quantity);
+    int updateCartQuantityById(@Param("id") Long id, @Param("quantity") int quantity);
 }
