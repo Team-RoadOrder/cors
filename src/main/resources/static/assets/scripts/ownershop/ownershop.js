@@ -42,8 +42,6 @@ if (overlay && btnTodayClose && btnClose) {
 }
 
 
-
-
 /**@type {HTMLInputElement} */
 const imageInput = document.getElementById('imageInput');
 /**@type {HTMLSpanElement} */
@@ -51,7 +49,7 @@ const imageCount = document.getElementById('imageCount');
 const imageSection = document.getElementById('item-images');
 const mainImageIndexInput = document.getElementById('mainImageIndex');
 
-// 현재 선택된 파일들을 담아둘 배열 (이게 있어야 삭제가 제대로 됨)
+
 let currentFiles = [];
 
 imageInput.addEventListener('change', (e) => {
@@ -158,74 +156,142 @@ const $form = document.forms['form'];
 
 $form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // 변수 선언
     const itemName = $form['itemName'].value.trim();
     const color = $form['color'].value.trim();
     const size = $form['size'].value.trim();
     const price = $form['price'].value.trim();
     const style = $form['style'].value.trim();
+
+    // 카테고리 및 이미지 관련 변수
     const mainCategory = document.getElementById('inputMainCategory').value;
     const subCategory = document.getElementById('inputSubCategory').value;
     const detailCategory = document.getElementById('inputDetailCategory').value;
     const mainImageIndex = document.getElementById('mainImageIndex').value;
+    const imageInput = document.getElementById('imageInput');
     const imageFiles = imageInput.files;
 
+    // 상품 이름
     if (!itemName) {
-        alert("상품 이름을 입력해주세요.");
-        $form['itemName'].focus();
+        openModal("FAILURE", `<p>상품 등록에 실패하였습니다.<br>상품 이름을 확인해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['itemName'].focus(); }
+        });
         return;
     }
+    if (itemName.length < 2 || itemName.length > 50) {
+        openModal("FAILURE", `<p>상품 이름은 2자 이상,<br>50자 이하로 입력해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['itemName'].focus(); }
+        });
+        return;
+    }
+    const namePattern = /^[가-힣a-zA-Z0-9\s()[\]_&\/-]+$/;
+    if (!namePattern.test(itemName)) {
+        openModal("FAILURE", `<p>상품 이름에 사용 불가능한<br>특수문자가 포함되어 있습니다.<br>(허용 기호: [ ] ( ) - _ &)</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['itemName'].focus(); }
+        });
+        return;
+    }
+    // 색상
     if (!color) {
-        alert("색상을 입력해주세요.");
-        $form['color'].focus();
+        openModal("FAILURE", `<p>색상을 입력해주세요</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['color'].focus(); }
+        });
         return;
     }
-   /* if (!size) {
-        alert("사이즈를 입력해주세요.");
-        $form['size'].focus();
-        return;
-    }*/
-    if (!style ){
-        alert('스타일을 입력해주세요.');
-        $form['style'].focus();
-        return;
-    }
-    if (!price || isNaN(price) || parseInt(price) <= 0) {
-        alert("가격을 올바르게 입력해주세요.");
-        $form['price'].focus();
-        return;
-    }
-    if (!mainCategory || !subCategory) {
-        alert("카테고리를 최소 중분류까지 선택해주세요.");
-        return;
-    }
-    if (imageFiles.length === 0) {
-        alert("상품 이미지를 최소 1장 등록해주세요.");
+    const colorPattern = /^[가-힣a-zA-Z\s]+$/;
+    if (!colorPattern.test(color)) {
+        openModal("FAILURE", `<p>색상에 특수문자나 숫자는<br>포함될 수 없습니다.<br>(예: 블랙, Navy)</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['color'].focus(); }
+        });
         return;
     }
 
-    // --- 3. FormData 생성 및 하나씩 append ---
+
+    if (size) {
+        const sizePattern = /^[^,\s]+(\s*,\s*[^,\s]+)*$/;
+        if (!sizePattern.test(size)) {
+            openModal("FAILURE", `<p>사이즈 형식이 올바르지 않습니다.<br>쉼표(,)로 구분하여 입력해주세요.<br>(예: S,M,L)</p>`, {
+                confirmText: '확인',
+                onConfirm: () => { $form['size'].focus(); }
+            });
+            return;
+        }
+    }
+    const allowedStyles = ['스트릿', '미니멀', '댄디', '캐주얼', '빈티지', '모던', '스포티', '페미닌'];
+
+    if (!style) {
+        openModal("FAILURE", `<p>스타일을 선택해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['style'].focus(); }
+        });
+        return;
+    }
+    if (!allowedStyles.includes(style)) {
+        openModal("FAILURE", `<p>유효하지 않은 스타일입니다.<br>목록에서 선택해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['style'].focus(); }
+        });
+        return;
+    }
+
+    // 가격
+    if (!price || isNaN(price) || parseInt(price) <= 0) {
+        openModal("FAILURE", `<p>가격을 올바르게 입력해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { $form['price'].focus(); }
+        });
+        return;
+    }
+
+    // 카테고리
+    if (!mainCategory || !subCategory) {
+        openModal("FAILURE", `<p>카테고리를 최소 중분류까지<br>선택해주세요.</p>`, {
+            confirmText: '확인'
+        });
+        return;
+    }
+
+    // 이미지
+    if (imageFiles.length === 0) {
+        openModal("FAILURE", `<p>상품 이미지를<br>최소 1장 등록해주세요.</p>`, {
+            confirmText: '확인'
+        });
+        return;
+    }
+
+    // --- 2. FormData 생성 및 데이터 추가 ---
     const formData = new FormData();
 
-    // 텍스트 데이터 추가
     formData.append('itemName', itemName);
     formData.append('color', color);
     formData.append('size', size);
     formData.append('price', price);
     formData.append('style', style);
-    // 카테고리 데이터 추가
     formData.append('mainCategory', mainCategory);
     formData.append('subCategory', subCategory);
     formData.append('detailCategory', detailCategory);
+    let fileList = Array.from(imageFiles);
 
-    // 메인 이미지 설정 정보 추가
-    formData.append('mainImageIndex', mainImageIndex);
+    // 2. 사용자가 선택한 메인 인덱스 번호 (예: 2)
+    const targetIndex = parseInt(mainImageIndex);
 
-    // 이미지 파일들 추가 (동일한 key 이름인 'images'로 여러 개 추가)
-    for (let i = 0; i < imageFiles.length; i++) {
-        formData.append('images', imageFiles[i]);
+    // 3. 해당 인덱스를 배열의 맨 앞(0번)으로 이동
+    if (targetIndex >= 0 && targetIndex < fileList.length) {
+        const mainFile = fileList[targetIndex]; // 선택된 파일 저장
+        fileList.splice(targetIndex, 1);      // 원래 위치에서 제거
+        fileList.unshift(mainFile);           // 맨 앞으로 이동
     }
+    fileList.forEach((file) => {
+        formData.append('images', file);
+    });
 
-    // --- 4. XHR 전송 ---
+    // --- 3. 서버 전송 ---
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) return;
@@ -234,7 +300,7 @@ $form.addEventListener('submit', (e) => {
             const response = JSON.parse(xhr.responseText);
             switch (response.result) {
                 case 'FAILURE':
-                    openModal("FAILURE", `<p>상품 등록에 실패하였습니다. 입력 정보를 다시 확인해주세요.</p>`, {confirmText: '확인'});
+                    openModal("FAILURE", `<p>상품 등록에 실패하였습니다.<br>입력 정보를 다시 확인해주세요.</p>`, {confirmText: '확인'});
                     break;
                 case 'SUCCESS':
                     openModal("SUCCESS", `<p>상품이 성공적으로 등록되었습니다.</p>`, {

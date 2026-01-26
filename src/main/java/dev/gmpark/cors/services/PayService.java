@@ -5,7 +5,7 @@ import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.results.Result;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.validators.PayValidator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;

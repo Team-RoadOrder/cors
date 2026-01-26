@@ -5,7 +5,7 @@ import dev.gmpark.cors.entities.LikeShopEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.services.ShopService;
 import lombok.RequiredArgsConstructor;

@@ -3,10 +3,9 @@ package dev.gmpark.cors.controllers;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.OwnerMainService;
 import dev.gmpark.cors.services.OwnerShopService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 

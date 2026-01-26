@@ -4,7 +4,7 @@ import dev.gmpark.cors.dtos.CartOrderDto;
 import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.results.Result;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.CartService;
 import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.vos.CartVo;

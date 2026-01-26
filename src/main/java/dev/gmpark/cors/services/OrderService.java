@@ -8,7 +8,7 @@ import dev.gmpark.cors.entities.PointHistoryEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.RegisterMapper;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.vos.CartVo;
 import dev.gmpark.cors.vos.ShopItemVo;
 import lombok.RequiredArgsConstructor;

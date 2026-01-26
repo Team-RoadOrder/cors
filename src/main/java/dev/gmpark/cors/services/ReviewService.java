@@ -4,7 +4,7 @@ import dev.gmpark.cors.dtos.ReviewStatsDto;
 import dev.gmpark.cors.entities.*;
 import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.ReviewMapper;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.vos.ReviewVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

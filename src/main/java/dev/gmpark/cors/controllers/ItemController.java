@@ -2,7 +2,7 @@ package dev.gmpark.cors.controllers;
 
 import dev.gmpark.cors.dtos.ReviewStatsDto;
 import dev.gmpark.cors.entities.*;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.*;
 import dev.gmpark.cors.vos.ReviewVo;
 import dev.gmpark.cors.vos.ShopItemVo;

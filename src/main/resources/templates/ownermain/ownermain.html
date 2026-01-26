@@ -179,7 +179,6 @@
                     예약 정보가 없습니다.
                 </div>
 
-
                 <div class="product"
                      th:unless="${reservations == null or #lists.isEmpty(reservations)}"
                      th:each="res : ${reservations}"

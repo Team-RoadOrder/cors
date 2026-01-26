@@ -4,10 +4,10 @@ package dev.gmpark.cors.services;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ReservationItemsEntity;
 import dev.gmpark.cors.mappers.*;
-import dev.gmpark.cors.results.register.CommonResult;
-import dev.gmpark.cors.validators.OwnerMemberValidator;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.vos.LikeItemVo;
 import dev.gmpark.cors.vos.LikeShopVo;
+import dev.gmpark.cors.validators.OwnerMemberValidator;
 import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,14 @@ public class MyService {
         return this.reservationMapper.selectReservationsByEmail(sessionUser.getEmail());
     }
     public CommonResult updateUserName(RegisterEntity sessionUser, String newName) {
-        if (!OwnerMemberValidator.validateName(newName)) {
-            return CommonResult.FAILURE;
-        }
+
         RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
 
         if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+
+        if (!OwnerMemberValidator.validateName(newName)) {
             return CommonResult.FAILURE;
         }
         dbUser.setName(newName);
@@ -47,11 +49,12 @@ public class MyService {
         }
     }
     public CommonResult updateUserPhone(RegisterEntity sessionUser, String newPhone) {
-        if (!OwnerMemberValidator.validatePhone(newPhone)) {
-            return CommonResult.FAILURE;
-        }
+
         RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
         if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+        if (!OwnerMemberValidator.validatePhone(newPhone)) {
             return CommonResult.FAILURE;
         }
         dbUser.setPhone(newPhone);
@@ -64,12 +67,11 @@ public class MyService {
         }
     }
     public CommonResult updateUserAddress(RegisterEntity sessionUser, String newAddress, String newAddressDetail) {
-        if (!OwnerMemberValidator.validateAddress(newAddress, newAddressDetail)) {
+        RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
+        if (dbUser == null) {
             return CommonResult.FAILURE;
         }
-        RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
-
-        if (dbUser == null) {
+        if (!OwnerMemberValidator.validateAddress(newAddress, newAddressDetail)) {
             return CommonResult.FAILURE;
         }
 

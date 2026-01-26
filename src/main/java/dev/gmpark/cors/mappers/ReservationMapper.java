@@ -17,4 +17,5 @@ public interface ReservationMapper {
     List<ReservationItemVo> selectReservationsByShopId(@Param("shopId") int shopId);
     int updateReservationStatus(@Param("reservationId") int reservationId, @Param("status") String status);
     int deleteReservationById(@Param("reservationId") int reservationId);
+    ReservationItemVo selectReservationById(@Param("reservationId") int reservationId);
 }

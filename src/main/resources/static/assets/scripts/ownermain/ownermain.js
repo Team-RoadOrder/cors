@@ -638,6 +638,102 @@ const deleteProduct = (btn) => {
 const saveProduct = (btn) => {
     /**@type {HTMLFormElement}*/
     const form = btn.closest('form');
+    const itemName = form['itemName'].value.trim();
+    const color = form['color'].value.trim();
+    const size = form['size'].value.trim();
+    const priceStr = form['price'].value.replace(/,/g, '');
+    const style = form['style'].value.trim();
+    const mainCategory = form['mainCategory'].value.trim();
+    const subCategory = form['subCategory'].value.trim();
+
+    if (!itemName) {
+        openModal("FAILURE", `<p>상품 이름을 입력해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['itemName'].focus(); }
+        });
+        return;
+    }
+    if (itemName.length < 2 || itemName.length > 50) {
+        openModal("FAILURE", `<p>상품 이름은 2자 이상,<br>50자 이하로 입력해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['itemName'].focus(); }
+        });
+        return;
+    }
+    const namePattern = /^[가-힣a-zA-Z0-9\s()[\]_&\/-]+$/;
+    if (!namePattern.test(itemName)) {
+        openModal("FAILURE", `<p>상품 이름에 사용 불가능한<br>특수문자가 포함되어 있습니다.<br>(허용 기호: [ ] ( ) - _ &)</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['itemName'].focus(); }
+        });
+        return;
+    }
+
+    // [색상]
+    if (!color) {
+        openModal("FAILURE", `<p>색상을 입력해주세요</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['color'].focus(); }
+        });
+        return;
+    }
+    const colorPattern = /^[가-힣a-zA-Z\s]+$/;
+    if (!colorPattern.test(color)) {
+        openModal("FAILURE", `<p>색상에 특수문자나 숫자는<br>포함될 수 없습니다.<br>(예: 블랙, Navy)</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['color'].focus(); }
+        });
+        return;
+    }
+
+    // [사이즈] (값이 있을 때만 콤마 형식 검사)
+    if (size) {
+        const sizePattern = /^[^,\s]+(\s*,\s*[^,\s]+)*$/;
+        if (!sizePattern.test(size)) {
+            openModal("FAILURE", `<p>사이즈 형식이 올바르지 않습니다.<br>쉼표(,)로 구분하여 입력해주세요.<br>(예: S,M,L)</p>`, {
+                confirmText: '확인',
+                onConfirm: () => { form['size'].focus(); }
+            });
+            return;
+        }
+    }
+
+    // [스타일]
+    const allowedStyles = ['스트릿', '미니멀', '댄디', '캐주얼', '빈티지', '모던', '스포티', '페미닌'];
+    if (!style || !allowedStyles.includes(style)) {
+        // select 박스가 아니라 input hidden일 수도 있으니 메시지만 띄움
+        openModal("FAILURE", `<p>유효하지 않은 스타일입니다.</p>`, {
+            confirmText: '확인'
+        });
+        return;
+    }
+
+    // [가격]
+    if (!priceStr || isNaN(priceStr) || parseInt(priceStr) <= 0) {
+        openModal("FAILURE", `<p>가격을 올바르게 입력해주세요.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { form['price'].focus(); }
+        });
+        return;
+    }
+    const categoryPattern = /^[가-힣]+$/; // 완성된 한글만 허용 (자음/모음 낱자 불가)
+
+    if (!mainCategory) {
+        openModal("FAILURE", `<p>대분류 카테고리가 비어있습니다.</p>`, { confirmText: '확인' });
+        return;
+    }
+    if (!categoryPattern.test(mainCategory)) {
+        openModal("FAILURE", `<p>대분류 카테고리는<br>완성된 한글이어야 합니다.</p>`, { confirmText: '확인' });
+        return;
+    }
+    if (!subCategory) {
+        openModal("FAILURE", `<p>중분류 카테고리가 비어있습니다.</p>`, { confirmText: '확인' });
+        return;
+    }
+    if (!categoryPattern.test(subCategory)) {
+        openModal("FAILURE", `<p>중분류 카테고리는<br>완성된 한글이어야 합니다.</p>`, { confirmText: '확인' });
+        return;
+    }
     const formData = new FormData();
     formData.append('id', form['id'].value);
     formData.append('itemName', form['itemName'].value);

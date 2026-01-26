@@ -75,7 +75,7 @@ document.addEventListener('click', function(e) {
     // 1. 클릭한 요소가 'delete-btn' 클래스를 가진 요소인지 확인
     if (e.target && e.target.classList.contains('delete-btn')) {
         e.preventDefault();
-
+        e.stopPropagation();
         // 2. 버튼에 심어둔 data-id 값을 가져옴
         const reservationId = e.target.getAttribute('data-id');
 
@@ -105,7 +105,7 @@ document.addEventListener('click', function(e) {
             // 2. 입력값(.value)을 가져옵니다.
             changeName(inputElement.value);
         } else {
-            alert("이름 입력창을 찾을 수 없습니다.");
+            openModal("alert", "<p>이름 입력창을 찾을 수 없습니다.</p>", { onConfirm: () => {}});
         }
     }
     if (e.target && e.target.id === 'telChangeButton') {
@@ -184,7 +184,7 @@ const deleteReservation = (reservationId) => {
                     }
                 });
             } else {
-                openModal("WARN", "<p>삭제에 실패하였습니다.</p>");
+                openModal("WARN", "<p>대기상태가 아닐때는 삭제할 수 없습니다.</p>");
             }
         } else {
             openModal("ERROR", "<p>서버 통신 오류</p>");
@@ -363,13 +363,32 @@ const filterStatus= (statusType) => {
 }
 
 const changeName = (name) => {
+    const $nameInput = document.getElementById('name');
     if (!name || name.trim().length < 2) {
-        alert("이름을 2글자 이상 입력해주세요.");
+        openModal("alert", "<p>두글자 이상 입력해주세요.</p>", {
+            onConfirm: () => {
+                // 2. 전달받은 글자(name)가 아니라, 찾은 요소($nameInput)를 사용합니다.
+                if ($nameInput) {
+                    $nameInput.focus();
+                    $nameInput.select();
+                }
+            }
+        });
+        return;
+    }
+    if( !/^[가-힣A-Za-z]{2,10}$/.test(name)) {
+        openModal("alert", "<p>이름은 한글 또는 영문으로 2자 이상 10자 이하로 입력해 주세요.</p>", {
+            onConfirm: () => {
+                if ($nameInput) {
+                    $nameInput.focus();
+                    $nameInput.select();
+                }
+            }
+        });
         return;
     }
 
     const xhr = new XMLHttpRequest();
-    // FormData 객체 생성
     const formData = new FormData();
     formData.append('name', name);
 
@@ -415,6 +434,18 @@ const changeName = (name) => {
     xhr.send(formData);
 }
 const changePhone = (phone) => {
+    const $phoneInput = document.getElementById('phone');
+    if (!phone || !/^\d{11}$/.test(phone)) {
+        openModal("alert", "<p>올바른 전화번호를 입력해주세요.</p>", {
+            onConfirm: () => {
+                if ($phoneInput) {
+                    $phoneInput.focus();
+                    $phoneInput.select();
+                }
+            }
+        });
+        return;
+    }
     const xhr = new XMLHttpRequest();
     // FormData 객체 생성
     const formData = new FormData();

@@ -88,4 +88,38 @@
         WHERE t1.`shop_id` = #{shopId}
         ORDER BY t1.`visit_date` DESC
     </select>
+    <select id="selectReservationById" resultType="dev.gmpark.cors.vos.ReservationItemVo">
+        SELECT
+            t1.`shop_id`    AS `shopId`,
+            t1.`id`         AS `reservationId`,
+            t4.`shop_name`  AS `shopName`,
+            t3.`id`         AS `itemId`,
+            t2.`size`       AS `size`,
+            t3.`item_name`  AS `itemName`,
+            t3.`color`      AS `color`,
+            t3.`price`      AS `price`,
+            t1.`visit_date` AS `visitDate`,
+            t1.`status`     AS `status`,
+            t1.`user_email` AS `userEmail`,
+            t5.`name`       AS `userName`,
+            t5.`phone`    AS `userTel`,
+            (SELECT img.`image_path`
+             FROM `cors`.`shop_item_images` img
+             WHERE img.`product_id` = t3.`id`
+             LIMIT 1)       AS `imagePath`
+
+        FROM `cors`.`reservations` AS t1
+                 JOIN `cors`.`reservation_items` AS t2
+                      ON t1.`id` = t2.`reservation_id`
+                 LEFT JOIN `cors`.`shop_items` AS t3
+                           ON t2.`item_id` = t3.`id`
+                 LEFT JOIN `cors`.`shop_info` AS t4
+                           ON t1.`shop_id` = t4.`shop_id`
+
+            /* ★ [추가] 회원 테이블 조인 (테이블명 users 확인 필요) */
+                 LEFT JOIN `cors`.`users` AS t5
+                           ON t1.`user_email` = t5.`email`
+        WHERE t1.`id` = #{reservationId}
+        ORDER BY t1.`visit_date` DESC
+    </select>
 </mapper>

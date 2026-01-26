@@ -24,14 +24,10 @@ public class ShopItemEntity {
     private String mainCategory;
     private String subCategory;
     private String detailCategory;
-
-    // 메인 이미지 인덱스 또는 경로 (조회 편의성)
-    private Integer mainImageIndex;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt; // 삭제 시 데이터 보존을 위한 Soft Delete용
     private String imagePath;
-    
     private double rating; // 별점
     private int reviewCount; // 리뷰 수
 

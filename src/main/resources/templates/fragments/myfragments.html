@@ -151,7 +151,7 @@
             해당하는 예약 상품이 없습니다.
         </div>
 
-        <label class="list res-item-row"
+        <div class="list res-item-row"
                th:if="${items != null}"
                th:each="item : ${items}"
                th:data-status="${item.status}"
@@ -182,7 +182,7 @@
                             th:style="${item.status== '대기' ? 'display:block;' : 'display:none;'}">삭제</button>
                 </span>
             </span>
-        </label>
+        </div>
     </div>
 </div>
 

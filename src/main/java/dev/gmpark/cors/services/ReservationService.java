@@ -9,7 +9,8 @@ import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,9 +59,17 @@ public class ReservationService {
 
         return CommonResult.SUCCESS;
     }
-    public CommonResult deleteReservation( int reservationId) {
+    public CommonResult deleteReservation( int reservationId ) {
+        ReservationItemVo dbReservation = this.reservationMapper.selectReservationById(reservationId);
+        if (dbReservation == null) return CommonResult.FAILURE;
+        if (!dbReservation.getStatus().equals("대기")) {
+            return CommonResult.FAILURE;
+        }
+        // 대기 상태일때를 제외하고는 삭제불가함
       return   this.reservationMapper.deleteReservationById(reservationId) > 0
                 ? CommonResult.SUCCESS
                 : CommonResult.FAILURE;
     }
+
+
 }

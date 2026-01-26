@@ -7,7 +7,8 @@ import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.validators.ShopItemValidator;
 import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor; // 이걸 쓰면 코드가 깔끔해집니다
@@ -115,7 +116,18 @@ public class OwnerMainService {
         if (dbItem == null) {
             return CommonResult.FAILURE;
         }
-        // TODO: 적절하지않은 매장 정보가 들어올지 FAILURE를 반환해야함
+        if (!ShopItemValidator.validateItemName(shopItem)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateColor(shopItem)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateSize(shopItem)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateStyle(shopItem)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validatePrice(shopItem)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateCategory(shopItem)) return CommonResult.FAILURE;
+
+        if (shopItem.getSize() == null || shopItem.getSize().isBlank()) {
+            shopItem.setSize("FREE");
+        } else {
+            shopItem.setSize(shopItem.getSize().replaceAll("\\s+", ""));
+        }
         dbItem.setItemName(shopItem.getItemName());
         dbItem.setColor(shopItem.getColor());
         dbItem.setSize(shopItem.getSize());

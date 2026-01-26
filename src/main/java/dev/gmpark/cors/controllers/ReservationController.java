@@ -3,7 +3,7 @@ package dev.gmpark.cors.controllers;
 
 import dev.gmpark.cors.dtos.ReservationDto;
 import dev.gmpark.cors.entities.*;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.ReservationService;
 import dev.gmpark.cors.services.ShopService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,4 @@
-package dev.gmpark.cors.results.register;
-
-import dev.gmpark.cors.results.Result;
+package dev.gmpark.cors.results;
 
 public enum CommonResult implements Result {
     SUCCESS,

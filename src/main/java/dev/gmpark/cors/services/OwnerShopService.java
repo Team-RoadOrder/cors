@@ -3,7 +3,8 @@ package dev.gmpark.cors.services;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.entities.ShopItemImagesEntity;
 import dev.gmpark.cors.mappers.OwnerShopMapper;
-import dev.gmpark.cors.results.register.CommonResult;
+import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.validators.ShopItemValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,17 @@ public class OwnerShopService {
 
     @Transactional
     public CommonResult registerShopItem(ShopItemEntity item, MultipartFile[] images) {
-          /* TODO: 적절하지않은 상품정보가 들어올시 FAILURE를 반환해야함,사이즈를 , 로
-              구분하지않는다면 당연히 실패여야할것 스타일이 null이면 실패여야할것 ,
-              가격이 null이면 실패 색상도 null이면 실패,상품이름이 null이어도 실패 ,
-              카테고리정보가 null이어도 실패*/
+        if (!ShopItemValidator.validateItemName(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateColor(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateSize(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateStyle(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validatePrice(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateCategory(item)) return CommonResult.FAILURE;
+        if (!ShopItemValidator.validateImages(images)) return CommonResult.FAILURE;
         if (item.getSize() == null || item.getSize().isBlank()) {
-            item.setSize("free");
-        }
-        if (item.getSize() != null) {
-            item.setSize(item.getSize().replace(" ", ""));
+            item.setSize("FREE"); // 입력 없으면 FREE로 설정
+        } else {
+            item.setSize(item.getSize().replaceAll("\\s+", ""));
         }
         if (ownerShopMapper.insertItem(item) == 0) {
             return CommonResult.FAILURE;
@@ -59,7 +62,6 @@ public class OwnerShopService {
                 String uuidName = UUID.randomUUID().toString() + ext;
 
                 try {
-                    // [수정] path 변수 사용
                     file.transferTo(new File(path + uuidName));
 
                     ShopItemImagesEntity imageEntity = ShopItemImagesEntity.builder()

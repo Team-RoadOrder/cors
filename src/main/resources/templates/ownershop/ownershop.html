@@ -19,14 +19,7 @@
 <body>
 <th:block th:replace="~{/fragments/common.html :: owner-header}">
 </th:block>
-<!--<header id="header">
-    <a href="/owner/shop">   <img src="/assets/images/ownershop/logo2.png" alt="" class="logo"></a>
-    <ul class="header-list">
-        <li class="service">서비스/도구</li> <li class="shop">매장관리</li>
-    </ul>
-    <ul class="tools"> <li class="notice">공지사항</li> <li>고객센터</li>   <li id="logoutBtn">로그아웃</li>
-        <li id="loginBtn" style="display:none;">로그인</li></ul>
-</header>-->
+
 <main id="main">
     <button id="toggleNav" class="toggle-btn **nav-open**">
         <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/></button>
@@ -76,23 +69,6 @@
                 <span class="tooltip">⚠️ 최대 5장까지 등록 가능합니다.</span>
             </div>
             <input type="hidden" name="mainImageIndex" id="mainImageIndex" value="0">
-
-            <!--           <div class="sub-image-wrapper">
-                           <img class="img" src="/assets/images/shop/quick/2.webp" alt="카메라">
-                           <span class="close">x</span>
-                       </div>
-                       <div class="sub-image-wrapper">
-                           <img class="img" src="/assets/images/shop/quick/2.webp" alt="카메라">
-                           <span class="close">x</span>
-                       </div>
-                       <div class="sub-image-wrapper">
-                           <img class="img" src="/assets/images/shop/quick/2.webp" alt="카메라">
-                           <span class="close">x</span>
-                       </div>
-                       <div class="sub-image-wrapper">
-                           <img class="img" src="/assets/images/shop/quick/2.webp" alt="카메라">
-                           <span class="close">x</span>
-                       </div>-->
         </section>
         <section id="item-info">
             <div class="item-list">
@@ -113,7 +89,7 @@
                             사이즈
                         </label>
                         <input class="input" type="text" id="size" name="size" placeholder="ex: S,M,L,XL">
-                        <span class="tooltip">⚠️사이즈가 없는 경우 입력하지 말아주세요.</span>
+                        <span class="tooltip">⚠️사이즈가 없는 경우엔 입력하지 말아주세요. 반드시 예시 양식처럼 입력해야합니다.</span>
                     </div>
                     <div class="input-group">
                         <label class="label" for="style">스타일</label>
