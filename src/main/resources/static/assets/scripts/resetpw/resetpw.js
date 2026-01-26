@@ -25,16 +25,43 @@ function startTimer(duration) {
     clearInterval(timerInterval);
     remainingTime = duration;
     
-    // 타이머 표시 요소가 없다면 생성 (인증번호 입력란 근처에)
+    // 타이머와 재전송 버튼을 담을 컨테이너 생성
+    let timerContainer = document.getElementById('timerContainer');
+    if (!timerContainer) {
+        timerContainer = document.createElement('div');
+        timerContainer.id = 'timerContainer';
+        timerContainer.className = 'timer-container';
+        // "확인하기" 버튼을 포함하는 int-area 다음에 삽입
+        $verifyButton.parentElement.after(timerContainer);
+    }
+    
+    // 타이머 표시 요소가 없다면 생성
     let timerDisplay = document.getElementById('timerDisplay');
     if (!timerDisplay) {
         timerDisplay = document.createElement('span');
         timerDisplay.id = 'timerDisplay';
         timerDisplay.style.color = 'red';
         timerDisplay.style.fontSize = '12px';
-        timerDisplay.style.marginLeft = '10px';
-        // 인증번호 입력란의 부모 요소에 추가
-        $codeInput.parentElement.appendChild(timerDisplay);
+        timerDisplay.style.marginRight = '10px';
+        timerContainer.appendChild(timerDisplay);
+    }
+
+    // 재전송 버튼 생성
+    let resendBtn = document.getElementById('resendBtn');
+    if (!resendBtn) {
+        resendBtn = document.createElement('input');
+        resendBtn.type = 'button';
+        resendBtn.id = 'resendBtn';
+        resendBtn.value = '재전송';
+        resendBtn.className = 'resend-btn-bottom'; // CSS 클래스
+        timerContainer.appendChild(resendBtn);
+        
+        resendBtn.addEventListener('click', () => {
+            $emailInput.disabled = false;
+            loginForm['email'].readOnly = false;
+            $emailSendButton.disabled = false;
+            $emailSendButton.click();
+        });
     }
     
     updateTimerDisplay();
@@ -48,7 +75,12 @@ function startTimer(duration) {
             timerDisplay.innerText = "시간 초과";
             $codeInput.disabled = true;
             $verifyButton.disabled = true;
-            openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
+            $emailInput.disabled = false;
+            loginForm['email'].readOnly = false;
+            $emailSendButton.disabled = false;
+            openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인', onConfirm: () => {
+                $emailInput.focus();
+            }});
         }
     }, 1000);
 }
@@ -66,9 +98,9 @@ function updateTimerDisplay() {
 // 타이머 종료 함수
 function stopTimer() {
     clearInterval(timerInterval);
-    const timerDisplay = document.getElementById('timerDisplay');
-    if (timerDisplay) {
-        timerDisplay.innerText = "";
+    const timerContainer = document.getElementById('timerContainer');
+    if (timerContainer) {
+        timerContainer.remove();
     }
 }
 

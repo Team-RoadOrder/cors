@@ -540,6 +540,38 @@ body {
     font-weight: bold;
 }
 
+/* 타이머와 재전송 버튼을 담을 컨테이너 */
+.timer-container {
+    display: flex;
+    justify-content: flex-end; /* 우측 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-top: 5px;
+}
+
+/* 재전송 버튼 스타일 (확인 버튼 아래, 우측 정렬, 작게) */
+.resend-btn-bottom {
+    display: block !important;
+    width: auto !important;
+    height: 2rem !important;
+    background: #23B1FA !important;
+    color: #fefefe !important;
+    border: none !important;
+    font-size: 0.9rem !important;
+    border-radius: 25px !important;
+    font-weight: bold !important;
+    margin-left: 10px !important; /* 타이머와의 간격 */
+    cursor: pointer !important;
+    padding: 0 1rem !important;
+    font-family: "Gowun Dodum", sans-serif !important;
+}
+
+.resend-btn-bottom:hover {
+    background-color: #0aa7f8 !important;
+    color: #fff !important;
+    transition-delay: 75ms;
+    transition-property: background-color, color;
+}
+
 /*대화면 1920 px 이상*/
 @media screen and (max-width: 100rem) {
     .site-logo-welcome {
@@ -703,6 +735,12 @@ body {
         display: flex;
         flex-wrap: wrap;
         gap: 7px;
+    }
+
+    /* 모바일 화면에서의 재전송 버튼 스타일 */
+    .resend-btn-bottom {
+        font-size: 0.8rem !important;
+        height: 1.8rem !important;
     }
 }
 

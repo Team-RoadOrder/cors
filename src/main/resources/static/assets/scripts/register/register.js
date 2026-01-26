@@ -41,10 +41,51 @@ let custTimerInterval;
 let ownerTimerInterval;
 
 // 타이머 시작 함수
-function startTimer(duration, displayElement, onExpire) {
+function startTimer(duration, displayElement, onExpire, type) {
     let remaining = duration;
     updateDisplay(displayElement, remaining);
     
+    // 타이머와 재전송 버튼을 담을 컨테이너 생성
+    let timerContainerId = type === 'customer' ? 'custTimerContainer' : 'ownerTimerContainer';
+    let timerContainer = document.getElementById(timerContainerId);
+    let verifyBtn = type === 'customer' ? $verifyButton : $ownerVerifyButton;
+    let emailInput = type === 'customer' ? $customerEmailInput : $ownerEmailInput;
+    let emailSendBtn = type === 'customer' ? $customerEmailSendButton : $ownerEmailSendButton;
+    let form = type === 'customer' ? customerForm : ownerForm;
+
+    if (!timerContainer) {
+        timerContainer = document.createElement('div');
+        timerContainer.id = timerContainerId;
+        timerContainer.className = 'timer-container';
+        // "확인하기" 버튼을 포함하는 int-area 다음에 삽입
+        verifyBtn.parentElement.after(timerContainer);
+    }
+    
+    // 타이머 표시 요소를 컨테이너로 이동
+    if (displayElement && displayElement.parentElement !== timerContainer) {
+        timerContainer.appendChild(displayElement);
+        displayElement.style.marginRight = '10px'; // 간격 조정
+    }
+
+    // 재전송 버튼 생성
+    let resendBtnId = type === 'customer' ? 'custResendBtn' : 'ownerResendBtn';
+    let resendBtn = document.getElementById(resendBtnId);
+    if (!resendBtn) {
+        resendBtn = document.createElement('input');
+        resendBtn.id = resendBtnId;
+        resendBtn.type = 'button';
+        resendBtn.value = '재전송';
+        resendBtn.className = 'resend-btn-bottom'; // CSS 클래스 적용
+        timerContainer.appendChild(resendBtn);
+        
+        resendBtn.addEventListener('click', () => {
+            emailInput.disabled = false;
+            form['email'].readOnly = false;
+            emailSendBtn.disabled = false;
+            emailSendBtn.click();
+        });
+    }
+
     const interval = setInterval(() => {
         remaining--;
         updateDisplay(displayElement, remaining);
@@ -66,9 +107,13 @@ function updateDisplay(element, seconds) {
     }
 }
 
-function stopTimer(interval, displayElement) {
+function stopTimer(interval, displayElement, type) {
     clearInterval(interval);
-    if (displayElement) displayElement.innerText = "";
+    let timerContainerId = type === 'customer' ? 'custTimerContainer' : 'ownerTimerContainer';
+    const timerContainer = document.getElementById(timerContainerId);
+    if (timerContainer) {
+        timerContainer.remove();
+    }
 }
 
 if (isSocialRegister) {
@@ -256,16 +301,21 @@ $customerEmailSendButton.addEventListener('click', (e) => {
                     timerSpan = document.createElement('span');
                     timerSpan.id = 'custTimer';
                     timerSpan.style.color = 'red';
-                    timerSpan.style.marginLeft = '10px';
                     timerSpan.style.fontSize = '12px';
-                    $customerCodeInput.parentElement.appendChild(timerSpan);
+                    // 초기에는 임시 위치에 생성, startTimer에서 컨테이너로 이동됨
                 }
+                
                 clearInterval(custTimerInterval);
                 custTimerInterval = startTimer(180, timerSpan, () => {
                     $customerCodeInput.disabled = true;
                     $verifyButton.disabled = true;
-                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
-                });
+                    $customerEmailInput.disabled = false;
+                    $customerEmailSendButton.disabled = false;
+                    customerForm['email'].readOnly = false;
+                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인', onConfirm: () => {
+                        $customerEmailInput.focus();
+                    }});
+                }, 'customer');
                 break;
             default:
                 openModal("WARN",`<p>서버가 알수없는 응답을 반환하였습니다. 잠시후 다시 시도해주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
@@ -314,7 +364,7 @@ $verifyButton.addEventListener('click', (e) => {
                         $verifyButton.disabled = true;
                         customerForm['email'].readOnly = false;
                         isEmailVerified = false;
-                        stopTimer(custTimerInterval, document.getElementById('custTimer'));
+                        stopTimer(custTimerInterval, document.getElementById('custTimer'), 'customer');
                     }});
                 break;
             case 'SUCCESS' :
@@ -324,7 +374,7 @@ $verifyButton.addEventListener('click', (e) => {
                        isEmailVerified = true;
                        customerForm['email'].readOnly = true;
                        customerForm['code'].readOnly = true;
-                       stopTimer(custTimerInterval, document.getElementById('custTimer'));
+                       stopTimer(custTimerInterval, document.getElementById('custTimer'), 'customer');
                     }});
                 break;
             default:
@@ -408,16 +458,21 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
                     timerSpan = document.createElement('span');
                     timerSpan.id = 'ownerTimer';
                     timerSpan.style.color = 'red';
-                    timerSpan.style.marginLeft = '10px';
                     timerSpan.style.fontSize = '12px';
-                    $ownerCodeInput.parentElement.appendChild(timerSpan);
+                    // 초기에는 임시 위치에 생성, startTimer에서 컨테이너로 이동됨
                 }
+                
                 clearInterval(ownerTimerInterval);
                 ownerTimerInterval = startTimer(180, timerSpan, () => {
                     $ownerCodeInput.disabled = true;
                     $ownerVerifyButton.disabled = true;
-                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
-                });
+                    $ownerEmailInput.disabled = false;
+                    $ownerEmailSendButton.disabled = false;
+                    ownerForm['email'].readOnly = false;
+                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인', onConfirm: () => {
+                        $ownerEmailInput.focus();
+                    }});
+                }, 'owner');
                 break;
             default:
                 openModal("WARN", `<p>서버가 알수없는 응답을 반환하였습니다.</p>`, { confirmText: '확인' });
@@ -474,7 +529,7 @@ $ownerVerifyButton.addEventListener('click', (e) => {
                         $ownerVerifyButton.disabled = true;
                         ownerForm['email'].readOnly = false;
                         isEmailVerified = false;
-                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
+                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'), 'owner');
                     }
                 });
                 break;
@@ -487,7 +542,7 @@ $ownerVerifyButton.addEventListener('click', (e) => {
                         isEmailVerified = true;
                         ownerForm['email'].readOnly = true;
                         ownerForm['code'].readOnly = true;
-                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
+                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'), 'owner');
                     }
                 });
                 break;
@@ -515,14 +570,14 @@ function updateForm() {
             $customerEmailSendButton.disabled = false;
             $customerCodeInput.disabled = true;
             $verifyButton.disabled = true;
-            stopTimer(custTimerInterval, document.getElementById('custTimer'));
+            stopTimer(custTimerInterval, document.getElementById('custTimer'), 'customer');
         } else {
             $ownerEmailInput.disabled = false;
             $ownerEmailInput.readOnly = false;
             $ownerEmailSendButton.disabled = false;
             $ownerCodeInput.disabled = true;
             $ownerVerifyButton.disabled = true;
-            stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
+            stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'), 'owner');
         }
     };
 
