@@ -100,6 +100,10 @@ public class OrderService {
             if (user.getPoint() < usedPoints) {
                 return CommonResult.FAILURE; // 포인트 부족
             }
+            // 결제 금액보다 많은 포인트 사용 불가
+            if (usedPoints > totalPrice) {
+                return CommonResult.FAILURE;
+            }
             totalPrice -= usedPoints;
             
             // 포인트 차감
@@ -211,6 +215,10 @@ public class OrderService {
         if (usedPoints > 0) {
             if (user.getPoint() < usedPoints) {
                 return CommonResult.FAILURE; // 포인트 부족
+            }
+            // 결제 금액보다 많은 포인트 사용 불가
+            if (usedPoints > totalPrice) {
+                return CommonResult.FAILURE;
             }
             totalPrice -= usedPoints;
             

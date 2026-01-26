@@ -12,6 +12,7 @@ public interface CartMapper {
     int insertCart(CartEntity cart);
     CartVo[] selectCartByUserEmail(@Param("userEmail") String userEmail);
     int deleteCartItem(@Param("id") Long id);
+    int deleteCartItems(@Param("ids") List<Long> ids); // 추가: 일괄 삭제
     List<CartVo> selectCartItemsByIds(@Param("ids") List<Long> ids);
     int selectCartCount(@Param("userEmail") String userEmail);
     

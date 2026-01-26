@@ -279,7 +279,11 @@ if ($loginErrorBtn) {
 
 // 로딩영역
 
+// common.js 파일의 Loading 객체 수정
+
 const Loading = {
+    timer: null, // 타이머 ID를 저장할 변수
+
     show: function(msg) {
         let el = document.querySelector('[data-object="loading"]');
         if (!el) {
@@ -296,15 +300,28 @@ const Loading = {
         if (msg) {
             msgEl.innerText = msg;
         } else {
-            msgEl.innerText = ""; // CSS의 ::before 내용이 나올 수 있게 비움
+            msgEl.innerText = "";
         }
 
-        // 렌더링 동기화를 위해 setTimeout 사용
-        setTimeout(() => el.setAttribute('data-visible', ''), 10);
+        // 기존에 예약된 타이머가 있다면 취소 (중복 실행 방지)
+        if (this.timer) clearTimeout(this.timer);
+
+        // 10ms 후에 로딩창을 표시 (애니메이션 동기화)
+        this.timer = setTimeout(() => {
+            el.setAttribute('data-visible', '');
+            this.timer = null; // 실행 후 초기화
+        }, 10);
     },
 
     hide: function() {
         const el = document.querySelector('[data-object="loading"]');
+
+        // ★ 핵심: 로딩창이 켜지기 전에 끄기 명령이 오면, 켜는 타이머를 취소해버림
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+
         if (el) {
             el.removeAttribute('data-visible');
         }

@@ -168,13 +168,15 @@ $emailSendButton.addEventListener('click', (e) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
     formData.append('email', $emailInput.value);
-    formData.append('type','0');
+    formData.append('type','1'); // 비밀번호 재설정용 type=1
     Loading.show("인증 번호를 발송 중입니다...");
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
-            Loading.hide();
             return;
         }
+        
+        Loading.hide(); // 요청 완료 시 로딩 숨김
+        
         if (xhr.status < 200 || xhr.status >= 400) {
             openModal("ERROR",`<p>요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요</p>`,{confirmText: '확인', onConfirm: () => {}});
             return;
@@ -182,39 +184,10 @@ $emailSendButton.addEventListener('click', (e) => {
         const response = JSON.parse(xhr.responseText);
         switch (response.result) {
             case 'FAILURE' :
-                openModal("WARN",`<p>알수 없는 이유로 회원가입에 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
+                openModal("WARN",`<p>알수 없는 이유로 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
                 break;
-            case 'FAILURE_EMAIL_DUPLICATE' :
-                // 비밀번호 찾기에서는 이메일이 존재해야 하므로, 중복(존재)이 성공 케이스임.
-                // 하지만 /register/email은 중복이면 FAILURE_EMAIL_DUPLICATE를 반환함.
-                // 따라서 여기서는 FAILURE_EMAIL_DUPLICATE가 오면 인증번호 발송 성공으로 처리해야 함.
-                // 하지만 서버가 FAILURE_EMAIL_DUPLICATE일 때 인증번호를 보내는지 확인해야 함.
-                // RegisterController를 확인해보면, 중복이면 인증번호를 보내지 않고 바로 리턴함.
-                // 따라서 /register/email 엔드포인트는 비밀번호 찾기에 적합하지 않음.
-                // ResetPasswordController에 인증번호 발송 엔드포인트를 추가하거나,
-                // RegisterController를 수정해야 함.
-                
-                // 사용자가 400 에러를 겪는 것은 submit 시점임.
-                // submit 시점에는 code와 salt가 있어야 함.
-                // 만약 인증번호 발송이 안 되면 code와 salt가 없어서 submit도 못함 (readOnly 체크 때문에).
-                // 사용자가 인증번호를 받고 인증을 완료했다고 가정하면, code와 salt는 있음.
-                
-                // 400 에러의 원인은 아마도 disabled 된 input 때문일 가능성이 높음.
-                // FormData는 disabled 된 input의 값을 포함하지 않을 수 있음?
-                // 아니, FormData.append('code', $codeInput.value)로 직접 값을 넣고 있음.
-                // $codeInput.value는 disabled 상태라도 값을 가짐.
-                
-                // 다시 400 에러 원인 추측:
-                // ResetPasswordController의 updatePassword 메서드 파라미터 이름 불일치?
-                // email, password, code, salt. 일치함.
-                
-                // 혹시 salt가 null인가?
-                // $saltInput.value = response['salt'];
-                // 만약 response['salt']가 없으면?
-                
-                // 일단 $customerEmailInput 오타 수정.
-                
-                openModal("WARN",`<p>입력하신 이메일(${$emailInput.value}은 이미 사용 중입니다.</p>`,{confirmText: '확인', onConfirm: () => {
+            case 'FAILURE_EMAIL_NOT_FOUND': // 추가된 케이스
+                openModal("WARN",`<p>가입되지 않은 이메일입니다.</p>`,{confirmText: '확인', onConfirm: () => {
                         $emailInput.focus();
                         $emailInput.select();
                     }});

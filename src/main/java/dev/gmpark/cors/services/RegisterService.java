@@ -10,6 +10,7 @@ import dev.gmpark.cors.results.register.RegisterResult;
 import dev.gmpark.cors.results.register.SendEmailResult;
 import dev.gmpark.cors.results.register.VerifyEmailResult;
 import dev.gmpark.cors.validators.EmailTokenValidator;
+import dev.gmpark.cors.validators.OwnerMemberValidator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -61,13 +62,28 @@ public class RegisterService {
                  || register.getAddressDetail() == null || register.getAddressDetail().isEmpty()) {
              return RegisterResult.FAILURE;
          }
+
+         // 정규식 유효성 검사 추가
+         if (!OwnerMemberValidator.validateName(register.getName())) {
+             return RegisterResult.FAILURE;
+         }
+         if (!OwnerMemberValidator.validatePhone(register.getPhone())) {
+             return RegisterResult.FAILURE;
+         }
+         if (!OwnerMemberValidator.validateAddress(register.getAddress(), register.getAddressDetail())) {
+             return RegisterResult.FAILURE;
+         }
+
          if (isSocialRegister) {
              // 소셜 가입이면: 비밀번호를 입력받지 않았으므로 랜덤한 값으로 설정 (DB NOT NULL 제약 조건 해결)
              // 사용자는 이 비밀번호를 모르므로 이메일 로그인 시도는 실패하게 됨 (보안상 안전)
              register.setPassword(UUID.randomUUID().toString());
          } else {
-             // 일반 가입이면: 비밀번호 필수 체크
+             // 일반 가입이면: 비밀번호 필수 체크 및 유효성 검사
              if (register.getPassword() == null || register.getPassword().isEmpty()) {
+                 return RegisterResult.FAILURE;
+             }
+             if (!OwnerMemberValidator.validatePassword(register.getPassword())) {
                  return RegisterResult.FAILURE;
              }
          }
@@ -120,6 +136,23 @@ public class RegisterService {
         if( !EmailTokenValidator.validateEmail(email) ) {
             return Pair.of(SendEmailResult.FAILURE, null);
         }
+        
+        // 이메일 중복 검사 로직 분기
+        // type 0: 회원가입 (중복이면 실패)
+        // type 1: 비밀번호 재설정 (중복이어야 성공 -> 즉, 가입된 이메일이어야 함)
+        
+        RegisterEntity existingUser = this.registerMapper.selectByEmail(email);
+        
+        if (type == 0) { // 회원가입
+            if (existingUser != null) {
+                return Pair.of(SendEmailResult.FAILURE_EMAIL_DUPLICATE, null);
+            }
+        } else if (type == 1) { // 비밀번호 재설정
+            if (existingUser == null) {
+                return Pair.of(SendEmailResult.FAILURE_EMAIL_NOT_FOUND, null); // 가입되지 않은 이메일
+            }
+        }
+
         String code = RandomStringUtils.randomNumeric(6); // "000000" ~ "999999"
         String salt = new BCryptPasswordEncoder().encode(String.format("%s%s%f%f", email, code, Math.random(), Math.random())); // 아무거나 섞으면됨 $2a$~~~
         EmailTokenEntity emailToken = new EmailTokenEntity();

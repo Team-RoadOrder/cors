@@ -194,6 +194,8 @@ $customerEmailSendButton.addEventListener('click', (e) => {
     e.preventDefault();
     const emailValue = customerForm['email'].value;
     const emailRegex = /^(?=.{8,50}$)([\da-zA-Z_.]{4,25})@([\da-z\-]+\.)?([\da-z\-]{2,})\.([a-z]{2,15}\.)?([a-z]{2,3})$/g;
+
+    // 유효성 검사
     if (!emailRegex.test($customerEmailInput.value)) {
         openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인',onConfirm: () => {} });
         $customerEmailInput.focus();
@@ -208,12 +210,18 @@ $customerEmailSendButton.addEventListener('click', (e) => {
     const formData = new FormData();
     formData.append('email', $customerEmailInput.value);
     formData.append('type','0');
+
+    // [수정됨] 딜레이 없이 즉시 로딩창 표시
     Loading.show("인증 번호를 발송 중입니다...");
+
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
-            Loading.hide();
             return;
         }
+
+        // [수정됨] 응답을 받자마자 로딩창 닫기 (clearTimeout 제거)
+        Loading.hide();
+
         if (xhr.status < 200 || xhr.status >= 400) {
             openModal("ERROR",`<p>요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요</p>`,{confirmText: '확인', onConfirm: () => {}});
             return;
@@ -224,7 +232,8 @@ $customerEmailSendButton.addEventListener('click', (e) => {
                 openModal("WARN",`<p>알수 없는 이유로 회원가입에 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
                 break;
             case 'FAILURE_EMAIL_DUPLICATE' :
-                openModal("WARN",`<p>입력하신 이메일(${$customerEmailInput.value}은 이미 사용 중입니다.</p>`,{confirmText: '확인', onConfirm: () => {
+                // Loading.hide()가 위에서 이미 실행되었으므로 모달만 뜸
+                openModal("WARN",`<p>입력하신 이메일(${$customerEmailInput.value})은 이미 사용 중입니다.</p>`,{confirmText: '확인', onConfirm: () => {
                         $customerEmailInput.focus();
                         $customerEmailInput.select();
                     }});
@@ -240,7 +249,7 @@ $customerEmailSendButton.addEventListener('click', (e) => {
                 openModal("SUCCESS",`<p>입력하신 이메일(${$customerEmailInput.value})로 인증번호를 전송하였습니다. 인증 번호는 3분간만 유효하니 유의해주세요.</p>`,{confirmText: '확인', onConfirm: () => {
                         $customerCodeInput.focus();
                     }});
-                
+
                 // 타이머 시작
                 let timerSpan = document.getElementById('custTimer');
                 if (!timerSpan) {
@@ -261,10 +270,9 @@ $customerEmailSendButton.addEventListener('click', (e) => {
             default:
                 openModal("WARN",`<p>서버가 알수없는 응답을 반환하였습니다. 잠시후 다시 시도해주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
         }
-     };
-     xhr.open('POST', '/register/email')
-     xhr.send(formData);
-
+    };
+    xhr.open('POST', '/register/email')
+    xhr.send(formData);
 });
 $verifyButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -334,6 +342,7 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
     const emailValue = ownerForm['email'].value;
     const emailRegex = /^(?=.{8,50}$)([\da-zA-Z_.]{4,25})@([\da-z\-]+\.)?([\da-z\-]{2,})\.([a-z]{2,15}\.)?([a-z]{2,3})$/g;
 
+    // 유효성 검사
     if (!emailRegex.test($ownerEmailInput.value)) {
         openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인', onConfirm: () => {} });
         $ownerEmailInput.focus();
@@ -348,12 +357,18 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
     const formData = new FormData();
     formData.append('email', $ownerEmailInput.value);
     formData.append('type', '0');
+
+    // [수정됨] 딜레이 없이 즉시 로딩창 표시
     Loading.show("인증 번호를 발송 중입니다...");
+
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
-            Loading.hide();
             return;
         }
+
+        // [수정됨] 응답을 받자마자 로딩창 닫기 (clearTimeout 제거)
+        Loading.hide();
+
         if (xhr.status < 200 || xhr.status >= 400) {
             openModal("ERROR", `<p>요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요</p>`, { confirmText: '확인' });
             return;
@@ -362,9 +377,10 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
         const response = JSON.parse(xhr.responseText);
         switch (response.result) {
             case 'FAILURE':
-                openModal("WARN", `<p>알수 없는 이유로 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`, { confirmText: '확인' });
+                openModal("WARN", `<p>알수 없는 이유로 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`, { confirmText: '확인' , onConfirm: () => {}});
                 break;
             case 'FAILURE_EMAIL_DUPLICATE':
+                // Loading.hide()가 위에서 이미 실행되었으므로 모달만 뜸
                 openModal("WARN", `<p>입력하신 이메일(${$ownerEmailInput.value})은 이미 사용 중입니다.</p>`, {
                     confirmText: '확인',
                     onConfirm: () => {
@@ -385,7 +401,7 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
                     confirmText: '확인',
                     onConfirm: () => $ownerCodeInput.focus()
                 });
-                
+
                 // 타이머 시작
                 let timerSpan = document.getElementById('ownerTimer');
                 if (!timerSpan) {
@@ -826,4 +842,3 @@ ownerForm.addEventListener('submit', (e) => {
     xhr.open('POST', '/register')
     xhr.send(formData);
 })
-

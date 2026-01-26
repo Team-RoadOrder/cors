@@ -111,10 +111,7 @@ public class CartService {
             }
         }
 
-        int deletedCount = 0;
-        for (Long id : ids) {
-            deletedCount += this.cartMapper.deleteCartItem(id);
-        }
+        int deletedCount = this.cartMapper.deleteCartItems(ids);
         return deletedCount > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
 
