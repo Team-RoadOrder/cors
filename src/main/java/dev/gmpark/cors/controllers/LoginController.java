@@ -35,6 +35,18 @@ public class LoginController {
     private String naverRedirectUri;
 
 
+    @RequestMapping(value = "/")
+    public String getRoot(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        if (sessionUser != null) {
+            String userType = sessionUser.getUsertype();
+            if ("customer".equalsIgnoreCase(userType)) {
+                return "redirect:/main";
+            } else if ("owner".equalsIgnoreCase(userType)) {
+                return "redirect:/owner";
+            }
+        }
+        return "redirect:/login";
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET) // 페이지 이동이므로 produces 생략 권장
     public String getLogin(Model model, @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
