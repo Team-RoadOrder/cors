@@ -677,14 +677,7 @@ const saveProduct = (btn) => {
         });
         return;
     }
-    const colorPattern = /^[가-힣a-zA-Z\s]+$/;
-    if (!colorPattern.test(color)) {
-        openModal("FAILURE", `<p>색상에 특수문자나 숫자는<br>포함될 수 없습니다.<br>(예: 블랙, Navy)</p>`, {
-            confirmText: '확인',
-            onConfirm: () => { form['color'].focus(); }
-        });
-        return;
-    }
+
 
     // [사이즈] (값이 있을 때만 콤마 형식 검사)
     if (size) {

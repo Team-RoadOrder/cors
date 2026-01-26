@@ -16,8 +16,7 @@ public class ShopItemValidator {
     // 이름: 한글, 영문, 숫자, 공백, 소괄호(), 대괄호[], 하이픈-, 언더바_, 앤퍼샌드&, 슬래시/
     public static final String NAME_REGEX = "^[가-힣a-zA-Z0-9\\s()\\[\\]\\-_&/]+$";
 
-    // 색상: 한글, 영문, 공백
-    public static final String COLOR_REGEX = "^[가-힣a-zA-Z\\s]+$";
+
 
     // 사이즈: 콤마로 구분된 형식 (예: S,M,L) - 공백 허용
     public static final String SIZE_REGEX = "^[^,\\s]+(\\s*,\\s*[^,\\s]+)*$";
@@ -42,8 +41,8 @@ public class ShopItemValidator {
 
     public static boolean validateColor(String color) {
         return color != null &&
-                ValidatorUtils.isLengthInBetween(color, 1, 20) && // 길이 제한 추가 (DB 안전용)
-                color.matches(COLOR_REGEX);
+                ValidatorUtils.isLengthInBetween(color, 1, 20);
+
     }
 
     public static boolean validateSize(@NonNull ShopItemEntity item) {
