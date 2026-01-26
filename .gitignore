@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets & Configuration ###
+application.properties
+application.yml
+application-*.properties
+application-*.yml
+src/main/resources/application.properties
+src/main/resources/application.yml
