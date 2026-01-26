@@ -472,7 +472,7 @@ const changePhone = (phone) => {
                         });
                         break;
                     case 'FAILURE':
-                        openModal("WARN", `<p>이름 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
+                        openModal("WARN", `<p>전화번호 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
                         break;
                     default:
                         openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
