@@ -36,6 +36,41 @@ const socialIdVal = $globalSocialId ? $globalSocialId.value : '';
 const socialTypeVal = $globalSocialTypeCode ? $globalSocialTypeCode.value : '';
 const isSocialRegister = socialIdVal !== '' && socialTypeVal !== '';
 
+// 타이머 관련 변수
+let custTimerInterval;
+let ownerTimerInterval;
+
+// 타이머 시작 함수
+function startTimer(duration, displayElement, onExpire) {
+    let remaining = duration;
+    updateDisplay(displayElement, remaining);
+    
+    const interval = setInterval(() => {
+        remaining--;
+        updateDisplay(displayElement, remaining);
+        
+        if (remaining <= 0) {
+            clearInterval(interval);
+            if (displayElement) displayElement.innerText = "시간 초과";
+            if (typeof onExpire === 'function') onExpire();
+        }
+    }, 1000);
+    return interval;
+}
+
+function updateDisplay(element, seconds) {
+    if (element) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        element.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+}
+
+function stopTimer(interval, displayElement) {
+    clearInterval(interval);
+    if (displayElement) displayElement.innerText = "";
+}
+
 if (isSocialRegister) {
     openModal("SNS-REGISTER", "<p>소셜계정으로 회원가입이 진행됩니다.</p>", { confirmText: '확인',onConfirm: () => {} });
     const $custPw = customerForm.querySelector('input[name="password"]');
@@ -205,6 +240,23 @@ $customerEmailSendButton.addEventListener('click', (e) => {
                 openModal("SUCCESS",`<p>입력하신 이메일(${$customerEmailInput.value})로 인증번호를 전송하였습니다. 인증 번호는 3분간만 유효하니 유의해주세요.</p>`,{confirmText: '확인', onConfirm: () => {
                         $customerCodeInput.focus();
                     }});
+                
+                // 타이머 시작
+                let timerSpan = document.getElementById('custTimer');
+                if (!timerSpan) {
+                    timerSpan = document.createElement('span');
+                    timerSpan.id = 'custTimer';
+                    timerSpan.style.color = 'red';
+                    timerSpan.style.marginLeft = '10px';
+                    timerSpan.style.fontSize = '12px';
+                    $customerCodeInput.parentElement.appendChild(timerSpan);
+                }
+                clearInterval(custTimerInterval);
+                custTimerInterval = startTimer(180, timerSpan, () => {
+                    $customerCodeInput.disabled = true;
+                    $verifyButton.disabled = true;
+                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
+                });
                 break;
             default:
                 openModal("WARN",`<p>서버가 알수없는 응답을 반환하였습니다. 잠시후 다시 시도해주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
@@ -254,6 +306,7 @@ $verifyButton.addEventListener('click', (e) => {
                         $verifyButton.disabled = true;
                         customerForm['email'].readOnly = false;
                         isEmailVerified = false;
+                        stopTimer(custTimerInterval, document.getElementById('custTimer'));
                     }});
                 break;
             case 'SUCCESS' :
@@ -263,6 +316,7 @@ $verifyButton.addEventListener('click', (e) => {
                        isEmailVerified = true;
                        customerForm['email'].readOnly = true;
                        customerForm['code'].readOnly = true;
+                       stopTimer(custTimerInterval, document.getElementById('custTimer'));
                     }});
                 break;
             default:
@@ -331,6 +385,23 @@ $ownerEmailSendButton.addEventListener('click', (e) => {
                     confirmText: '확인',
                     onConfirm: () => $ownerCodeInput.focus()
                 });
+                
+                // 타이머 시작
+                let timerSpan = document.getElementById('ownerTimer');
+                if (!timerSpan) {
+                    timerSpan = document.createElement('span');
+                    timerSpan.id = 'ownerTimer';
+                    timerSpan.style.color = 'red';
+                    timerSpan.style.marginLeft = '10px';
+                    timerSpan.style.fontSize = '12px';
+                    $ownerCodeInput.parentElement.appendChild(timerSpan);
+                }
+                clearInterval(ownerTimerInterval);
+                ownerTimerInterval = startTimer(180, timerSpan, () => {
+                    $ownerCodeInput.disabled = true;
+                    $ownerVerifyButton.disabled = true;
+                    openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
+                });
                 break;
             default:
                 openModal("WARN", `<p>서버가 알수없는 응답을 반환하였습니다.</p>`, { confirmText: '확인' });
@@ -387,6 +458,7 @@ $ownerVerifyButton.addEventListener('click', (e) => {
                         $ownerVerifyButton.disabled = true;
                         ownerForm['email'].readOnly = false;
                         isEmailVerified = false;
+                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
                     }
                 });
                 break;
@@ -399,6 +471,7 @@ $ownerVerifyButton.addEventListener('click', (e) => {
                         isEmailVerified = true;
                         ownerForm['email'].readOnly = true;
                         ownerForm['code'].readOnly = true;
+                        stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
                     }
                 });
                 break;
@@ -426,12 +499,14 @@ function updateForm() {
             $customerEmailSendButton.disabled = false;
             $customerCodeInput.disabled = true;
             $verifyButton.disabled = true;
+            stopTimer(custTimerInterval, document.getElementById('custTimer'));
         } else {
             $ownerEmailInput.disabled = false;
             $ownerEmailInput.readOnly = false;
             $ownerEmailSendButton.disabled = false;
             $ownerCodeInput.disabled = true;
             $ownerVerifyButton.disabled = true;
+            stopTimer(ownerTimerInterval, document.getElementById('ownerTimer'));
         }
     };
 
@@ -616,7 +691,7 @@ ownerForm.addEventListener('submit', (e) => {
     const businessNumRegex = /^\d{3}-\d{2}-\d{5}$/;
 
     if (!/^(?=.{8,50}$)([\da-zA-Z_.]{4,25})@([\da-z\-]+\.)?([\da-z\-]{2,})\.([a-z]{2,15}\.)?([a-z]{2,3})$/g.test(form['email'].value)) {
-        openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인',onConfirm: () => {
+        openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인', onConfirm: () => {
                 form['email'].focus();
             } });
         return;

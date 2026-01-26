@@ -129,7 +129,7 @@ public class RegisterService {
         emailToken.setVerified(false);
         emailToken.setUsed(false);
         emailToken.setCreatedAt(LocalDateTime.now());
-        emailToken.setExpiresAt(LocalDateTime.now().plusMinutes(10L));
+        emailToken.setExpiresAt(LocalDateTime.now().plusMinutes(3L)); // 3분으로 변경
         int insertResult = this.emailTokenMapper.insert(emailToken);
         if(insertResult<1){
             return Pair.of(SendEmailResult.FAILURE, null);

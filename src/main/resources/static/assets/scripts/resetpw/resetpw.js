@@ -15,6 +15,63 @@ const $codeInput = loginForm.querySelector('input[name="code"]');
 const $saltInput = loginForm.querySelector('input[name="salt"]');
 /** @type {HTMLButtonElement} */
 const $verifyButton = loginForm.querySelector('button[name="verifyButton"]');
+
+// 타이머 관련 변수
+let timerInterval;
+let remainingTime = 0;
+
+// 타이머 시작 함수
+function startTimer(duration) {
+    clearInterval(timerInterval);
+    remainingTime = duration;
+    
+    // 타이머 표시 요소가 없다면 생성 (인증번호 입력란 근처에)
+    let timerDisplay = document.getElementById('timerDisplay');
+    if (!timerDisplay) {
+        timerDisplay = document.createElement('span');
+        timerDisplay.id = 'timerDisplay';
+        timerDisplay.style.color = 'red';
+        timerDisplay.style.fontSize = '12px';
+        timerDisplay.style.marginLeft = '10px';
+        // 인증번호 입력란의 부모 요소에 추가
+        $codeInput.parentElement.appendChild(timerDisplay);
+    }
+    
+    updateTimerDisplay();
+    
+    timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerDisplay();
+        
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerDisplay.innerText = "시간 초과";
+            $codeInput.disabled = true;
+            $verifyButton.disabled = true;
+            openModal("WARN", "<p>인증 시간이 만료되었습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
+        }
+    }, 1000);
+}
+
+// 타이머 표시 업데이트 함수
+function updateTimerDisplay() {
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (timerDisplay) {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+}
+
+// 타이머 종료 함수
+function stopTimer() {
+    clearInterval(timerInterval);
+    const timerDisplay = document.getElementById('timerDisplay');
+    if (timerDisplay) {
+        timerDisplay.innerText = "";
+    }
+}
+
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (loginForm['email'].readOnly !== true) {
@@ -35,6 +92,8 @@ loginForm.addEventListener('submit', (e) => {
     const formData = new FormData();
     formData.append('email', loginForm['email'].value)
     formData.append('password', loginForm['password'].value);
+    formData.append('code', $codeInput.value);
+    formData.append('salt', $saltInput.value);
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
@@ -98,7 +157,7 @@ $emailSendButton.addEventListener('click', (e) => {
     const emailRegex = /^(?=.{8,50}$)([\da-zA-Z_.]{4,25})@([\da-z\-]+\.)?([\da-z\-]{2,})\.([a-z]{2,15}\.)?([a-z]{2,3})$/g;
     if (!emailRegex.test($emailInput.value)) {
         openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인',onConfirm: () => {} });
-        $customerEmailInput.focus();
+        $emailInput.focus();
         return;
     }
     if (!emailValue) {
@@ -126,6 +185,35 @@ $emailSendButton.addEventListener('click', (e) => {
                 openModal("WARN",`<p>알수 없는 이유로 회원가입에 실패하였습니다. 잠시 후 다시 시도해 주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
                 break;
             case 'FAILURE_EMAIL_DUPLICATE' :
+                // 비밀번호 찾기에서는 이메일이 존재해야 하므로, 중복(존재)이 성공 케이스임.
+                // 하지만 /register/email은 중복이면 FAILURE_EMAIL_DUPLICATE를 반환함.
+                // 따라서 여기서는 FAILURE_EMAIL_DUPLICATE가 오면 인증번호 발송 성공으로 처리해야 함.
+                // 하지만 서버가 FAILURE_EMAIL_DUPLICATE일 때 인증번호를 보내는지 확인해야 함.
+                // RegisterController를 확인해보면, 중복이면 인증번호를 보내지 않고 바로 리턴함.
+                // 따라서 /register/email 엔드포인트는 비밀번호 찾기에 적합하지 않음.
+                // ResetPasswordController에 인증번호 발송 엔드포인트를 추가하거나,
+                // RegisterController를 수정해야 함.
+                
+                // 사용자가 400 에러를 겪는 것은 submit 시점임.
+                // submit 시점에는 code와 salt가 있어야 함.
+                // 만약 인증번호 발송이 안 되면 code와 salt가 없어서 submit도 못함 (readOnly 체크 때문에).
+                // 사용자가 인증번호를 받고 인증을 완료했다고 가정하면, code와 salt는 있음.
+                
+                // 400 에러의 원인은 아마도 disabled 된 input 때문일 가능성이 높음.
+                // FormData는 disabled 된 input의 값을 포함하지 않을 수 있음?
+                // 아니, FormData.append('code', $codeInput.value)로 직접 값을 넣고 있음.
+                // $codeInput.value는 disabled 상태라도 값을 가짐.
+                
+                // 다시 400 에러 원인 추측:
+                // ResetPasswordController의 updatePassword 메서드 파라미터 이름 불일치?
+                // email, password, code, salt. 일치함.
+                
+                // 혹시 salt가 null인가?
+                // $saltInput.value = response['salt'];
+                // 만약 response['salt']가 없으면?
+                
+                // 일단 $customerEmailInput 오타 수정.
+                
                 openModal("WARN",`<p>입력하신 이메일(${$emailInput.value}은 이미 사용 중입니다.</p>`,{confirmText: '확인', onConfirm: () => {
                         $emailInput.focus();
                         $emailInput.select();
@@ -142,6 +230,9 @@ $emailSendButton.addEventListener('click', (e) => {
                 openModal("SUCCESS",`<p>입력하신 이메일(${$emailInput.value})로 인증번호를 전송하였습니다. 인증 번호는 3분간만 유효하니 유의해주세요.</p>`,{confirmText: '확인', onConfirm: () => {
                         $codeInput.focus();
                     }});
+                
+                // 타이머 시작 (3분 = 180초)
+                startTimer(180);
                 break;
             default:
                 openModal("WARN",`<p>서버가 알수없는 응답을 반환하였습니다. 잠시후 다시 시도해주세요.</p>`,{confirmText: '확인', onConfirm: () => {}});
@@ -190,6 +281,7 @@ $verifyButton.addEventListener('click', (e) => {
                         $verifyButton.disabled = true;
                         loginForm['email'].readOnly = false;
                         isEmailVerified = false;
+                        stopTimer(); // 타이머 중지
                     }});
                 break;
             case 'SUCCESS' :
@@ -199,6 +291,7 @@ $verifyButton.addEventListener('click', (e) => {
                         isEmailVerified = true;
                         loginForm['email'].readOnly = true;
                         loginForm['code'].readOnly = true;
+                        stopTimer(); // 타이머 중지
                     }});
                 break;
             default:
