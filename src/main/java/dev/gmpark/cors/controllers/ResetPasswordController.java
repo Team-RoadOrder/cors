@@ -1,7 +1,6 @@
 package dev.gmpark.cors.controllers;
 
 
-import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.results.register.ResetPasswordResult;
 import dev.gmpark.cors.services.ResetPasswordService;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +26,13 @@ public class ResetPasswordController {
     }
     @RequestMapping(value = "/resetpw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> updatePassword(@RequestParam String email, @RequestParam String password) {
-        RegisterEntity user = this.resetPasswordService.UpdatePassword(email, password);
+    public Map<String, Object> updatePassword(@RequestParam String email, 
+                                              @RequestParam String password,
+                                              @RequestParam String code,
+                                              @RequestParam String salt) {
+        ResetPasswordResult result = this.resetPasswordService.UpdatePassword(email, password, code, salt);
         Map<String, Object> responseBody = new HashMap<>();
-        if (user != null) {
-            responseBody.put("status", ResetPasswordResult.SUCCESS);
-            responseBody.put("password", user.getPassword());
-        } else {
-            responseBody.put("status", ResetPasswordResult.FAILURE);
-        }
+        responseBody.put("status", result);
 
         return responseBody;
     }

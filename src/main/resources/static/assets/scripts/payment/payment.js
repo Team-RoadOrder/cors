@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (val < 0) val = 0;
             if (val > maxPoints) {
                 val = maxPoints;
-                alert("보유 포인트 이상 사용할 수 없습니다.");
+                openModal('알림', '보유 포인트 이상 사용할 수 없습니다.', { confirmText: '확인' });
             }
             
             this.value = val;
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // 결제 버튼 클릭 이벤트
         paymentButton.addEventListener("click", function() {
             if (!agreeCheckbox.checked) {
-                alert("주문 내용 확인 및 정보 제공에 동의해주세요.");
+                openModal('알림', '주문 내용 확인 및 정보 제공에 동의해주세요.', { confirmText: '확인' });
                 return;
             }
 
@@ -317,8 +317,32 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // 유효성 검사
-            if (!receiverName || !receiverPhone || !address || !addressDetail) {
-                alert("배송지 정보를 모두 입력해주세요.");
+            if (!receiverName || receiverName.trim() === "") {
+                openModal('알림', '수령인 이름을 입력해주세요.', { 
+                    confirmText: '확인',
+                    onConfirm: () => document.getElementById('receiver_name').focus()
+                });
+                return;
+            }
+            if (!receiverPhone || phoneParts[0].value.trim() === "" || phoneParts[1].value.trim() === "" || phoneParts[2].value.trim() === "") {
+                openModal('알림', '수령인 연락처를 입력해주세요.', {
+                    confirmText: '확인',
+                    onConfirm: () => phoneParts[0].focus()
+                });
+                return;
+            }
+            if (!address || address.trim() === "") {
+                openModal('알림', '배송지 주소를 입력해주세요.', {
+                    confirmText: '확인',
+                    onConfirm: () => addressInput.focus()
+                });
+                return;
+            }
+            if (!addressDetail || addressDetail.trim() === "") {
+                openModal('알림', '상세 주소를 입력해주세요.', {
+                    confirmText: '확인',
+                    onConfirm: () => addressDetailInput.focus()
+                });
                 return;
             }
 
@@ -405,31 +429,49 @@ document.addEventListener("DOMContentLoaded", function() {
                 usedCouponId: null // 쿠폰 ID (추후 구현)
             };
 
-            fetch('/pay', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result === 'SUCCESS') {
-                    // 결제 성공 시 화면 처리
-                    if (paymentContainer) {
-                        paymentContainer.style.display = 'none'; // 기존 결제 화면 숨김
-                    }
-                    if (paymentCompleteModal) {
-                        paymentCompleteModal.style.display = 'flex'; // 완료 모달 표시
-                    }
-                } else {
-                    alert("결제 실패: " + data.message);
+            // 로딩 표시
+            Loading.show("결제 처리 중입니다...");
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/pay');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("결제 처리 중 오류가 발생했습니다.");
-            });
+                
+                // 로딩 숨김
+                Loading.hide();
+                
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal('오류', `요청을 처리하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요. (${xhr.status})`, { confirmText: '확인' });
+                    return;
+                }
+
+                const response = JSON.parse(xhr.responseText);
+                switch (response.result) {
+                    case 'SUCCESS':
+                        // 결제 성공 시 화면 처리
+                        if (paymentContainer) {
+                            paymentContainer.style.display = 'none'; // 기존 결제 화면 숨김
+                        }
+                        if (paymentCompleteModal) {
+                            paymentCompleteModal.style.display = 'flex'; // 완료 모달 표시
+                        }
+                        break;
+                    case 'FAILURE_SESSION':
+                        openModal('경고', '세션이 만료되었습니다. 지금 로그인하러 이동할까요?', {
+                            confirmText: '이동',
+                            cancelText: '취소',
+                            onConfirm: () => window.location.href = '/login'
+                        });
+                        break;
+                    case 'FAILURE':
+                    default:
+                        openModal('경고', response.message || '결제 처리에 실패하였습니다.', { confirmText: '확인' });
+                }
+            };
+            xhr.send(JSON.stringify(orderData));
         });
     }
 

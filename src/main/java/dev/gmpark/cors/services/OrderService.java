@@ -54,6 +54,8 @@ public class OrderService {
         }
 
         int quantity = dto.getQuantity() > 0 ? dto.getQuantity() : 1; // 수량 확인 (기본 1)
+        if (quantity > 99) quantity = 99; // 최대 수량 제한
+
         long totalProductPrice = item.getPrice() * quantity; // 총 상품 금액 계산
         
         List<OrderItemEntity> items = new ArrayList<>();
@@ -72,6 +74,9 @@ public class OrderService {
                 String newSize = (String) newItem.get("size");
                 int newQuantity = ((Number) newItem.get("quantity")).intValue();
                 
+                if (newQuantity < 1) newQuantity = 1;
+                if (newQuantity > 99) newQuantity = 99;
+
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
                     totalProductPrice += newItemVo.getPrice() * newQuantity;
@@ -159,6 +164,9 @@ public class OrderService {
                 quantity = cartQuantities.get(cart.getId());
             }
             
+            if (quantity < 1) quantity = 1;
+            if (quantity > 99) quantity = 99;
+
             totalProductPrice += cart.getItemPrice() * quantity;
             orderItems.add(OrderItemEntity.builder()
                     .itemId(cart.getItemId())
@@ -176,6 +184,9 @@ public class OrderService {
                 String newSize = (String) newItem.get("size");
                 int newQuantity = ((Number) newItem.get("quantity")).intValue();
                 
+                if (newQuantity < 1) newQuantity = 1;
+                if (newQuantity > 99) newQuantity = 99;
+
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
                     totalProductPrice += newItemVo.getPrice() * newQuantity;

@@ -18,6 +18,12 @@ public class OwnerMemberValidator {
      */
     public static final String PHONE_REGEX = "^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$";
 
+    // 주소 정규식: 한글, 영문, 숫자, 공백, 특수문자(-,(),.[]) 허용, 2~100자
+    public static final String ADDRESS_REGEX = "^[가-힣a-zA-Z0-9\\s\\-\\(\\)\\[\\]\\.,]{2,100}$";
+    
+    // 상세주소 정규식: 한글, 영문, 숫자, 공백, 특수문자(-,(),.[]) 허용, 1~100자 (빈 값 허용 안 함)
+    public static final String ADDRESS_DETAIL_REGEX = "^[가-힣a-zA-Z0-9\\s\\-\\(\\)\\[\\]\\.,]{1,100}$";
+
     /**
      * 임직원 데이터 전체 유효성 검사
      */
@@ -54,8 +60,12 @@ public class OwnerMemberValidator {
     }
 
     public static boolean validateAddress(String address, String addressDetail) {
-//        return address != null && !address.trim().isEmpty() &&
-//                addressDetail != null && !addressDetail.trim().isEmpty();
+        if (address == null || !address.matches(ADDRESS_REGEX)) {
+            return false;
+        }
+        if (addressDetail == null || !addressDetail.matches(ADDRESS_DETAIL_REGEX)) {
+            return false;
+        }
         return true;
     }
 }

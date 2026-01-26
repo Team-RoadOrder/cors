@@ -57,6 +57,17 @@ document.addEventListener("DOMContentLoaded", function() {
 // 페이지 로딩 시(탭 이동 시) 기본적으로 '대기' 상태만 보이게 초기화
     setTimeout(() => filterStatus('대기'), 50);
 
+    // 모달 닫기 버튼 이벤트 리스너 추가
+    const dialog = document.getElementById("dialog");
+    if (dialog) {
+        const closeBtn = dialog.querySelector(".close");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                dialog.style.display = 'none';
+            });
+        }
+    }
 });
 
 // 이벤트 위임용
@@ -119,9 +130,41 @@ document.addEventListener('click', function(e) {
 
         const inputAddress = addressContainer.querySelector('input[name="address"]');
         const inputDetail = addressContainer.querySelector('input[name="addressDetail"]');
+        const searchBtn = addressContainer.querySelector('#btn-search-address-my'); // 주소 검색 버튼
 
         // 3. 함수 바로 호출 (리스너를 또 등록하지 않음!)
-        toggleAddressMode(e.target, inputAddress, inputDetail);
+        toggleAddressMode(e.target, inputAddress, inputDetail, searchBtn);
+    }
+    
+    // 주소 검색 버튼 클릭 이벤트 위임
+    if (e.target && e.target.id === 'btn-search-address-my') {
+        e.preventDefault();
+        const addressContainer = document.querySelector('.tab_address_content');
+        if (!addressContainer) return;
+        
+        const inputAddress = addressContainer.querySelector('input[name="address"]');
+        const inputDetail = addressContainer.querySelector('input[name="addressDetail"]');
+        
+        // Daum 주소 API 호출 (모달 방식)
+        const dialog = document.getElementById("dialog");
+        const modal = dialog.querySelector(".modal");
+        
+        new daum.Postcode({
+            oncomplete: function(data) {
+                let addr = '';
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+                inputAddress.value = addr;
+                inputDetail.focus();
+                dialog.style.display = 'none';
+            },
+            width : '100%',
+            height : '100%'
+        }).embed(modal);
+        dialog.style.display = 'block';
     }
 });
 // [삭제 요청 함수]
@@ -200,6 +243,12 @@ const loadTab = (menuName, element) => {
         // [추가] 프로필 탭일 경우 스타일 체크박스 이벤트 리스너 등록
         if (menuName === 'profile') {
             attachStyleCheckboxEvents();
+        }
+        
+        // [추가] 주소 탭일 경우 주소 검색 버튼 초기화 (숨김)
+        if (menuName === 'address') {
+            const searchBtn = document.getElementById('btn-search-address-my');
+            if (searchBtn) searchBtn.style.display = 'none';
         }
      };
     const timestamp = new Date().getTime();
@@ -454,17 +503,38 @@ const changeStyle = () => {
  * @param {HTMLElement} btn - 클릭된 버튼 요소
  * @param {HTMLElement} addrInput - 주소 인풋 요소
  * @param {HTMLElement} detailInput - 상세주소 인풋 요소
+ * @param {HTMLElement} searchBtn - 주소 검색 버튼 요소
  */
 
-const  toggleAddressMode = (btn, addrInput, detailInput) => {
+const  toggleAddressMode = (btn, addrInput, detailInput, searchBtn) => {
     // 현재 버튼 텍스트가 '수정'인지 확인
     if (btn.innerText.trim() === '수정') {
-        addrInput.removeAttribute('readonly');
+        // addrInput.removeAttribute('readonly'); // 기본 주소는 직접 수정 불가
         detailInput.removeAttribute('readonly');
-        addrInput.focus();
+        
+        // 주소 검색 버튼 표시
+        if (searchBtn) {
+            searchBtn.style.display = 'inline-block';
+        }
+        
+        detailInput.focus();
         btn.innerText = '완료';
 
     } else {
+        // 유효성 검사 추가
+        const addressRegex = /^[가-힣a-zA-Z0-9\s\-\(\)\[\]\.,]{2,100}$/;
+        const addressDetailRegex = /^[가-힣a-zA-Z0-9\s\-\(\)\[\]\.,]{1,100}$/;
+
+        if (!addrInput.value || !addressRegex.test(addrInput.value)) {
+            openModal("WARN", "<p>올바른 주소를 입력해주세요.</p>", {confirmText: '확인'});
+            return;
+        }
+        if (!detailInput.value || !addressDetailRegex.test(detailInput.value)) {
+            openModal("WARN", "<p>올바른 상세 주소를 입력해주세요.</p>", {confirmText: '확인'});
+            detailInput.focus();
+            return;
+        }
+
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
         formData.append('address', addrInput.value);
@@ -490,7 +560,7 @@ const  toggleAddressMode = (btn, addrInput, detailInput) => {
                             });
                             break;
                         case 'FAILURE':
-                            openModal("WARN", `<p>이름 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
+                            openModal("WARN", `<p>주소 변경에 실패하였습니다.</p>`, {confirmText: '확인'});
                             break;
                         default:
                             openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});

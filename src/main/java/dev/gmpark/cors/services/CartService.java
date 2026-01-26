@@ -29,6 +29,11 @@ public class CartService {
         if (itemId == null || itemId < 1 || size == null || size.isEmpty() || quantity < 1) {
             return Pair.of(CommonResult.FAILURE, -1L);
         }
+        
+        // 수량 제한 (최대 99개)
+        if (quantity > 99) {
+            return Pair.of(CommonResult.FAILURE, -1L);
+        }
 
         // 상품 존재 여부 확인
         ShopItemVo item = this.itemService.getItemById(itemId);
@@ -49,6 +54,10 @@ public class CartService {
         CartEntity existingCart = this.cartMapper.selectCartItem(sessionUser.getEmail(), itemId, size);
 
         if (existingCart != null) {
+            // 기존 수량 + 추가 수량이 99개를 넘지 않도록 체크
+            if (existingCart.getQuantity() + quantity > 99) {
+                return Pair.of(CommonResult.FAILURE, -1L);
+            }
             if (this.cartMapper.updateCartQuantity(existingCart.getId(), quantity) > 0) {
                 return Pair.of(CommonResult.SUCCESS, existingCart.getId());
             }
@@ -128,6 +137,11 @@ public class CartService {
             return CommonResult.FAILURE_SESSION;
         }
         if (cartId == null || quantity < 1) {
+            return CommonResult.FAILURE;
+        }
+        
+        // 수량 제한 (최대 99개)
+        if (quantity > 99) {
             return CommonResult.FAILURE;
         }
 
