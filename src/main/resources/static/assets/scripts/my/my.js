@@ -548,6 +548,8 @@ const  toggleAddressMode = (btn, addrInput, detailInput, searchBtn) => {
             searchBtn.style.display = 'inline-block';
         }
         
+        // [수정됨] 상세주소 내용 비우기
+        detailInput.value = '';
         detailInput.focus();
         btn.innerText = '완료';
 
