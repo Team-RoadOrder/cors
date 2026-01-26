@@ -27,11 +27,8 @@
         INSERT INTO `cors`.`item_review_comments` (`review_id`, `user_email`, `content`, `parent_id`)
         VALUES (#{reviewId}, #{userEmail}, #{content}, #{parentId})
     </insert>
-    <!--주문완료사용자 : 리뷰작성-->
-    <insert id="insertReservationForOrder" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO `cors`.`reservations` (`user_email`,`shop_id`,`visit_date`,`status`,`created_at`)
-                                VALUES (#{userEmail},#{shopId},NOW(), 'ORDER_REVIEW', NOW())
-    </insert>
+
+
 
     <update id="updateReview" parameterType="dev.gmpark.cors.entities.ItemReviewEntity">
         UPDATE `cors`.`item_reviews`
@@ -82,7 +79,11 @@
         r.`useful_count`    AS `usefulCount`,
         r.`created_at`      AS `createdAt`,
         r.`updated_at`      AS `updatedAt`,
-        u.`name`            AS `userName`
+        u.`name`            AS `userName`,
+        /* [FBI 정규화] 해당 유저가 이 아이템에 대해 결제한 날짜 중 가장 최신 날짜를 매칭 */
+        (SELECT MAX(o.`created_at`)
+        FROM `cors`.`orders` AS o
+        WHERE o.`user_email` = r.`user_email`) AS `orderDate`
         FROM `cors`.`item_reviews` AS r
         LEFT JOIN `cors`.`users` AS u ON r.`user_email` = u.`email`
         WHERE r.`item_id` = #{itemId}
@@ -111,18 +112,6 @@
         ORDER BY ri.`id` DESC
     </select>
 
-    <select id="checkPurchaseHistory" resultType="java.lang.Integer">
-        SELECT IFNULL((SELECT r.`id`
-                       FROM `cors`.`reservations` AS r
-                                INNER JOIN `cors`.`reservation_items` AS ri ON r.`id` = ri.`reservation_id`
-                                LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
-                       WHERE r.`user_email` = #{email}
-                         AND ri.`item_id` = #{itemId}
-                         AND r.`status` IN ('대기', '확정', '완료')
-                         AND ir.`id` IS NULL
-                       LIMIT 1), 0)
-    </select>
-
     <select id="isShopOwnerOfReview" resultType="int">
         SELECT COUNT(*)
         FROM `cors`.`shop_info`
@@ -132,18 +121,22 @@
 
     <select id="selectReviewById" resultType="dev.gmpark.cors.vos.ReviewVo">
         SELECT
-            `id`                AS `id`,
-            `item_id`           AS `itemId`,
-            `shop_id`           AS `shopId`,
-            `user_email`        AS `userEmail`,
-            `reservation_id`    AS `reservationId`,
-            `content`           AS `content`,
-            `rating`            AS `rating`,
-            `useful_count`      AS `usefulCount`,
-            `created_at`        AS `createdAt`,
-            `updated_at`        AS `updatedAt`
-        FROM `cors`.`item_reviews`
-        WHERE `id` = #{id}
+            ir.`id`                AS `id`,
+            ir.`item_id`           AS `itemId`,
+            ir.`shop_id`           AS `shopId`,
+            ir.`user_email`        AS `userEmail`,
+            ir.`reservation_id`    AS `reservationId`,
+            ir.`content`           AS `content`,
+            ir.`rating`            AS `rating`,
+            ir.`useful_count`      AS `usefulCount`,
+            ir.`created_at`        AS `createdAt`,
+            ir.`updated_at`        AS `updatedAt`,
+            /* [FBI 정규화] JS에게 알려줄 실제 결제일 추가 */
+            o.`created_at`         AS `orderDate`
+        FROM `cors`.`item_reviews` AS ir
+                 INNER JOIN `cors`.`reservations` AS r ON ir.`reservation_id` = r.`id`
+                 INNER JOIN `cors`.`orders` AS o ON r.`user_email` = o.`user_email`
+        WHERE ir.`id` = #{id}
         LIMIT 1
     </select>
 
@@ -151,11 +144,19 @@
         SELECT r.`id`
         FROM `cors`.`reservations` AS r
                  INNER JOIN `cors`.`reservation_items` AS ri ON r.`id` = ri.`reservation_id`
+            /* 예약과 연결된 주문 정보를 가져오기 위해 조인 */
+                 INNER JOIN `cors`.`orders` AS o ON r.`user_email` = o.`user_email`
                  LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
         WHERE r.`user_email` = #{email}
           AND ri.`item_id` = CAST(#{itemId} AS UNSIGNED)
           AND r.`status` IN ('대기', '확정', '완료')
+
+          AND r.`created_at` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
+
+          AND o.`created_at` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
+
           AND ir.`id` IS NULL
+
         ORDER BY r.`id` DESC
         LIMIT 1
     </select>
@@ -169,7 +170,7 @@
 
     <select id="selectReviewLikeCount" resultType="java.lang.Integer">
         SELECT `useful_count` FROM `cors`.`item_reviews`
-        WHERE `id` = #{reviewId}.
+        WHERE `id` = #{reviewId}
     </select>
 
     <select id="selectCommentsByReviewId" resultType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
@@ -177,39 +178,34 @@
             c.`id`            AS `id`,
             c.`review_id`     AS `reviewId`,
             c.`user_email`    AS `userEmail`,
-            u.`name`          AS `userName`,
-            c.`content`       AS `content`,
+            u.`name`          AS `userName`,  c.`content`       AS `content`,
             c.`parent_id`     AS `parentId`,
             c.`created_at`    AS `createdAt`,
             c.`updated_at`    AS `updatedAt`
         FROM `cors`.`item_review_comments` AS c
                  LEFT JOIN `cors`.`users` AS u ON c.`user_email` = u.`email`
         WHERE c.`review_id` = #{reviewId}
-        ORDER BY
-            IFNULL(c.`parent_id`, c.`id`) ASC,
-            c.`created_at` ASC
+        ORDER BY IFNULL(c.`parent_id`, c.`id`) ASC, c.`created_at` ASC
     </select>
 
     <select id="selectCommentById" resultType="dev.gmpark.cors.entities.ItemReviewCommentEntity">
         SELECT
-            `id`            AS `id`,
-            `review_id`     AS `reviewId`,
-            `user_email`    AS `userEmail`,
-            `content`       AS `content`,
-            `parent_id`     AS `parentId`,
-            `created_at`    AS `createdAt`,
-            `updated_at`    AS `updatedAt`
-        FROM `cors`.`item_review_comments`
-        WHERE `id` = #{id}
+            c.`id`            AS `id`,
+            c.`review_id`     AS `reviewId`,
+            c.`user_email`    AS `userEmail`,  u.`name`          AS `userName`,
+            c.`content`       AS `content`,
+            c.`parent_id`     AS `parentId`,
+            c.`created_at`    AS `createdAt`,
+            c.`updated_at`    AS `updatedAt`
+        FROM `cors`.`item_review_comments` AS c
+                 LEFT JOIN `cors`.`users` AS u ON c.`user_email` = u.`email`
+        WHERE c.`id` = #{id}
         LIMIT 1
     </select>
 
-    <select id="selectReviewCountByEmail" resultType="java.lang.Integer">
-        SELECT COUNT(*)
-        FROM `cors`.`item_reviews`
-        WHERE `user_email` = #{email}
-          AND `item_id` = #{itemId}
-        LIMIT 1
+    <select id="selectChildCountByParentId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM `cors`.`item_review_comments`
+        WHERE `parent_id` = #{parentId}
     </select>
 
 </mapper>

@@ -21,6 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         //리뷰 이미지 전용
         registry.addResourceHandler("/review-images/**")
-                .addResourceLocations("file:" + path); // 이제 동적으로 경로를 찾습니다.
+                // upload의하위폴더에 리뷰이미지저장목적
+                .addResourceLocations("file:" + path + "review/");
     }
 }

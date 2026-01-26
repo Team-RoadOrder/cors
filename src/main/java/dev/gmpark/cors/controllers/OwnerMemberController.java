@@ -19,6 +19,15 @@
     @RequestMapping(value = "/owner")
     @RequiredArgsConstructor
     public class OwnerMemberController {
+        /*TODO
+        1. 무단 삽입가능성
+        직원을 등록하려는 사람이 로그인한 사장인가?확인하는것 필요
+        2. 무단 수정 가능
+        email로 멤버를 조회하지만, 멤버가 현재 로그인한 사장 소유의 멤버인지 확인하는 로직 필요
+        3.if (!targetMember.getOwnerEmail().equals(ownerEmail)) 로직을 통해 소유권을 검증하고 있습니다.
+        이 방식이 모든 수정/조회/삭제에 적용되어야함
+
+* */
         private final OwnerMainService ownerMainService;
         private final OwnerMemberService ownerMemberService;
 

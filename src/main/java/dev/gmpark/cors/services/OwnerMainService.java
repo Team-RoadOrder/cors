@@ -110,10 +110,14 @@ public class OwnerMainService {
         }
         return this.ownerShopMapper.selectAllByShopId(dbShop.getShopId());
     }
-
-    public CommonResult modify(ShopItemEntity shopItem ) {
+    // 상품수정 : 세션 유저의 매장 ID와 상품의 ID 대조
+    public CommonResult modify(RegisterEntity user,ShopItemEntity shopItem ) {
+        // [보안] 현재 로그인한 사장님의 매장 정보 조회
+        ShopInfoEntity myShop = this.shopInfoMapper.selectShopByUserEmail(user.getEmail());
+        //수정하려는 원본 데이터 조회
         ShopItemEntity dbItem = this.ownerShopMapper.selectItemById(shopItem.getId());
-        if (dbItem == null) {
+        // [IDOR 방어] 매장이 없거나, 상품의 shopId가 내 매장과 다르면 차단
+        if (dbItem == null || myShop == null || dbItem.getShopId() != myShop.getShopId()) {
             return CommonResult.FAILURE;
         }
         if (!ShopItemValidator.validateItemName(shopItem)) return CommonResult.FAILURE;
@@ -138,14 +142,30 @@ public class OwnerMainService {
 
         return this.ownerShopMapper.updateItem(dbItem) > 0  ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
-
-    public CommonResult delete(Long id) {
+    //상품삭제: 소유권 확인 후 삭제 처리
+    public CommonResult delete(RegisterEntity user,Long id) {
         if( id == null ) return CommonResult.FAILURE;
+
+        ShopInfoEntity myShop = this.shopInfoMapper.selectShopByUserEmail(user.getEmail());
         ShopItemEntity dbItem = this.ownerShopMapper.selectItemById(id);
-        if (dbItem == null) return CommonResult.FAILURE;
+        // [IDOR 방어] 타 매장 상품 삭제 시도 원천 차단
+        if (dbItem == null || myShop == null || dbItem.getShopId() != myShop.getShopId()) {
+            return CommonResult.FAILURE;
+        }
         return this.ownerShopMapper.deleteItemById(id) > 0  ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
-    public CommonResult updateReservationStatus(int reservationId, String status) {
+    /*예약변경:예약 데이터 소유권 검증 */
+    public CommonResult updateReservationStatus(RegisterEntity user,int reservationId, String status) {
+        // [보안] 현재 사장님의 매장 ID 확보
+        ShopInfoEntity myShop = this.shopInfoMapper.selectShopByUserEmail(user.getEmail());
+        if (myShop == null) return CommonResult.FAILURE;
+        // [검증] 해당 예약이 현재 사장님의 매장에 속해있는지 리스트 기반 확인
+        List<ReservationItemVo> reservations = this.reservationMapper.selectReservationsByShopId(myShop.getShopId());
+        boolean isMine = reservations.stream().anyMatch(r -> r.getReservationId() == reservationId);
+
+        // [IDOR 방어] 내 매장 예약이 아니면 실패 반환
+        if (!isMine) return CommonResult.FAILURE;
+
         // 2. 업데이트 실행
        return this.reservationMapper.updateReservationStatus(reservationId, status) > 0
                ? CommonResult.SUCCESS

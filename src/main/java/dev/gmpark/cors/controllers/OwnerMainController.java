@@ -10,10 +10,13 @@ import dev.gmpark.cors.services.OwnerMainService; // OwnerMainService 사용
 import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model; // Model 추가
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,7 +163,7 @@ public class OwnerMainController {
             response.put("result", "NO_AUTH");
             return response;
         }
-        CommonResult result = this.ownerMainService.modify(shopItem);
+        CommonResult result = this.ownerMainService.modify(sessionUser,shopItem);
         response.put("result", result.name());
         return response;
 
@@ -175,7 +178,7 @@ public class OwnerMainController {
             response.put("result", "NO_AUTH");
             return response;
         }
-        CommonResult result = this.ownerMainService.delete(shopItem.getId());
+        CommonResult result = this.ownerMainService.delete(sessionUser,shopItem.getId());
 
         response.put("result",result.name() );
         return response;
@@ -191,7 +194,7 @@ public class OwnerMainController {
             response.put("result", "NO_AUTH");
             return response;
         }
-        CommonResult result = this.ownerMainService.updateReservationStatus(reservationId, status);
+        CommonResult result = this.ownerMainService.updateReservationStatus(sessionUser,reservationId, status);
 
         response.put("result", result.name());
         return response;

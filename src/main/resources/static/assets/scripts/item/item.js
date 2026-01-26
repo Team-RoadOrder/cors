@@ -182,7 +182,21 @@ document.addEventListener("DOMContentLoaded", () => {
         xhr.open('GET', `/item/reviews?itemId=${itemId}&sort=${sortType}`);
         xhr.send();
     });
-
+    //#region : 기존 handelReviewResponse
+    // const handleReviewResponse = (data) => {
+    //     if (data.result === 'SUCCESS') {
+    //         openModal("처리 성공", `<p>후기가 성공적으로 반영되었습니다!</p>`, {
+    //             confirmText: '확인', onConfirm: () => { location.reload(); }
+    //         });
+    //     } else if (data.result === 'FAILURE_SESSION') {
+    //         openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
+    //             confirmText: '로그인 이동', onConfirm: () => { location.href = '/login'; }
+    //         });
+    //     } else {
+    //         openModal("처리 실패", `<p>권한이 없거나 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+    //     }
+    // };
+    //#endregion : 기존 handelReviewResponse
     const handleReviewResponse = (data) => {
         if (data.result === 'SUCCESS') {
             openModal("처리 성공", `<p>후기가 성공적으로 반영되었습니다!</p>`, {
@@ -192,15 +206,22 @@ document.addEventListener("DOMContentLoaded", () => {
             openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
                 confirmText: '로그인 이동', onConfirm: () => { location.href = '/login'; }
             });
+        } else if (data.result === 'FAILURE') {
+            // [FBI 정규화] 1구매-1리뷰 원칙 및 60일 기한 만료 통합 안내
+            openModal("작성 불가",
+                `<p>리뷰 작성 권한이 없거나 구매 후 60일이 경과했습니다.</p>
+                 <p style="font-size: 0.85rem; color: #888; margin-top: 0.5rem;">
+                    * 삭제 후 재작성도 구매일로부터 60일 이내에만 가능합니다.
+                 </p>`,
+                { confirmText: '확인' }
+            );
         } else {
-            openModal("처리 실패", `<p>권한이 없거나 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+            openModal("처리 실패", `<p>알 수 없는 오류가 발생했습니다.</p>`, { confirmText: '확인' });
         }
     };
-
     const handleReviewError = () => { openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' }); };
 });
 
-// 사이즈선택, 장바구니
 // 사이즈선택, 장바구니
 // [수정] 모바일용 데이터(serverSizeData-M)도 함께 찾도록 수정
 const sizeDataInput = document.getElementById('serverSizeData') || document.getElementById('serverSizeData-M');
@@ -447,22 +468,59 @@ const toggleLikeShop = (shopId) => {
     xhr.open('POST', '/shop/like');
     xhr.send(formData);
 }
+
+
+
+
 //리뷰삭제
+//#region: 기존 deleteReview
+// function deleteReview(reviewId) {
+//     openModal("리뷰 삭제", `<p>정말 이 후기를 삭제하시겠습니까?</p>`, {
+//         confirmText: '삭제',
+//         cancelText: '취소',
+//         onConfirm: () => {
+//             const xhr = new XMLHttpRequest();
+//             xhr.onreadystatechange = () => {
+//                 if (xhr.readyState !== XMLHttpRequest.DONE) {
+//                     return;
+//                 }
+//                 if (xhr.status < 200 || xhr.status >= 400) {
+//                     return;
+//                 }
+//                 const response = JSON.parse(xhr.responseText);
+//                 if (response.result === 'SUCCESS') {
+//                     location.reload();
+//                 }
+//             };
+//             xhr.open('DELETE', `/item/review/${reviewId}`);
+//             xhr.send();
+//         }
+//     });
+// }
+//#endregion
+// [정규화] 리뷰 삭제 함수
 function deleteReview(reviewId) {
-    openModal("리뷰 삭제", `<p>정말 이 후기를 삭제하시겠습니까?</p>`, {
-        confirmText: '삭제',
+    const finalContent = `
+        <div style="text-align: center;">
+            <p style="font-size: 1.05rem; margin-bottom: 1rem;">정말 이 후기를 삭제하시겠습니까?</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 1rem 0;">
+            <div style="background-color: #f9f9f9; padding: 0.8rem; border-radius: 0.4rem; text-align: left;">
+                <p style="font-size: 0.85rem; color: #555; font-weight: bold; margin-bottom: 0.3rem;">리뷰 정책 안내</p>
+                <p style="font-size: 0.8rem; color: #888; line-height: 1.5; margin: 0;">
+                    * 후기 삭제 시,<br> <b>구매일로부터 60일이 경과한 상품</b>은 시스템 정책상 재작성이 불가능합니다.<br>
+                    * 60일 이내인 경우에만 삭제 후 다시 작성하실 수 있습니다.
+                </p>
+            </div>
+        </div>
+    `;
+
+    openModal("리뷰 삭제", finalContent, {
+        confirmText: '확인',
         cancelText: '취소',
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
-                if (xhr.readyState !== XMLHttpRequest.DONE) {
-                    return;
-                }
-                if (xhr.status < 200 || xhr.status >= 400) {
-                    return;
-                }
-                const response = JSON.parse(xhr.responseText);
-                if (response.result === 'SUCCESS') {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                     location.reload();
                 }
             };
@@ -566,51 +624,29 @@ function toggleReviewLike(reviewId, btnElement) {
 // 댓글 및 대댓글
 window.deleteComment = function(commentId) {
     const item = document.querySelector(`.comment-item[data-comment-id="${commentId}"]`);
-    const card = item ? item.closest('.review-item-card') : null;
+    if (!item) return;
 
-    // 대댓글 존재 여부 체크
-    // 현재 댓글 바로 다음 요소가 'reply' 클래스를 가지고 있는지 확인
+    const isReply = item.classList.contains('reply');
     const nextItem = item.nextElementSibling;
-    const hasReply = nextItem && nextItem.classList.contains('reply');
+    const hasChild = nextItem && nextItem.classList.contains('reply');
 
-    if (hasReply) {
-        // 대댓글이 있으면 삭제를 중단하고 안내 모달을 띄웁니다.
-        if (typeof openModal === 'function') {
-            openModal("삭제 불가", "<p>답글이 있는 댓글은 서비스 정책상 삭제할 수 없습니다.</p>", { confirmText: '확인' });
-        }
-        return; // 함수 실행 종료
+    // [보안 정책] 원본 댓글인데 답글이 달려있는 경우만 삭제 차단
+    if (!isReply && hasChild) {
+        openModal("삭제 불가", "<p>답글이 있는 댓글은 서비스 정책상 삭제할 수 없습니다.</p>", { confirmText: '확인' });
+        return;
     }
-    // ------------------------------------------
 
     openModal("댓글 삭제", "<p>댓글을 정말 삭제하시겠습니까?</p>", {
-        confirmText: '삭제',
-        cancelText: '취소',
+        confirmText: '삭제', cancelText: '취소',
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
-
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) return;
-                if (xhr.status < 200 || xhr.status >= 400) {
-                    openModal("오류", "<p>삭제 실패했습니다.</p>", { confirmText: '확인' });
-                    return;
-                }
-
                 const data = JSON.parse(xhr.responseText);
-                if (data.result === 'SUCCESS' && item) {
-                    item.style.transition = "opacity 0.3s ease";
-                    item.style.opacity = "0";
-                    setTimeout(() => {
-                        item.remove();
-                        // 모든 댓글이 사라졌을 때 '첫 댓글' 문구 표시 유지
-                        if (card && card.querySelectorAll('.comment-item').length === 0) {
-                            const listBody = card.querySelector('.comment-list');
-                            if (listBody) {
-                                listBody.innerHTML = '<p class="empty-msg" style="text-align:center; padding:1rem; color:#ccc;">첫 댓글을 남겨보세요.</p>';
-                            }
-                        }
-                    }, 300);
+                if (data.result === 'SUCCESS') {
+                    item.remove(); // 화면에서 즉시 제거
                 } else {
-                    openModal("오류", "<p>삭제 실패했습니다.</p>", { confirmText: '확인' });
+                    openModal("오류", "<p>삭제 권한이 없거나 실패했습니다.</p>", { confirmText: '확인' });
                 }
             };
             xhr.open('DELETE', `/item/review/comment/${commentId}`);
@@ -755,43 +791,43 @@ function loadComments(reviewId, container) {
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {
-        if (xhr.readyState !== XMLHttpRequest.DONE) {
-            return;
-        }
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+        if (xhr.status < 200 || xhr.status >= 400) return;
 
-        if (xhr.status < 200 || xhr.status >= 400) {
-            return;
-        }
         const comments = JSON.parse(xhr.responseText);
         const listBody = container.querySelector('.comment-list');
         if (!listBody) return;
 
-        // 목록 초기화 및 데이터 유무에 따른 메시지 처리 보존
-        listBody.innerHTML = comments.length === 0 ? '<p class="empty-msg" style="text-align:center; padding:1rem; color:#ccc;">첫 댓글을 남겨보세요.</p>' : '';
+        listBody.innerHTML = comments.length === 0
+            ? '<p class="empty-msg" style="text-align:center; padding:1rem; color:#ccc;">첫 댓글을 남겨보세요.</p>'
+            : '';
 
         comments.forEach(comment => {
             const commentItem = document.createElement('div');
-            // 대댓글 여부에 따른 클래스 부여 로직 보존
+            // parentId가 있으면 대댓글(reply) 클래스 부여
             commentItem.className = `comment-item ${comment.parentId ? 'reply' : ''}`;
             commentItem.dataset.commentId = comment.id;
 
-            // 작성자 본인 확인 로직 보존
-            const isMyComment = (sessionUserEmail === comment.userEmail);
+            // [보안 포인트] 세션 이메일과 댓글 이메일의 엄격한 비교
+            const isMyComment = (sessionUserEmail && sessionUserEmail === comment.userEmail);
 
             commentItem.innerHTML = `
                 <div class="comment-header">
-                    <strong class="author">${comment.userName || '익명'}</strong>
+                    <strong class="author">${comment.userName || '알 수 없는 사용자'}</strong>
                     <span class="date">${comment.createdAt.replace('T', ' ').substring(0, 16)}</span>
                 </div>
                 <p class="content">${comment.content}</p>
+                
                 <div class="comment-actions">
-                    ${!comment.parentId ? `<button class="btn-reply" onclick="showReplyForm(${reviewId}, ${comment.id}, this)">답글 달기</button>` : ''}
+                    ${(!comment.parentId) ? `<button class="btn-reply" onclick="showReplyForm(${reviewId}, ${comment.id}, this)">답글 달기</button>` : ''}
                 </div>
+
                 ${isMyComment ? `
                     <div class="owner-comment-btns">
                         <button onclick="showEditCommentForm(${comment.id}, this)">수정</button>
                         <button onclick="deleteComment(${comment.id})">삭제</button>
-                    </div>` : ''}`;
+                    </div>` : ''}
+            `;
             listBody.appendChild(commentItem);
         });
     };
@@ -812,40 +848,76 @@ function showReplyForm(reviewId, parentId, btnElement) {
     btnElement.parentElement.insertAdjacentHTML('afterend', formHtml);
 }
 
+
+//#region : 기존 submitComment
+// function submitComment(reviewId, parentId, btnElement) {
+//     const container = btnElement.closest('.comment-form') || btnElement.closest('.reply-form-wrapper');
+//     const input = container?.querySelector('textarea');
+//     if (!input) return;
+//     // 댓글 공백 제거 및 연속 공백 정리 로직 보존
+//     const content = input.value.trim().replace(/\s{2,}/g, ' ');
+//     // 글자 수 유효성 검사 보존
+//     if (content.length < 1 || content.length > 100) {
+//         openModal("입력 오류", `<p>댓글 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
+//         return;
+//     }
+//     const xhr = new XMLHttpRequest();
+//     const formData = new FormData();
+//     formData.append('reviewId', reviewId);
+//     formData.append('content', content);
+//     if (parentId) formData.append('parentId', parentId);
+//     xhr.onreadystatechange = () => {
+//         if (xhr.readyState !== XMLHttpRequest.DONE) {
+//             return;
+//         }
+//         if (xhr.status < 200 || xhr.status >= 400) {
+//             return;
+//         }
+//         const data = JSON.parse(xhr.responseText);
+//         if (data.result === 'SUCCESS') {
+//             input.value = '';
+//             // 답글 폼인 경우 폼 제거
+//             if (parentId && container.classList.contains('reply-form-wrapper')) {
+//                 container.remove();
+//             }
+//             const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
+//             const commentBox = reviewCard?.querySelector('.comment-section');
+//             if (commentBox) {
+//                 loadComments(reviewId, commentBox);
+//             }
+//         }
+//     };
+//     xhr.open('POST', '/item/review/comment');
+//     xhr.send(formData);
+// }
+//endregion
+// 댓글/답글 등록 로직]
 function submitComment(reviewId, parentId, btnElement) {
     const container = btnElement.closest('.comment-form') || btnElement.closest('.reply-form-wrapper');
     const input = container?.querySelector('textarea');
     if (!input) return;
-    // 댓글 공백 제거 및 연속 공백 정리 로직 보존
+
     const content = input.value.trim().replace(/\s{2,}/g, ' ');
-    // 글자 수 유효성 검사 보존
     if (content.length < 1 || content.length > 100) {
         openModal("입력 오류", `<p>댓글 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
         return;
     }
+
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
     formData.append('reviewId', reviewId);
     formData.append('content', content);
     if (parentId) formData.append('parentId', parentId);
+
     xhr.onreadystatechange = () => {
-        if (xhr.readyState !== XMLHttpRequest.DONE) {
-            return;
-        }
-        if (xhr.status < 200 || xhr.status >= 400) {
-            return;
-        }
-        const data = JSON.parse(xhr.responseText);
-        if (data.result === 'SUCCESS') {
-            input.value = '';
-            // 답글 폼인 경우 폼 제거
-            if (parentId && container.classList.contains('reply-form-wrapper')) {
-                container.remove();
-            }
-            const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
-            const commentBox = reviewCard?.querySelector('.comment-section');
-            if (commentBox) {
-                loadComments(reviewId, commentBox);
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+        if (xhr.status >= 200 && xhr.status < 400) {
+            const data = JSON.parse(xhr.responseText);
+            if (data.result === 'SUCCESS') {
+                input.value = '';
+                if (parentId) container.remove(); // 답글 폼 제거
+                const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
+                loadComments(reviewId, reviewCard.querySelector('.comment-section'));
             }
         }
     };
@@ -853,14 +925,55 @@ function submitComment(reviewId, parentId, btnElement) {
     xhr.send(formData);
 }
 
+//#region: 기존 renderReviewList
+// function renderReviewList(reviews) {
+//     const container = document.querySelector('.review-list-container');
+//     if (!container) return;
+//     const sessionEmail = document.getElementById('sessionUserEmail')?.value;
+//     container.innerHTML = reviews.length === 0 ? '<p class="empty-msg" style="text-align:center; padding:3rem; color:#999;">검색 결과가 없습니다.</p>' : '';
+//     reviews.forEach(review => {
+//         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+//
+//
+//         let imagesHtml = (review.images || []).map((img, idx) => {
+//             const imgSrc = img.startsWith('data:image') ? img : `/review-images/${img}`;
+//             return `
+//                 <div class="review-img-box" onclick="viewReviewImages(${review.id}, ${idx})" style="cursor:pointer; width: 6.25rem; height: 6.25rem; overflow: hidden; border-radius: 0.25rem;">
+//                     <img src="${imgSrc}" alt="리뷰이미지" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+//                 </div>`;
+//         }).join('');
+//
+//         if (imagesHtml) {
+//             imagesHtml = `<div class="review-contents-images" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom: 1rem;">${imagesHtml}</div>`;
+//         }
+//
+//         const isAuthor = (sessionEmail === review.userEmail);
+//
+//         const itemHtml = `
+//         <div class="review-item-card" data-review-id="${review.id}">
+//             <div class="review-card-header">
+//                 <div class="user-meta">
+//                     <img src="/assets/images/my/default_profile.png" class="user-avatar">
+//                     <div class="user-text">
+//                         <strong class="user-name">${review.userName}</strong>
+//                         <span class="review-date">${review.createdAt.substring(0, 10)}</span>
+//                     </div>
+//                 </div>
+//                 </div>
+//         </div>`;
+//         container.insertAdjacentHTML('beforeend', itemHtml);
+//     });
+// }
+//#endregion
 function renderReviewList(reviews) {
     const container = document.querySelector('.review-list-container');
     if (!container) return;
     const sessionEmail = document.getElementById('sessionUserEmail')?.value;
+
     container.innerHTML = reviews.length === 0 ? '<p class="empty-msg" style="text-align:center; padding:3rem; color:#999;">검색 결과가 없습니다.</p>' : '';
+
     reviews.forEach(review => {
         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-
 
         let imagesHtml = (review.images || []).map((img, idx) => {
             const imgSrc = img.startsWith('data:image') ? img : `/review-images/${img}`;
@@ -877,50 +990,27 @@ function renderReviewList(reviews) {
         const isAuthor = (sessionEmail === review.userEmail);
 
         const itemHtml = `
-            <div class="review-item-card" data-review-id="${review.id}" style="margin-bottom:2rem; border-bottom:0.0625rem solid #eee; padding-bottom:1.5rem;">
-                <div class="review-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div class="user-meta" style="display:flex; align-items:center; gap:0.75rem;">
-                        <img src="/assets/images/my/default_profile.png" class="user-avatar" alt="profile" style="width:2.5rem; height:2.5rem; border-radius:50%;">
-                        <div class="user-text">
-                            <strong class="user-name">${review.userName || '익명'}</strong>
-                            <span class="review-date" style="font-size:0.8rem; color:#999; margin-left:0.5rem;">
-                                ${review.createdAt ? review.createdAt.substring(0, 10).replace(/-/g, '.') : ''}
-                            </span>
-                            <div class="star-rating" style="color: #f1c40f;">${stars}</div>
-                        </div>
+        <div class="review-item-card" data-review-id="${review.id}">
+            <div class="review-card-header">
+                <div class="user-meta">
+                    <img src="/assets/images/my/default_profile.png" class="user-avatar">
+                    <div class="user-text">
+                        <strong class="user-name">${review.userName}</strong>
+                        <span class="review-date">${review.createdAt.substring(0, 10)}</span>
                     </div>
-                    ${isAuthor ? `
-                        <div class="owner-btns">
-                            <button type="button" class="btn-action-text" onclick="openEditReview(${review.id})" style="background:none; 
-                            border:none; color:#999; cursor:pointer; font-size:0.8rem;">수정</button>
-                            <button type="button" class="btn-action-text" onclick="deleteReview(${review.id})" style="background:none; 
-                            border:none; color:#999; cursor:pointer; font-size:0.8rem;">삭제</button>
-                        </div>` : ''}
                 </div>
-                
-                <div class="review-card-content" style="margin-top:1rem;">
-                    ${imagesHtml}
-                    <p class="content-text" style="margin: 1rem 0; line-height: 1.6;">${review.content}</p>
-                </div>
-                
-                <div class="review-card-footer" style="display:flex; gap:0.5rem;">
-                    <button type="button" class="btn-utility ${review.isLiked ? 'active' : ''}" onclick="toggleReviewLike(${review.id}, this)" style="padding: 0.3rem 0.6rem; border:0.0625rem solid #ddd; border-radius: 0.25rem; background: #fff; cursor: pointer;">
-                        도움 돼요 <span class="like-count">${review.usefulCount}</span>
-                    </button>
-                    <button type="button" class="btn-utility" onclick="toggleCommentSection(${review.id})" style="padding: 0.3rem 0.6rem; border: 0.0625rem solid #ddd; border-radius: 0.25rem; background: #fff; cursor: pointer;">댓글</button>
-                </div>
-                
-                <div class="comment-section" style="display: none; margin-top: 0.9375rem; padding: 0.9375rem; background: #f9f9f9; border-radius: 0.5rem;">
-                    <div class="comment-form" style="margin-bottom: 0.625rem; display: flex; gap: 0.3125rem;">
-                        <textarea class="comment-input" placeholder="댓글을 1자 이상 100자 이하로 작성해주세요." style="flex: 1; height: 2.5rem; 
-                        padding: 0.3125rem; resize: none; border:0.0625rem solid #ddd;"></textarea>
-                        <button onclick="submitComment(${review.id}, null, this)" style="padding: 0 0.9375rem; background: #333;
-                         color: #fff; border: none; border-radius: 0.25rem; cursor: pointer;">등록</button>
-                    </div>
-                    <div class="comment-list"></div>
-                </div>
+                ${isAuthor ? `
+                    <div class="owner-btns" style="display: flex; gap: 0.5rem;">
+                        <button onclick="openEditReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">수정</button>
+                        <button onclick="deleteReview(${review.id}, '${review.orderDate}')" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">삭제</button>
+                    </div>` : ''}
+            </div>
+            <div class="review-contents" style="margin-top: 1rem;">
+                <div class="stars" style="color: #ffcc00; margin-bottom: 0.5rem;">${stars}</div>
+                <p class="text" style="line-height: 1.5; color: #333; margin-bottom: 1rem;">${review.content}</p>
+                ${imagesHtml}
+            </div>
             </div>`;
-
         container.insertAdjacentHTML('beforeend', itemHtml);
     });
 }
