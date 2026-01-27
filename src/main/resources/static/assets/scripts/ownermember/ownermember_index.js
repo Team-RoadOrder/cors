@@ -8,8 +8,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnTodayClose = document.getElementById('btnTodayClose');
     const btnClose = document.getElementById('btnCloseOverlay');
 
+    //#region : 기존 코드
+    // if (overlay && btnTodayClose && btnClose) {
+    //     const checkOverlay = () => {
+    //         const hideExpiry = localStorage.getItem('mobileGuideHideExpiry');
+    //         const now = new Date().getTime();
+    //
+    //         // 32rem(512px) 이하일 때만 작동
+    //         if (window.innerWidth <= 512) {
+    //             if (!hideExpiry || now > parseInt(hideExpiry)) {
+    //                 overlay.style.display = 'flex';
+    //                 document.body.style.overflow = 'hidden';
+    //             }
+    //         } else {
+    //             overlay.style.display = 'none';
+    //             document.body.style.overflow = '';
+    //         }
+    //     };
+    //
+    //     // 초기 실행
+    //     checkOverlay();
+    //#endregion
     if (overlay && btnTodayClose && btnClose) {
+        /*추가:키워드가있는상태(검색 중)라면 오버레이를 강제로 띄우지 않음*/
+        const urlParams = new URLSearchParams(window.location.search);
+
         const checkOverlay = () => {
+            if (urlParams.get('keyword')) return;
+
             const hideExpiry = localStorage.getItem('mobileGuideHideExpiry');
             const now = new Date().getTime();
 
@@ -385,6 +411,7 @@ function deleteMember(email, name, loginUserEmail) {
 
 /**
  * 연락처 하이픈 자동 생성 함수
+ * 입력된 값에서 숫자가 아닌 모든 문자(하이픈 등)를 지우고 순수 숫자만 서버로 넘겨줍니다.
  */
 function autoHyphen(target) {
     target.value = target.value.replace(/[^0-9]/g, '')

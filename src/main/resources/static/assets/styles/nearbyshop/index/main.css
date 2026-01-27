@@ -56,7 +56,6 @@
 /* [구간 1] 1100px(68.75rem) ~ 768px(48rem)
    : 유리 헤더 3단 정렬, 지도 풀스크린, 카드 너비 최적화(10% 축소) */
 @media screen and (max-width: 68.75rem) {
-    /* 1. 헤더: 슬림 높이 및 글래스모피즘 적용 */
     header#header {
         display: flex;
         align-items: center;
@@ -263,7 +262,7 @@
     }
 }
 
-/* [구간 2] 768px ~ 640px : 태블릿 구간 */
+/* [구간 2] 768px ~ 640px : 태블릿 구간*/
 @media screen and (max-width: 48rem) {
     header#header div.left > ul.nav { gap: 0.8rem; }
     header#header ul.nav a { font-size: 0.95rem; }
@@ -282,7 +281,7 @@
     button#shop-header { top: 6.5rem; }
 }
 
-/* [구간 3] 640px ~ 375px : 모바일 구간 */
+/* [구간 3] 640px ~ 375px : 모바일 구간: 상호길어질때 eclipse처리 */
 @media screen and (max-width: 40rem) {
     header#header { display: none; }
 
@@ -347,10 +346,52 @@
         flex-direction: column;
         flex-shrink: 0;
         white-space: normal;
+        position: relative;
+    }
+    /* [구간 3] 모바일 미디어 쿼리 내부 수정 */
+        li.shop-detail .toggle-icon {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            display: inline-block;
+            transform-origin: 50% 50%;
+            transform: rotate(180deg);
+            transition: transform 0.05s linear;
+            font-size: 0.8rem;
+            color: #999;
+            padding: 0.2rem;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        li.shop-detail.active .toggle-icon {
+            transform: rotate(360deg);
+        }
+
+    li.shop-detail .firstLine {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        flex: 1;
+        min-width: 0;
+    }
+    li.shop-detail .name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 0 1 auto;
+    }
+    li.shop-detail .km {
+        font-size: 0.75rem;
+        color: #666;
+        white-space: nowrap;
+        flex-shrink: 0; /* 거리 정보 위치 보존 */
     }
 
     li.shop-detail.active {
-        width: 80vw; /* 활성화 시에는 가독성을 위해 넓게 유지 */
+        width: 80vw;
         min-width: 16rem;
     }
 
@@ -361,7 +402,7 @@
         transition: all 0.3s ease;
     }
     li.shop-detail .info-body > .address{
-        font-size: 0.875rem;
+        font-size: 1rem;
     }
 
     li.shop-detail.active .info-body {
@@ -370,5 +411,13 @@
         margin-top: 0.8rem;
         border-top: 1px solid rgba(0, 0, 0, 0.05);
         padding-top: 0.8rem;
+    }
+    li.shop-detail .info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 0.5rem;
+        box-sizing: border-box;
     }
 }

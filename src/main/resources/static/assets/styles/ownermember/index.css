@@ -311,105 +311,100 @@
    [1] 32rem(512px) 이하: 모바일 전용 (375px 접속 시간 노출)
    ============================================================ */
 @media screen and (max-width: 32rem) {
-    /* 1. 데스크톱 UI 요소 제거 및 그리드 해제 */
-    body #header, body #nav, body #toggleNav, body #owner-header,
-    body .admin-title, body .btn-group, body .filter-group, body .manage-btns {
-        display: none;
-    }
-
     body #main {
         display: flex;
         flex-direction: column;
         align-items: center;
         padding-top: 2rem;
         width: 100%;
-        margin: 0 auto;
-        grid-template-columns: none;
+        margin: 0; /* 좌우 마진 제거 */
+        box-sizing: border-box;
     }
 
     body .sections {
         width: 100%;
-        margin: 0 auto;
-        padding: 0 0.5rem; /* 패딩 최소화로 내부 표 공간 확보 */
+        margin: 0;
+        padding: 0; /* 외부 패딩을 0으로 설정하여 표가 끝까지 차게 함 */
         display: flex;
         flex-direction: column;
         align-items: center;
         box-sizing: border-box;
     }
 
-    /* 2. 검색창 중앙 정렬 */
+    /* 2. 표를 감싸는 wrapper에서 여백 제거 */
+    body .table-wrapper {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center; /* 내부 표를 중앙으로 */
+    }
+
+    body .admin-table {
+        width: 100%; /* 부모 너비에 꽉 맞춤 */
+        margin: 0 auto;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border-spacing: 0; /* 셀 간격 제거 */
+    }
+
+    /* 3. 375px(모바일) 최적화 비율 재조정 (합계 100%) */
+    /* 너비 합이 100%가 되도록 정밀 조정하여 쏠림 현상 방지 */
+    body .admin-table th:nth-child(1) { width: 18%; } /* 이름 */
+    body .admin-table th:nth-child(2) { width: 34%; } /* 이메일 */
+    body .admin-table th:nth-child(3) { width: 16%; } /* 권한 */
+    body .admin-table th:nth-child(4) { width: 16%; } /* 입사일 */
+    body .admin-table th:nth-child(5) { width: 16%; } /* 마지막접속 */
+
+    body .admin-table th,
+    body .admin-table td {
+        padding: 1rem 0; /* 좌우 패딩을 0으로 하여 텍스트 겹침 방지 */
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* 4. 검색창 너비 및 중앙 정렬 */
     body .admin-header {
         width: 100%;
+        display: flex;
         justify-content: center;
-        padding-bottom: 2rem;
+        padding: 0 1rem 2rem 1rem;
         border: none;
+        box-sizing: border-box;
     }
-
     body .search-box {
-        width: 95%;
+        width: 100%;
         max-width: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
     }
-
     body .search-input {
+        width: 100%;
+        box-sizing: border-box;
         border: 1px solid #ccc;
         border-radius: 0.5rem;
         padding: 0.7rem 1rem;
         font-size: 0.9rem;
+        outline: none;
     }
-
-    /* 3. [열 최적화] 상태 대신 '마지막 접속' 노출 (총 5개 열) */
-    /* 상태(6번째)와 관리(7번째) 열을 숨김 */
-    body .admin-table th:nth-child(6), body .admin-table td:nth-child(6),
-    body .admin-table th:nth-child(7), body .admin-table td:nth-child(7) {
-        display: none;
-    }
-
-    /* 4. 표 속성: 언제나 흰색 배경 및 줄바꿈 차단 */
-    body .table-wrapper {
-        width: 100%;
-        overflow-x: hidden;
-        /*background-color: #fff;*/
-    }
-
-    body .admin-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-        /*background-color: #fff;*/
-    }
-
-    /* 375px 맞춤 비율 (이름/이메일/권한/입사일/마지막접속) */
-    body .admin-table th:nth-child(1) { width: 22%; }
-    body .admin-table th:nth-child(2) { width: 30%; }
-    body .admin-table th:nth-child(3) { width: 14%; }
-    body .admin-table th:nth-child(4) { width: 18%; }
-    body .admin-table th:nth-child(5) { width: 18%; } /* 마지막접속 노출 */
-
-    body .admin-table th {
-        background-color: #eee;
-        font-size: 0.72rem;
-        padding: 0.8rem 0.1rem;
-        color: #fff;
-        font-weight: 600;
+    .search-box button {
+        position: absolute;
+        right: 0.5rem; /* 인풋창 우측에서 살짝 띄움 */
+        top: 95%;
+        transform: translateY(-50%); /* 버튼 자체를 세로 정렬 */
+        background: none;
         border: none;
-        white-space: nowrap;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        display: flex; /* 내부 아이콘 정렬을 위해 flex 사용 */
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        height: 100%; /* 부모(search-box) 높이를 따라가서 기준을 잡음 */
     }
 
-    body .admin-table td {
-        /*background-color: #fff; !* 표 내부 흰색 고정 *!*/
-        font-size: 0.7rem;
-        padding: 1rem 0.1rem;
-        text-align: center;
-        border-bottom: 1px solid #eee;
-        white-space: nowrap; /* 줄바꿈 절대 방지 */
-        overflow: hidden;
-        text-overflow: ellipsis; /* 넘치면 ... */
-        color: #495057;
-    }
-
-    body .sections {
-        padding-bottom: 8rem;
-    }
 }
 
 /* ============================================================
@@ -541,6 +536,7 @@
     body .table-wrapper {
         width: 100%;
         overflow-x: hidden;
+        white-space: nowrap;
         /*background-color: #fff;*/
     }
 

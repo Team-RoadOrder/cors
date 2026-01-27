@@ -112,15 +112,29 @@
     padding: 0.2rem;
     background-color: #eaeaea;
 }
-.toggle-icon {
-    font-size: 0.8rem;
-    color: #888;
-    transition: transform 0.3s;
+/*.toggle-icon {*/
+/*    font-size: 0.8rem;*/
+/*    color: #888;*/
+/*    transition: transform 0.3s;*/
 
-}
-.shop-detail.active .toggle-icon {
+/*}*/
+/*.shop-detail.active .toggle-icon {*/
+/*    transform: rotate(180deg);*/
+/*    transition-property: transform;*/
+/*}*/
+
+/* 1. 기본 상태: 트랜지션 대상을 transform으로 한정하고 초기 상태를 명시 */
+li.shop-detail .toggle-icon {
+    display: inline-block;
     transform: rotate(180deg);
-    transition-property: transform;
+    transition: transform 0.3s ease-in-out; /* 'all' 대신 'transform'만 지정 */
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/*활성화 상태: 180도 회전만 수행합니다. */
+li.shop-detail.active .toggle-icon {
+    transform: rotate(360deg);
 }
 
 .detail-link {

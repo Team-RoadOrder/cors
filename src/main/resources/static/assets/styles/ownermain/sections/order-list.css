@@ -444,7 +444,7 @@
 
     #shop-info > #bgUpdateBtn {
         position: absolute;
-        top:11rem;
+        top: 11rem;
         right: 1rem;
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
@@ -543,6 +543,35 @@
         flex-direction: column;
         align-items: center;
     }
+
+    /* 1. 상품명(title) 말줄임 핵심 설정 */
+    #main .sections #items .item-list .itemTitle .title {
+        display: block;
+        width: 100%;
+        padding-right: 0.75rem;
+        max-width: 8.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 500;
+        font-size: 1rem;
+        border: none;
+        background: transparent;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0.25rem;
+        box-sizing: border-box;
+    }
+
+    /*  상품명 정보를 담는 컨테이너 보정 */
+    #main .sections #items .item-list .itemTitle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+        flex: 1;
+    }
+
 
     #items .item-list, #items .res-list, #items .order-list {
         display: none;
@@ -669,8 +698,9 @@
     #main .sections #items .order-list {
         min-height: auto;
         border-radius: 0;
-        margin-top:0.8rem;
+        margin-top: 0.8rem;
     }
+
     #main .sections #items .order-list .table,
     #main .sections #items .order-list .tbody,
     #main .sections #items .order-list tr.list-colum,
@@ -693,12 +723,12 @@
         box-sizing: border-box;
     }
 
+    /*1월26일수정*/
     #main .sections #items .order-list .tbody .list-colum {
         display: grid;
         width: 94%;
         margin: 0 auto 1.2rem auto;
-        /* 버튼 공간(5rem)을 확실히 보장하고 나머지를 이름이 쓰도록 설정 */
-        grid-template-columns: 5.5rem 1fr 4.5rem;
+        grid-template-columns: 5.5rem minmax(0, 1fr) 4.5rem;
         grid-template-areas:
         "img title status"
         "img price status"
@@ -710,7 +740,7 @@
         border-radius: 0.8rem;
         background: #fff;
         box-sizing: border-box;
-        align-items: start; /* 위쪽 정렬 기준 */
+        align-items: start;
     }
 
     #main .order-list .tbody tr.list-colum td {
@@ -747,20 +777,22 @@
         flex-shrink: 0;
     }
 
-    .order-list td.itemName {
+    /*1월26일수정*/
+    #main .sections #items .order-list .tbody .list-colum td.itemName {
         grid-area: title;
-        font-size: 1.05rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #4e8bbc;
-        /* 텍스트 고정 및 말줄임 처리 핵심 코드 */
-        display: block;            /* 또는 -webkit-box */
-        white-space: nowrap;       /* 줄바꿈 금지 (한 줄 제한) */
-        overflow: hidden;          /* 넘치는 부분 숨김 */
-        text-overflow: ellipsis;   /* 넘치면 ... 표시 */
 
-        /* 그리드 내에서 자기 영역을 넘지 못하도록 제한 */
-        width: 0;
-        min-width: 100%;           /* 부모 컬럼 너비에 맞춤 */
+        /* 핵심: block 설정과 함께 너비의 한계를 명확히 지정 */
+        display: block;
+        width: 100%;
+        min-width: 0; /* 그리드 내부에서 유연하게 줄어들게 함 */
+        max-width: 100%; /* 부모 영역을 절대 넘지 않음 */
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .order-list td.price {
@@ -787,7 +819,7 @@
         color: #888;
         white-space: normal;
         margin-top: 0.8rem;
-        margin-bottom:0.5rem;
+        margin-bottom: 0.5rem;
         padding-top: 0.5rem;
     }
 
