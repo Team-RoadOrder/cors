@@ -18,26 +18,6 @@ public class OwnerMemberService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Transactional
-//#region : 기존 add
-//    public RegisterResult addMember(RegisterEntity member) {
-//        if (!OwnerMemberValidator.validateEmail(member.getEmail()) ||
-//                !OwnerMemberValidator.validateName(member.getName()) ||
-//                !OwnerMemberValidator.validatePhone(member.getPhone()) ||
-//                !OwnerMemberValidator.validatePassword(member.getPassword())) {
-//
-//            return RegisterResult.FAILURE; // 형식이 맞지 않으면 FAILURE 반환
-//        }
-//        if (this.registerMapper.selectByEmail(member.getEmail()) != null) {
-//            return RegisterResult.FAILURE_EMAIL_DUPLICATE;
-//        }
-//        member.setPassword(encoder.encode(member.getPassword()));
-//
-//
-//        return this.registerMapper.insertMember(member) > 0
-//                ? RegisterResult.SUCCESS
-//                : RegisterResult.FAILURE;
-//    }
-//#endregion
     public RegisterResult addMember(RegisterEntity member,String loginUserEmail, Integer loginUserLevel) {
 
         //최고관리자 확인
@@ -73,28 +53,6 @@ public class OwnerMemberService {
         }
         return this.registerMapper.selectMembersByOwner(ownerEmail, level, keyword);
     }
-//#region : 기존 modify
-//    @Transactional
-//    public RegisterResult modifyMember(String email, String name, Integer level, String currentPassword) {
-//        RegisterEntity dbMember = this.registerMapper.selectByEmail(email);
-//
-//        // [수정 1] matches 사용 (순서: 평문, 암호화된문자열)
-//        if (!encoder.matches(currentPassword, dbMember.getPassword())) {
-//            return RegisterResult.FAILURE; // 비밀번호 불일치
-//        }
-//
-//        if (!OwnerMemberValidator.validateName(name)) {
-//            return RegisterResult.FAILURE;
-//        }
-//
-//        dbMember.setName(name);
-//        dbMember.setLevel(level);
-//
-//        return this.registerMapper.updateMember(dbMember) > 0
-//                ? RegisterResult.SUCCESS
-//                : RegisterResult.FAILURE;
-//    }
-    //#endregion
 @Transactional
 public RegisterResult modifyMember(String email, String name, Integer level, String currentPassword, String loginUserEmail, Integer loginUserLevel) {
     // 1. 최고관리자 권한 확인
@@ -123,26 +81,6 @@ public RegisterResult modifyMember(String email, String name, Integer level, Str
             ? RegisterResult.SUCCESS
             : RegisterResult.FAILURE;
 }
-
-    //#region: 기존 remove
-//    @Transactional
-//    public RegisterResult removeMember(String ownerEmail,String targetEmail ) {
-//        // 본인 삭제 방지 (화면에 없더라도 API 직접 호출 등을 차단)
-////        if (ownerEmail.equals(targetEmail)) {
-////            return RegisterResult.FAILURE;
-////        }
-//        //삭제 대상조회
-//        RegisterEntity targetMember = this.registerMapper.selectByEmail(targetEmail);
-//
-//        //내 멤버가 아니면 삭제 불가 :관리자가 특정 직원/멤버를 해고/삭제
-//        if (targetMember == null || !targetMember.getOwnerEmail().equals(ownerEmail)) {
-//            return RegisterResult.FAILURE;
-//        }
-//        return this.registerMapper.delete(targetMember) > 0
-//                ? RegisterResult.SUCCESS
-//                : RegisterResult.FAILURE;
-//    }
-    //#endregion
 @Transactional
 public RegisterResult removeMember(String targetEmail, String loginUserEmail, Integer loginUserLevel) {
     // 최고 관리자 권한 확인 및 본인 삭제 방지

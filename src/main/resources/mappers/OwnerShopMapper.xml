@@ -310,6 +310,7 @@
         si.`created_at`       AS `createdAt`,
         si.`updated_at`       AS `updateAt`,
         si.`deleted_at`       AS `deletedAt`,
+        info.`shop_time`      AS `shopTime`,
         (SELECT img.`image_path`
         FROM `cors`.`shop_item_images` img
         WHERE img.`product_id` = si.`id`

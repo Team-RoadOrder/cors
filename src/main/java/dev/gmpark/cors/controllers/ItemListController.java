@@ -3,7 +3,6 @@ package dev.gmpark.cors.controllers;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.services.ItemService;
-import dev.gmpark.cors.services.MainService;
 import dev.gmpark.cors.vos.PageVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

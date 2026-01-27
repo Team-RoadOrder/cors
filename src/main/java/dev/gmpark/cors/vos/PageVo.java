@@ -14,7 +14,6 @@ public class PageVo {
     private final  int totalCount;
     private final int requestPage;
     private final int dbOffset;
-    // PageVo.java
 
     public PageVo(int requestPage, int totalCount) {
         this.requestPage = requestPage;

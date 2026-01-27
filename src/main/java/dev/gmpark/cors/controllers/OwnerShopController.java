@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/owner")
-@RequiredArgsConstructor // [중요] final이 붙은 필드(Service)를 자동으로 주입해줍니다.
+@RequiredArgsConstructor
 public class OwnerShopController {
 
     private final OwnerShopService ownerShopService; // 서비스 연결
@@ -31,7 +31,7 @@ public class OwnerShopController {
             Model model
     ) throws IOException {
 
-        // 1. 로그인 검증
+
         if (sessionUser == null) {
             return "redirect:/login";
         }
@@ -40,30 +40,29 @@ public class OwnerShopController {
         }
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
         if (shopInfo == null) {
-            // URL 뒤에 파라미터를 붙여서 리다이렉트
+
             return "redirect:/owner?alert=noshop";
         }
         if ( sessionUser.getLevel()==2 || sessionUser.getLevel() == 1) {
             return "redirect:/owner?alert=noauth";
         }
-        /*레벨이 2거나1인경우에는 권한없음으로  ownermain.js에 로직짜기 */
+
         model.addAttribute("shop", shopInfo);
         return "ownershop/ownershop";
 
 
     }
 
-    // [수정] POST 요청 처리 부분
     @RequestMapping(value = "/shop", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody // [중요] HTML 페이지 이동이 아니라, 결과 데이터(JSON 문자열)만 리턴한다는 뜻
+    @ResponseBody
     public  Map<String, Object>  postOwnerShop(
-            ShopItemEntity shopItem, // HTML form의 name 속성과 Entity 필드명이 같으면 자동 매핑
+            ShopItemEntity shopItem,
             @RequestParam(value = "images", required = false) MultipartFile[] images, // 이미지 배열 받기,
             @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser
     ) {
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
         shopItem.setShopId(shopInfo.getShopId());
-        // 서비스에게 일 시키기 (DB 저장 + 파일 저장)
+
         CommonResult result = ownerShopService.registerShopItem(shopItem, images);
         Map<String, Object> response = new HashMap<>();
         response.put("result", result.name());

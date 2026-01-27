@@ -9,27 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnTodayClose = document.getElementById('btnTodayClose');
     const btnClose = document.getElementById('btnCloseOverlay');
 
-    //#region : 기존 코드
-    // if (overlay && btnTodayClose && btnClose) {
-    //     const checkOverlay = () => {
-    //         const hideExpiry = localStorage.getItem('mobileGuideHideExpiry');
-    //         const now = new Date().getTime();
-    //
-    //         // 32rem(512px) 이하일 때만 작동
-    //         if (window.innerWidth <= 512) {
-    //             if (!hideExpiry || now > parseInt(hideExpiry)) {
-    //                 overlay.style.display = 'flex';
-    //                 document.body.style.overflow = 'hidden';
-    //             }
-    //         } else {
-    //             overlay.style.display = 'none';
-    //             document.body.style.overflow = '';
-    //         }
-    //     };
-    //
-    //     // 초기 실행
-    //     checkOverlay();
-    //#endregion
     if (overlay && btnTodayClose && btnClose) {
         /*추가:키워드가있는상태(검색 중)라면 오버레이를 강제로 띄우지 않음*/
         const urlParams = new URLSearchParams(window.location.search);
@@ -162,36 +141,6 @@ function getInit(str) {
     return result;
 }
 
-//#region:기존 filterTable
-/**
- * 실시간 검색 필터링 함수
- */
-// function filterTable() {
-//     const searchInput = document.querySelector('.search-input');
-//     const keyword = searchInput.value.toLowerCase();
-//     const rows = document.querySelectorAll('.member-row');
-//     const keywordInit = getInit(keyword); // 입력값의 초성
-//
-//     rows.forEach(row => {
-//         const name = row.getAttribute('data-name') || "";
-//         const email = row.getAttribute('data-email') || "";
-//
-//         // 1. 일반 텍스트 포함 여부 (이메일 등)
-//         const isMatch = name.toLowerCase().includes(keyword) || email.toLowerCase().includes(keyword);
-//
-//         // 2. 초성 일치 여부 (김갑수 -> ㄱㄱㅅ)
-//         const nameInit = getInit(name);
-//         const isInitMatch = nameInit.includes(keywordInit);
-//
-//         // 결과에 따라 행 표시/숨김
-//         if (isMatch || isInitMatch) {
-//             row.style.display = "";
-//         } else {
-//             row.style.display = "none";
-//         }
-//     });
-// }
-//#endregion
 /**
  * 실시간 검색 필터링 함수 (오류 수정 및 결과 없음 안내 포함)
  */

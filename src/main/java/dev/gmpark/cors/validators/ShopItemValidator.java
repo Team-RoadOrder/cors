@@ -7,13 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @UtilityClass
 public class ShopItemValidator {
 
-    // 정규식 상수 정의 (자바 문자열 이스케이프 '\\' 주의)
-    // 이름: 한글, 영문, 숫자, 공백, 소괄호(), 대괄호[], 하이픈-, 언더바_, 앤퍼샌드&, 슬래시/
     public static final String NAME_REGEX = "^[가-힣a-zA-Z0-9\\s()\\[\\]\\-_&/]+$";
 
 

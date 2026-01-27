@@ -57,7 +57,9 @@
 
                     <div class="tag-area">
                         <span class="tag">예약가능</span>
-                        <span class="tag">영업 중</span>
+                        <span class="tag open" th:if="${item.isOpen}">영업중</span>
+                        <span class="tag closed" th:unless="${item.isOpen}" style="color: #ffffff; background-color: #fd6464">방문시 부재중</span>
+                    </span>
                     </div>
                 </div>
             </a>

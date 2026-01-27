@@ -38,7 +38,6 @@ public class ShopListController {
 
         String userAddress = (sessionUser != null) ? sessionUser.getAddress() : "";
 
-        // [수정] sort 파라미터 전달
         ShopInfoEntity[] shops = this.mainService.getAllShopByPage(pageVo, userAddress, sort);
 
         modelAndView.addObject("shops", shops);

@@ -19,14 +19,3 @@ public class EmailTokenEntity {
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 }
-/*
-CREATE TABLE `cors`.`email_tokens` (
-        `email` VARCHAR(50),
-        `code` VARCHAR(6),
-        `salt` VARCHAR(255),
-        `is_verified` BOOLEAN,
-        `is_used` BOOLEAN,
-        `created_at` DATETIME,
-        `expires_at` DATETIME,
-CONSTRAINT PRIMARY KEY (`email`,`code`,`salt`)
-)*/

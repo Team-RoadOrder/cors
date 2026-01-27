@@ -12,7 +12,6 @@ public class ReviewStatsDto {
         this.ratingCounts = ratingCounts;
     }
 
-    // Getter (데이터를 꺼낼 때 사용)
     public double getAverageRating() { return averageRating; }
     public int getTotalCount() { return totalCount; }
     public int[] getRatingCounts() { return ratingCounts; }

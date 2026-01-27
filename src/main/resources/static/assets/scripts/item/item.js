@@ -469,36 +469,6 @@ const toggleLikeShop = (shopId) => {
     xhr.send(formData);
 }
 
-
-
-
-//리뷰삭제
-//#region: 기존 deleteReview
-// function deleteReview(reviewId) {
-//     openModal("리뷰 삭제", `<p>정말 이 후기를 삭제하시겠습니까?</p>`, {
-//         confirmText: '삭제',
-//         cancelText: '취소',
-//         onConfirm: () => {
-//             const xhr = new XMLHttpRequest();
-//             xhr.onreadystatechange = () => {
-//                 if (xhr.readyState !== XMLHttpRequest.DONE) {
-//                     return;
-//                 }
-//                 if (xhr.status < 200 || xhr.status >= 400) {
-//                     return;
-//                 }
-//                 const response = JSON.parse(xhr.responseText);
-//                 if (response.result === 'SUCCESS') {
-//                     location.reload();
-//                 }
-//             };
-//             xhr.open('DELETE', `/item/review/${reviewId}`);
-//             xhr.send();
-//         }
-//     });
-// }
-//#endregion
-// [정규화] 리뷰 삭제 함수
 function deleteReview(reviewId) {
     const finalContent = `
         <div style="text-align: center;">
@@ -849,48 +819,6 @@ function showReplyForm(reviewId, parentId, btnElement) {
 }
 
 
-//#region : 기존 submitComment
-// function submitComment(reviewId, parentId, btnElement) {
-//     const container = btnElement.closest('.comment-form') || btnElement.closest('.reply-form-wrapper');
-//     const input = container?.querySelector('textarea');
-//     if (!input) return;
-//     // 댓글 공백 제거 및 연속 공백 정리 로직 보존
-//     const content = input.value.trim().replace(/\s{2,}/g, ' ');
-//     // 글자 수 유효성 검사 보존
-//     if (content.length < 1 || content.length > 100) {
-//         openModal("입력 오류", `<p>댓글 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
-//         return;
-//     }
-//     const xhr = new XMLHttpRequest();
-//     const formData = new FormData();
-//     formData.append('reviewId', reviewId);
-//     formData.append('content', content);
-//     if (parentId) formData.append('parentId', parentId);
-//     xhr.onreadystatechange = () => {
-//         if (xhr.readyState !== XMLHttpRequest.DONE) {
-//             return;
-//         }
-//         if (xhr.status < 200 || xhr.status >= 400) {
-//             return;
-//         }
-//         const data = JSON.parse(xhr.responseText);
-//         if (data.result === 'SUCCESS') {
-//             input.value = '';
-//             // 답글 폼인 경우 폼 제거
-//             if (parentId && container.classList.contains('reply-form-wrapper')) {
-//                 container.remove();
-//             }
-//             const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
-//             const commentBox = reviewCard?.querySelector('.comment-section');
-//             if (commentBox) {
-//                 loadComments(reviewId, commentBox);
-//             }
-//         }
-//     };
-//     xhr.open('POST', '/item/review/comment');
-//     xhr.send(formData);
-// }
-//endregion
 // 댓글/답글 등록 로직]
 function submitComment(reviewId, parentId, btnElement) {
     const container = btnElement.closest('.comment-form') || btnElement.closest('.reply-form-wrapper');
@@ -925,46 +853,6 @@ function submitComment(reviewId, parentId, btnElement) {
     xhr.send(formData);
 }
 
-//#region: 기존 renderReviewList
-// function renderReviewList(reviews) {
-//     const container = document.querySelector('.review-list-container');
-//     if (!container) return;
-//     const sessionEmail = document.getElementById('sessionUserEmail')?.value;
-//     container.innerHTML = reviews.length === 0 ? '<p class="empty-msg" style="text-align:center; padding:3rem; color:#999;">검색 결과가 없습니다.</p>' : '';
-//     reviews.forEach(review => {
-//         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-//
-//
-//         let imagesHtml = (review.images || []).map((img, idx) => {
-//             const imgSrc = img.startsWith('data:image') ? img : `/review-images/${img}`;
-//             return `
-//                 <div class="review-img-box" onclick="viewReviewImages(${review.id}, ${idx})" style="cursor:pointer; width: 6.25rem; height: 6.25rem; overflow: hidden; border-radius: 0.25rem;">
-//                     <img src="${imgSrc}" alt="리뷰이미지" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
-//                 </div>`;
-//         }).join('');
-//
-//         if (imagesHtml) {
-//             imagesHtml = `<div class="review-contents-images" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom: 1rem;">${imagesHtml}</div>`;
-//         }
-//
-//         const isAuthor = (sessionEmail === review.userEmail);
-//
-//         const itemHtml = `
-//         <div class="review-item-card" data-review-id="${review.id}">
-//             <div class="review-card-header">
-//                 <div class="user-meta">
-//                     <img src="/assets/images/my/default_profile.png" class="user-avatar">
-//                     <div class="user-text">
-//                         <strong class="user-name">${review.userName}</strong>
-//                         <span class="review-date">${review.createdAt.substring(0, 10)}</span>
-//                     </div>
-//                 </div>
-//                 </div>
-//         </div>`;
-//         container.insertAdjacentHTML('beforeend', itemHtml);
-//     });
-// }
-//#endregion
 function renderReviewList(reviews) {
     const container = document.querySelector('.review-list-container');
     if (!container) return;

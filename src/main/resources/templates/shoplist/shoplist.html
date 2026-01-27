@@ -50,7 +50,8 @@
                     <div class="time" th:text="${shop.shopTime}">영업중 10:00~22:00</div>
                     <div class="tag-area">
                         <span class="tag">예약 가능</span>
-                        <span class="tag">영업 중</span>
+                        <span class="tag open" th:if="${shop.isOpen}">영업 중</span>
+                        <span class="tag closed" th:unless="${shop.isOpen}" style="color: #ffffff; background-color: #fd6464">준비 중</span>
                     </div>
                 </div>
             </a>

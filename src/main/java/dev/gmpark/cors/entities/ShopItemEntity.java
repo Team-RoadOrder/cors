@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,30 +33,28 @@ public class ShopItemEntity {
     private int reviewCount; // 리뷰 수
     private String shopName; // 매장명 추가
 
+    // 영업중 여부위함
+    private String shopTime;
+    public boolean getIsOpen() {
+        if (this.shopTime == null || this.shopTime.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            String[] times = this.shopTime.split("[~-]");
+            if (times.length < 2) return false;
+
+            LocalTime now = LocalTime.now();
+            LocalTime startTime = LocalTime.parse(times[0].trim());
+            LocalTime endTime = LocalTime.parse(times[1].trim());
+
+            if (endTime.isAfter(startTime)) {
+                return !now.isBefore(startTime) && !now.isAfter(endTime);
+            } else {
+                return !now.isBefore(startTime) || !now.isAfter(endTime);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
-
-/*
-CREATE TABLE `cors`.`shop_items` (
-        `id`               BIGINT          NOT NULL AUTO_INCREMENT COMMENT 'PK',
-        `shop_id`          INT UNSIGNED    NOT NULL COMMENT '매장 PK (FK)',
-        `item_name`        VARCHAR(100)    NOT NULL COMMENT '상품명',
-        `color`            VARCHAR(50)     NOT NULL COMMENT '색상',
-        `size`             VARCHAR(50)     NOT NULL COMMENT '사이즈',
-        `price`            BIGINT          NOT NULL DEFAULT 0 COMMENT '가격',
-        `style`            VARCHAR(20)          NULL DEFAULT '없음' COMMENT '스타일',
-        `main_category`    VARCHAR(50)     NOT NULL COMMENT '대분류',
-        `sub_category`     VARCHAR(50)     NOT NULL COMMENT '중분류',
-        `detail_category`  VARCHAR(50)     NULL     COMMENT '소분류 (선택)',
-
-        `main_image_index` INT             NOT NULL DEFAULT 0 COMMENT '메인 이미지 인덱스 번호',
-
-        `created_at`       DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-        `updated_at`       DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '수정일',
-        `deleted_at`       DATETIME        NULL     COMMENT '삭제일 (Soft Delete용)',
-
-        PRIMARY KEY (`id`),
-        CONSTRAINT `fk_items_shop_id`
-        FOREIGN KEY (`shop_id`) REFERENCES `cors`.`shop_info` (`shop_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='상품 정보';*/

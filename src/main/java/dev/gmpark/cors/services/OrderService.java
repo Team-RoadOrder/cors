@@ -34,11 +34,6 @@ public class OrderService {
     private static final long DELIVERY_FEE = 3000;
     private static final double POINT_EARN_RATE = 0.02; 
 
-    // ======================================================================
-    // [정규화 & 유효성 검사 메서드]
-    // ArticleService 처럼 비즈니스 로직 진입 전에 데이터를 깨끗하게 만듭니다.
-    // ======================================================================
-
     /**
      * 주문 데이터 정규화 (Normalization)
      * - 입력값이 없으면 유저 정보로 채움
@@ -86,10 +81,6 @@ public class OrderService {
         if (quantity > 99) return 99;
         return quantity;
     }
-    
-    // ======================================================================
-    // [비즈니스 로직]
-    // ======================================================================
 
     @Transactional
     public CommonResult processSingleOrder(RegisterEntity user, SingleOrderDto dto) {
@@ -268,10 +259,6 @@ public class OrderService {
 
         return CommonResult.FAILURE;
     }
-
-    // ======================================================================
-    // [단순 조회 및 페이지 데이터 반환 메서드]
-    // ======================================================================
 
     public List<PaymentItemDto> getPaymentItemsForSingleOrder(Long itemId, String size) {
         List<PaymentItemDto> items = new ArrayList<>();

@@ -6,7 +6,7 @@ import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.services.MainService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +17,9 @@ import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/")
+@RequiredArgsConstructor
 public class MainController {
     private final MainService mainService;
-
-    @Autowired
-    public MainController(MainService mainService) {
-        this.mainService = mainService;
-    }
 
     @RequestMapping(value = "/main")
     public String getMain(

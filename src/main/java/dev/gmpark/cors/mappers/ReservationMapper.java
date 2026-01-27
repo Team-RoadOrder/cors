@@ -13,9 +13,14 @@ public interface ReservationMapper {
 
     // 예약 상품들 저장 (List로 받음)
     int insertReservationItems(@Param("items") List<ReservationItemsEntity> items);
+
     List<ReservationItemVo> selectReservationsByEmail(@Param("email") String email);
+
     List<ReservationItemVo> selectReservationsByShopId(@Param("shopId") int shopId);
+
     int updateReservationStatus(@Param("reservationId") int reservationId, @Param("status") String status);
+
     int deleteReservationById(@Param("reservationId") int reservationId);
+
     ReservationItemVo selectReservationById(@Param("reservationId") int reservationId);
 }

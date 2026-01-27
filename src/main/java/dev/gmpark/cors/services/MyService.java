@@ -2,7 +2,6 @@ package dev.gmpark.cors.services;
 
 
 import dev.gmpark.cors.entities.RegisterEntity;
-import dev.gmpark.cors.entities.ReservationItemsEntity;
 import dev.gmpark.cors.mappers.*;
 import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.vos.LikeItemVo;
@@ -12,7 +11,6 @@ import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 

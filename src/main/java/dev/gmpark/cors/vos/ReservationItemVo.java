@@ -1,7 +1,6 @@
 package dev.gmpark.cors.vos;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 @Getter

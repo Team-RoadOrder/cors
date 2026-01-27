@@ -23,18 +23,3 @@ public class OrderEntity {
     private String addressDetail;
     private String request;
 }
-/*
-CREATE TABLE `cors`.`orders` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `user_email` VARCHAR(50) NOT NULL,
-    `total_price` BIGINT NOT NULL DEFAULT 0,
-    `status` VARCHAR(20) NOT NULL DEFAULT 'PENDING',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `receiver_name` VARCHAR(50),
-    `receiver_phone` VARCHAR(20),
-    `address` VARCHAR(255),
-    `address_detail` VARCHAR(255),
-    `request` VARCHAR(255),
-    PRIMARY KEY (`id`)
-);
-*/

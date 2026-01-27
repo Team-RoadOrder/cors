@@ -29,14 +29,11 @@ public class ReservationService {
     @Transactional // 예약과 상품 저장이 모두 성공하거나, 모두 실패해야 함
     public CommonResult registerReservation(ReservationDto dto, String userEmail) {
         LocalDateTime now = LocalDateTime.now();
-        
-        // 날짜 유효성 검사 (과거 날짜 예약 방지)
-        // 예약하려는 날짜(visitDate)가 현재 시간(now)보다 이전이면 실패
+
         if (dto.getVisitDate() == null || dto.getVisitDate().isBefore(now)) {
             return CommonResult.FAILURE;
         }
 
-        // 1. 예약 정보(Header) 만들기
         ReservationEntity reservation = ReservationEntity.builder()
                 .userEmail(userEmail)
                 .shopId(dto.getShopId()) // int -> Long 자동 변환 주의 (Entity가 Long이면 DTO도 Long 추천)
@@ -44,8 +41,7 @@ public class ReservationService {
                 .status("대기")
                 .createdAt(now) // 생성 시간 명시적 설정
                 .build();
-        // 2. 예약 insert 실행
-        // 여기서 useGeneratedKeys 덕분에 reservation.getId()에 값이 채워짐
+
         int insertCount = this.reservationMapper.insertReservation(reservation);
         if (insertCount == 0) return CommonResult.FAILURE;
 

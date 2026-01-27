@@ -16,7 +16,6 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RegisterService {
     private final RegisterMapper registerMapper;
     private final JavaMailSender mailSender;    // 메일 발송을 위한 의존성
@@ -42,13 +42,6 @@ public class RegisterService {
     private String naverClientId;
     @Value("${custom.property.naver-client-secret}")
     private String naverClientSecret;
-    @Autowired
-    public RegisterService(RegisterMapper registerMapper, JavaMailSender mailSender, SpringTemplateEngine templateEngine, EmailTokenMapper emailTokenMapper) {
-        this.registerMapper = registerMapper;
-        this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
-        this.emailTokenMapper = emailTokenMapper;
-    }
 
      @Transactional
      public RegisterResult register(RegisterEntity register, EmailTokenEntity emailToken) {
