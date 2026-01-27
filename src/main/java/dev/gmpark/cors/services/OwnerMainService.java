@@ -8,6 +8,7 @@ import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.validators.OwnerMemberValidator;
 import dev.gmpark.cors.validators.ShopItemValidator;
 import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
@@ -44,39 +45,64 @@ public class OwnerMainService {
 
     public String saveShopInfo(RegisterEntity user, ShopInfoEntity shopInfo) {
         shopInfo.setUserEmail(user.getEmail());
-
+        ShopInfoEntity existingShop = shopInfoMapper.selectShopByUserEmail(user.getEmail());
+        boolean isNewShop = (existingShop == null);
+        String nameRegex = "^[가-힣a-zA-Z0-9\\s]+$";
+        if (shopInfo.getShopName() == null || !shopInfo.getShopName().matches(nameRegex)) {
+            return "FAILURE"; // 매장 이름 형식이 맞지 않음
+        }
+        String timeRegex = "^\\d{2}:\\d{2}\\s*[~-]\\s*\\d{2}:\\d{2}$";
+        if (shopInfo.getShopTime() == null || !shopInfo.getShopTime().matches(timeRegex)) {
+            return "FAILURE";
+        }
+        if (shopInfo.getShopCategory() == null || shopInfo.getShopCategory().trim().isEmpty()) {
+            return "FAILURE";
+        }
+        String addressRegex = "^[가-힣a-zA-Z0-9\\s\\-\\(\\)\\[\\]\\.,]{2,100}$";
+        if (shopInfo.getShopAddress() == null || !shopInfo.getShopAddress().matches(addressRegex)) {
+            return "FAILURE"; // 주소 형식이 맞지 않음
+        }
+        if (shopInfo.getShopTel() == null || !OwnerMemberValidator.validatePhone(shopInfo.getShopTel())) {
+            return "FAILURE"; // 매장 전화번호 형식 오류
+        }
+        if (isNewShop) {
+            if (shopInfo.getProfileImageFile() == null || shopInfo.getProfileImageFile().isEmpty()) {
+                return "FAILURE";
+            }
+            if (shopInfo.getBackgroundImageFile() == null || shopInfo.getBackgroundImageFile().isEmpty()) {
+                return "FAILURE";
+            }
+        }
         try {
             MultipartFile profileFile = shopInfo.getProfileImageFile();
             if (profileFile != null && !profileFile.isEmpty()) {
                 String path = uploadFile(profileFile);
                 shopInfo.setProfileImage(path);
+            } else if (!isNewShop) {
+                // 수정인데 파일이 안 넘어왔으면 기존 이미지 경로 유지
+                shopInfo.setProfileImage(existingShop.getProfileImage());
             }
 
             MultipartFile backgroundFile = shopInfo.getBackgroundImageFile();
             if (backgroundFile != null && !backgroundFile.isEmpty()) {
                 String path = uploadFile(backgroundFile);
                 shopInfo.setBackgroundImage(path);
+            } else if (!isNewShop) {
+                // 수정인데 파일이 안 넘어왔으면 기존 이미지 경로 유지
+                shopInfo.setBackgroundImage(existingShop.getBackgroundImage());
             }
+
         } catch (IOException e) {
             e.printStackTrace();
-            return "FAILURE";
+            return "FAILURE"; // 파일 저장 중 에러
         }
-                // TODO: 적절하지않은 매장 정보가 들어올지 FAILURE를 반환해야함
-        ShopInfoEntity existingShop = shopInfoMapper.selectShopByUserEmail(user.getEmail());
         int result;
-        if (existingShop == null) {
+        if (isNewShop) {
             result = shopInfoMapper.insert(shopInfo);
         } else {
             shopInfo.setShopId(existingShop.getShopId());
-            if (shopInfo.getProfileImage() == null) {
-                shopInfo.setProfileImage(existingShop.getProfileImage());
-            }
-            if (shopInfo.getBackgroundImage() == null) {
-                shopInfo.setBackgroundImage(existingShop.getBackgroundImage());
-            }
             result = shopInfoMapper.update(shopInfo);
         }
-
         return result > 0 ? "SUCCESS" : "FAILURE";
     }
 

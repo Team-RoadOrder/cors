@@ -1,5 +1,5 @@
 #shop {
-    width: 100%; /* 너비 100%로 변경 */
+    width: 95%; /* 너비 100%로 변경 */
     max-width: 100%; /* 최대 너비 제한 해제 또는 100% */
     background-color: #fff;
     display: flex;

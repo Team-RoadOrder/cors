@@ -222,18 +222,118 @@ if (infoUpdateBtn && form ) {
                 const xhr = new XMLHttpRequest();
                 const formData = new FormData();
 
-                // 2. 텍스트 데이터 수동 추가 (append '키', '값')
-                // HTML의 id를 기준으로 값을 가져옵니다.
-                formData.append('shopName', document.getElementById('shopName_Input').value);
-                formData.append('shopTime', document.getElementById('time').value);
-                formData.append('shopCategory', document.getElementById('category').value);
-                formData.append('shopAddress', document.getElementById('address').value);
-                formData.append('shopTel', document.getElementById('tel').value);
+                const shopName = document.getElementById('shopName_Input').value;
+                const shopTime = document.getElementById('time').value;
+                const shopCategory = document.getElementById('category').value;
+                const shopAddress =  document.getElementById('address').value;
+                const shopTel = document.getElementById('tel').value
 
-                // 3. 파일 데이터 수동 추가
-                // 파일 인풋 요소 가져오기
+                const nameRegex = /^[가-힣a-zA-Z0-9\s]+$/;
+                if (!shopName || !nameRegex.test(shopName)) {
+                    openModal("WARN", `<p>매장 이름이 올바르지 않습니다.</p><p style="font-size:0.8em; color:#666;">(특수문자는 사용할 수 없습니다)</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { document.getElementById('shopName_Input').focus(); }
+                    });
+                    return;
+                }
+                const timeRegex = /^\d{2}:\d{2}\s*[~-]\s*\d{2}:\d{2}$/;
+                if (!shopTime || !timeRegex.test(shopTime)) {
+                    openModal("WARN", `<p>운영 시간 형식이 올바르지 않습니다.</p><p style="font-size:0.8em; color:#666;">(예: 09:00~22:00)</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { document.getElementById('time').focus(); }
+                    });
+                    return;
+                }
+                const validKeywords = ['스트릿', '미니멀', '댄디', '캐주얼', '빈티지', '모던', '스포티', '페미닌'];
+
+                const inputCats = shopCategory.split(',')
+                    .map(s => s.trim())
+                    .filter(s => s !== "");
+
+                // (2) 입력된 카테고리가 0개이거나 2개를 초과하는지 검사
+                if (inputCats.length === 0 || inputCats.length > 2) {
+                    openModal("WARN",
+                        `<p>카테고리는 <strong>1개 또는 2개</strong>만 입력 가능합니다.</p>
+                         <p style="font-size:0.8em; color:#666;">(예시: 미니멀,댄디)</p>`,
+                        {
+                            confirmText: '확인',
+                            onConfirm: () => { document.getElementById('category').focus(); }
+                        }
+                    );
+                    return;
+                }
+                const unknownCat = inputCats.find(cat => !validKeywords.includes(cat));
+
+                if (unknownCat) {
+                    openModal("WARN",
+                        `<p>'<strong>${unknownCat}</strong>'은(는) 사용할 수 없는 카테고리입니다.</p>
+                         <div style="font-size:0.8em; color:#666; margin-top:5px; text-align:left; background:#f9f9f9; padding:8px;">
+                            <strong>[허용된 카테고리]</strong><br>
+                            스트릿, 미니멀, 댄디, 캐주얼, <br>
+                            빈티지, 모던, 스포티, 페미닌
+                         </div>`,
+                        {
+                            confirmText: '확인',
+                            onConfirm: () => { document.getElementById('category').focus(); }
+                        }
+                    );
+                    return;
+                }
+                const addressRegex = /^[가-힣a-zA-Z0-9\s\-\(\)\[\]\.,]{2,100}$/;
+                if (!shopAddress || !addressRegex.test(shopAddress)) {
+                    openModal("WARN", `<p>주소 형식이 올바르지 않습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { document.getElementById('address').focus(); }
+                    });
+                    return;
+                }
+                const telRegex = /^0\d{1,2}-?\d{3,4}-?\d{4}$/;
+                if (!shopTel || !telRegex.test(shopTel)) {
+                    openModal("WARN", `<p>전화번호 형식이 올바르지 않습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => { document.getElementById('tel').focus(); }
+                    });
+                    return;
+                }
                 const profileInput = document.getElementById('profileImageInput');
                 const bgInput = document.getElementById('backgroundImageInput');
+
+                // 현재 화면에 보여지는 이미지 태그 가져오기 (기본 이미지인지 확인용)
+                const profileImgDisplay = document.getElementById('profileImg');
+                const bgImgDisplay = document.getElementById('backgroundImage');
+
+                // 1. 프로필 사진 검사
+                // 조건: (새 파일 선택 안 함) AND (현재 이미지가 'profile.png' 즉, 기본 이미지임)
+                // 주의: HTML에서 설정한 기본 이미지 파일명('profile.png')이 포함되어 있는지 확인
+                if (!profileInput.files[0] && profileImgDisplay.src.includes('profile.png')) {
+                    openModal("WARN", `<p>프로필 사진을 등록해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            // 모달 확인 후 바로 파일 선택창 띄워주기 (UX 향상)
+                            profileInput.click();
+                        }
+                    });
+                    return;
+                }
+
+                // 2. 배경 사진 검사
+                // 조건: (새 파일 선택 안 함) AND (현재 이미지가 'background.png' 즉, 기본 이미지임)
+                if (!bgInput.files[0] && bgImgDisplay.src.includes('background.png')) {
+                    openModal("WARN", `<p>배경 사진을 등록해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            // 모달 확인 후 바로 배경 수정 버튼 클릭 트리거
+                            document.getElementById('bgUpdateBtn').click();
+                        }
+                    });
+                    return;
+                }
+
+                formData.append('shopName', shopName );
+                formData.append('shopTime',  shopTime);
+                formData.append('shopCategory', shopCategory);
+                formData.append('shopAddress', shopAddress);
+                formData.append('shopTel', shopTel );
 
                 if (profileInput && profileInput.files[0]) {
                     formData.append('profileImageFile', profileInput.files[0]); // 이름 변경
