@@ -51,10 +51,21 @@ public class OwnerGraphController {
         modelAndView.setViewName("ownergraph/ownergraph");
         modelAndView.addObject("shop", shopInfo);
 
-        // 초기 데이터 로드 (SSR)
-        SalesStatusVo status = ownerGraphService.getWeeklyStatus(shopInfo.getShopId());
-        List<PaymentListVo> payments = ownerGraphService.getRecentPayments(shopInfo.getShopId());
-        List<TopProductVo> topProducts = ownerGraphService.getTopProducts(shopInfo.getShopId());
+
+        // authorizedId: 현재 로그인한 사용자가 정당하게 접근 가능한 매장의 식별자
+        int requestedId = shopInfo.getShopId();//실제로 DB에서 조회하고자 하는 매장의 식별자
+        Integer authorizedId = shopInfo.getShopId();//현재 로그인한 사용자가 정당하게 접근 가능한 매장의 식별자
+
+
+
+        //금주 매출 현황 및 증감 지표 분석
+        SalesStatusVo status = ownerGraphService.getWeeklyStatus(requestedId, authorizedId);
+
+        //해당 매장의 최근 결제 내역 (최신순)
+        List<PaymentListVo> payments = ownerGraphService.getRecentPayments(requestedId, authorizedId);
+
+        // 매출 상위 5개 제품 리스트 및 순위
+        List<TopProductVo> topProducts = ownerGraphService.getTopProducts(requestedId, authorizedId);
 
         modelAndView.addObject("status", status);
         modelAndView.addObject("payments", payments);
@@ -68,13 +79,21 @@ public class OwnerGraphController {
     @ResponseBody
     public List<SalesGraphVo> getDailyGraphData(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser) {
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
-        return ownerGraphService.getDailySales(shopInfo.getShopId());
+        int targetId = shopInfo.getShopId();//조회 대상(targetId)
+        Integer authId = shopInfo.getShopId();//보안 검증용(authId) ID
+
+        // 3. 서비스 호출 시 두 식별자를 함께 전달하여 '본인 매장 여부' 검증한 후 데이터를 반환
+        return ownerGraphService.getDailySales(authId,targetId);
     }
 
     @RequestMapping(value = "/graph/data/monthly", method = RequestMethod.GET)
     @ResponseBody
     public List<SalesGraphVo> getMonthlyGraphData(@SessionAttribute(value = "sessionUser") RegisterEntity sessionUser) {
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
-        return ownerGraphService.getMonthlySales(shopInfo.getShopId());
+        int targetShopId = shopInfo.getShopId();          // SQL 조회용 ID
+        Integer authorizedShopId = shopInfo.getShopId(); // 보안 검증용 ID
+
+        // 3. 두 인자를 모두 전달하여 서비스 레이어의 보안 로직 통과
+        return ownerGraphService.getMonthlySales(targetShopId, authorizedShopId);
     }
 }
