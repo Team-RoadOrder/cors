@@ -1,3 +1,4 @@
+
 /* 전역 변수로 현재 선택된 행의 정보를 저장합니다. */
 let selectedMemberEmail = null;
 let selectedMemberName = null;
@@ -161,35 +162,92 @@ function getInit(str) {
     return result;
 }
 
+//#region:기존 filterTable
 /**
  * 실시간 검색 필터링 함수
+ */
+// function filterTable() {
+//     const searchInput = document.querySelector('.search-input');
+//     const keyword = searchInput.value.toLowerCase();
+//     const rows = document.querySelectorAll('.member-row');
+//     const keywordInit = getInit(keyword); // 입력값의 초성
+//
+//     rows.forEach(row => {
+//         const name = row.getAttribute('data-name') || "";
+//         const email = row.getAttribute('data-email') || "";
+//
+//         // 1. 일반 텍스트 포함 여부 (이메일 등)
+//         const isMatch = name.toLowerCase().includes(keyword) || email.toLowerCase().includes(keyword);
+//
+//         // 2. 초성 일치 여부 (김갑수 -> ㄱㄱㅅ)
+//         const nameInit = getInit(name);
+//         const isInitMatch = nameInit.includes(keywordInit);
+//
+//         // 결과에 따라 행 표시/숨김
+//         if (isMatch || isInitMatch) {
+//             row.style.display = "";
+//         } else {
+//             row.style.display = "none";
+//         }
+//     });
+// }
+//#endregion
+/**
+ * 실시간 검색 필터링 함수 (오류 수정 및 결과 없음 안내 포함)
  */
 function filterTable() {
     const searchInput = document.querySelector('.search-input');
     const keyword = searchInput.value.toLowerCase();
+    const tableBody = document.querySelector('.admin-table tbody');
     const rows = document.querySelectorAll('.member-row');
     const keywordInit = getInit(keyword); // 입력값의 초성
 
+    let visibleCount = 0; // 현재 화면에 보이는 행의 개수 체크
+
+    // 1. 데이터 행 필터링 (루프 안에서는 검색 결과 카운트만 계산)
     rows.forEach(row => {
         const name = row.getAttribute('data-name') || "";
         const email = row.getAttribute('data-email') || "";
 
-        // 1. 일반 텍스트 포함 여부 (이메일 등)
+        // 일반 텍스트 및 초성 일치 여부 확인
         const isMatch = name.toLowerCase().includes(keyword) || email.toLowerCase().includes(keyword);
-
-        // 2. 초성 일치 여부 (김갑수 -> ㄱㄱㅅ)
         const nameInit = getInit(name);
         const isInitMatch = nameInit.includes(keywordInit);
 
-        // 결과에 따라 행 표시/숨김
         if (isMatch || isInitMatch) {
-            row.style.display = "";
+            row.style.display = ""; // 행 표시
+            visibleCount++; // 카운트 증가
         } else {
-            row.style.display = "none";
+            row.style.display = "none"; // 행 숨김
         }
     });
-}
 
+    // 2. 검색 결과 없음 처리 (모든 행 검사 후 루프 밖에서 처리)
+    let noResultRow = document.getElementById('noResultRow');
+
+    if (visibleCount === 0) {
+        // 검색 결과가 하나도 없을 때
+        if (!noResultRow) {
+            // 안내 행이 없으면 새로 생성
+            noResultRow = document.createElement('tr');
+            noResultRow.id = 'noResultRow';
+            noResultRow.innerHTML = `
+                <td colspan="7" style="padding: 6.25rem 0; text-align: center; vertical-align: middle;">
+                    <div style="color: #999; font-size: 1rem; display: block;">
+                        검색 결과와 일치하는 임직원이 없습니다.
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(noResultRow);
+        }
+        noResultRow.style.display = "table-row"; // 안내 문구 표시
+    } else {
+        // 검색 결과가 하나라도 있을 때 안내 행 숨김
+        if (noResultRow) {
+            noResultRow.style.display = "none";
+        }
+    }
+}
 
 /**
  * 상단 '- 삭제' 버튼 클릭 시 호출되는 함수
