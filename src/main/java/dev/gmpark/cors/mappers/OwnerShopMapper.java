@@ -28,10 +28,10 @@ public interface OwnerShopMapper {
                                          @Param("address") String address,
                                          @Param("region") String region,
                                          @Param("sort") String sort);
-    ShopItemEntity[] selectItemsByKeyword(@Param("keyword") String keyword);
-    
+    ShopItemEntity[] selectItemsByKeyword(@Param("keywords") String[] keywords);
+
     // [수정] 매장 검색 메서드 (ShopEntity -> ShopInfoEntity)
-    ShopInfoEntity[] selectShopsByKeyword(@Param("keyword") String keyword);
+    ShopInfoEntity[] selectShopsByKeyword(@Param("keywords") String[] keywords);
 
     int selectLikeItemCount(@Param("userEmail") String userEmail, @Param("shopId") int shopId, @Param("itemId") Long itemId);
     int insertLikeItem(@Param("likeItem") LikeItemEntity likeItem);

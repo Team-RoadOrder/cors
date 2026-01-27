@@ -26,11 +26,14 @@ public class SearchService {
             return result;
         }
 
+        // 공백으로 분리하여 키워드 배열 생성
+        String[] keywords = normalizedKeyword.split("\\s+");
+
         // 2. 상품 검색
-        ShopItemEntity[] searchResults = this.ownerShopMapper.selectItemsByKeyword(normalizedKeyword);
+        ShopItemEntity[] searchResults = this.ownerShopMapper.selectItemsByKeyword(keywords);
         
         // 3. 매장 검색
-        ShopInfoEntity[] shopResults = this.ownerShopMapper.selectShopsByKeyword(normalizedKeyword);
+        ShopInfoEntity[] shopResults = this.ownerShopMapper.selectShopsByKeyword(keywords);
 
         result.put("searchResults", searchResults);
         result.put("shopResults", shopResults);

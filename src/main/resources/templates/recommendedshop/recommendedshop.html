@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>recommended shop</title>
-    <link rel="stylesheet" href="/assets/styles/recommendedshop/index.css">
-    <link href="/assets/images/login/favicon.png" rel="icon"  >
+    <title>추천 매장</title>
     <link rel="stylesheet" href="/assets/styles/common.css">
+    <link rel="stylesheet" href="/assets/styles/recommendedshop/index.css">
+    <link href="/assets/images/login/favicon.png" rel="icon">
     <script defer src="/assets/scripts/common.js"></script>
     <script defer src="/assets/scripts/recommendedshop/recommendedshop.js"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
-</th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
-</th:block>
-<!--스크롤스냅 적용된 가로 슬라이더: 각 img에 id부여하여 앵커이동-->
-<!--헤더에 호버하면 나타나는 메뉴 -->
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}"></th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}"></th:block>
 
 <div class="video-container">
     <video class="video" poster="https://campaign-cdn.pstatic.net/0/campaign/2022/12/save-the-stars/img/img_spot_v8.jpg" autoplay muted loop playsinline>
@@ -33,26 +29,21 @@
     <div class="item">
         <div class="text-container">
             <span class="title shop">SHOP</span>
-            <span class="description">해당카테고리의 인기많은 매장</span>
+            <span class="description">해당 카테고리의 인기 많은 매장</span>
         </div>
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
                 <li class="box" th:each="shop : ${recommendedShops}">
                     <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
-                        <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="" class="image">
+                        <!-- 매장 이미지 경로 수정 -->
+                        <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="매장 이미지" class="image">
                     </a>
                     <div class="info">
-                    <span class="title" th:text="${shop.shopName}">
-                        밥 위에 소복이 쌓인 튀김,텐동집
-                    </span>
+                        <span class="title" th:text="${shop.shopName}">매장명</span>
                         <div class="subtitle">
-                        <span class="icon" th:text="${shop.shopAddress}">
-                            @전국
-                        </span>
-                            <span class="icon" th:text="'♥ ' + ${shop.likeCount}">
-                            &starf;54만+
-                        </span>
+                            <span class="icon" th:text="${shop.shopAddress}">주소</span>
+                            <span class="icon" th:text="'♥ ' + ${shop.likeCount}">좋아요</span>
                         </div>
                     </div>
                 </li>
@@ -63,26 +54,20 @@
     <div class="item">
         <div class="text-container">
             <span class="title product">PRODUCT</span>
-            <span class="description">해당카테고리의 인기많은 제품</span>
+            <span class="description">해당 카테고리의 인기 많은 제품</span>
         </div>
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
                 <li class="box" th:each="item : ${popularItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
-                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="상품 이미지" class="image">
                     </a>
                     <div class="info">
-                        <span class="title" th:text="${item.itemName}">
-                            밥 위에 소복이 쌓인 튀김,텐동집
-                        </span>
+                        <span class="title" th:text="${item.itemName}">상품명</span>
                         <div class="subtitle">
-                            <span class="icon" th:text="${item.price} + '원'">
-                                @전국
-                            </span>
-                            <span class="icon" th:text="'★ ' + ${#numbers.formatDecimal(item.rating, 1, 1)} + ' (' + ${item.reviewCount} + ')'">
-                                &starf;54만+
-                            </span>
+                            <span class="icon" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}">가격</span>
+                            <span class="icon" th:text="'★ ' + ${#numbers.formatDecimal(item.rating, 1, 1)} + ' (' + ${item.reviewCount} + ')'">별점</span>
                         </div>
                     </div>
                 </li>
@@ -93,26 +78,20 @@
     <div class="item">
         <div class="text-container">
             <span class="title all">ALL PRODUCT</span>
-            <span class="description">해당카테고리의 모든 제품</span>
+            <span class="description">해당 카테고리의 모든 제품</span>
         </div>
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
                 <li class="box" th:each="item : ${allItems}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
-                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="" class="image">
+                        <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="상품 이미지" class="image">
                     </a>
                     <div class="info">
-                        <span class="title" th:text="${item.itemName}">
-                            밥 위에 소복이 쌓인 튀김,텐동집
-                        </span>
+                        <span class="title" th:text="${item.itemName}">상품명</span>
                         <div class="subtitle">
-                            <span class="icon" th:text="${item.price} + '원'">
-                                @전국
-                            </span>
-                            <span class="icon" th:text="'★ ' + ${#numbers.formatDecimal(item.rating, 1, 1)} + ' (' + ${item.reviewCount} + ')'">
-                                &starf;54만+
-                            </span>
+                            <span class="icon" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}">가격</span>
+                            <span class="icon" th:text="'★ ' + ${#numbers.formatDecimal(item.rating, 1, 1)} + ' (' + ${item.reviewCount} + ')'">별점</span>
                         </div>
                     </div>
                 </li>

@@ -234,12 +234,15 @@
         LIMIT 1)             AS `imagePath`
         FROM `cors`.`shop_items` si
         JOIN `cors`.`shop_info` info ON si.`shop_id` = info.`shop_id`
-        WHERE si.`item_name` LIKE CONCAT('%', #{keyword}, '%')
-        OR si.`main_category` LIKE CONCAT('%', #{keyword}, '%')
-        OR si.`sub_category` LIKE CONCAT('%', #{keyword}, '%')
-        OR si.`detail_category` LIKE CONCAT('%', #{keyword}, '%')
-        OR si.`style` LIKE CONCAT('%', #{keyword}, '%')
-        OR info.`shop_name` LIKE CONCAT('%', #{keyword}, '%')
+        WHERE 1=1
+        <foreach collection="keywords" item="keyword" open="AND (" separator="AND" close=")">
+            (si.`item_name` LIKE CONCAT('%', #{keyword}, '%')
+            OR si.`main_category` LIKE CONCAT('%', #{keyword}, '%')
+            OR si.`sub_category` LIKE CONCAT('%', #{keyword}, '%')
+            OR si.`detail_category` LIKE CONCAT('%', #{keyword}, '%')
+            OR si.`style` LIKE CONCAT('%', #{keyword}, '%')
+            OR info.`shop_name` LIKE CONCAT('%', #{keyword}, '%'))
+        </foreach>
         ORDER BY si.`updated_at` DESC
     </select>
 
@@ -255,9 +258,12 @@
                `profile_image`    AS `profileImage`,
                `background_image` AS `backgroundImage`
         FROM `cors`.`shop_info`
-        WHERE `shop_name` LIKE CONCAT('%', #{keyword}, '%')
-        OR `shop_address` LIKE CONCAT('%', #{keyword}, '%')
-        OR `shop_category` LIKE CONCAT('%', #{keyword}, '%')
+        WHERE 1=1
+        <foreach collection="keywords" item="keyword" open="AND (" separator="AND" close=")">
+            (`shop_name` LIKE CONCAT('%', #{keyword}, '%')
+            OR `shop_address` LIKE CONCAT('%', #{keyword}, '%')
+            OR `shop_category` LIKE CONCAT('%', #{keyword}, '%'))
+        </foreach>
         ORDER BY `shop_id` DESC
     </select>
 
