@@ -742,6 +742,9 @@
         box-sizing: border-box;
         align-items: start;
     }
+    #main .sections #items .order-list .tbody .list-colum:last-child {
+        margin-bottom:5rem ;
+    }
 
     #main .order-list .tbody tr.list-colum td {
         padding: 0;
