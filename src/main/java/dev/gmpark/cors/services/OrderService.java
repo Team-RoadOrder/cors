@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,52 +32,98 @@ public class OrderService {
 
     private static final long FREE_DELIVERY_THRESHOLD = 70000;
     private static final long DELIVERY_FEE = 3000;
-    private static final double POINT_EARN_RATE = 0.02; // 1% 적립
+    private static final double POINT_EARN_RATE = 0.02; 
 
-    @Transactional
-    public CommonResult createOrder(OrderEntity order, List<OrderItemEntity> items) {
-        if (this.orderMapper.insertOrder(order) == 0) {
-            return CommonResult.FAILURE;
+    // ======================================================================
+    // [정규화 & 유효성 검사 메서드]
+    // ArticleService 처럼 비즈니스 로직 진입 전에 데이터를 깨끗하게 만듭니다.
+    // ======================================================================
+
+    /**
+     * 주문 데이터 정규화 (Normalization)
+     * - 입력값이 없으면 유저 정보로 채움
+     * - 수량이 범위를 벗어나면 조정 (Clamping)
+     * - 문자열 앞뒤 공백 제거 (Trimming)
+     */
+    private void normalizeOrderData(RegisterEntity user, SingleOrderDto dto) {
+        // 1. 수신자 정보가 비어있으면 주문자(User) 정보로 대체 및 공백 제거
+        if (dto.getReceiverName() == null || dto.getReceiverName().isBlank()) {
+            dto.setReceiverName(user.getName());
+        } else {
+            dto.setReceiverName(dto.getReceiverName().trim());
         }
-        
-        for (OrderItemEntity item : items) {
-            item.setOrderId(order.getId());
+
+        if (dto.getReceiverPhone() == null || dto.getReceiverPhone().isBlank()) {
+            // 전화번호에서 숫자만 남기고 저장 (Format Normalization)
+            String cleanPhone = user.getPhone().replaceAll("[^0-9]", "");
+            dto.setReceiverPhone(cleanPhone);
+        } else {
+            dto.setReceiverPhone(dto.getReceiverPhone().replaceAll("[^0-9]", ""));
         }
-        
-        return this.orderMapper.insertOrderItems(items) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+
+        if (dto.getAddress() == null || dto.getAddress().isBlank()) {
+            dto.setAddress(user.getAddress());
+            dto.setAddressDetail(user.getAddressDetail());
+        } else {
+            dto.setAddress(dto.getAddress().trim());
+            dto.setAddressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail().trim() : "");
+        }
+
+        // 2. 요청사항 공백 제거
+        if (dto.getRequest() != null) {
+            dto.setRequest(dto.getRequest().trim());
+        }
+
+        // 3. 수량 정규화 (1 ~ 99)
+        dto.setQuantity(this.normalizeQuantity(dto.getQuantity()));
     }
+
+    /**
+     * 수량 범위 보정 (1 ~ 99)
+     */
+    private int normalizeQuantity(int quantity) {
+        if (quantity < 1) return 1;
+        if (quantity > 99) return 99;
+        return quantity;
+    }
+    
+    // ======================================================================
+    // [비즈니스 로직]
+    // ======================================================================
 
     @Transactional
     public CommonResult processSingleOrder(RegisterEntity user, SingleOrderDto dto) {
+        // 1. 기본 유효성 검사 (Validation)
+        if (user == null || dto == null || dto.getItemId() == null || dto.getSize() == null) {
+            return CommonResult.FAILURE;
+        }
+
+        // 2. 데이터 정규화 (Normalization) - 로직 수행 전 데이터 정제
+        this.normalizeOrderData(user, dto);
+
         ShopItemVo item = this.itemService.getItemById(dto.getItemId());
         if (item == null) {
             return CommonResult.FAILURE;
         }
 
-        int quantity = dto.getQuantity() > 0 ? dto.getQuantity() : 1; // 수량 확인 (기본 1)
-        if (quantity > 99) quantity = 99; // 최대 수량 제한
-
-        long totalProductPrice = item.getPrice() * quantity; // 총 상품 금액 계산
+        long totalProductPrice = item.getPrice() * dto.getQuantity();
         
         List<OrderItemEntity> items = new ArrayList<>();
         items.add(OrderItemEntity.builder()
                 .itemId(dto.getItemId())
                 .shopId(item.getShopId())
                 .size(dto.getSize())
-                .quantity(quantity) // DTO에서 받은 수량 사용
+                .quantity(dto.getQuantity()) // 정규화된 수량 사용
                 .price(item.getPrice())
                 .build());
 
-        // 새로 추가된 아이템 처리
+        // 추가 아이템 처리 (Option Items)
         if (dto.getNewItems() != null) {
             for (Map<String, Object> newItem : dto.getNewItems()) {
                 Long newItemId = ((Number) newItem.get("itemId")).longValue();
                 String newSize = (String) newItem.get("size");
-                int newQuantity = ((Number) newItem.get("quantity")).intValue();
+                int newQuantity = this.normalizeQuantity(((Number) newItem.get("quantity")).intValue());
                 
-                if (newQuantity < 1) newQuantity = 1;
-                if (newQuantity > 99) newQuantity = 99;
-
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
                     totalProductPrice += newItemVo.getPrice() * newQuantity;
@@ -91,67 +138,19 @@ public class OrderService {
             }
         }
 
-        long deliveryFee = totalProductPrice >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
-        long totalPrice = totalProductPrice + deliveryFee;
-
-        // 포인트 사용 처리
-        int usedPoints = dto.getUsedPoints();
-        if (usedPoints > 0) {
-            if (user.getPoint() < usedPoints) {
-                return CommonResult.FAILURE; // 포인트 부족
-            }
-            // 결제 금액보다 많은 포인트 사용 불가
-            if (usedPoints > totalPrice) {
-                return CommonResult.FAILURE;
-            }
-            totalPrice -= usedPoints;
-            
-            // 포인트 차감
-            this.registerMapper.updatePoint(user.getEmail(), -usedPoints);
-        }
-
-        OrderEntity order = OrderEntity.builder()
-                .userEmail(user.getEmail())
-                .totalPrice(totalPrice)
-                .status("PAID")
-                .receiverName(dto.getReceiverName() != null ? dto.getReceiverName() : user.getName())
-                .receiverPhone(dto.getReceiverPhone() != null ? dto.getReceiverPhone() : user.getPhone())
-                .address(dto.getAddress() != null ? dto.getAddress() : user.getAddress())
-                .addressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail() : user.getAddressDetail())
-                .request(dto.getRequest())
-                .build();
-
-        CommonResult result = this.createOrder(order, items);
-        
-        if (result == CommonResult.SUCCESS) {
-            // 포인트 사용 히스토리 저장 (주문 성공 시)
-            if (usedPoints > 0) {
-                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                        .userEmail(user.getEmail())
-                        .amount(-usedPoints)
-                        .type("USE")
-                        .orderId(String.valueOf(order.getId()))
-                        .build());
-            }
-
-            // 포인트 적립 처리 (실 결제 금액 기준)
-            int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
-            if (earnedPoints > 0) {
-                this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
-                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                        .userEmail(user.getEmail())
-                        .amount(earnedPoints)
-                        .type("EARN")
-                        .orderId(String.valueOf(order.getId()))
-                        .build());
-            }
-        }
-        
-        return result;
+        return this.finalizeOrder(user, dto, totalProductPrice, items);
     }
 
     @Transactional
     public CommonResult processCartOrder(RegisterEntity user, SingleOrderDto dto) {
+        // 1. 기본 유효성 검사
+        if (user == null || dto == null || dto.getCartIds() == null || dto.getCartIds().isEmpty()) {
+            return CommonResult.FAILURE;
+        }
+
+        // 2. 데이터 정규화
+        this.normalizeOrderData(user, dto);
+
         List<CartVo> cartItems = this.cartService.getCartItemsByIds(dto.getCartIds());
         if (cartItems.isEmpty()) {
             return CommonResult.FAILURE;
@@ -163,13 +162,10 @@ public class OrderService {
 
         for (CartVo cart : cartItems) {
             int quantity = cart.getQuantity();
-            // 결제창에서 변경된 수량이 있으면 적용
             if (cartQuantities != null && cartQuantities.containsKey(cart.getId())) {
                 quantity = cartQuantities.get(cart.getId());
             }
-            
-            if (quantity < 1) quantity = 1;
-            if (quantity > 99) quantity = 99;
+            quantity = this.normalizeQuantity(quantity); // 수량 정규화
 
             totalProductPrice += cart.getItemPrice() * quantity;
             orderItems.add(OrderItemEntity.builder()
@@ -181,15 +177,12 @@ public class OrderService {
                     .build());
         }
 
-        // 새로 추가된 아이템 처리
+        // 추가 아이템 처리 (위와 동일 로직)
         if (dto.getNewItems() != null) {
             for (Map<String, Object> newItem : dto.getNewItems()) {
                 Long newItemId = ((Number) newItem.get("itemId")).longValue();
                 String newSize = (String) newItem.get("size");
-                int newQuantity = ((Number) newItem.get("quantity")).intValue();
-                
-                if (newQuantity < 1) newQuantity = 1;
-                if (newQuantity > 99) newQuantity = 99;
+                int newQuantity = this.normalizeQuantity(((Number) newItem.get("quantity")).intValue());
 
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
@@ -205,24 +198,27 @@ public class OrderService {
             }
         }
 
-        long deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD) ? 0 : DELIVERY_FEE;
-        if (totalProductPrice == 0) deliveryFee = 0; // 상품이 없으면 배송비도 0
+        CommonResult result = this.finalizeOrder(user, dto, totalProductPrice, orderItems);
 
+        if (result == CommonResult.SUCCESS) {
+            this.cartService.deleteCartItems(user, dto.getCartIds());
+        }
+        
+        return result;
+    }
+
+    // 공통 주문 처리 로직 (결제, 포인트, DB저장)
+    private CommonResult finalizeOrder(RegisterEntity user, SingleOrderDto dto, long totalProductPrice, List<OrderItemEntity> items) {
+        long deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD || totalProductPrice == 0) ? 0 : DELIVERY_FEE;
         long totalPrice = totalProductPrice + deliveryFee;
 
-        // 포인트 사용 처리
+        // 포인트 사용 검증
         int usedPoints = dto.getUsedPoints();
         if (usedPoints > 0) {
-            if (user.getPoint() < usedPoints) {
-                return CommonResult.FAILURE; // 포인트 부족
-            }
-            // 결제 금액보다 많은 포인트 사용 불가
-            if (usedPoints > totalPrice) {
-                return CommonResult.FAILURE;
-            }
-            totalPrice -= usedPoints;
+            if (user.getPoint() < usedPoints) return CommonResult.FAILURE;
+            if (usedPoints > totalPrice) return CommonResult.FAILURE;
             
-            // 포인트 차감
+            totalPrice -= usedPoints;
             this.registerMapper.updatePoint(user.getEmail(), -usedPoints);
         }
 
@@ -230,20 +226,23 @@ public class OrderService {
                 .userEmail(user.getEmail())
                 .totalPrice(totalPrice)
                 .status("PAID")
-                .receiverName(dto.getReceiverName() != null ? dto.getReceiverName() : user.getName())
-                .receiverPhone(dto.getReceiverPhone() != null ? dto.getReceiverPhone() : user.getPhone())
-                .address(dto.getAddress() != null ? dto.getAddress() : user.getAddress())
-                .addressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail() : user.getAddressDetail())
+                .receiverName(dto.getReceiverName())
+                .receiverPhone(dto.getReceiverPhone())
+                .address(dto.getAddress())
+                .addressDetail(dto.getAddressDetail())
                 .request(dto.getRequest())
                 .build();
 
-        CommonResult orderResult = this.createOrder(order, orderItems);
-        
-        if (orderResult == CommonResult.SUCCESS) {
-            // 수정된 부분: deleteCartItems 호출 시 user 파라미터 추가
-            this.cartService.deleteCartItems(user, dto.getCartIds());
-            
-            // 포인트 사용 히스토리 저장
+        if (this.orderMapper.insertOrder(order) == 0) {
+            return CommonResult.FAILURE;
+        }
+
+        for (OrderItemEntity item : items) {
+            item.setOrderId(order.getId());
+        }
+
+        if (this.orderMapper.insertOrderItems(items) > 0) {
+            // 포인트 이력 저장 (사용)
             if (usedPoints > 0) {
                 this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
                         .userEmail(user.getEmail())
@@ -253,7 +252,7 @@ public class OrderService {
                         .build());
             }
 
-            // 포인트 적립 처리 (실 결제 금액 기준)
+            // 포인트 적립
             int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
             if (earnedPoints > 0) {
                 this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
@@ -264,10 +263,15 @@ public class OrderService {
                         .orderId(String.valueOf(order.getId()))
                         .build());
             }
+            return CommonResult.SUCCESS;
         }
-        
-        return orderResult;
+
+        return CommonResult.FAILURE;
     }
+
+    // ======================================================================
+    // [단순 조회 및 페이지 데이터 반환 메서드]
+    // ======================================================================
 
     public List<PaymentItemDto> getPaymentItemsForSingleOrder(Long itemId, String size) {
         List<PaymentItemDto> items = new ArrayList<>();
@@ -298,11 +302,6 @@ public class OrderService {
         List<PaymentItemDto> items = new ArrayList<>();
         List<CartVo> cartItems = this.cartService.getCartItemsByIds(cartIds);
         for (CartVo cart : cartItems) {
-            // 장바구니 아이템의 경우 원본 상품 정보를 조회해서 가능한 사이즈 목록을 가져와야 함
-            // CartVo에는 원본 상품의 전체 사이즈 정보가 없을 수 있음 (보통 선택된 사이즈만 저장됨)
-            // 따라서 itemId로 다시 조회하거나 CartVo에 해당 정보가 있어야 함.
-            // 여기서는 itemId로 다시 조회하는 방식을 사용 (성능상 이슈가 있을 수 있으나 정확성을 위해)
-            
             List<String> sizes = new ArrayList<>();
             ShopItemVo originalItem = this.itemService.getItemById(cart.getItemId());
             if (originalItem != null && originalItem.getSize() != null) {
@@ -326,15 +325,96 @@ public class OrderService {
         return items;
     }
 
-    public CommonResult updateOrderItem(long id, int status) {
-        if (id < 1) {
-            return CommonResult.FAILURE;
-        }
-        if (status == 0) {
-            return CommonResult.FAILURE;
+    public Map<String, Object> getPaymentInfo(Long itemId, String size, List<Long> cartIds) {
+        List<PaymentItemDto> items = new ArrayList<>();
+
+        if (itemId != null && size != null) {
+            items = this.getPaymentItemsForSingleOrder(itemId, size);
+        } else if (cartIds != null && !cartIds.isEmpty()) {
+            items = this.getPaymentItemsForCartOrder(cartIds);
         }
 
-        // Mapper 호출
+        long totalProductPrice = 0;
+        for (PaymentItemDto item : items) {
+            totalProductPrice += item.getPrice() * item.getQuantity();
+        }
+
+        long deliveryFee = 0;
+        if (totalProductPrice > 0) {
+            deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD)
+                    ? 0
+                    : DELIVERY_FEE;
+        }
+
+        long totalPrice = totalProductPrice + deliveryFee;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("items", items);
+        result.put("totalProductPrice", totalProductPrice);
+        result.put("deliveryFee", deliveryFee);
+        result.put("totalPrice", totalPrice);
+        
+        return result;
+    }
+
+    public Map<String, Object> getPaymentPageData(RegisterEntity sessionUser, Long itemId, String size, List<Long> cartIds) {
+        Map<String, Object> result = new HashMap<>();
+        
+        RegisterEntity user = this.registerMapper.selectByEmail(sessionUser.getEmail());
+        if (user == null) {
+            user = sessionUser;
+        }
+        
+        Map<String, Object> paymentInfo = this.getPaymentInfo(itemId, size, cartIds);
+        result.putAll(paymentInfo);
+        result.put("user", user);
+        result.put("isCartOrder", (cartIds != null && !cartIds.isEmpty()));
+        result.put("cartIds", cartIds);
+        
+        return result;
+    }
+
+    public Map<String, Object> processOrder(String userEmail, SingleOrderDto dto) {
+        Map<String, Object> response = new HashMap<>();
+        
+        if (userEmail == null || dto == null) {
+            response.put("result", CommonResult.FAILURE.name());
+            response.put("message", "잘못된 요청입니다.");
+            return response;
+        }
+
+        RegisterEntity user = this.registerMapper.selectByEmail(userEmail);
+        if (user == null) {
+            response.put("result", CommonResult.FAILURE.name());
+            response.put("message", "사용자 정보를 찾을 수 없습니다.");
+            return response;
+        }
+
+        try {
+            CommonResult result;
+            if (dto.getCartIds() != null && !dto.getCartIds().isEmpty()) {
+                result = this.processCartOrder(user, dto);
+            } else if (dto.getItemId() != null && dto.getSize() != null) {
+                result = this.processSingleOrder(user, dto);
+            } else {
+                result = CommonResult.FAILURE;
+                response.put("message", "주문 정보가 올바르지 않습니다.");
+                response.put("result", result.name());
+                return response;
+            }
+            response.put("result", result.name());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("result", CommonResult.FAILURE.name());
+            response.put("message", "주문 처리 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
+
+    public CommonResult updateOrderItem(long id, int status) {
+        if (id < 1 || status == 0) {
+            return CommonResult.FAILURE;
+        }
         return this.orderMapper.updateOrderItemStatus(id, status) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
 }

@@ -324,13 +324,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
                 return;
             }
-            if (!receiverPhone || phoneParts[0].value.trim() === "" || phoneParts[1].value.trim() === "" || phoneParts[2].value.trim() === "") {
-                openModal('알림', '수령인 연락처를 입력해주세요.', {
+            
+            // 전화번호 유효성 검사 (숫자만 입력되었는지, 길이 체크 등)
+            const phoneRegex = /^[0-9]+$/;
+            if (!phoneParts[0].value.trim() || !phoneRegex.test(phoneParts[0].value.trim()) ||
+                !phoneParts[1].value.trim() || !phoneRegex.test(phoneParts[1].value.trim()) ||
+                !phoneParts[2].value.trim() || !phoneRegex.test(phoneParts[2].value.trim())) {
+                openModal('알림', '수령인 연락처를 올바르게 입력해주세요.', {
                     confirmText: '확인',
                     onConfirm: () => phoneParts[0].focus()
                 });
                 return;
             }
+
             if (!address || address.trim() === "") {
                 openModal('알림', '배송지 주소를 입력해주세요.', {
                     confirmText: '확인',

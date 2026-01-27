@@ -1,21 +1,56 @@
 @import "index/main.css";
 @import "index/search-form.css";
 @import "index/grid.css";
-@import "common.css";
-
-
+@import "common.css"; /* 경로 수정 */
 
 body {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     background-color: rgb(243,243,233);
+    margin: 0;
+    padding: 0;
+    display: block;
 }
 
-body > .box {
+.container {
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+    box-sizing: border-box;
+}
 
-    box-sizing: border-box; /* 패딩 포함 너비 계산 */
-    padding: 0 1rem; /* 좌우 여백 추가 */
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    padding-left: 5px;
+    border-left: 4px solid #222;
+    line-height: 1.2;
+}
+
+/* 매장 검색 결과 타이틀용 여백 클래스 */
+.section-title.shop-title {
+    margin-top: 50px;
+}
+
+
+
+/* 헤더 높이만큼 본문 여백 추가 */
+#main {
+    padding-top: 80px; /* 헤더 높이에 맞춰 조정 */
+}
+
+/* 반응형 */
+@media (max-width: 1240px) {
+    .container {
+        width: 100%;
+        padding: 0 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 0 15px;
+        padding-bottom: 4rem;
+    }
 }

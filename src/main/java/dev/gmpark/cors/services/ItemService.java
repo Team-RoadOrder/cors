@@ -23,12 +23,9 @@ public class ItemService {
         // 로직 추가해야함
         return this.ownerShopMapper.selectItemVoById(id);
     }
-    public ShopItemEntity[] searchItems(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return new ShopItemEntity[0]; // 키워드가 없으면 빈 배열 반환
-        }
-        return this.ownerShopMapper.selectItemsByKeyword(keyword);
-    }
+    
+    // searchItems, searchShops 메서드는 SearchService로 이동됨
+
     public CommonResult toggleLikeItem(int shopId, Long itemId, RegisterEntity sessionUser) {
         if (sessionUser == null) {
             return CommonResult.FAILURE_SESSION;

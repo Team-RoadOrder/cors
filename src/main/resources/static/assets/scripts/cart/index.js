@@ -22,17 +22,10 @@ const calculateTotal = () => {
             const price = parseInt($priceElement.textContent.replace(/[^0-9]/g, ''));
             totalProductPrice += price;
             
-            // 수정: 같은 상품이라도 수량이 다를 수 있으므로 수량을 더해야 하는지, 아니면 항목 수만 세야 하는지 확인 필요
-            // 사용자의 요청 "같은 상품 갯수가 포함안되는거같음" -> 수량을 더해달라는 의미로 해석됨
-            // 하지만 보통 장바구니 결제 버튼에는 "총 N건"이라고 하여 항목 수를 표시하는 경우가 많음.
-            // 만약 "총 N개"를 원한다면 수량을 더해야 함.
-            // 여기서는 사용자의 피드백에 따라 수량을 더하는 것으로 수정.
-            
             // 수량 가져오기
             const $qtyInput = $cartItem.querySelector('.item-qty-input');
             const qty = parseInt($qtyInput.value) || 1;
             
-            // totalCount++; // 기존: 항목 수
             totalCount += qty; // 변경: 총 수량
         }
     });

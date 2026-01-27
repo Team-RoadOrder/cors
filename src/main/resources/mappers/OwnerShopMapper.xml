@@ -227,18 +227,40 @@
         si.`created_at`       AS `createdAt`,
         si.`updated_at`       AS `updateAt`,
         si.`deleted_at`       AS `deletedAt`,
+        info.`shop_name`      AS `shopName`,
         (SELECT img.`image_path`
         FROM `cors`.`shop_item_images` img
         WHERE img.`product_id` = si.`id`
         LIMIT 1)             AS `imagePath`
         FROM `cors`.`shop_items` si
+        JOIN `cors`.`shop_info` info ON si.`shop_id` = info.`shop_id`
         WHERE si.`item_name` LIKE CONCAT('%', #{keyword}, '%')
         OR si.`main_category` LIKE CONCAT('%', #{keyword}, '%')
         OR si.`sub_category` LIKE CONCAT('%', #{keyword}, '%')
         OR si.`detail_category` LIKE CONCAT('%', #{keyword}, '%')
         OR si.`style` LIKE CONCAT('%', #{keyword}, '%')
+        OR info.`shop_name` LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY si.`updated_at` DESC
     </select>
+
+    <!-- 매장 검색 쿼리 수정 (ShopEntity -> ShopInfoEntity) -->
+    <select id="selectShopsByKeyword" resultType="dev.gmpark.cors.entities.ShopInfoEntity">
+        SELECT `shop_id`          AS `shopId`,
+               `user_email`       AS `userEmail`,
+               `shop_name`        AS `shopName`,
+               `shop_time`        AS `shopTime`,
+               `shop_category`    AS `shopCategory`,
+               `shop_address`     AS `shopAddress`,
+               `shop_tel`         AS `shopTel`,
+               `profile_image`    AS `profileImage`,
+               `background_image` AS `backgroundImage`
+        FROM `cors`.`shop_info`
+        WHERE `shop_name` LIKE CONCAT('%', #{keyword}, '%')
+        OR `shop_address` LIKE CONCAT('%', #{keyword}, '%')
+        OR `shop_category` LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY `shop_id` DESC
+    </select>
+
     <select id="selectLikeItemCount" resultType="java.lang.Integer">
         SELECT COUNT(0)
         FROM `cors`.`like_items`

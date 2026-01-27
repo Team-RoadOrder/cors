@@ -30,6 +30,7 @@ public class ShopItemEntity {
     private String imagePath;
     private double rating; // 별점
     private int reviewCount; // 리뷰 수
+    private String shopName; // 매장명 추가
 
 }
 

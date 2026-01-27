@@ -6,7 +6,7 @@ body {
 .container {
   width: 1200px; /* 전체 너비 고정 */
   margin: 0 auto;
-  padding-top: 180px; /* 헤더와 겹치지 않도록 여백 증가 */
+  padding-top: 100px; /* 헤더와 겹치지 않도록 여백 증가 */
   padding-bottom: 100px;
 }
 
@@ -376,6 +376,19 @@ body {
 #header #loginBtn,
 #header #logoutBtn {
     color: #000;
+}
+
+/* 숨김 라벨 스타일 */
+.hidden-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* 반응형 미디어 쿼리 추가 */

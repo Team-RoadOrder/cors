@@ -1,5 +1,6 @@
 package dev.gmpark.cors.mappers;
 import dev.gmpark.cors.entities.LikeItemEntity;
+import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.entities.ShopItemImagesEntity;
 import dev.gmpark.cors.vos.LikeItemVo;
@@ -28,6 +29,10 @@ public interface OwnerShopMapper {
                                          @Param("region") String region,
                                          @Param("sort") String sort);
     ShopItemEntity[] selectItemsByKeyword(@Param("keyword") String keyword);
+    
+    // [수정] 매장 검색 메서드 (ShopEntity -> ShopInfoEntity)
+    ShopInfoEntity[] selectShopsByKeyword(@Param("keyword") String keyword);
+
     int selectLikeItemCount(@Param("userEmail") String userEmail, @Param("shopId") int shopId, @Param("itemId") Long itemId);
     int insertLikeItem(@Param("likeItem") LikeItemEntity likeItem);
     int selectCountAllItems();

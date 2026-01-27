@@ -1,64 +1,56 @@
 .search-form {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    gap: 1.5rem;
-    margin-top: 4rem;
-    width: 100%; /* 너비 100% */
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 
-.search-form .icon:hover {
-    opacity: 0.6;
-}
-
-.search-form > .label > .icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    fill: #000000;
-    padding-right: 1.3rem;
-    transition: opacity 0.3s ease;
-    flex-shrink: 0; /* 아이콘 크기 유지 */
-}
-
-.search-form > .label {
+.search-form .label {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center; /* 세로 중앙 정렬 */
-    border: 0.0925rem solid #000000;
-    padding: 1rem 1.4rem; /* 패딩 약간 조정 */
-    gap: 0.375rem;
-    background-color: #fff; /* 배경색 추가 */
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* 검색창 최대 너비 제한 */
+    border: 2px solid #222; /* 테두리 진하게 */
+    border-radius: 50px; /* 둥근 검색창 */
+    padding: 10px 20px;
+    background-color: #fff;
+    transition: border-color 0.2s;
 }
 
-.search-form > .label > .input {
+.search-form .label:focus-within {
+    border-color: #000;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+}
+
+.search-form .icon {
+    width: 24px;
+    height: 24px;
+    fill: #555;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.search-form .input {
+    flex: 1;
     border: none;
-    font: inherit;
     outline: none;
-    padding: 0.5rem 0; /* 패딩 조정 */
-    background-color: transparent;
-    width: 100%;
-    font-size: 1.1rem; /* 폰트 크기 키움 */
+    font-size: 16px;
+    background: transparent;
+    padding: 5px 0;
 }
 
 /* 모바일 대응 */
 @media (max-width: 600px) {
     .search-form {
-        margin-top: 2rem; /* 상단 여백 줄임 */
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 
-    .search-form > .label {
-        padding: 0.8rem 1rem;
+    .search-form .label {
+        padding: 8px 15px;
     }
 
-    .search-form > .label > .icon {
-        width: 2rem;
-        height: 2rem;
-        padding-right: 0.8rem;
-    }
-
-    .search-form > .label > .input {
-        font-size: 1rem;
+    .search-form .input {
+        font-size: 14px;
     }
 }

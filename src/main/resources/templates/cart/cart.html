@@ -1,114 +1,120 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>장바구니</title>
-  <link rel="stylesheet" href="/assets/styles/common.css">
-  <link rel="stylesheet" href="/assets/styles/cart/common.css">
-    <link rel="stylesheet" href="/assets/styles/reservation/common.css">
-  <link rel="stylesheet" href="/assets/styles/cart/cart.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap" rel="stylesheet">
-  <link href="/assets/images/login/favicon.png" rel="icon">
-  <script defer src="/assets/scripts/cart/index.js"></script>
-    <script defer src="/assets/scripts/common.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>장바구니</title>
+    <link href="/assets/styles/common.css" rel="stylesheet" type="text/css">
+    <link href="/assets/styles/cart/common.css" rel="stylesheet" type="text/css">
+    <link href="/assets/styles/reservation/common.css" rel="stylesheet" type="text/css">
+    <link href="/assets/styles/cart/cart.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&family=Yellowtail&display=swap" rel="stylesheet">
+    <link href="/assets/images/login/favicon.png" rel="icon">
+    <script defer src="/assets/scripts/common.js" type="text/javascript"></script>
+    <script defer src="/assets/scripts/cart/index.js" type="text/javascript"></script>
 </head>
 <body>
 <th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}">
-</th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
-</th:block>
-<div class="container">
-  <div class="page-header">
-    <h1>장바구니</h1>
-    <div class="steps">
-        <span class="step active">1</span>
-        <span class="step">2</span>
-        <span class="step">3</span>
-    </div>
-  </div>
-
-  <div class="cart-layout">
-    <!-- 왼쪽 섹션: 장바구니 목록 -->
-    <div class="cart-left-section">
-      <div class="cart-box">
-        <div class="select-all-row">
-          <div class="check-group">
-            <input type="checkbox" id="selectAll">
-            <label for="selectAll">전체 선택</label>
-          </div>
-          <button class="delete-btn">선택 삭제</button>
-        </div>
-
-        <th:block th:if="${#lists.isEmpty(cartList)}">
-          <div class="empty-cart">
-            <p>장바구니에 담긴 상품이 없습니다.</p>
-          </div>
-        </th:block>
-
-        <th:block th:unless="${#lists.isEmpty(cartList)}">
-          <div class="cart-items-list">
-            <div class="cart-item" th:each="cart : ${cartList}" th:data-item-id="${cart.itemId}">
-              <div class="item-check">
-                <input type="checkbox" class="item-checkbox" th:value="${cart.id}">
-              </div>
-              <div class="item-image">
-                <img th:src="@{/images/{path}(path=${cart.itemImage})}" alt="상품 이미지">
-              </div>
-              <div class="item-info">
-                <h2 th:text="${cart.itemName}">상품명</h2>
-
-                <!-- 옵션 및 수량 조절 영역 -->
-                <div class="item-option-row">
-                    <span th:text="${cart.itemColor}">색상</span>
-                    <span>/</span>
-                    <!-- 사이즈 선택 -->
-                    <select class="item-size-select">
-                        <option th:each="s : ${cart.availableSizes}" th:value="${s}" th:text="${s}" th:selected="${s == cart.size}"></option>
-                    </select>
-                </div>
-
-                <div class="item-qty-price">
-                   <div class="qty-control">
-                      <button type="button" class="btn-qty-minus">-</button>
-                      <input type="text" class="item-qty-input" th:value="${cart.quantity}" readonly>
-                      <button type="button" class="btn-qty-plus">+</button>
-                   </div>
-                   <span class="price" th:data-unit-price="${cart.itemPrice}" th:text="${cart.itemPrice * cart.quantity} + '원'">159,000원</span>
-                </div>
-              </div>
-
-              <!-- + 버튼 추가 -->
-              <div class="item-actions">
-                <button type="button" class="btn-add-item">+</button>
-              </div>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-header}"></th:block>
+<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}"></th:block>
+<main id="main">
+    <div class="container">
+        <div class="page-header">
+            <h1>장바구니</h1>
+            <div class="steps">
+                <span class="step active">1</span>
+                <span class="step">2</span>
+                <span class="step">3</span>
             </div>
-          </div>
-        </th:block>
-      </div>
-    </div>
+        </div>
 
-    <!-- 오른쪽 섹션: 결제 요약 -->
-    <div class="cart-right-section">
-      <div class="summary-box sticky-summary">
-        <h3>결제 금액</h3>
-        <div class="summary-row">
-          <span>상품금액</span>
-          <span id="totalProductPrice">0원</span>
+        <div class="cart-layout">
+            <!-- 왼쪽 섹션: 장바구니 목록 -->
+            <div class="cart-left-section">
+                <div class="cart-box">
+                    <div class="select-all-row">
+                        <div class="check-group">
+                            <input type="checkbox" id="selectAll">
+                            <label for="selectAll">전체 선택</label>
+                        </div>
+                        <button class="delete-btn">선택 삭제</button>
+                    </div>
+
+                    <th:block th:if="${#lists.isEmpty(cartList)}">
+                        <div class="empty-cart">
+                            <p>장바구니에 담긴 상품이 없습니다.</p>
+                        </div>
+                    </th:block>
+
+                    <th:block th:unless="${#lists.isEmpty(cartList)}">
+                        <div class="cart-items-list">
+                            <div class="cart-item" th:each="cart : ${cartList}" th:data-item-id="${cart.itemId}">
+                                <div class="item-check">
+                                    <input type="checkbox" class="item-checkbox" th:value="${cart.id}" th:id="'cart-item-' + ${cart.id}">
+                                    <label th:for="'cart-item-' + ${cart.id}" class="hidden-label">선택</label>
+                                </div>
+                                <div class="item-image">
+                                    <img th:src="@{/images/{path}(path=${cart.itemImage})}" alt="상품 이미지">
+                                </div>
+                                <div class="item-info">
+                                    <h2 th:text="${cart.itemName}">상품명</h2>
+
+                                    <!-- 옵션 및 수량 조절 영역 -->
+                                    <div class="item-option-row">
+                                        <span th:text="${cart.itemColor}">색상</span>
+                                        <span>/</span>
+                                        <!-- 사이즈 선택 -->
+                                        <label>
+                                            <select class="item-size-select">
+                                                <option th:each="s : ${cart.availableSizes}" th:value="${s}" th:text="${s}" th:selected="${s == cart.size}"></option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div class="item-qty-price">
+                                        <div class="qty-control">
+                                            <button type="button" class="btn-qty-minus">-</button>
+                                            <label>
+                                                <input type="text" class="item-qty-input" th:value="${cart.quantity}" readonly>
+                                            </label>
+                                            <button type="button" class="btn-qty-plus">+</button>
+                                        </div>
+                                        <span class="price" th:data-unit-price="${cart.itemPrice}" th:text="${cart.itemPrice * cart.quantity} + '원'">159,000원</span>
+                                    </div>
+                                </div>
+
+                                <!-- + 버튼 추가 -->
+                                <div class="item-actions">
+                                    <button type="button" class="btn-add-item">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
+            <!-- 오른쪽 섹션: 결제 요약 -->
+            <div class="cart-right-section">
+                <div class="summary-box sticky-summary">
+                    <h3>결제 금액</h3>
+                    <div class="summary-row">
+                        <span>상품금액</span>
+                        <span id="totalProductPrice">0원</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>배송비</span>
+                        <span id="deliveryFee">0원</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>총 결제금액</span>
+                        <span id="totalPrice" class="total-price">0원</span>
+                    </div>
+                    <button class="order-btn">결제하기</button>
+                </div>
+            </div>
         </div>
-        <div class="summary-row">
-          <span>배송비</span>
-          <span id="deliveryFee">0원</span>
-        </div>
-        <div class="summary-row total">
-          <span>총 결제금액</span>
-          <span id="totalPrice" class="total-price">0원</span>
-        </div>
-        <button class="order-btn">결제하기</button>
-      </div>
     </div>
-  </div>
-</div>
+</main>
 </body>
 </html>

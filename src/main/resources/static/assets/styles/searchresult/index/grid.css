@@ -1,14 +1,14 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 1rem 0;
-    align-items: start;
-    row-gap: 3rem;
-    column-gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr); /* 3열 */
+    gap: 30px; /* 간격 증가 */
     margin-top: 2rem;
+    padding-bottom: 4rem;
+    padding-left: 20px; /* 좌측 여백 */
+    padding-right: 20px; /* 우측 여백 */
 }
 
-.grid a {
+.item-card {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -16,109 +16,121 @@
     border: 1px solid #eee;
     border-radius: 8px;
     overflow: hidden;
-    transition: box-shadow 0.3s;
-    background-color: transparent; /* 배경색 투명하게 변경 */
-    position: relative;
-    height: 100%; /* 높이를 100%로 설정하여 그리드 셀 높이에 맞춤 */
-}
-
-/* PC 화면에서만 호버 효과 적용 */
-@media (hover: hover) {
-
-
-    .grid a:hover .image-wrapper img {
-        transform: scale(1.05);
-    }
-}
-
-.grid .image-wrapper {
+    background-color: #fff;
+    max-width: 350px; /* 카드 최대 너비 제한 */
+    margin: 0 auto; /* 중앙 정렬 */
     width: 100%;
-    aspect-ratio: 1 / 1;
+}
+
+.image-wrapper {
+    width: 100%;
+    height: 250px; /* 높이 고정 (기존 aspect-ratio 대신) */
     overflow: hidden;
-    position: relative;
     background-color: transparent; /* 배경색 투명하게 변경 */
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-shrink: 0; /* 이미지가 줄어들지 않도록 설정 */
+    box-sizing: border-box;
 }
 
-.grid .image-wrapper img {
+.image-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    display: block;
+    object-fit: contain; /* 비율 유지하며 맞춤 (cover 대신 contain 사용 고려) */
     transition: transform 0.3s ease;
-    transform-origin: center center;
 }
 
-.grid .text-wrapper {
-    text-align: left;
+/* 매장 카드 전용 스타일 추가 */
+.shop-card .image-wrapper {
+    height: 180px; /* 매장 이미지 높이를 줄임 */
+    padding: 20px;
+}
+
+.shop-card .image-wrapper img {
+    object-fit: contain; /* 매장 이미지 잘리지 않게 contain으로 변경 */
+}
+
+/* 호버 시 이미지만 확대 */
+.item-card:hover .image-wrapper img {
+    transform: scale(1.05);
+}
+
+.text-wrapper {
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    padding: 1.2rem;
-    flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
-    justify-content: space-between; /* 내용 분산 */
-    background-color: transparent; /* 배경색 투명하게 변경 */
-    position: relative;
-    z-index: 1;
-    min-height: 100px; /* 최소 높이 설정하여 텍스트 영역 확보 */
+    gap: 5px; /* 간격 조정 */
 }
 
-.grid .text-wrapper .title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.text-wrapper .shop-name {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.text-wrapper .title {
+    font-size: 15px;
+    font-weight: 500;
     color: #333;
     line-height: 1.4;
-    /* 말줄임 처리 강화 */
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* 두 줄까지만 표시 */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 2.8em; /* 두 줄 높이 고정 (line-height * 2) */
+    height: 2.8em;
 }
 
-.grid .text-wrapper .price {
-    font-size: 1.1rem;
+.text-wrapper .price {
+    font-size: 16px;
     font-weight: bold;
     color: #222;
-    margin-top: auto; /* 가격을 항상 바닥에 붙임 */
+    margin-top: 5px;
 }
 
-/* 반응형 미디어 쿼리 */
+.no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 0;
+    font-size: 16px;
+    color: #666;
+}
 
-/* 태블릿 (1024px 이하) - 1열로 변경 */
+.highlight {
+    font-weight: bold;
+    color: #222;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    padding-left: 20px;
+    color: #333;
+}
+
+/* 반응형 */
 @media (max-width: 1024px) {
     .grid {
-        grid-template-columns: repeat(1, 1fr); /* 2열 -> 1열로 변경 */
-        row-gap: 4rem;
-        column-gap: 1.5rem;
+        grid-template-columns: repeat(2, 1fr); /* 태블릿 2열 */
+        gap: 20px;
     }
-
-    /* 1열일 때 이미지 크기가 너무 커지는 것을 방지하려면 max-height를 줄이거나 조절 가능 */
-    /* 현재는 aspect-ratio 1/1이라 가로가 꽉 차면 세로도 커짐 */
 }
 
-/* 모바일 (600px 이하) */
 @media (max-width: 600px) {
     .grid {
-        grid-template-columns: repeat(1, 1fr);
-        row-gap: 5rem;
+        grid-template-columns: repeat(1, 1fr); /* 모바일 1열 */
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
-    .grid .text-wrapper {
-        padding: 1.5rem;
+    .image-wrapper {
+        height: 200px; /* 모바일에서 이미지 높이 줄임 */
     }
 
-    .grid .text-wrapper .title {
-        font-size: 1.1rem;
-        height: auto;
-        -webkit-line-clamp: 2;
-    }
-
-    .grid .text-wrapper .price {
-        font-size: 1.2rem;
+    .shop-card .image-wrapper {
+        height: 150px; /* 모바일에서 매장 이미지 높이 더 줄임 */
     }
 }
