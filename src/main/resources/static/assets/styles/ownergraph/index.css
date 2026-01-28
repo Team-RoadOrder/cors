@@ -40,10 +40,11 @@
 }
 
 
-
+/*수정*/
 .sections {
-    padding: 3rem 5rem 3rem 7rem;
-    min-height: calc(100vh - 4.375rem);
+    padding: 1rem 5rem 3rem 5rem;
+    /*min-height: calc(100vh - 4.375rem);*/
+    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -348,7 +349,9 @@ td {
         width: 100%;
         box-sizing: border-box;
     }
-
+    .admin-header{
+        display: none;
+    }
     .sections {
         width: 100%;
         display: flex;
@@ -427,47 +430,61 @@ td {
 }
 /* [1] 1100px(68.75rem) 이하: 모바일/태블릿 레이아웃 (세로 배치) */
 @media screen and (max-width: 68.75rem) {
-    body #header, body #nav, body #toggleNav, body #owner-header, body .admin-header {
-        display: none;
-    }
-
-    body { background-color: #fff; }
-
     #main {
-        margin: 0 auto;
-        padding: 1.5rem 5%;
+        margin-top: 0; /* 데스크톱용 4rem 마진 제거 */
+        padding-top: 1rem;       /* 최소한의 상단 여백만 유지 */
         display: flex;
         flex-direction: column;
-        align-items: center; /* 가로 중앙 정렬 */
         width: 100%;
-        box-sizing: border-box;
     }
-
+    /* 1. 섹션 컨테이너 정렬 보정 */
     .sections {
+        align-items: flex-start; /* 중앙 정렬 해제하여 제목을 왼쪽으로 */
+        padding: 0 1rem;
+    }
+    .admin-header{
         width: 100%;
-        max-width: 1100px;
+    }
+    #item-info .item-list .form-title {
+        display: flex;
+        align-items: center;
+        font-size: 1.125rem; /* 약 18px */
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1.5rem;
+        width: 100%;
+        position: relative;
+        padding-left: 0.75rem;
+    }
+
+
+    #item-info .item-list .form-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 1.2rem;
+        background-color: #6366f1;
+        border-radius: 2px;
+    }
+
+
+    .input-group {
+        width: 100%;
+        margin-bottom: 1.25rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
     }
 
-    .top-section {
-        display: flex;
-        flex-direction: column; /* 세로로 쌓아서 찌그러짐 방지 */
-        width: 100%;
-        gap: 1.5rem;
-        align-items: center;
-    }
 
-    .graph-container, .status-container, .bottom-section {
-        width: 100%;
-    }
-
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        width: 100%;
+    .input-group .label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
     }
 }
 /* [2] 1101px ~ 1280px (문제의 사각지대 해결): 노트북 레이아웃 보존 */

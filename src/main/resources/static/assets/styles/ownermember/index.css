@@ -6,13 +6,15 @@
 #main {
     margin-top: 4rem;
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: min-content 1fr;
+    /*grid-template-columns: 1fr 4fr;*/
     flex-grow: 1; /* body 내에서 남은 공간을 모두 차지 */
     width: 100%;
 }
 .sections {
-    padding: 1.5rem 5rem 3rem 7rem;
-    min-height: calc(100vh - 4.375rem);
+    padding: 1rem 5rem 3rem 5rem;
+    /*min-height: calc(100vh - 4.375rem);*/
+    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -24,7 +26,6 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding: 0;
     border-bottom: 0.0625rem solid #adb5bd;
     width: 100%;
     box-sizing: border-box;
@@ -50,6 +51,7 @@
     outline: none;
     background-color: #fff;
     margin-bottom: -1rem;
+    box-sizing: border-box;
 }
 
 .search-icon {
@@ -614,25 +616,6 @@
     }
 }
 
-/* ============================================================
-   [3] 80.01rem(1281px) 이상: 데스크톱 대화면
-   ============================================================ */
-@media screen and (min-width: 80.01rem) {
-    body .sections {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 3rem 7rem 3rem 3rem;
-
-    }
-
-    body .admin-table {
-        /*background-color: #fff;*/
-    }
-
-    body .admin-table td {
-        /*background-color: #fff;*/
-    }
-}
 
 /* [공통] 모달 베이스 - 중앙 정렬 유지 */
 body .member-modal {

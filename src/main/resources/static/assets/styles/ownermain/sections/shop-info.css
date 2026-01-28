@@ -3,7 +3,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 70rem;
+    /*width: 70rem;*/
+    width: 100%;
     height: 25rem;
     background: #FFFFFF;
     margin-top: 2rem;

@@ -1,3 +1,12 @@
+#item-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    min-height: 25rem;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
 #item-info .item-list {
     background: #FFFFFF;
     border-radius: 1rem;
@@ -83,9 +92,10 @@
 
 #item-info .item-list .list .input-group .price-input-wrapper .currency {
     position: absolute;
-    right: 1.75rem;
+    /*right: 1.75rem;*/
     top: 50%;
-    transform: translateY(-50%);
+    right: 20%;
+    transform: translate(-50%,-50%);
     font-weight: 400;
     color: #667eea;
     font-size: 1.1rem;
@@ -114,6 +124,7 @@
     width: 100%;
     color: #a0aec0; /* 기본 placeholder 색상 */
 }
+
 #item-info .item-list .list .input-group .select:valid {
     color: #2d3748; /* 진한 색상 */
 }
@@ -144,7 +155,7 @@
 }
 
 #item-info .item-list .list .input-group .select.selected {
-    color: #2d3748 !important;
+    color: #2d3748;
 }
 
 /* 옵션 드롭다운 스타일 */

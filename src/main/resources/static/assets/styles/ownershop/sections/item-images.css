@@ -1,7 +1,8 @@
 #item-images {
     display: flex;
     flex-direction: row;
-    width: 75rem;
+    width: 100%;
+    /*width: 75rem;*/
     height: 20rem;
     background: #FFFFFF;
     margin-top: 2rem;
@@ -54,8 +55,9 @@
 }
 #item-images > .main-image-wrapper > .caption {
     position: absolute;
-    top: 62%;
-    left: 28%;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-size: 1.3rem;
     font-weight: 300;
     color: #212121;

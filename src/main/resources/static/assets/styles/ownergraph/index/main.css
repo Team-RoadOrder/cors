@@ -4,10 +4,11 @@
 #main {
     margin-top: 4rem;
     display: grid;
-    grid-template-columns: 17.1375rem 1fr; /* 274.2px -> 17.1375rem */
+    grid-template-columns: min-content 1fr;
+    /*grid-template-columns: 17.1375rem 1fr; !* 274.2px -> 17.1375rem *!*/
     flex-grow: 1;
     width: 100%;
-    min-height: calc(100vh - 4rem);
+    /*min-height: calc(100vh - 4rem);*/
 }
 
 /*.content {*/
