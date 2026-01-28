@@ -252,7 +252,54 @@
                             <span class="total-price" id="summary-total-price" th:text="${totalPrice} + '원'">13,000원</span>
                         </div>
                     </section>
+                    <!--추가: 01-28 결제 전 안내사항-->
+                    <section class="summary-box delivery-process-container">
+                        <input type="checkbox" id="toggle-delivery" class="toggle-checkbox" hidden>
 
+                        <label for="toggle-delivery" class="delivery-process-header">
+                            <h3 class="delivery-process-title">브랜드 배송 및 반품 정책</h3>
+                            <span class="toggle-icon">▼</span>
+                        </label>
+
+                        <div class="delivery-process-content">
+                            <div class="delivery-info-box">
+<!--                                <div class="info-item">-->
+<!--                                    <h4 class="info-subtitle">구매 안내</h4>-->
+<!--                                    <p class="info-desc">구매는 <strong>결제 완료 > 주문 확인 > 출고 > 배송 완료 > 구매확정</strong> 단계로 진행됩니다.</p>-->
+<!--                                    <p class="info-desc">예약 상품은 마이페이지에서 실시간 진행 상황을 확인하실 수 있으며, 안내된 일정에 맞춰 방문해 주시기 바랍니다.</p>-->
+<!--                                </div>-->
+
+                                <div class="info-item">
+                                    <h4 class="info-subtitle">교환/반품 안내</h4>
+                                    <p class="info-desc"><strong>교환:</strong> 배송 완료 후 신청 > 접수 > 상품 회송 > 판매자 검수 > 새 상품 출고 > 교환 완료</p>
+                                    <p class="info-desc"><strong>반품:</strong> 배송 완료 후 신청 > 접수 > 상품 회송 > 판매자 검수 > 반품 완료(환불)</p>
+                                    <ul class="info-list">
+                                        <li><strong>방문 반품:</strong> 상품 수령 후 7일 이내 직접 방문 시, 배송비를 포함한 <strong>결제 금액 전액이 환불</strong>됩니다.</li>
+                                        <li><strong>우편/택배 반품:</strong> 단순 변심으로 인한 반품 시 초기 배송비를 제외한 금액이 환불됩니다.</li>
+                                        <li><strong>예약 환불:</strong> 예약 상품의 취소 및 환불은 해당 상호로 직접 문의해 주시기 바랍니다.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="info-item">
+                                    <h4 class="info-subtitle">구매확정 및 자동 처리</h4>
+                                    <ul class="info-list">
+                                        <li>배송 시작 후 21일 경과 시 자동으로 배송 완료 처리됩니다.</li>
+                                        <li>배송 완료 후 7일 이내에 직접 구매 확정이 가능하며, 기간 내 미확정 시 자동 구매확정 처리됩니다.</li>
+                                    </ul>
+                                </div>
+
+<!--                                <div class="info-item notice">-->
+<!--                                    <h4 class="info-subtitle">[유의사항]</h4>-->
+<!--                                    <ul class="info-list bullet">-->
+<!--                                        <li><strong>주문 취소:</strong> '결제 완료' 단계에서만 가능하며, 배송 준비가 시작된 이후에는 취소가 제한될 수 있습니다.</li>-->
+<!--                                        <li><strong>신청 거부:</strong> 상품 훼손, 구성품 누락, 재고 부족 등의 사유로 교환/반품이 거부될 수 있습니다.</li>-->
+<!--                                        <li><strong>반품 비용:</strong> 단순 변심으로 인한 반품 시 고객님께 반품 배송 비용이 발생합니다.</li>-->
+<!--                                        <li><strong>불량/하자:</strong> 상품 실물 확인 후 하자로 판명될 경우 처리가 가능하며, 사유에 따라 왕복 배송비 입금이 필요할 수 있습니다.</li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </section>
                     <!-- 결제 확인 및 동의 -->
                     <section class="summary-box agreement-box">
                         <label class="check-label">

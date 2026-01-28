@@ -65,6 +65,74 @@ body {
   width: 400px; /* 고정 너비 */
 }
 
+/*추가: 01-28 결제 전 안내사항 -시작-*/
+
+.delivery-process-container {
+    /*border: 0.0625rem solid #e0e0e0;*/
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.delivery-process-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.delivery-process-header .delivery-process-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* 토글 전 내용 숨김 */
+.delivery-process-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+/* :has() 선택자를 활용한 토글 로직 */
+.delivery-process-container:has(.toggle-checkbox:checked) .delivery-process-content {
+    max-height: 125rem;
+    /*border-top: 0.0625rem solid #eee;*/
+}
+
+/* 화살표 회전 및 스타일 */
+.delivery-process-container:has(.toggle-checkbox:checked) .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.toggle-icon {
+    transition: transform 0.3s;
+    font-size: 0.625rem;
+    color: #666;
+}
+
+/* 내부 정보 박스 스타일 (참고용) */
+.delivery-info-box {
+    padding: 0.9375rem;
+}
+
+.info-item {
+    margin-bottom: 0.9375rem;
+}
+
+.info-subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.3125rem;
+}
+
+.info-desc, .info-list li {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+
+/*추가: 01-28 결제 전 안내사항 -끝-*/
 /* 스티키 처리 (스크롤 시 따라오게) */
 .sticky-summary {
   position: sticky;
