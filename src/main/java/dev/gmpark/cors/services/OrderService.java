@@ -32,7 +32,7 @@ public class OrderService {
 
     private static final long FREE_DELIVERY_THRESHOLD = 70000;
     private static final long DELIVERY_FEE = 3000;
-    private static final double POINT_EARN_RATE = 0.02; 
+    // private static final double POINT_EARN_RATE = 0.02; // Removed: PayService handles point earning
 
     /**
      * 주문 데이터 정규화 (Normalization)
@@ -243,7 +243,8 @@ public class OrderService {
                         .build());
             }
 
-            // 포인트 적립
+            // 포인트 적립 로직 제거 (PayService에서 처리)
+            /*
             int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
             if (earnedPoints > 0) {
                 this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
@@ -254,6 +255,7 @@ public class OrderService {
                         .orderId(String.valueOf(order.getId()))
                         .build());
             }
+            */
             return CommonResult.SUCCESS;
         }
 

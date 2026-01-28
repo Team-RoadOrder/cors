@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // 토스페이먼츠 초기화 (내 클라이언트 키)
+    const clientKey = "test_ck_XZYkKL4Mrjjxe4LwBYgLr0zJwlEW"; 
+    const tossPayments = TossPayments(clientKey);
+    // 로그인한 유저 ID가 있다면 넣고, 없으면 랜덤 문자열 (비회원 결제 시 ANONYMOUS)
+    const customerKey = "USER_" + new Date().getTime(); 
+    const payment = tossPayments.payment({ customerKey });
+
     const dialog = document.getElementById("dialog");
     const modal = dialog.querySelector(".modal");
     const closeBtn = dialog.querySelector(".close");
@@ -291,7 +298,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // 결제 버튼 클릭 이벤트
         paymentButton.addEventListener("click", function() {
+            // 1. 즉시 로딩 표시 및 버튼 비활성화 (가장 먼저 실행)
+            Loading.show("결제 준비 중입니다...");
+            paymentButton.disabled = true;
+
+            // 2. 동의 여부 확인 (로딩 끄고 리턴)
             if (!agreeCheckbox.checked) {
+                Loading.hide();
+                paymentButton.disabled = false;
                 openModal('알림', '주문 내용 확인 및 정보 제공에 동의해주세요.', { confirmText: '확인' });
                 return;
             }
@@ -316,8 +330,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 request = "요청사항 없음"; // 선택 안 함일 경우 기본값 설정
             }
 
-            // 유효성 검사
+            // 유효성 검사 (실패 시 로딩 끄고 리턴)
             if (!receiverName || receiverName.trim() === "") {
+                Loading.hide();
+                paymentButton.disabled = false;
                 openModal('알림', '수령인 이름을 입력해주세요.', { 
                     confirmText: '확인',
                     onConfirm: () => document.getElementById('receiver_name').focus()
@@ -325,11 +341,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
             
-            // 전화번호 유효성 검사 (숫자만 입력되었는지, 길이 체크 등)
+            // 전화번호 유효성 검사
             const phoneRegex = /^[0-9]+$/;
             if (!phoneParts[0].value.trim() || !phoneRegex.test(phoneParts[0].value.trim()) ||
                 !phoneParts[1].value.trim() || !phoneRegex.test(phoneParts[1].value.trim()) ||
                 !phoneParts[2].value.trim() || !phoneRegex.test(phoneParts[2].value.trim())) {
+                Loading.hide();
+                paymentButton.disabled = false;
                 openModal('알림', '수령인 연락처를 올바르게 입력해주세요.', {
                     confirmText: '확인',
                     onConfirm: () => phoneParts[0].focus()
@@ -338,6 +356,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (!address || address.trim() === "") {
+                Loading.hide();
+                paymentButton.disabled = false;
                 openModal('알림', '배송지 주소를 입력해주세요.', {
                     confirmText: '확인',
                     onConfirm: () => addressInput.focus()
@@ -345,6 +365,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
             if (!addressDetail || addressDetail.trim() === "") {
+                Loading.hide();
+                paymentButton.disabled = false;
                 openModal('알림', '상세 주소를 입력해주세요.', {
                     confirmText: '확인',
                     onConfirm: () => addressDetailInput.focus()
@@ -357,13 +379,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const paymentGroup = document.querySelector('input[name="paymentMethodGroup"]:checked').value;
             
             if (paymentGroup === 'simple') {
-                // 간편결제 로직 (카드 등록 여부 확인 등)
-                // 여기서는 일단 'SIMPLE_CARD'로 가정하거나, 등록된 카드가 없으면 알림
-                // 현재 UI상 카드 등록 버튼만 있으므로, 실제로는 카드 등록이 선행되어야 함.
-                // 임시로 'SIMPLE_PAY'로 설정
                 paymentMethod = 'SIMPLE_PAY';
             } else {
-                // 일반결제
                 const generalMethod = document.querySelector('input[name="generalPaymentMethod"]:checked');
                 if (generalMethod) {
                     paymentMethod = generalMethod.value;
@@ -391,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function() {
             orderItems.forEach(item => {
                 const cartId = item.dataset.cartId;
                 const isNew = item.dataset.isNew === 'true';
-                const currentItemId = item.dataset.itemId || itemId; // data-item-id가 없으면 URL 파라미터 사용
+                const currentItemId = item.dataset.itemId || itemId; 
                 const qtyInput = item.querySelector('.item-qty-input');
                 const sizeSelect = item.querySelector('.item-size-select');
                 
@@ -399,16 +416,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 const currentSize = sizeSelect ? sizeSelect.value : size;
 
                 if (cartId && !isNew) {
-                    // 기존 장바구니 아이템
                     cartQuantities[cartId] = currentQty;
                 } else if (isNew || (!cartId && currentItemId)) {
-                    
                     if (!cartId && !isNew && itemId) {
-                        // 단일 상품 주문의 원본 아이템 -> quantity 변수 업데이트
                         quantity = currentQty;
                         size = currentSize;
                     } else {
-                        // 진짜로 추가된 아이템
                         newItems.push({
                             itemId: parseInt(currentItemId),
                             size: currentSize,
@@ -430,54 +443,57 @@ document.addEventListener("DOMContentLoaded", function() {
                 receiverPhone: receiverPhone,
                 address: address,
                 addressDetail: addressDetail,
-                paymentMethod: paymentMethod, // 결제 수단 추가
-                usedPoints: usedPoints, // 포인트 사용량
-                usedCouponId: null // 쿠폰 ID (추후 구현)
+                paymentMethod: paymentMethod,
+                usedPoints: usedPoints,
+                usedCouponId: null
             };
 
-            // 로딩 표시
-            Loading.show("결제 처리 중입니다...");
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/pay');
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState !== XMLHttpRequest.DONE) {
-                    return;
+            // 3. 서버에 '가주문' 요청
+            fetch('/pay/prepare', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || "서버 응답 오류"); });
                 }
+                return response.text();
+            }) 
+            .then(orderId => {
+                // 4. 주문번호를 받으면 토스 결제창 띄우기 (로딩은 유지)
                 
-                // 로딩 숨김
+                const totalAmountStr = document.getElementById('summary-total-price').textContent;
+                const totalAmount = parseInt(totalAmountStr.replace(/[^0-9]/g, ''));
+
+                return payment.requestPayment({
+                    method: "CARD",
+                    amount: {
+                        currency: "KRW",
+                        value: totalAmount,
+                    },
+                    orderId: orderId,
+                    orderName: "로드오더 상품 결제",
+                    successUrl: window.location.origin + "/payment/success",
+                    failUrl: window.location.origin + "/payment/fail",
+                    customerEmail: document.getElementById('orderer_email') ? document.getElementById('orderer_email').value : "",
+                    customerName: receiverName,
+                });
+            })
+            .catch(error => {
+                // 5. 에러 발생 시에만 로딩 끄고 버튼 활성화
                 Loading.hide();
+                paymentButton.disabled = false;
                 
-                if (xhr.status < 200 || xhr.status >= 400) {
-                    openModal('오류', `요청을 처리하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요. (${xhr.status})`, { confirmText: '확인' });
+                // 토스 결제창 닫기 등으로 인한 에러는 무시하거나 적절히 처리
+                if (error.code === 'USER_CANCEL') {
+                    // 사용자가 결제창을 닫은 경우
                     return;
                 }
 
-                const response = JSON.parse(xhr.responseText);
-                switch (response.result) {
-                    case 'SUCCESS':
-                        // 결제 성공 시 화면 처리
-                        if (paymentContainer) {
-                            paymentContainer.style.display = 'none'; // 기존 결제 화면 숨김
-                        }
-                        if (paymentCompleteModal) {
-                            paymentCompleteModal.style.display = 'flex'; // 완료 모달 표시
-                        }
-                        break;
-                    case 'FAILURE_SESSION':
-                        openModal('경고', '세션이 만료되었습니다. 지금 로그인하러 이동할까요?', {
-                            confirmText: '이동',
-                            cancelText: '취소',
-                            onConfirm: () => window.location.href = '/login'
-                        });
-                        break;
-                    case 'FAILURE':
-                    default:
-                        openModal('경고', response.message || '결제 처리에 실패하였습니다.', { confirmText: '확인' });
-                }
-            };
-            xhr.send(JSON.stringify(orderData));
+                console.error("결제 준비 중 에러:", error);
+                openModal('오류', '결제 시작에 실패했습니다: ' + error.message, { confirmText: '확인' });
+            });
         });
     }
 

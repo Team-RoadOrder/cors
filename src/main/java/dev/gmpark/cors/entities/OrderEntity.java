@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 public class OrderEntity {
     private Long id;
+    // private String orderId; // Removed as we use ID
+    private String paymentKey; // Added for Toss Payments
+    private LocalDateTime paidAt; // Added for Toss Payments
     private String userEmail;
     private Long totalPrice;
     private String status;

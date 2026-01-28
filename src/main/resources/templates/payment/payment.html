@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>주문 결제</title>
+    <script src="https://js.tosspayments.com/v2/standard"></script>
     <link href="/assets/styles/common.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Gowun+Dodum&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
     <link href="/assets/styles/payment/pay.css" rel="stylesheet" type="text/css">
@@ -181,73 +182,11 @@
                     </div>
                 </section>
 
-                <!-- 5. 결제 수단 -->
-                <section class="checkout-box">
-                    <h3>결제 수단</h3>
-                    <div class="box-content">
-                        <div class="payment-methods-container">
-
-                            <!-- 간편결제 -->
-                            <div class="payment-method-group">
-                                <label class="method-header">
-                                    <input type="radio" name="paymentMethodGroup" value="simple" checked>
-                                    <span class="method-title">간편결제</span>
-                                </label>
-                                <div class="method-content simple-payment-content">
-                                    <!-- 등록된 카드가 있는 경우 (예시) -->
-                                    <!--
-                                    <div class="registered-card">
-                                        <img src="/assets/images/payment/card.png" alt="Card" class="card-icon">
-                                        <div class="card-info">
-                                            <span class="bank-name">국민은행</span>
-                                            <span class="card-number">**** **** **** **12</span>
-                                        </div>
-                                    </div>
-                                    -->
-
-                                    <!-- 등록된 카드가 없는 경우 (카드 추가 버튼) -->
-                                    <div class="add-card-btn">
-                                        <span class="plus-icon">+</span>
-                                        <span class="add-text">카드 등록</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 일반결제 -->
-                            <div class="payment-method-group">
-                                <label class="method-header">
-                                    <input type="radio" name="paymentMethodGroup" value="general">
-                                    <span class="method-title">일반결제</span>
-                                </label>
-                                <div class="method-content general-payment-content" style="display: none;">
-                                    <div class="general-methods-grid">
-                                        <label class="general-method-item">
-                                            <input type="radio" name="generalPaymentMethod" value="CARD" checked>
-                                            <span>신용/체크카드</span>
-                                        </label>
-                                        <label class="general-method-item">
-                                            <input type="radio" name="generalPaymentMethod" value="NAVER_PAY">
-                                            <img src="/assets/images/payment/naverpay.png" alt="네이버페이" class="pay-icon">
-                                        </label>
-                                        <label class="general-method-item">
-                                            <input type="radio" name="generalPaymentMethod" value="KAKAO_PAY">
-                                            <img src="/assets/images/payment/kakaopay.png" alt="카카오페이" class="pay-icon">
-                                        </label>
-                                        <label class="general-method-item">
-                                            <input type="radio" name="generalPaymentMethod" value="TOSS_PAY">
-                                            <img src="/assets/images/payment/tosspay.png" alt="토스페이" class="pay-icon">
-                                        </label>
-                                        <label class="general-method-item">
-                                            <input type="radio" name="generalPaymentMethod" value="V_BANK">
-                                            <span>무통장입금</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </section>
+                <!-- 5. 결제 수단 (제거됨) -->
+                <div style="display:none;">
+                    <input type="radio" name="paymentMethodGroup" value="simple" checked>
+                    <input type="radio" name="generalPaymentMethod" value="CARD" checked>
+                </div>
 
             </div>
 

@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+}
+
+.icon-wrapper {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.success-icon {
+    color: #4CAF50;
+}
+
+.fail-icon {
+    color: #F44336;
+}
+
+.message {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.details {
+    margin-bottom: 30px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.details p {
+    margin: 5px 0;
+}
+
+.details span {
+    font-weight: bold;
+    color: #333;
+}
+
+.btn-action {
+    padding: 12px 30px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-action:hover {
+    background-color: #555;
+}

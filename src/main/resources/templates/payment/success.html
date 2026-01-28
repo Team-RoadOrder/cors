@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 성공</title>
+    <link rel="stylesheet" th:href="@{/assets/styles/common.css}">
+    <link rel="stylesheet" th:href="@{/assets/styles/payment/result.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="icon-wrapper success-icon">✔</div>
+    <div class="message">결제가 성공적으로 완료되었습니다.</div>
+    <div class="details">
+        <p>주문번호: <span th:text="${orderId}"></span></p>
+        <p>결제금액: <span th:text="${#numbers.formatInteger(amount, 0, 'COMMA')} + '원'"></span></p>
+    </div>
+    <a href="/" class="btn-action">홈으로 돌아가기</a>
+</div>
+</body>
+</html>

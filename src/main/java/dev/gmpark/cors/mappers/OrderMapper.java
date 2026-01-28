@@ -12,10 +12,20 @@ import java.util.List;
 public interface OrderMapper {
     int insertOrder(OrderEntity order);
     int insertOrderItems(@Param("items") List<OrderItemEntity> items);
+    
+    OrderEntity selectOrderById(@Param("id") Long id);
+    int updateOrderStatus(OrderEntity order);
+
     //특정 상품 구매 완료 조회
     int selectCompleteOrderCount(@Param("itemId")Long ItemId,@Param("userEmail")String userEmail);
     OrderHistoryVo[] getAllOrders(String userEmail);
 
     OrderHistoryVo[] getAllOrdersByShopId(@Param("shopId") int shopId);
     int updateOrderItemStatus(@Param("id") Long id, @Param("status") int status);
+
+    // 추가: 주문 ID로 주문 아이템 조회
+    List<OrderItemEntity> selectOrderItemsByOrderId(@Param("orderId") Long orderId);
+
+    // PENDING 상태인 주문 삭제
+    int deletePendingOrdersByUserEmail(@Param("userEmail") String userEmail);
 }
