@@ -191,8 +191,12 @@ public class OwnerMainController {
     }
     @RequestMapping(value = "/owner/patch-order-status", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> patchOrderItemStatus(@RequestParam(value = "id") Long id, @RequestParam(value = "status") Integer status) {
+    public Map<String, Object> patchOrderItemStatus(@RequestParam(value = "id") Long id, @RequestParam(value = "status") Integer status, @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
+        if( (sessionUser.getLevel() == 1 && status == 3) ||(sessionUser.getLevel() == 2 && status == 3) ) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
         CommonResult result = this.orderService.updateOrderItem(id, status);
         response.put("result", result.name());
         return response;
