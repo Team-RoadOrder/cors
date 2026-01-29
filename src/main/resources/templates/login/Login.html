@@ -53,12 +53,12 @@
             </div>
         </form>
         <div class="container">
-    <span class="caption">
-        <a href="/register"> 회원가입 </a>
-    </span>
-            <span class="caption">
-        <a href="/resetpw"> 비밀번호 재설정</a>
-    </span>
+<!--    <span class="caption">-->
+<!--        <a href="/register"> 회원가입 </a>-->
+<!--    </span>-->
+<!--            <span class="caption">-->
+<!--        <a href="/resetpw"> 비밀번호 재설정</a>-->
+<!--    </span>-->
             <div class="caption sns">
                 <a href="" target="_self"
                    th:href="@{https://kauth.kakao.com/oauth/authorize (response_type='code', client_id=${kakaoClientId}, redirect_uri = ${kakaoRedirectUri})}">
@@ -68,12 +68,18 @@
                    th:href="@{https://nid.naver.com/oauth2.0/authorize (response_type='code', client_id = ${naverClientId}, redirect_uri = ${naverRedirectUri}, state = 'study')}">
                     <img src="/assets/images/login/naver.png" alt="">
                 </a>
-                <span class="sns">소셜계정으로 로그인</span>
-                <span class="text">카카오톡</span>
-                <span class="text naver">네이버</span>
+<!--                <span class="sns">소셜계정으로 로그인</span>-->
+                <span class="text">KAKAO</span>
+                <span class="text naver">NAVER</span>
             </div>
         </div>
+        <div class="bottom-menu">
+            <a href="/register" class="register-button" > 회원가입 </a>
+            <!--                <span class="divider"></span>-->
+            <a href="/resetpw"  class="passwordChange-button"> 비밀번호 재설정</a>
+        </div>
     </div>
+
 </section>
 </body>
 </html>

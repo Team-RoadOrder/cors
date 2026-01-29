@@ -99,21 +99,29 @@ html, body {
     left: 0;
     height: 100vh;
     width: 100%;
-    background: url("/assets/images/login/clothes.jpeg") no-repeat center/cover;
+    background: url("/assets/images/login/white-back.jpg") no-repeat center/cover;
     transform: translateY(100%);
     z-index: 10;
     box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
 }
+
 .login-form {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(215, 224, 232, 0.9);
-    padding: 13rem 3rem 3rem;
-    border-radius: 1rem;
+    padding: 13rem 1.5rem 2.5rem;
+    border-radius: 0.5rem;
     z-index: 11;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(1.25rem);
+    -webkit-backdrop-filter: blur(1.25rem);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+    /*border-radius: 3.125rem;*/
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
 }
+
 
 .site-logo {
     position: absolute;
@@ -160,29 +168,38 @@ html, body {
     padding: 20px 10px 10px;
     background: transparent;
     border: none;
-    border-bottom: 0.13rem solid #fefefe;
+    /* 기존 border-bottom은 삭제합니다. */
     color: #4d4d4d;
     font-size: 1.2rem;
     outline: none;
+
+    background-image:
+            linear-gradient(#242424, #242424),
+            linear-gradient(#ffffff, #ffffff);
+    background-position: bottom left, bottom left;
+    background-repeat: no-repeat;
+
+    background-size: 0% 2px, 100% 2px;
+    transition: background-size 0.3s ease-out;
 }
 .int-area input:first-child {
     margin-bottom: 0.5rem;
 }
-/* 입력창 클릭(포커스) 시 하단 라인 색상 변경 */
+ /*입력창 클릭(포커스) 시 하단 라인 색상 변경 */
 .int-area input:focus {
-    border-bottom: 2px solid #23B1FA;
+    background-size: 100% 2px, 100% 2px;
 }
 
 /* 포커스 시 라벨 색상도 테마 색상으로 맞춤 (선택사항) */
 .int-area input:focus + label {
-    color: #23B1FA !important;
+    color: #242424;
 }
 .int-area label {
     position: absolute;
     left: 10px;
     top: 15px;
     font-size: 1.2rem;
-    color: #4d4d4d;
+    color: #242424;
     transition: 0.5s;
 }
 
@@ -197,62 +214,136 @@ html, body {
 }
 
 .btn-area button {
-    width: 100%;
-    height: 50px;
-    background: #23B1FA;
+    width: 50%;
+    height: 45px;
+    background: #242424;
     color: #eaeaea;
     border: none;
     font-size: 1.2rem;
-    border-radius: 0.8rem;
+    border-radius: 0.25rem;
     opacity: 100% !important;
     /*font-family: "Gowun Dodum", sans-serif;*/
     font-weight: 600;
+    margin-left:25%;
 }
 .container {
     display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    position: relative;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+    position: relative;     /* 하단 sns 기준점 */
 }
-.caption {
-    margin-top : 2.3rem;
-    text-align: center;
+
+.bottom-menu {
+    gap: 0.25rem;
+    position: absolute;
+    right: 2.5rem;
+    bottom: -1.5rem;
+    display: flex;
+    width: 25%;
+
+    /*margin-top: 3rem;*/
 }
-.caption a:hover{
-    opacity: 0.7;
-}
-.caption a {
-    font-size: 1rem;
-    color: #4d4d4d;
+
+.bottom-menu a {
+    white-space: nowrap;
+    flex: 1; /* 좌우 50%씩 차지 */
     text-decoration: none;
+    color: #fff;
+    background-color: #242424; /* 목업의 진한 배경색 */
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 300;
+    padding: 0.25rem; /* 버튼 높이감 */
+    text-align: center;
+    transition: all 0.2s ease;
 }
-.caption img {
-    width: 2rem;
+.bottom-menu a:hover {
+    background-color: #fff;
+    color:#242424;;
 }
+/* 로고 이미지를 감싸고 있는 a 태그 */
+.caption.sns a {
+    position: relative;
+    display: inline-flex;   /* 박스 성격을 확실히 부여 */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;       /* 삐져나가는 빛을 잘라내는 핵심 속성 */
+    border-radius: 12px;    /* 로고 아이콘의 곡률과 비슷하게 (매우 중요) */
+
+    /* 혹시 모를 잔상을 위해 배경색 투명하게 고정 */
+    background: transparent;
+    -webkit-mask-image: -webkit-radial-gradient(white, black); /* 사파리 등 일부 브라우저의 overflow 버그 방지 */
+}
+
+
+.caption.sns a::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -150%;
+    width: 60px;
+    height: 300%;
+    background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(25deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 호버 시 애니메이션 */
+.caption.sns a:hover::before {
+    left: 150%;
+    transition: all 0.6s ease-in-out;
+}
+
+/* 로고 이미지 */
+.caption.sns img {
+    width: 3rem;
+    height: 3rem;
+    display: block;
+    position: relative;
+    z-index: 0;
+}
+/*카카오,네이버*/
+/*.caption img {*/
+/*    width: 3rem;*/
+/*}*/
 .caption.sns {
     display: flex;
-    gap: 0.5rem;
-    position: absolute;
-    right: 0.3rem;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    /*margin-bottom: rem;*/
+    position: relative;
 }
-.caption.sns > .sns{
-    transform: translateY(-1.4rem) translateX(-2.5rem);;
-    position: absolute;
-    font-size: 0.7rem;
-    width: 9rem;
-    color: #ffff;
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    font-weight: 700;
-}
+
+/*.caption.sns > .sns{*/
+/*    transform: translateY(-1.4rem) translateX(-5.5rem);;*/
+/*    position: absolute;*/
+/*    font-size: 0.7rem;*/
+/*    width: 9rem;*/
+/*    color: #ffff;*/
+/*    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;*/
+/*    font-weight: 700;*/
+/*}*/
 .caption.sns > .text {
-   transform: translateY(2rem) translateX(0.1rem);;
+   transform: translateY(2rem) translateX(-2rem);;
     position: absolute;
     font-size: 0.5rem;
+    color:#f9e000;
 }
 .caption.sns > .text.naver {
-    transform: translateY(2rem) translateX(2.9rem);
+    transform: translateY(2rem) translateX(2.15rem);
     position: absolute;
     font-size: 0.5rem;
+    color:#03a94d;
 }
 
 
@@ -318,8 +409,6 @@ html, body {
     }
 
 }
-
-
 
 
 

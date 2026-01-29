@@ -5,12 +5,15 @@
 }
 
 *{margin :0; padding:0; box-sizing: border-box;}
+
 body{
     font-family: "Gowun Dodum", sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url("/assets/images/login/clothes.jpeg");
+    min-height: 100vh;
+    margin: 0;
+    background: url("/assets/images/login/white-back.jpg") no-repeat fixed;
     background-size: cover;
 
 }
@@ -23,17 +26,51 @@ body{
     right: 5.5rem;
 }
 .login-form{
-
     gap: 2rem;
     position: absolute;
-    background-color: rgba(215, 224, 232, 0.9);
-    padding: 13rem 3rem 3rem 3rem;
+    /*background-color: rgba(215, 224, 232, 0.9);*/
+    padding: 13rem 1.5rem 3rem 1.5rem;
     border-radius: 1rem;
     top:50%;
     left:50%;
     transform: translate(-50%,-50%);
-
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(1.25rem);
+    -webkit-backdrop-filter: blur(1.25rem);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+    /*border-radius: 3.125rem;*/
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
 }
+.resetpwBottom-menu {
+    position: absolute;
+    bottom: -1.5rem;
+    right: 2.5rem;
+    display: flex;
+    gap: 0.25rem;
+    z-index: 12;
+    color: #fff;
+}
+.resetpwBottom-menu a {
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+
+    background-color: #242424;
+    font-size: 0.625rem;
+    font-weight: 300;
+    padding: 0.25rem;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+.resetpwBottom-menu a:hover {
+    background-color: #fff;
+    color: #242424;
+}
+
+
 
 .login-form h1 {
     font-size: 2rem;
@@ -54,29 +91,41 @@ body{
     top: 0.5rem;
     width: 20%;
     height: 2rem;
-    background-color: #23B1FA;
+    background-color: #242424;
     border: none;
     color: #fefefe;
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 500;
     font-family: "Gowun Dodum", sans-serif;
-    border-radius: 25px;
+    border-radius: 0.25rem;
     cursor: pointer;
 
 }
 .int-area button:hover {
-    background-color: #0aa7f8;
+    background-color: #333;
     color: #fff;
     transition-delay: 75ms;
     transition-property: background-color, color;
 }
+/*.int-area input:focus + label,*/
+/*.int-area input:valid + label,*/
+/*.int-area input:read-only + label{*/
+/*    top: 0;*/
+/*    font-size: 0.9rem;*/
+/*    color: #8c8c8c;*/
+/*}*/
 .int-area input:focus + label,
+.int-area input:not(:placeholder-shown) + label, /* 값이 있으면 위로 고정 */
 .int-area input:valid + label,
-.int-area input:read-only + label{
+.int-area input:read-only + label {
     top: 0;
     font-size: 0.9rem;
-    color: #8c8c8c;
+    color: #878787 !important;
 }
+
+
+
+
 /* #code 아이디를 가진 input이 disabled 상태일 때 라벨 색상 변경 */
 .int-area input#code:disabled + label {
     color: #8f8f8f !important; /* 기본 라벨 색상인 진한 회색으로 변경 */
@@ -87,53 +136,42 @@ body{
     /* 만약 약간 흐린 회색을 원하시면 color: #8c8c8c !important; 를 사용하세요 */
 }
 
+/* 1. 기본 인풋 스타일 (애니메이션 포함) */
 .int-area input {
     width: 100%;
     padding: 20px 10px 10px;
     background: transparent;
-    border: none;
-    border-bottom: 2px solid #fff;
-    font-size: 1.2rem;
+    border: none; /* 기존 border-bottom 삭제 필수! */
     color: #4d4d4d;
+    font-size: 1.2rem;
     outline: none;
+
+    /* 배경 레이어: [1. 포커스용 검정선, 2. 기본용 흰색선] */
+    background-image:
+            linear-gradient(#242424, #242424),
+            linear-gradient(#ffffff, #ffffff);
+    background-position: bottom left, bottom left;
+    background-repeat: no-repeat;
+    background-size: 0% 2px, 100% 2px; /* 검정선 너비 0%에서 시작 */
+    transition: background-size 0.3s ease-out; /* 0.3초 동안 슥- 움직임 */
 }
+
+/* 2. 포커스 시 애니메이션 실행 */
+.int-area input:focus {
+    background-size: 100% 2px, 100% 2px; /* 검정선이 100%로 길어짐 */
+}
+
+/* 3. 비활성화(disabled) 상태 대응 */
 .int-area input:disabled {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* 하단 선을 흐리게 */
-    color: rgba(255, 255, 255, 0.3); /* 글자색을 흐리게 */
-    cursor: not-allowed; /* 금지 표시 커서 */
-}
-
-
-.int-area input:disabled + label {
-    color: rgba(255, 255, 255, 0.3) !important;
-}
-
-.int-area button:disabled,
-.btn-area button:disabled {
-    background-color: #0aa7f8;
-    color: #fefefe;
-    opacity: 0.6;
+    /*background-image:*/
+    /*        linear-gradient(#242424, #242424),*/
+    /*        linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3));*/
+    /*background-size: 0% 2px, 100% 2px;*/
+    color: #242424;
     cursor: not-allowed;
 }
 
-
-.int-area button:disabled:hover,
-.btn-area button:disabled:hover {
-    background-color: #0aa7f8;
-    color: #fefefe;
-    transition: none;
-}
-.int-area input {
-    width: 100%;
-    padding: 20px 10px 10px;
-    background: transparent;
-    border: none;
-    border-bottom: 0.13rem solid #fff;
-    font-size: 1.2rem;
-    color: #4d4d4d;
-    outline: none;
-}
-
+/* 4. 라벨 위치 조정 (기존 유지) */
 .int-area label {
     position: absolute;
     left: 10px;
@@ -141,12 +179,16 @@ body{
     font-size: 1.2rem;
     color: #312f2f;
     transition: 0.5s;
+    pointer-events: none; /* 라벨 클릭해도 인풋 포커스되게 */
 }
 
-.int-area input:focus + label ,input:valid + label  {
+/* 5. 포커스/입력 시 라벨 위로 올리기 */
+.int-area input:focus + label,
+.int-area input:valid + label,
+.int-area input:read-only + label {
     top: 0;
     font-size: 0.9rem;
-    color: #878787;
+    color: #878787 !important;
 }
 
 .btn-area {
@@ -156,22 +198,22 @@ body{
 .btn-area button {
     width: 100%;
     height: 50px;
-    background: #23B1FA;
+    background: #242424;
     color: #eaeaea;
     border: none;
     font-size: 1.2rem;
-    border-radius: 0.8rem;
+    border-radius: 0.25rem;
     opacity: 100% !important;
     /*font-family: "Gowun Dodum", sans-serif;*/
     font-weight: 600;
 }
-.int-area input:focus {
-    border-bottom: 2px solid #23B1FA;
-}
+/*.int-area input:focus {*/
+/*    border-bottom: 2px solid #242424;*/
+/*}*/
 
 /* 포커스 시 라벨 색상도 테마 색상으로 맞춤 (선택사항) */
 .int-area input:focus + label {
-    color: #23B1FA !important;
+    color: #242424 !important;
 }
 
 a[href] {
@@ -203,7 +245,7 @@ a[href] {
     display: block !important;
     width: auto !important;
     height: 2rem !important;
-    background: #23B1FA !important;
+    background: #242424 !important;
     color: #fefefe !important;
     border: none !important;
     font-size: 0.9rem !important;
@@ -216,7 +258,7 @@ a[href] {
 }
 
 .resend-btn-bottom:hover {
-    background-color: #0aa7f8 !important;
+    background-color: #333 !important;
     color: #fff !important;
     transition-delay: 75ms;
     transition-property: background-color, color;
@@ -274,11 +316,11 @@ a[href] {
         top: 0.5rem;
         width: 20%;
         height: 2rem;
-        background-color: #23B1FA;
+        background-color: #242424;
         border: none;
         color: #fefefe;
         font-size: 0.9rem;
-        font-weight: bold;
+        font-weight: 500;
         font-family: "Gowun Dodum", sans-serif;
         border-radius: 25px;
         cursor: pointer;
