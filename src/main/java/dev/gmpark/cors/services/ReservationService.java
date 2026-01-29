@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -34,24 +35,28 @@ public class ReservationService {
             return CommonResult.FAILURE;
         }
 
-        ReservationEntity reservation = ReservationEntity.builder()
-                .userEmail(userEmail)
-                .shopId(dto.getShopId()) // int -> Long 자동 변환 주의 (Entity가 Long이면 DTO도 Long 추천)
-                .visitDate(dto.getVisitDate())
-                .status("대기")
-                .createdAt(now) // 생성 시간 명시적 설정
-                .build();
-
-        int insertCount = this.reservationMapper.insertReservation(reservation);
-        if (insertCount == 0) return CommonResult.FAILURE;
-
-        // 3. 상품들(Items)에 방금 만든 예약번호(ID) 심어주기
+        // 여러 상품을 각각의 예약으로 처리
         for (ReservationItemsEntity item : dto.getItems()) {
-            item.setReservationId(reservation.getId()); // 여기가 핵심 연결고리!
-        }
+            ReservationEntity reservation = ReservationEntity.builder()
+                    .userEmail(userEmail)
+                    .shopId(dto.getShopId())
+                    .visitDate(dto.getVisitDate())
+                    .status("대기")
+                    .createdAt(now)
+                    .build();
 
-        // 4. 상품들 insert (한 번에 넣거나 반복문으로 넣거나)
-        this.reservationMapper.insertReservationItems(dto.getItems());
+            int insertCount = this.reservationMapper.insertReservation(reservation);
+            if (insertCount == 0) {
+                // 하나라도 실패하면 전체 롤백
+                throw new RuntimeException("예약 생성에 실패했습니다.");
+            }
+
+            // 생성된 예약 ID를 상품에 설정
+            item.setReservationId(reservation.getId());
+
+            // 단일 상품을 리스트에 담아 insert
+            this.reservationMapper.insertReservationItems(Collections.singletonList(item));
+        }
 
         return CommonResult.SUCCESS;
     }
