@@ -1018,23 +1018,24 @@ const confirmRefund = (element) => {
     };
     openModal("Request", `
     <div style="text-align: left;">
-        <div style="margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px;">
-            환불 사유
-        </div>
+        <span style="display: block; font-size: 13px; color: #888; margin-bottom: 8px;">환불 사유</span>
         <div style="
-            background-color: #f8f9fa; 
-            border: 1px solid #e9ecef; 
-            border-radius: 8px; 
-            padding: 15px; 
+            border-left: 4px solid #6c757d;
+            background-color: #f8f9fa;      /* 배경색 조금 더 연하게 */
+            padding: 15px;                  /* [핵심] 상하좌우 여백을 넉넉히 줌 */
             color: #333;
             font-size: 15px;
-            line-height: 1.5;
-            white-space: pre-wrap;
+            line-height: 1.6;               /* 줄 간격을 조금 더 넓힘 */
+            /*
+            white-space: pre-wrap;          !* 줄바꿈 유지 *!
+            */
+            word-break: break-all;          /* 긴 단어 강제 줄바꿈 (이미지같은 상황 방지) */
+            border-radius: 0 4px 4px 0;     /* 오른쪽 모서리만 살짝 둥글게 */
         ">
-            <p style="margin: 0;">${reasonText}</p>
+            ${reasonText}
         </div>
     </div>
-    `, {
+`, {
         confirmText: '승인',
         onConfirm: () => {
             if (typeof Loading !== 'undefined') {

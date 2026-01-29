@@ -489,7 +489,10 @@ public class OrderService {
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
         // status가 2(환불요청) 또는 3(환불완료)일 때만 허용
-        if( id < 1 || (status != 2 && status != 3) || refundReason == null || refundReason.isEmpty()) {
+        if( id < 1 || (status != 2 && status != 3) ||
+                refundReason == null ||
+                refundReason.isEmpty() ||
+                refundReason.length() > 200) {
             return CommonResult.FAILURE;
         }
         

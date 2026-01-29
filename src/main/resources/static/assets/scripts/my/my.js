@@ -819,10 +819,37 @@ const buyOk = (id, status) => {
 
 
 const refundRequest = (id, status) => {
-    // 1. input 태그에 id="refundReasonInput" 을 추가했습니다.
-    openModal("Request", `
-    <input type="text" id="refundReasonInput" placeholder="환불사유" style="width: 100%;">
-`, {
+    const modalContent = `
+        <div style="text-align: left;">
+            <label for="refundReasonInput" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px;">
+                환불 사유를 입력해주세요
+            </label>
+            <textarea id="refundReasonInput" 
+                      maxlength=200 
+                      placeholder="예: 사이즈가 맞지 않아요, 화면과 색상이 달라요. (상세히 적어주세요)" 
+                      style="
+                        width: 100%; 
+                        height: 120px; 
+                        padding: 12px; 
+                        border: 1px solid #ddd; 
+                        border-radius: 6px; 
+                        resize: none; 
+                        font-size: 14px; 
+                        letter-spacing: -0.5px;
+                        font-family: inherit;
+                        box-sizing: border-box;
+                        line-height: 1.5;
+                        outline: none;
+                      "
+                      onfocus="this.style.borderColor='#333'"
+                      onblur="this.style.borderColor='#ddd'"
+            ></textarea>
+            <p style="margin-top: 8px; font-size: 12px; color: #888;">
+                * 입력하신 내용은 판매자에게 전달되니 유의해주세요.
+            </p>
+        </div>
+    `;
+    openModal("Request", modalContent, {
         confirmText: '확인',
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
@@ -830,7 +857,13 @@ const refundRequest = (id, status) => {
             const reasonInput = document.getElementById('refundReasonInput');
             const reasonValue = reasonInput ? reasonInput.value : '';
             if (!reasonValue) {
-                openModal("ERROR", `<p>환불사유를 <입력해주세요></입력해주세요></p>`, {
+                openModal("ERROR", `<p>환불사유를 입력해주세요</p>`, {
+                    confirmText: '확인'
+                });
+                return;
+            }
+            if(reasonValue.length > 200) {
+                openModal("ERROR", `<p>환불사유는 200자 이상 작성이 제한됩니다.</p>`, {
                     confirmText: '확인'
                 });
                 return;

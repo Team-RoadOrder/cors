@@ -183,21 +183,20 @@
 }
 
 .tab_purchase_content .item .list .product .itemStatus .list-column > .cardOk {
-    font-weight: 700;
-    color: green;
-
+    font-weight: 600;
+    color: #648a64 !important;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .buyOk {
-    font-weight: 700;
-    color: #61df61;
+    font-weight: 600;
+    color: #5d9ee3a9;
     cursor: pointer;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .buyOk:hover {
     text-decoration: underline;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .request {
-    font-weight: 700;
-    color: #dc53ab;
+    font-weight: 600;
+    color: #939393;
     cursor: pointer;
 
 }
@@ -206,19 +205,19 @@
 
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .requesting {
-    color: #002a51;
-    font-weight: 700;
+    color: #5e7185;
+    font-weight: 600;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .refundOk {
-    color: #ff004b;
-    font-weight: 700;
+    color: #f32020;
+    font-weight: 600;
 
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .refundNot {
-    color: red;
-    font-weight: 700;
+    color: #e35656;
+    font-weight: 600;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .done {
-    font-weight: 700;
-    color: #007BFF;
+    font-weight: 600;
+    color: #1d6ec3;
 }
