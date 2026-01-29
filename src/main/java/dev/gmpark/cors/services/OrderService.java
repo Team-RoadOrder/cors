@@ -29,6 +29,7 @@ public class OrderService {
     private final ItemService itemService;
     private final CartService cartService;
     private final RegisterMapper registerMapper;
+    private final TossApiService tossApiService;
 
     private static final long FREE_DELIVERY_THRESHOLD = 70000;
     private static final long DELIVERY_FEE = 3000;
@@ -400,22 +401,50 @@ public class OrderService {
         return response;
     }
 
+    // 환불 로직 분리
+    private boolean processRefund(long orderItemId, String manualReason) {
+        try {
+            OrderItemEntity orderItem = this.orderMapper.selectOrderItemById(orderItemId);
+            if (orderItem == null) return false;
+
+            OrderEntity order = this.orderMapper.selectOrderById(orderItem.getOrderId());
+            if (order == null) return false;
+
+            // paymentKey가 있는 경우에만 환불 API 호출 (테스트 데이터 등 예외 처리)
+            if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
+                long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
+                String cancelReason = manualReason != null ? manualReason : 
+                                     (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
+                this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, cancelAmount);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public CommonResult updateOrderItem(long id, int status) {
         if (id < 1 || status == 0) {
             return CommonResult.FAILURE;
         }
 
-        // TODO: 상태 5번으로 변경 요청시 실제 환불이 이루어져야만 성공으로 처리
-        /*if(status == 5) {
+        if (status == 3) {
+            // 환불 로직 수행
+            if (!this.processRefund(id, null)) {
+                return CommonResult.FAILURE;
+            }
+        }
 
-        }*/
         return this.orderMapper.updateOrderItemStatus(id, status) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
-    public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
 
-        if( id < 1 || status != 2 || refundReason.isEmpty()) {
+    public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
+        // status가 2(환불요청) 또는 3(환불완료)일 때만 허용
+        if( id < 1 || (status != 2 && status != 3) || refundReason == null || refundReason.isEmpty()) {
             return CommonResult.FAILURE;
         }
+
         return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
 

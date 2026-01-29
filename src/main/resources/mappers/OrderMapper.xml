@@ -136,6 +136,22 @@
         WHERE `order_id` = #{orderId}
     </select>
 
+    <!-- 추가: ID로 주문 아이템 단건 조회 -->
+    <select id="selectOrderItemById" resultType="dev.gmpark.cors.entities.OrderItemEntity">
+        SELECT
+            `id`,
+            `order_id` AS `orderId`,
+            `item_id` AS `itemId`,
+            `shop_id` AS `shopId`,
+            `size`,
+            `quantity`,
+            `price`,
+            `status`,
+            `refund_reason` AS `refundReason`
+        FROM `cors`.`order_items`
+        WHERE `id` = #{id}
+    </select>
+
     <!-- PENDING 상태인 주문 삭제 -->
     <delete id="deletePendingOrdersByUserEmail">
         DELETE FROM `cors`.`orders`

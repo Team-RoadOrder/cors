@@ -27,6 +27,9 @@ public interface OrderMapper {
                                              @Param("refundReason") String refundReason);
     // 추가: 주문 ID로 주문 아이템 조회
     List<OrderItemEntity> selectOrderItemsByOrderId(@Param("orderId") Long orderId);
+    
+    // 추가: ID로 주문 아이템 단건 조회
+    OrderItemEntity selectOrderItemById(@Param("id") Long id);
 
     // PENDING 상태인 주문 삭제
     int deletePendingOrdersByUserEmail(@Param("userEmail") String userEmail);

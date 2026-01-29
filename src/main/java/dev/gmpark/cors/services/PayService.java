@@ -41,9 +41,7 @@ public class PayService {
     private final CartService cartService;
     private final ItemService itemService;
     private final CartMapper cartMapper;
-
-    // 개발자센터 시크릿 키 (테스트용)
-    private final String SECRET_KEY = "test_sk_yZqmkKeP8gNGqeA05AvprbQRxB9l";
+    private final TossApiService tossApiService;
 
     public Map<String, Object> getPaymentInfo(RegisterEntity sessionUser, Long itemId, String size, List<Long> cartIds) {
         if (sessionUser == null) {
@@ -286,39 +284,7 @@ public class PayService {
         }
 
         // 2. 토스페이먼츠 승인 API 호출
-        URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        
-        // 인증 헤더 설정 (시크릿 키 Base64 인코딩)
-        String encodedKey = Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
-        connection.setRequestProperty("Authorization", "Basic " + encodedKey);
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-
-        // 요청 본문 전송
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonBody = mapper.createObjectNode()
-                .put("paymentKey", paymentKey)
-                .put("orderId", orderId)
-                .put("amount", amount)
-                .toString();
-
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
-        }
-
-        // 3. 응답 처리
-        int code = connection.getResponseCode();
-        boolean isSuccess = code == 200;
-
-        InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
-        JsonNode responseNode = mapper.readTree(responseStream);
-
-        if (!isSuccess) {
-            // 결제 승인 실패 시 에러 처리
-            throw new RuntimeException(responseNode.path("message").asText());
-        }
+        tossApiService.confirmPayment(paymentKey, orderId, amount);
 
         // 4. [성공 시] DB 상태 업데이트 (PENDING -> PAID)
         order.setStatus("PAID"); 
@@ -370,101 +336,10 @@ public class PayService {
     }
 
     /**
-     * [환불] 결제 취소 요청
+     * 결제 취소 (환불)
      */
-    @Transactional
-    public void cancelPayment(Long orderId, String userEmail, String cancelReason) {
-        // 1. 주문 조회
-        OrderEntity order = orderMapper.selectOrderById(orderId);
-        if (order == null) {
-            throw new RuntimeException("주문 정보를 찾을 수 없습니다.");
-        }
-
-        // 2. 권한 및 상태 검증
-        if (!order.getUserEmail().equals(userEmail)) {
-            throw new RuntimeException("본인의 주문만 취소할 수 있습니다.");
-        }
-        if (!"PAID".equals(order.getStatus())) {
-            throw new RuntimeException("결제 완료 상태의 주문만 취소할 수 있습니다.");
-        }
-        if (order.getPaymentKey() == null) {
-            throw new RuntimeException("결제 키가 존재하지 않습니다.");
-        }
-
-        try {
-            // 3. 토스페이먼츠 취소 API 호출
-            URL url = new URL("https://api.tosspayments.com/v1/payments/" + order.getPaymentKey() + "/cancel");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            String encodedKey = Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
-            connection.setRequestProperty("Authorization", "Basic " + encodedKey);
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonBody = mapper.createObjectNode()
-                    .put("cancelReason", cancelReason)
-                    .toString();
-
-            try (OutputStream os = connection.getOutputStream()) {
-                os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
-            }
-
-            int code = connection.getResponseCode();
-            boolean isSuccess = code == 200;
-
-            if (!isSuccess) {
-                InputStream errorStream = connection.getErrorStream();
-                JsonNode errorNode = mapper.readTree(errorStream);
-                throw new RuntimeException(errorNode.path("message").asText());
-            }
-
-            // 4. DB 상태 업데이트 (CANCELLED)
-            order.setStatus("CANCELLED");
-            orderMapper.updateOrderStatus(order);
-
-            // 5. 포인트 복구 및 회수 로직
-            // 5-1. 원 주문 금액 재계산 (포인트 사용량 역산)
-            List<OrderItemEntity> orderItems = orderMapper.selectOrderItemsByOrderId(order.getId());
-            long totalProductPrice = 0;
-            for (OrderItemEntity item : orderItems) {
-                totalProductPrice += item.getPrice() * item.getQuantity();
-            }
-
-            long deliveryFee = (totalProductPrice >= 70000 || totalProductPrice == 0) ? 0 : 3000;
-            long originalTotalPrice = totalProductPrice + deliveryFee;
-            long usedPoints = originalTotalPrice - order.getTotalPrice(); // 사용했던 포인트
-
-            int earnedPoints = (int) (order.getTotalPrice() * 0.01); // 적립됐던 포인트
-
-            // 5-2. 포인트 처리 (사용 포인트 반환 - 적립 포인트 회수)
-            int pointChange = (int) usedPoints - earnedPoints;
-
-            if (pointChange != 0) {
-                registerMapper.updatePoint(order.getUserEmail(), pointChange);
-            }
-            
-            // 히스토리 기록
-            if (usedPoints > 0) {
-                registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                        .userEmail(order.getUserEmail())
-                        .amount((int) usedPoints)
-                        .type("REFUND") // 환불로 인한 반환
-                        .orderId(String.valueOf(order.getId()))
-                        .build());
-            }
-            if (earnedPoints > 0) {
-                registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                        .userEmail(order.getUserEmail())
-                        .amount(-earnedPoints)
-                        .type("R_EARN") // 적립 취소 (Refund Earn)
-                        .orderId(String.valueOf(order.getId()))
-                        .build());
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("환불 처리 중 오류가 발생했습니다: " + e.getMessage());
-        }
+    public void cancelPayment(String paymentKey, String cancelReason, long cancelAmount) throws Exception {
+        tossApiService.cancelPayment(paymentKey, cancelReason, cancelAmount);
     }
+
 }
