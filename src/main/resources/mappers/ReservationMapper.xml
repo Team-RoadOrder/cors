@@ -20,7 +20,8 @@
     </insert>
     <update id="updateReservationStatus">
         UPDATE `cors`.`reservations`
-        SET `status` = #{status}
+        SET `status` = #{status},
+            `updated_at` = NOW()
         WHERE `id` = #{reservationId}
     </update>
     <delete id="deleteReservationById">
