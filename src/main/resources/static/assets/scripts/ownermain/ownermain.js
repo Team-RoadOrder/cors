@@ -984,12 +984,15 @@ const confirmRefund = (element) => {
             if (xhr.readyState !== XMLHttpRequest.DONE) return;
 
             if (xhr.status < 200 || xhr.status >= 400) {
+                if (typeof Loading !== 'undefined') Loading.hide(); // 에러 시 로딩 숨김
                 openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
                 return;
             }
 
             const response = JSON.parse(xhr.responseText);
             let successMsg = (status === 3) ? "환불이 승인되었습니다." : "환불이 거절되었습니다.";
+
+            if (typeof Loading !== 'undefined') Loading.hide(); // 응답 완료 시 로딩 숨김
 
             switch (response.result) {
                 case 'FAILURE':
@@ -1034,6 +1037,9 @@ const confirmRefund = (element) => {
     `, {
         confirmText: '승인',
         onConfirm: () => {
+            if (typeof Loading !== 'undefined') {
+                Loading.show('환불 처리중 입니다. 잠시만 기다려 주세요.');
+            }
             updateRefundStatus(3);
         },
         cancelText: '거절',

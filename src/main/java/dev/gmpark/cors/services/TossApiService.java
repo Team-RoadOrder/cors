@@ -61,6 +61,17 @@ public class TossApiService {
         return getResponse(connection);
     }
 
+    public JsonNode getPayment(String paymentKey) throws Exception {
+        URL url = new URL("https://api.tosspayments.com/v1/payments/" + paymentKey);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        String encodedKey = Base64.getEncoder().encodeToString((SECRET_KEY + ":").getBytes(StandardCharsets.UTF_8));
+        connection.setRequestProperty("Authorization", "Basic " + encodedKey);
+        connection.setRequestMethod("GET");
+
+        return getResponse(connection);
+    }
+
     private JsonNode getResponse(HttpURLConnection connection) throws Exception {
         int code = connection.getResponseCode();
         boolean isSuccess = code == 200;

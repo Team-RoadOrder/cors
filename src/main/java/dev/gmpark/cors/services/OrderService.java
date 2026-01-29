@@ -1,5 +1,6 @@
 package dev.gmpark.cors.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import dev.gmpark.cors.dtos.PaymentItemDto;
 import dev.gmpark.cors.dtos.SingleOrderDto;
 import dev.gmpark.cors.entities.OrderEntity;
@@ -413,9 +414,56 @@ public class OrderService {
             // paymentKey가 있는 경우에만 환불 API 호출 (테스트 데이터 등 예외 처리)
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
-                String cancelReason = manualReason != null ? manualReason : 
-                                     (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
-                this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, cancelAmount);
+                
+                // ★ 환불 가능 금액 조회 (토스 API 호출)
+                JsonNode paymentInfo = this.tossApiService.getPayment(order.getPaymentKey());
+                long balanceAmount = paymentInfo.path("balanceAmount").asLong(); // 남은 환불 가능 금액
+
+                // ★ [수정] 잔액이 0이어도 포인트 환불은 진행해야 함
+                // 기존: if (balanceAmount <= 0) return true; -> 포인트 환불 로직 실행 안됨
+                // 수정: 잔액이 0이면 토스 환불은 건너뛰고 포인트 환불 로직으로 바로 이동
+
+                long refundAmount = 0;
+                
+                if (balanceAmount > 0) {
+                    refundAmount = cancelAmount;
+                    if (cancelAmount > balanceAmount) {
+                        refundAmount = balanceAmount;
+                    }
+
+                    String cancelReason = manualReason != null ? manualReason : 
+                                         (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
+                    
+                    // ★ [수정] 토스 API 호출 시 refundAmount가 0보다 클 때만 호출
+                    if (refundAmount > 0) {
+                        this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, refundAmount);
+                    }
+                }
+                
+                // ★ 포인트 환불 로직 (사용한 포인트 돌려주기)
+                // 토스에서 환불받지 못한 금액(cancelAmount - refundAmount)은 전액 포인트로 환불
+                long pointRefundAmount = cancelAmount - refundAmount;
+                if (pointRefundAmount > 0) {
+                    this.registerMapper.updatePoint(order.getUserEmail(), (int) pointRefundAmount);
+                    this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                            .userEmail(order.getUserEmail())
+                            .amount((int) pointRefundAmount)
+                            .type("REFUND") // 환불 타입
+                            .orderId(String.valueOf(order.getId()))
+                            .build());
+                }
+
+                // ★ 적립된 포인트 회수 로직
+                int earnedPointsToRevoke = (int) (refundAmount * 0.01); 
+                if (earnedPointsToRevoke > 0) {
+                    this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
+                    this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                            .userEmail(order.getUserEmail())
+                            .amount(-earnedPointsToRevoke)
+                            .type("REVOKE") // 회수 타입
+                            .orderId(String.valueOf(order.getId()))
+                            .build());
+                }
             }
             return true;
         } catch (Exception e) {
@@ -443,6 +491,13 @@ public class OrderService {
         // status가 2(환불요청) 또는 3(환불완료)일 때만 허용
         if( id < 1 || (status != 2 && status != 3) || refundReason == null || refundReason.isEmpty()) {
             return CommonResult.FAILURE;
+        }
+        
+        if (status == 3) {
+            // 환불 로직 수행
+            if (!this.processRefund(id, refundReason)) {
+                return CommonResult.FAILURE;
+            }
         }
 
         return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;

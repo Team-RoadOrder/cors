@@ -111,6 +111,11 @@ public class PayService {
             return Pair.of(CommonResult.FAILURE, "상세 주소를 입력해주세요.");
         }
         
+        // [추가] 요청사항 글자수 제한 (20자)
+        if (dto.getRequest() != null && dto.getRequest().length() > 15) {
+            return Pair.of(CommonResult.FAILURE, "요청사항은 15자까지 입력 가능합니다.");
+        }
+        
         // 포인트 사용량 검증
         if (dto.getUsedPoints() < 0) {
             return Pair.of(CommonResult.FAILURE, "포인트 사용량은 0 이상이어야 합니다.");
@@ -147,6 +152,11 @@ public class PayService {
         }
         if (dto.getUsedPoints() < 0) {
             throw new RuntimeException("잘못된 포인트 금액입니다.");
+        }
+        
+        // [추가] 요청사항 글자수 제한 (20자)
+        if (dto.getRequest() != null && dto.getRequest().length() > 20) {
+            throw new RuntimeException("요청사항은 20자까지 입력 가능합니다.");
         }
 
         // 2. 가격 계산 및 주문 아이템 구성 (DB 정보 기반)

@@ -61,6 +61,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 inputRequest.value = "";
             }
         });
+        
+        // [추가] 요청사항 글자수 제한 (20자)
+        inputRequest.addEventListener("input", function() {
+            if (this.value.length > 15) {
+                this.value = this.value.slice(0, 15);
+                // 선택 사항: 사용자에게 알림을 주고 싶다면 아래 주석 해제
+                openModal('알림', '요청사항은 15자까지 입력 가능합니다.', { confirmText: '확인' });
+            }
+        });
     }
 
     // 이메일 도메인 선택 처리
