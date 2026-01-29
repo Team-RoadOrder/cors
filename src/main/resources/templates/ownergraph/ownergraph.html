@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>판매자 매출 흐름</title>
-    <link href="/assets/images/login/favicon.png" rel="icon" >
+    <link href="/assets/images/login/favicon.png" rel="icon">
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/ownergraph/common.css">
     <link rel="stylesheet" href="/assets/styles/ownergraph/index.css">
@@ -58,8 +58,12 @@
                     <div class="graph-header">
                         <h2 class="title">매출추이</h2>
                         <div class="buttons">
-                            <button type="button" class="weekButton -selected" onclick="SalesChartModule.loadGraph('daily')">주간</button>
-                            <button type="button" class="monthButton" onclick="SalesChartModule.loadGraph('monthly')">월간</button>
+                            <button type="button" class="weekButton -selected"
+                                    onclick="SalesChartModule.loadGraph('daily')">주간
+                            </button>
+                            <button type="button" class="monthButton" onclick="SalesChartModule.loadGraph('monthly')">
+                                월간
+                            </button>
                         </div>
                     </div>
                     <div class="chart-area">
@@ -75,14 +79,36 @@
                                 <div class="label">금주 매출</div>
                                 <div class="value-row">
                                     <span class="value" th:text="${#numbers.formatInteger(status.currentSales, 0, 'COMMA') + '원'}">0원</span>
-                                    <span class="change up" th:text="${'▲ ' + status.salesChangePercent + '%'}">0%</span>
+
+                                    <!-- [수정] 증감률이 0 이상일 때 -->
+                                    <span th:if="${status.salesChangePercent >= 0}"
+                                          class="change up"
+                                          th:text="${'▲ ' + status.salesChangePercent + '%'}">
+                                    </span>
+
+                                    <!-- [수정] 증감률이 0 미만일 때 -->
+                                    <span th:if="${status.salesChangePercent < 0}"
+                                          class="change down"
+                                          th:text="${'▼ ' + status.salesChangePercent + '%'}">
+                                    </span>
                                 </div>
                             </div>
                             <div class="status-card">
                                 <div class="label">금주 주문수</div>
                                 <div class="value-row">
                                     <span class="value" th:text="${status.currentOrderCount + '건'}">0건</span>
-                                    <span class="change down" th:text="${'▼ ' + status.orderCountChangePercent + '%'}">0%</span>
+
+                                    <!-- [수정] 증감률이 0 이상일 때 (상승 또는 유지) -->
+                                    <span th:if="${status.orderCountChangePercent >= 0}"
+                                          class="change up"
+                                          th:text="${'▲ ' + status.orderCountChangePercent + '%'}">
+                                     </span>
+
+                                    <!-- [수정] 증감률이 0 미만일 때 (하락) -->
+                                    <span th:if="${status.orderCountChangePercent < 0}"
+                                          class="change down"
+                                          th:text="${'▼ ' + status.orderCountChangePercent + '%'}">
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +119,12 @@
                         <div class="table-wrapper">
                             <table>
                                 <thead>
-                                <tr><th>고객명</th><th>제품명</th><th>상태</th><th>일자</th></tr>
+                                <tr>
+                                    <th>고객명</th>
+                                    <th>제품명</th>
+                                    <th>상태</th>
+                                    <th>일자</th>
+                                </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="payment : ${payments}">
@@ -117,11 +148,13 @@
                         <div class="product-card" th:if="${topProducts.size() > i}" th:with="product=${topProducts[i]}">
                             <div class="rank-badge" th:text="${product.rank}">1</div>
                             <div class="img-box">
-                                <img th:src="${product.imagePath != null ? '/images/' + product.imagePath : '/assets/images/ownergraph/no_image.png'}" alt="제품">
+                                <img th:src="${product.imagePath != null ? '/images/' + product.imagePath : '/assets/images/ownergraph/no_image.png'}"
+                                     alt="제품">
                             </div>
                             <div class="info-box">
                                 <p class="p-name" th:text="${product.productName}">제품명</p>
-                                <p class="p-price" th:text="${#numbers.formatInteger(product.totalSales, 0, 'COMMA') + '원'}">0원</p>
+                                <p class="p-price"
+                                   th:text="${'SUM: ' + #numbers.formatInteger(product.totalSales, 0, 'COMMA') + '원'}">0원</p>
                             </div>
                         </div>
 

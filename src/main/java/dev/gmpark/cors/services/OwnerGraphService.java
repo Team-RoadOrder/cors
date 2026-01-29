@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -41,7 +43,13 @@ public class OwnerGraphService {
         // 기존 7일에서 14일로 확장하여 12월 말의 주문 흐름을 차트에 반영합니다.
         LocalDate startDate = endDate.minusDays(13);
 
-        return ownerGraphMapper.selectDailySales(shopId, startDate, endDate);
+        // 1. 일반 주문 매출 조회
+        List<SalesGraphVo> orderSales = ownerGraphMapper.selectDailySales(shopId, startDate, endDate);
+        // 2. 예약 거래 완료 매출 조회
+        List<SalesGraphVo> reservationSales = ownerGraphMapper.selectDailyReservationSales(shopId, startDate, endDate);
+
+        // 3. 두 리스트 합치기 (날짜 기준)
+        return mergeSalesData(orderSales, reservationSales);
     }
 
     /**
@@ -54,7 +62,35 @@ public class OwnerGraphService {
         // 5개월 전 1일부터 조회하여 11월, 12월 매출이 누락 없이 합산되도록 합니다.
         LocalDate startDate = endDate.minusMonths(5).withDayOfMonth(1);
 
-        return ownerGraphMapper.selectMonthlySales(shopId, startDate, endDate);
+        // 1. 일반 주문 매출 조회
+        List<SalesGraphVo> orderSales = ownerGraphMapper.selectMonthlySales(shopId, startDate, endDate);
+        // 2. 예약 거래 완료 매출 조회
+        List<SalesGraphVo> reservationSales = ownerGraphMapper.selectMonthlyReservationSales(shopId, startDate, endDate);
+
+        // 3. 두 리스트 합치기
+        return mergeSalesData(orderSales, reservationSales);
+    }
+
+    /**
+     * 두 개의 매출 데이터 리스트(주문, 예약)를 날짜 기준으로 병합하는 유틸리티 메서드
+     */
+    private List<SalesGraphVo> mergeSalesData(List<SalesGraphVo> list1, List<SalesGraphVo> list2) {
+        // 날짜를 키로 하는 맵으로 변환하여 병합
+        Map<String, SalesGraphVo> mergedMap = list1.stream()
+                .collect(Collectors.toMap(SalesGraphVo::getDate, vo -> vo));
+
+        for (SalesGraphVo vo : list2) {
+            mergedMap.merge(vo.getDate(), vo, (v1, v2) -> {
+                v1.setSales(v1.getSales() + v2.getSales());
+                v1.setOrderCount(v1.getOrderCount() + v2.getOrderCount());
+                return v1;
+            });
+        }
+
+        // 맵의 값들을 리스트로 변환하고 날짜순 정렬
+        return mergedMap.values().stream()
+                .sorted((v1, v2) -> v1.getDate().compareTo(v2.getDate()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -71,11 +107,23 @@ public class OwnerGraphService {
         LocalDate lastWeekEnd = thisWeekStart.minusDays(1);
 
         // Optional을 사용해 데이터가 없는 경우(Null) 0으로 정규화하여 NullPointerException을 방지합니다.
-        long thisWeekSales = Optional.ofNullable(ownerGraphMapper.selectWeeklySales(shopId, thisWeekStart, today)).orElse(0L);
-        int thisWeekOrders = Optional.ofNullable(ownerGraphMapper.selectWeeklyOrderCount(shopId, thisWeekStart, today)).orElse(0);
+        // [이번 주] 일반 주문 + 예약 매출 합산
+        long thisWeekOrderSales = Optional.ofNullable(ownerGraphMapper.selectWeeklySales(shopId, thisWeekStart, today)).orElse(0L);
+        long thisWeekResSales = Optional.ofNullable(ownerGraphMapper.selectWeeklyReservationSales(shopId, thisWeekStart, today)).orElse(0L);
+        long thisWeekSales = thisWeekOrderSales + thisWeekResSales;
 
-        long lastWeekSales = Optional.ofNullable(ownerGraphMapper.selectWeeklySales(shopId, lastWeekStart, lastWeekEnd)).orElse(0L);
-        int lastWeekOrders = Optional.ofNullable(ownerGraphMapper.selectWeeklyOrderCount(shopId, lastWeekStart, lastWeekEnd)).orElse(0);
+        int thisWeekOrderCount = Optional.ofNullable(ownerGraphMapper.selectWeeklyOrderCount(shopId, thisWeekStart, today)).orElse(0);
+        int thisWeekResCount = Optional.ofNullable(ownerGraphMapper.selectWeeklyReservationCount(shopId, thisWeekStart, today)).orElse(0);
+        int thisWeekOrders = thisWeekOrderCount + thisWeekResCount;
+
+        // [지난 주] 일반 주문 + 예약 매출 합산
+        long lastWeekOrderSales = Optional.ofNullable(ownerGraphMapper.selectWeeklySales(shopId, lastWeekStart, lastWeekEnd)).orElse(0L);
+        long lastWeekResSales = Optional.ofNullable(ownerGraphMapper.selectWeeklyReservationSales(shopId, lastWeekStart, lastWeekEnd)).orElse(0L);
+        long lastWeekSales = lastWeekOrderSales + lastWeekResSales;
+
+        int lastWeekOrderCount = Optional.ofNullable(ownerGraphMapper.selectWeeklyOrderCount(shopId, lastWeekStart, lastWeekEnd)).orElse(0);
+        int lastWeekResCount = Optional.ofNullable(ownerGraphMapper.selectWeeklyReservationCount(shopId, lastWeekStart, lastWeekEnd)).orElse(0);
+        int lastWeekOrders = lastWeekOrderCount + lastWeekResCount;
 
         // 증감율 계산 로직을 별도 메서드로 정규화하여 가독성을 높였습니다.
         return SalesStatusVo.builder()

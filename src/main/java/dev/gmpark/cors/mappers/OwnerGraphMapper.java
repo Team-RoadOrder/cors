@@ -27,4 +27,16 @@ public interface OwnerGraphMapper {
 
     // 매출 상위 제품
     List<TopProductVo> selectTopProducts(@Param("shopId") int shopId, @Param("limit") int limit);
+
+    // 예약 거래 완료 매출 (일별)
+    List<SalesGraphVo> selectDailyReservationSales(@Param("shopId") int shopId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // 예약 거래 완료 매출 (월별)
+    List<SalesGraphVo> selectMonthlyReservationSales(@Param("shopId") int shopId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // 예약 거래 완료 매출 (주간 합계)
+    Long selectWeeklyReservationSales(@Param("shopId") int shopId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // 예약 거래 완료 건수 (주간 합계)
+    Integer selectWeeklyReservationCount(@Param("shopId") int shopId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
