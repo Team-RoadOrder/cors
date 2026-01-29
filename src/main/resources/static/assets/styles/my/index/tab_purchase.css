@@ -182,43 +182,43 @@
     gap: 0.5rem;
 }
 
-.tab_purchase_content .item .list .product .itemStatus .list-column > #cardOk {
+.tab_purchase_content .item .list .product .itemStatus .list-column > .cardOk {
     font-weight: 700;
     color: green;
 
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #buyOk {
+.tab_purchase_content .item .list .product .itemStatus .list-column .buyOk {
     font-weight: 700;
     color: #61df61;
     cursor: pointer;
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #buyOk:hover {
+.tab_purchase_content .item .list .product .itemStatus .list-column .buyOk:hover {
     text-decoration: underline;
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #request {
+.tab_purchase_content .item .list .product .itemStatus .list-column .request {
     font-weight: 700;
     color: #dc53ab;
     cursor: pointer;
 
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #request:hover {
+.tab_purchase_content .item .list .product .itemStatus .list-column .request:hover {
     text-decoration: underline;
 
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #requesting {
+.tab_purchase_content .item .list .product .itemStatus .list-column .requesting {
     color: #002a51;
     font-weight: 700;
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #refundOk {
+.tab_purchase_content .item .list .product .itemStatus .list-column .refundOk {
     color: #ff004b;
     font-weight: 700;
 
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #refundNot {
+.tab_purchase_content .item .list .product .itemStatus .list-column .refundNot {
     color: red;
     font-weight: 700;
 }
-.tab_purchase_content .item .list .product .itemStatus .list-column #done {
+.tab_purchase_content .item .list .product .itemStatus .list-column .done {
     font-weight: 700;
     color: #007BFF;
 }

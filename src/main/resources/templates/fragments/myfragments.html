@@ -45,12 +45,19 @@
                 <span class="description" th:text="${order.size}">사이즈</span>
             </span>
             <span class="itemStatus">
-                <span class="date" th:text="${#temporals.format(order.createdAt, 'yy/MM/dd')}">날짜</span>
-                <span class="list-column">
-                    <span>구매완료</span>
-                    <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a>
-                </span>
-            </span>
+                        <span class="date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">25/07/02</span>
+                        <span class="list-column">
+                       <span th:if="${order.status == 0}" class="cardOk">결제완료</span>
+                       <span class="status-container">
+                       <span th:if="${order.status == 1}" class="buyOk" th:onclick="|buyOk(${order.id},4)|" >구매확정</span>
+                       <span th:if="${order.status == 1}" class="request" th:onclick="|refundRequest(${order.id},2)|">환불요청</span>
+                       </span>
+                       <span th:if="${order.status == 2}" class="requesting">환불요청중</span>
+                       <span th:if="${order.status == 3}" class="refundOk">환불완료</span>
+                       <span th:if="${order.status == 4}" class="done">구매완료</span>
+                       <span th:if="${order.status == 5}" class="refundNot">환불거절됨</span>
+                       <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a></span>
+                    </span>
         </span>
             </label>
             <div th:if="${homeOrders == null or #arrays.isEmpty(homeOrders)}"
@@ -104,15 +111,15 @@
                     <span class="itemStatus">
                         <span class="date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">25/07/02</span>
                         <span class="list-column">
-                       <span th:if="${order.status == 0}" id="cardOk">결제완료</span>
+                       <span th:if="${order.status == 0}" class="cardOk">결제완료</span>
                        <span class="status-container">
-                       <span th:if="${order.status == 1}" id="buyOk" th:onclick="|buyOk(${order.id},4)|" >구매확정</span>
-                       <span th:if="${order.status == 1}" id="request" th:onclick="|refundRequest(${order.id},2)|">환불요청</span>
+                       <span th:if="${order.status == 1}" class="buyOk" th:onclick="|buyOk(${order.id},4)|" >구매확정</span>
+                       <span th:if="${order.status == 1}" class="request" th:onclick="|refundRequest(${order.id},2)|">환불요청</span>
                        </span>
-                       <span th:if="${order.status == 2}" id="requesting">환불요청중</span>
-                       <span th:if="${order.status == 3}" id="refundOk">환불완료</span>
-                       <span th:if="${order.status == 4}" id="done">구매완료</span>
-                       <span th:if="${order.status == 5}" id="refundNot">환불거절됨</span>
+                       <span th:if="${order.status == 2}" class="requesting">환불요청중</span>
+                       <span th:if="${order.status == 3}" class="refundOk">환불완료</span>
+                       <span th:if="${order.status == 4}" class="done">구매완료</span>
+                       <span th:if="${order.status == 5}" class="refundNot">환불거절됨</span>
                        <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a></span>
                     </span>
                 </span>

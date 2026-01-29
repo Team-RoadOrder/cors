@@ -402,3 +402,44 @@
     text-align: center;
     color: #d10220 !important;
 }
+
+.tab-content  .recent_item .list .product .itemStatus .list-column > .cardOk {
+    font-weight: 700;
+    color: green;
+
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .buyOk {
+    font-weight: 700;
+    color: #61df61;
+    cursor: pointer;
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .buyOk:hover {
+    text-decoration: underline;
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .request {
+    font-weight: 700;
+    color: #dc53ab;
+    cursor: pointer;
+
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .request:hover {
+    text-decoration: underline;
+
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .requesting {
+    color: #002a51;
+    font-weight: 700;
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .refundOk {
+    color: #ff004b;
+    font-weight: 700;
+
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .refundNot {
+    color: red;
+    font-weight: 700;
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .done {
+    font-weight: 700;
+    color: #007BFF;
+}
