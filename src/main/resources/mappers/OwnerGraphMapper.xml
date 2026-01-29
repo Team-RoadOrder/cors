@@ -7,36 +7,36 @@
     <!-- 일별 매출 및 주문수 조회 -->
     <select id="selectDailySales" resultType="dev.gmpark.cors.vos.SalesGraphVo">
         SELECT
-            DATE_FORMAT(o.created_at, '%Y-%m-%d') AS date,
+            DATE_FORMAT(o.paid_at, '%Y-%m-%d') AS date,
             SUM(oi.price * oi.quantity) AS sales,
             COUNT(DISTINCT o.id) AS orderCount
         FROM `cors`.`orders` o
-        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+                 JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
        <![CDATA[
-      AND o.created_at >= #{startDate}
-      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+          AND o.paid_at >= #{startDate}
+          AND o.paid_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
           AND o.status = 'PAID' AND oi.status = '4'
-        GROUP BY DATE_FORMAT(o.created_at, '%Y-%m-%d')
+        GROUP BY DATE_FORMAT(o.paid_at, '%Y-%m-%d')
         ORDER BY date ASC
     </select>
 
     <!-- 월별 매출 및 주문수 조회 -->
     <select id="selectMonthlySales" resultType="dev.gmpark.cors.vos.SalesGraphVo">
         SELECT
-            DATE_FORMAT(o.created_at, '%Y-%m') AS date,
+            DATE_FORMAT(o.paid_at, '%Y-%m') AS date,
             SUM(oi.price * oi.quantity) AS sales,
             COUNT(DISTINCT o.id) AS orderCount
         FROM `cors`.`orders` o
-        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+                 JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
              <![CDATA[
-      AND o.created_at >= #{startDate}
-      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+          AND o.paid_at >= #{startDate}
+          AND o.paid_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
           AND o.status = 'PAID' AND oi.status = '4'
-        GROUP BY DATE_FORMAT(o.created_at, '%Y-%m')
+        GROUP BY DATE_FORMAT(o.paid_at, '%Y-%m')
         ORDER BY date ASC
     </select>
 
@@ -44,11 +44,11 @@
     <select id="selectWeeklySales" resultType="java.lang.Long">
         SELECT IFNULL(SUM(oi.price * oi.quantity), 0)
         FROM `cors`.`orders` o
-        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+                 JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
             <![CDATA[
-      AND o.created_at >= #{startDate}
-      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+          AND o.paid_at >= #{startDate}
+          AND o.paid_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
           AND o.status = 'PAID' AND oi.status = '4'
     </select>
@@ -57,11 +57,11 @@
     <select id="selectWeeklyOrderCount" resultType="java.lang.Integer">
         SELECT COUNT(DISTINCT o.id)
         FROM `cors`.`orders` o
-        JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+                 JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         WHERE oi.shop_id = #{shopId}
            <![CDATA[
-      AND o.created_at >= #{startDate}
-      AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+          AND o.paid_at >= #{startDate}
+          AND o.paid_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
           AND o.status = 'PAID' AND oi.status = '4'
     </select>
@@ -69,36 +69,39 @@
     <!-- 최근 결제 리스트 조회 (일반 주문 + 예약 완료 통합) -->
     <select id="selectRecentPayments" resultType="dev.gmpark.cors.vos.PaymentListVo">
         SELECT * FROM (
-            -- 1. 일반 주문 (구매확정)
-            SELECT
-                u.name AS customerName,
-                si.item_name AS productName,
-                '구매확정' AS status,
-                o.created_at AS orderDate
-            FROM `cors`.`orders` o
-            JOIN `cors`.`order_items` oi ON o.id = oi.order_id
-            JOIN `cors`.`shop_items` si ON oi.item_id = si.id
-            LEFT JOIN `cors`.`users` u ON o.user_email = u.email
-            WHERE oi.shop_id = #{shopId}
-              AND o.status = 'PAID' AND oi.status = '4'
+                          -- 1. 일반 주문 (구매확정)
+                          SELECT
+                              u.name AS customerName,
+                              si.item_name AS productName,
+                              '구매확정' AS status,
+                              o.paid_at AS orderDate,
+                              si.price AS amount
+                          FROM `cors`.`orders` o
+                                   JOIN `cors`.`order_items` oi ON o.id = oi.order_id
+                                   JOIN `cors`.`shop_items` si ON oi.item_id = si.id
+                                   LEFT JOIN `cors`.`users` u ON o.user_email = u.email
+                          WHERE oi.shop_id = #{shopId}
+                            AND o.status = 'PAID' AND oi.status = '4'
 
-            UNION ALL
+                          UNION ALL
 
-            -- 2. 예약 (거래완료)
-            SELECT
-                u.name AS customerName,
-                si.item_name AS productName,
-                '거래완료' AS status,
-                r.updated_at AS orderDate
-            FROM `cors`.`reservations` r
-            JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
-            JOIN `cors`.`shop_items` si ON ri.item_id = si.id
-            LEFT JOIN `cors`.`users` u ON r.user_email = u.email
-            WHERE r.shop_id = #{shopId}
-              AND r.status = '완료'
-        ) AS combined_payments
+                          -- 2. 예약 (거래완료)
+                          SELECT
+                              u.name AS customerName,
+                              si.item_name AS productName,
+                              '거래완료' AS status,
+                              r.updated_at AS orderDate,
+                              si.price AS amount
+                          FROM `cors`.`reservations` r
+                                   JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
+                                   JOIN `cors`.`shop_items` si ON ri.item_id = si.id
+                                   LEFT JOIN `cors`.`users` u ON r.user_email = u.email
+                          WHERE r.shop_id = #{shopId}
+                            AND r.status = '완료'
+                      ) AS combined_payments
+        WHERE orderDate >= DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY)
+          AND orderDate &lt; DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY), INTERVAL 7 DAY)
         ORDER BY orderDate DESC
-        LIMIT 5
     </select>
 
     <!-- 매출 상위 제품 조회 (일반 주문 + 예약 완료 통합) -->
@@ -113,32 +116,32 @@
              ORDER BY `img`.`id` ASC
              LIMIT 1) AS `imagePath`
         FROM (
-            -- 1. 일반 주문 매출
-            SELECT
-                oi.item_id,
-                SUM(oi.price * oi.quantity) AS total_sales,
-                SUM(oi.quantity) AS total_quantity
-            FROM `cors`.`order_items` oi
-            JOIN `cors`.`orders` o ON oi.order_id = o.id
-            WHERE oi.shop_id = #{shopId}
-              AND o.status = 'PAID' AND oi.status = '4'
-            GROUP BY oi.item_id
+                 -- 1. 일반 주문 매출
+                 SELECT
+                     oi.item_id,
+                     SUM(oi.price * oi.quantity) AS total_sales,
+                     SUM(oi.quantity) AS total_quantity
+                 FROM `cors`.`order_items` oi
+                          JOIN `cors`.`orders` o ON oi.order_id = o.id
+                 WHERE oi.shop_id = #{shopId}
+                   AND o.status = 'PAID' AND oi.status = '4'
+                 GROUP BY oi.item_id
 
-            UNION ALL
+                 UNION ALL
 
-            -- 2. 예약 거래 완료 매출
-            SELECT
-                ri.item_id,
-                SUM(si.price) AS total_sales,
-                COUNT(ri.id) AS total_quantity
-            FROM `cors`.`reservations` r
-            JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
-            JOIN `cors`.`shop_items` si ON ri.item_id = si.id
-            WHERE r.shop_id = #{shopId}
-              AND r.status = '완료'
-            GROUP BY ri.item_id
-        ) AS combined_sales
-        JOIN `cors`.`shop_items` si ON combined_sales.item_id = si.id
+                 -- 2. 예약 거래 완료 매출
+                 SELECT
+                     ri.item_id,
+                     SUM(si.price) AS total_sales,
+                     COUNT(ri.id) AS total_quantity
+                 FROM `cors`.`reservations` r
+                          JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
+                          JOIN `cors`.`shop_items` si ON ri.item_id = si.id
+                 WHERE r.shop_id = #{shopId}
+                   AND r.status = '완료'
+                 GROUP BY ri.item_id
+             ) AS combined_sales
+                 JOIN `cors`.`shop_items` si ON combined_sales.item_id = si.id
         GROUP BY si.id, si.item_name
         ORDER BY totalSales DESC
         LIMIT #{limit}
@@ -151,8 +154,8 @@
             SUM(si.price) AS sales,
             COUNT(DISTINCT r.id) AS orderCount
         FROM `cors`.`reservations` r
-        JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
-        JOIN `cors`.`shop_items` si ON ri.item_id = si.id
+                 JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
+                 JOIN `cors`.`shop_items` si ON ri.item_id = si.id
         WHERE r.shop_id = #{shopId}
           AND r.status = '완료'
        <![CDATA[
@@ -170,8 +173,8 @@
             SUM(si.price) AS sales,
             COUNT(DISTINCT r.id) AS orderCount
         FROM `cors`.`reservations` r
-        JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
-        JOIN `cors`.`shop_items` si ON ri.item_id = si.id
+                 JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
+                 JOIN `cors`.`shop_items` si ON ri.item_id = si.id
         WHERE r.shop_id = #{shopId}
           AND r.status = '완료'
        <![CDATA[
@@ -186,8 +189,8 @@
     <select id="selectWeeklyReservationSales" resultType="java.lang.Long">
         SELECT IFNULL(SUM(si.price), 0)
         FROM `cors`.`reservations` r
-        JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
-        JOIN `cors`.`shop_items` si ON ri.item_id = si.id
+                 JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
+                 JOIN `cors`.`shop_items` si ON ri.item_id = si.id
         WHERE r.shop_id = #{shopId}
           AND r.status = '완료'
        <![CDATA[
