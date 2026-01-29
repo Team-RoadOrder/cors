@@ -23,4 +23,5 @@ public class OrderHistoryVo extends OrderItemEntity {
     private String address;         // 주소
     private String addressDetail;   // 상세 주소
     private String userEmail;       // 주문자 이메일
+    private String request;
 }

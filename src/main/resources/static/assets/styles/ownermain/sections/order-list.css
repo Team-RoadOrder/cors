@@ -145,7 +145,7 @@
 }
 
 .order-list .tbody > .list-colum > td:last-child > button {
-    padding: 0.5rem 1.5rem;
+    padding: 0.5rem 0.8rem;
     border-radius: 0.625rem;
     color: #fefefe;
     background-color: #79bdf3;

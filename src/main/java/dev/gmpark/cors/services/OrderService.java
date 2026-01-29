@@ -404,6 +404,19 @@ public class OrderService {
         if (id < 1 || status == 0) {
             return CommonResult.FAILURE;
         }
+
+        // TODO: 상태 5번으로 변경 요청시 실제 환불이 이루어져야만 성공으로 처리
+        /*if(status == 5) {
+
+        }*/
         return this.orderMapper.updateOrderItemStatus(id, status) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
+    public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
+
+        if( id < 1 || status != 2 || refundReason.isEmpty()) {
+            return CommonResult.FAILURE;
+        }
+        return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+    }
+
 }

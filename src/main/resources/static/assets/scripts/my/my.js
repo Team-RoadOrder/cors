@@ -781,3 +781,97 @@ const deleteMember = (email) => {
         }
     });
 }
+const buyOk = (id, status) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('status', status);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
+        }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {
+                confirmText: '확인'
+            });
+            return;
+        }
+        const response = JSON.parse(xhr.responseText);
+        switch (response.result) {
+            case 'FAILURE':
+                openModal("FAILURE", `<p>구매확정에 실패하였습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>구매확정이 완료되었습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        location.reload();
+                    }
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+    };
+    xhr.open('PATCH', '/owner/patch-order-status')
+    xhr.send(formData);
+}
+
+
+const refundRequest = (id, status) => {
+    // 1. input 태그에 id="refundReasonInput" 을 추가했습니다.
+    openModal("Request", `
+    <input type="text" id="refundReasonInput" placeholder="환불사유" style="width: 100%;">
+`, {
+        confirmText: '확인',
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            const reasonInput = document.getElementById('refundReasonInput');
+            const reasonValue = reasonInput ? reasonInput.value : '';
+            if (!reasonValue) {
+                openModal("ERROR", `<p>환불사유를 <입력해주세요></입력해주세요></p>`, {
+                    confirmText: '확인'
+                });
+                return;
+            }
+            formData.append('id', id);
+            formData.append('status', status);
+            formData.append('refundReason', reasonValue); // 수정된 값 입력
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                    return;
+                }
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {
+                        confirmText: '확인'
+                    });
+                    return;
+                }
+                const response = JSON.parse(xhr.responseText);
+                switch (response.result) {
+                    case 'FAILURE':
+                        openModal("FAILURE", `<p>환불양식이 맞지않아 실패하였습니다.</p>`, {confirmText: '확인'});
+                        break;
+                    case 'SUCCESS':
+                        openModal("SUCCESS", `<p>환불신청이 완료되었습니다.</p>`, {
+                            confirmText: '확인',
+                            onConfirm: () => {
+                                location.reload()
+                            }
+                        });
+                        break;
+                    default:
+                        openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+                }
+
+            };
+            xhr.open('PATCH', '/owner/refund')
+            xhr.send(formData);
+
+        }, cancelText:'취소', onCancel: () => {
+
+        }
+    } );
+}

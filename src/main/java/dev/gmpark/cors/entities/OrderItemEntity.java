@@ -3,6 +3,8 @@ package dev.gmpark.cors.entities;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -17,4 +19,7 @@ public class OrderItemEntity {
     private String size;
     private int quantity;
     private Long price;
+    private int status;
+    private String refundReason;
+    private LocalDateTime updatedAt;
 }

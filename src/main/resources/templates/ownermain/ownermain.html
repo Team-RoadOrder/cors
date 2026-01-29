@@ -246,8 +246,8 @@
                         <th>수량</th>
                         <th>가격</th>
                         <th>연락처</th>
-                        <th>배송지</th>
-                        <th></th> <th>상태</th>
+                        <th colspan="2" style="text-align: center;">배송지</th>
+                         <th>상태</th>
                     </tr>
                     </thead>
                     <tbody class="tbody">
@@ -277,9 +277,18 @@
                             010-8006-8384
                         </td>
 
-                        <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail}|">대구시 달성군 화암로 120</td>
+                        <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail} (${order.request})| ">대구시 달성군 화암로 120</td>
 
-                        <td><button type="button" th:onclick="|updateStatus(${order.getId()}, 1)|">완료</button></td>
+                        <td th:if="${order.getStatus() == 0}"><button type="button" th:onclick="|updateStatus(${order.getId()}, 1)|">배송완료</button></td>
+                        <td th:if="${order.getStatus() == 2}">
+                            <button type="button" style="background-color: #f33535"
+                                    th:data-id="${order.id}"
+                                    th:data-reason="${order.refundReason}"
+                                    onclick="confirmRefund(this)">
+                                환불요청
+                            </button>
+                        </td>
+
                     </tr>
                     </tbody>
                 </table>

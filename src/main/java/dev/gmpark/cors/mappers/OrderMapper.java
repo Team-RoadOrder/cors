@@ -22,7 +22,9 @@ public interface OrderMapper {
 
     OrderHistoryVo[] getAllOrdersByShopId(@Param("shopId") int shopId);
     int updateOrderItemStatus(@Param("id") Long id, @Param("status") int status);
-
+    int updateOrderItemStatusAndRefundReason(@Param("id") Long id,
+                                             @Param("status") int status,
+                                             @Param("refundReason") String refundReason);
     // 추가: 주문 ID로 주문 아이템 조회
     List<OrderItemEntity> selectOrderItemsByOrderId(@Param("orderId") Long orderId);
 

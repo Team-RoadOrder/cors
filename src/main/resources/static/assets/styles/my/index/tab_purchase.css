@@ -163,13 +163,11 @@
     align-items: flex-end; /* 오른쪽 정렬 */
 }
 
-/* '배송완료' 텍스트 스타일 */
 .tab_purchase_content .item .list .product .itemStatus .list-column > span:first-child {
     color: #555; /* 상태 텍스트 색상 */
     margin-bottom: 2px;
 }
 
-/* '스타일올리기' 텍스트 스타일 */
 .tab_purchase_content .item .list .product .itemStatus .list-column > span:last-child {
     color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
     text-decoration: none; /* 밑줄 제거 (선택 사항) */
@@ -178,18 +176,49 @@
     color: #333; /* 버튼/링크처럼 보이도록 색상 강조 (선택 사항) */
     text-decoration: underline; /* 밑줄 제거 (선택 사항) */
 }
-/*
-!* 구매 내역 목록 컨테이너 스타일 *!
-.tab_purchase_content .purchase_list {
-    width: 905px; !* 기존 콘텐츠 너비와 일치 *!
-    border-top: 2px solid #333;
+.tab_purchase_content .item .list .product .itemStatus .list-column .status-container {
+    display: flex;
+    flex-direction:row;
+    gap: 0.5rem;
 }
 
-!* 구매 내역 개별 항목 스타일 *!
-.tab_purchase_content .purchase_list .item {
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}*/
+.tab_purchase_content .item .list .product .itemStatus .list-column > #cardOk {
+    font-weight: 700;
+    color: green;
+
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #buyOk {
+    font-weight: 700;
+    color: #61df61;
+    cursor: pointer;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #buyOk:hover {
+    text-decoration: underline;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #request {
+    font-weight: 700;
+    color: #dc53ab;
+    cursor: pointer;
+
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #request:hover {
+    text-decoration: underline;
+
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #requesting {
+    color: #002a51;
+    font-weight: 700;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #refundOk {
+    color: #ff004b;
+    font-weight: 700;
+
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #refundNot {
+    color: red;
+    font-weight: 700;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column #done {
+    font-weight: 700;
+    color: #007BFF;
+}

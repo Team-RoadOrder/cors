@@ -948,7 +948,7 @@ const updateStatus = (id, status) => {
         const response = JSON.parse(xhr.responseText);
         switch (response.result) {
             case 'FAILURE':
-                openModal("FAILURE", `<p>성공적으로 완료되었습니다.</p>`, {confirmText: '확인'});
+                openModal("FAILURE", `<p>실패하였습니다..</p>`, {confirmText: '확인'});
                 break;
             case 'NO_AUTH':
                 openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
@@ -968,4 +968,77 @@ const updateStatus = (id, status) => {
      xhr.open('PATCH', '/owner/patch-order-status')
      xhr.send(formData);
 
+}
+const confirmRefund = (element) => {
+    // 1. data- 속성에서 값 가져오기
+    const id = element.dataset.id;
+    const refundReason = element.dataset.reason;
+    const reasonText = refundReason ? refundReason : "입력된 환불 사유가 없습니다.";
+    const updateRefundStatus = (status) => {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('status', status);
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+            if (xhr.status < 200 || xhr.status >= 400) {
+                openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                return;
+            }
+
+            const response = JSON.parse(xhr.responseText);
+            let successMsg = (status === 3) ? "환불이 승인되었습니다." : "환불이 거절되었습니다.";
+
+            switch (response.result) {
+                case 'FAILURE':
+                    openModal("FAILURE", `<p>요청 처리에 실패하였습니다.</p>`, {confirmText: '확인'});
+                    break;
+                case 'NO_AUTH':
+                    openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                    break;
+                case 'SUCCESS':
+                    openModal("SUCCESS", `<p>${successMsg}</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            location.reload();
+                        }
+                    });
+                    break;
+                default:
+                    openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+            }
+        };
+        xhr.open('PATCH', '/owner/patch-order-status');
+        xhr.send(formData);
+    };
+    openModal("Request", `
+    <div style="text-align: left;">
+        <div style="margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px;">
+            환불 사유
+        </div>
+        <div style="
+            background-color: #f8f9fa; 
+            border: 1px solid #e9ecef; 
+            border-radius: 8px; 
+            padding: 15px; 
+            color: #333;
+            font-size: 15px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        ">
+            <p style="margin: 0;">${reasonText}</p>
+        </div>
+    </div>
+    `, {
+        confirmText: '승인',
+        onConfirm: () => {
+            updateRefundStatus(3);
+        },
+        cancelText: '거절',
+        onCancel: () => {
+            updateRefundStatus(5);
+        }
+    });
 }

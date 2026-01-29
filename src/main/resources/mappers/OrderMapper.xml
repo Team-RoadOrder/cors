@@ -49,19 +49,28 @@
 
     <update id="updateOrderItemStatus">
         UPDATE `cors`.`order_items`
-        SET `status` = #{status}
+        SET `status` = #{status},
+            `updated_at` = NOW()
         WHERE `id` = #{id}
     </update>
-
+    <update id="updateOrderItemStatusAndRefundReason">
+        UPDATE `cors`.`order_items`
+        SET `status` = #{status},
+            `refund_reason` = #{refundReason},
+            `updated_at` = NOW()
+        WHERE `id` = #{id}
+    </update>
     <!-- 유저 구매 내역 조회: PENDING 상태 제외 -->
     <select id="getAllOrders" resultType="dev.gmpark.cors.vos.OrderHistoryVo">
         SELECT
+            `t1`.`id` AS `id`,
             `t1`.`item_id` AS `itemId`,
             `t3`.`item_name` AS `itemName`,
             `t1`.`shop_id` AS `shopId`,
             `t1`.`size`     AS `size` ,
             `t1`.`price`    AS `price`,
             `t2`.`created_at` AS `createdAt`,
+            `t1`.`status`   AS `status`,
             (SELECT `img`.`image_path`
                  FROM `cors`.`shop_item_images` AS `img`
                  WHERE `img`.`product_id` = `t3`.`id` LIMIT 1) AS `imagePath`
@@ -88,6 +97,9 @@
         SELECT
             `t1`.`id` AS `id`,
             `t1`.`status` AS `status`,
+            `t1`.`refund_reason` AS `refundReason`,
+            `t1`.`updated_at` AS `updatedAt`,
+            `t2`.`request` AS `request`,
             `t2`.`user_email` AS `userEmail`,
             `t3`.`item_name` AS `itemName`,
             `t1`.`quantity` AS `quantity`,

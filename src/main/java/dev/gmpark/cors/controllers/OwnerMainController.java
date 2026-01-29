@@ -72,7 +72,7 @@ public class OwnerMainController {
         List<OrderHistoryVo> pendingOrders = new ArrayList<>();
         if (allOrders != null) {
             for (OrderHistoryVo order : allOrders) {
-                if (order.getStatus() == 0) {
+                if (order.getStatus() == 0 || order.getStatus() == 2 ) {
                     pendingOrders.add(order);
                 }
             }
@@ -194,6 +194,16 @@ public class OwnerMainController {
     public Map<String, Object> patchOrderItemStatus(@RequestParam(value = "id") Long id, @RequestParam(value = "status") Integer status) {
         Map<String, Object> response = new HashMap<>();
         CommonResult result = this.orderService.updateOrderItem(id, status);
+        response.put("result", result.name());
+        return response;
+    }
+    @RequestMapping(value = "/owner/refund", method = RequestMethod.PATCH, produces =  MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,Object> refundItem(@RequestParam(value = "id") Long id,
+                                         @RequestParam(value = "status") Integer status,
+                                         @RequestParam(value = "refundReason") String refundReason) {
+        Map<String, Object> response = new HashMap<>();
+        CommonResult result = this.orderService.updateOrderItemAndRefundReason(id, status, refundReason);
         response.put("result", result.name());
         return response;
     }
