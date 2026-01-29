@@ -99,7 +99,7 @@
                                 <tr th:each="payment : ${payments}">
                                     <td th:text="${payment.customerName}">홍길동</td>
                                     <td th:text="${payment.productName}">상품명</td>
-                                    <td><span class="badge complete">결제완료</span></td>
+                                    <td><span class="badge complete">구매완료</span></td>
                                     <td th:text="${#temporals.format(payment.orderDate, 'yyyy-MM-dd')}">2026-01-15</td>
                                 </tr>
                                 </tbody>

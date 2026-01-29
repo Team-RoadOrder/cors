@@ -17,7 +17,7 @@
       AND o.created_at >= #{startDate}
       AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
-          AND o.status = 'PAID'
+          AND o.status = 'PAID' AND oi.status = '4'
         GROUP BY DATE_FORMAT(o.created_at, '%Y-%m-%d')
         ORDER BY date ASC
     </select>
@@ -35,7 +35,7 @@
       AND o.created_at >= #{startDate}
       AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
-          AND o.status = 'PAID'
+          AND o.status = 'PAID' AND oi.status = '4'
         GROUP BY DATE_FORMAT(o.created_at, '%Y-%m')
         ORDER BY date ASC
     </select>
@@ -50,7 +50,7 @@
       AND o.created_at >= #{startDate}
       AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
-          AND o.status = 'PAID'
+          AND o.status = 'PAID' AND oi.status = '4'
     </select>
 
     <!-- 기간별 총 주문수 조회 -->
@@ -63,7 +63,7 @@
       AND o.created_at >= #{startDate}
       AND o.created_at < DATE_ADD(#{endDate}, INTERVAL 1 DAY)
         ]]>
-          AND o.status = 'PAID'
+          AND o.status = 'PAID' AND oi.status = '4'
     </select>
 
     <!-- 최근 결제 리스트 조회 -->
@@ -77,7 +77,7 @@
         JOIN `cors`.`order_items` oi ON o.id = oi.order_id
         JOIN `cors`.`shop_items` si ON oi.item_id = si.id
         LEFT JOIN `cors`.`users` u ON o.user_email = u.email
-        WHERE oi.shop_id = #{shopId}
+        WHERE oi.shop_id = #{shopId} AND o.status = 'PAID' AND oi.status = '4'
         ORDER BY o.created_at DESC
     </select>
 
@@ -95,7 +95,7 @@
         JOIN `cors`.`shop_items` si ON oi.item_id = si.id
         JOIN `cors`.`orders` o ON oi.order_id = o.id
         WHERE oi.shop_id = #{shopId}
-          AND o.status = 'PAID'
+          AND o.status = 'PAID' AND oi.status = '4'
         GROUP BY si.id, si.item_name
         ORDER BY totalSales DESC
         LIMIT #{limit}
