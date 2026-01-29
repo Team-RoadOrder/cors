@@ -106,6 +106,7 @@
         SELECT
             si.item_name AS productName,
             SUM(total_sales) AS totalSales,
+            SUM(total_quantity) AS totalQuantity,
             (SELECT `img`.`image_path`
              FROM `cors`.`shop_item_images` AS `img`
              WHERE `img`.`product_id` = `si`.`id`
@@ -115,7 +116,8 @@
             -- 1. 일반 주문 매출
             SELECT
                 oi.item_id,
-                SUM(oi.price * oi.quantity) AS total_sales
+                SUM(oi.price * oi.quantity) AS total_sales,
+                SUM(oi.quantity) AS total_quantity
             FROM `cors`.`order_items` oi
             JOIN `cors`.`orders` o ON oi.order_id = o.id
             WHERE oi.shop_id = #{shopId}
@@ -127,7 +129,8 @@
             -- 2. 예약 거래 완료 매출
             SELECT
                 ri.item_id,
-                SUM(si.price) AS total_sales
+                SUM(si.price) AS total_sales,
+                COUNT(ri.id) AS total_quantity
             FROM `cors`.`reservations` r
             JOIN `cors`.`reservation_items` ri ON r.id = ri.reservation_id
             JOIN `cors`.`shop_items` si ON ri.item_id = si.id

@@ -155,6 +155,8 @@
                                 <p class="p-name" th:text="${product.productName}">제품명</p>
                                 <p class="p-price"
                                    th:text="${'SUM: ' + #numbers.formatInteger(product.totalSales, 0, 'COMMA') + '원'}">0원</p>
+                                <p class="p-price" style="background-color: #bfbfbf; color: #fefefe; margin-top: -0.5rem;"
+                                   th:text="${'COUNT: ' + #numbers.formatInteger(product.totalQuantity, 0, 'COMMA') + '개'}">0개</p>
                             </div>
                         </div>
 
