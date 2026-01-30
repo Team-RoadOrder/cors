@@ -493,8 +493,6 @@ function checkEmptyState() {
 const $item = document.getElementById('items');
 /**@type{HTMLDivElement} */
 const $itemList = $item.querySelector(':scope > .item-list')
-/**@type{HTMLDivElement} */
-const $resList = $item.querySelector(':scope > .res-list');
 
 const loadList = () => {
     const xhr = new XMLHttpRequest();
@@ -811,6 +809,8 @@ const saveProduct = (btn) => {
     }
     const categoryPattern = /^[가-힣]+$/; // 완성된 한글만 허용 (자음/모음 낱자 불가)
 
+
+    const allowedMainCategory = ['남성의류', '여성의류', '신발'];
     if (!mainCategory) {
         openModal("FAILURE", `<p>대분류 카테고리가 비어있습니다.</p>`, { confirmText: '확인' });
         return;
@@ -819,14 +819,24 @@ const saveProduct = (btn) => {
         openModal("FAILURE", `<p>대분류 카테고리는<br>완성된 한글이어야 합니다.</p>`, { confirmText: '확인' });
         return;
     }
-    if (!subCategory) {
-        openModal("FAILURE", `<p>중분류 카테고리가 비어있습니다.</p>`, { confirmText: '확인' });
+    if( !allowedMainCategory.includes(mainCategory)) {
+        openModal("FAILURE", `<p>올바른 대분류 카테고리 양식이 아닙니다.</p>`, { confirmText: '확인' });
         return;
     }
+    const allowedSubCategory = ['아우터','상의', '하의', '악세사리', '스니커즈', '구두류']
     if (!categoryPattern.test(subCategory)) {
         openModal("FAILURE", `<p>중분류 카테고리는<br>완성된 한글이어야 합니다.</p>`, { confirmText: '확인' });
         return;
     }
+    if (!subCategory) {
+        openModal("FAILURE", `<p>중분류 카테고리가 비어있습니다.</p>`, { confirmText: '확인' });
+        return;
+    }
+    if ( !allowedSubCategory.includes(subCategory)) {
+        openModal("FAILURE", `<p>올바른 종분류 카테고리 양식이 아닙니다.</p>`, { confirmText: '확인' });
+        return;
+    }
+
     const formData = new FormData();
     formData.append('id', form['id'].value);
     formData.append('itemName', form['itemName'].value);
