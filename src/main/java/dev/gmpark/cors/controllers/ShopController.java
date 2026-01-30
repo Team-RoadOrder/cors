@@ -65,7 +65,7 @@ public class ShopController {
         String dbCategoryName = switch (categoryCode){
             case "2" -> "아우터";
             case "3" -> "상의" ;
-            case "4" -> "바지" ;
+            case "4" -> "하의" ;
             case "5" -> "신발" ;
             case "6" -> "악세사리";
             default -> null;

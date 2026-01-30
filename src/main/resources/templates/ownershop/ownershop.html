@@ -9,10 +9,9 @@
     <link rel="stylesheet" type="text/css" href="/assets/styles/common.css">
     <link rel="stylesheet" href="/assets/styles/ownershop/common.css">
     <link rel="stylesheet" href="/assets/styles/ownershop/index.css">
-
-
+    <script defer src="/assets/scripts/ownermain/toggle.js"></script>
     <script defer src="/assets/scripts/common.js"></script>
-    <script src="/assets/scripts/ownershop/toggle.js" defer></script>
+
     <script src="/assets/scripts/ownershop/category.js" defer></script>
     <script src="/assets/scripts/ownershop/ownershop.js" defer></script>
 </head>
@@ -21,8 +20,9 @@
 </th:block>
 
 <main id="main">
-    <button id="toggleNav" class="toggle-btn **nav-open**">
-        <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/></button>
+    <button id="toggleNav" class="toggle-btn">
+        <img src="/assets/images/ownershop/arrow-left.png" alt="닫기" class="toggle-icon"/>
+    </button>
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
@@ -130,14 +130,13 @@
                     <ul class="list man-detail">
                         <li class="item" data-target="outer">아우터</li>
                         <li class="item" data-target="top">상의</li>
-                        <li class="item" data-target="pants">바지</li>
+                        <li class="item" data-target="pants">하의</li>
                         <li class="item" data-target="accessory">악세사리</li>
                     </ul>
                     <ul class="list woman-detail">
                         <li class="item" data-target="outer">아우터</li>
                         <li class="item" data-target="top">상의</li>
-                        <li class="item" data-target="pants">바지</li>
-                        <li class="item" data-target="pants">바지</li>
+                        <li class="item" data-target="pants">하의</li>
                         <li class="item" data-target="accessory">악세사리</li>
                     </ul>
                     <ul class="list shoe-detail">
@@ -172,6 +171,7 @@
                     <ul class="list man-sub-detail-accessory">
                         <li class="item">팔찌</li>
                         <li class="item">목걸이</li>
+                        <li class="item">기타</li>
                     </ul>
                     <ul class="list woman-sub-detail-outer">
                         <li class="item">패딩</li>
@@ -193,15 +193,15 @@
                         <li class="item">데님 / 청바지</li>
                         <li class="item">면바지</li>
                         <li class="item">슬랙스</li>
-                        <li class="item">셔츠</li>
                         <li class="item">트레이닝/조거팬츠</li>
                         <li class="item">반바지</li>
-                        <li class="item">레깅스</li>
+                        <li class="item">스커트</li>
                         <li class="item">기타</li>
                     </ul>
                     <ul class="list woman-sub-detail-accessory">
                         <li class="item">팔찌</li>
                         <li class="item">목걸이</li>
+                        <li class="item">기타</li>
                     </ul>
                     <ul class="list sub-detail-shoe">
                         <li class="item">샌들 / 슬리퍼</li>
