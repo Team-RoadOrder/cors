@@ -3,6 +3,21 @@
 @import "index/itemReview.css";
 @import "common.css";
 
+#review-rating {
+    color: #000;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    outline: none;
+}
+
+
+.star-rating .star,
+.stars,
+.review-contents .stars {
+    color: #ffcc00;
+}
 
 .splash {
     display: flex;

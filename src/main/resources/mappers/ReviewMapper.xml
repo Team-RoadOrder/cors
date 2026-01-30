@@ -66,6 +66,10 @@
         DELETE FROM `cors`.`item_review_comments`
         WHERE `id` = #{id}
     </delete>
+    <delete id="deleteImagesByReviewId">
+        DELETE FROM `cors`.`item_review_images`
+        WHERE `review_id` = #{reviewId}
+    </delete>
 
     <select id="selectReviewsByItemId" resultType="dev.gmpark.cors.vos.ReviewVo">
         SELECT
@@ -118,7 +122,7 @@
         WHERE `shop_id` = #{shopId}
           AND `user_email` = #{email}
     </select>
-
+    <!--수정:reservations를 거쳐 orders를 조인 방식에서order_items와 orders를 직접 조인하여 결제일 -->
     <select id="selectReviewById" resultType="dev.gmpark.cors.vos.ReviewVo">
         SELECT
             ir.`id`                AS `id`,
@@ -131,33 +135,47 @@
             ir.`useful_count`      AS `usefulCount`,
             ir.`created_at`        AS `createdAt`,
             ir.`updated_at`        AS `updatedAt`,
-            /* [FBI 정규화] JS에게 알려줄 실제 결제일 추가 */
-            o.`created_at`         AS `orderDate`
+            /* 일반 구매와 예약 구매 중 존재하는 날짜를 orderDate로 채택 */
+            COALESCE(o.`created_at`, res.`created_at`) AS `orderDate`
         FROM `cors`.`item_reviews` AS ir
-                 INNER JOIN `cors`.`reservations` AS r ON ir.`reservation_id` = r.`id`
-                 INNER JOIN `cors`.`orders` AS o ON r.`user_email` = o.`user_email`
+                 /* 1. 일반 구매 내역 조인 */
+                 LEFT JOIN `cors`.`order_items` AS oi ON ir.`reservation_id` = oi.`id`
+                 LEFT JOIN `cors`.`orders` AS o ON oi.`order_id` = o.`id`
+            /* 2. 예약 내역 조인 (추가된 부분) */
+                 LEFT JOIN `cors`.`reservation_items` AS ri ON ir.`reservation_id` = ri.`id`
+                 LEFT JOIN `cors`.`reservations` AS res ON ri.`reservation_id` = res.`id`
         WHERE ir.`id` = #{id}
         LIMIT 1
     </select>
-
     <select id="selectAvailableReservationId" resultType="java.lang.Integer">
-        SELECT r.`id`
-        FROM `cors`.`reservations` AS r
-                 INNER JOIN `cors`.`reservation_items` AS ri ON r.`id` = ri.`reservation_id`
-            /* 예약과 연결된 주문 정보를 가져오기 위해 조인 */
-                 INNER JOIN `cors`.`orders` AS o ON r.`user_email` = o.`user_email`
-                 LEFT JOIN `cors`.`item_reviews` AS ir ON r.`id` = ir.`reservation_id`
-        WHERE r.`user_email` = #{email}
-          AND ri.`item_id` = CAST(#{itemId} AS UNSIGNED)
-          AND r.`status` IN ('대기', '확정', '완료')
-
-          AND r.`created_at` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
-
-          AND o.`created_at` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
-
-          AND ir.`id` IS NULL
-
-        ORDER BY r.`id` DESC
+        /* 1. 예약 고객: 방문완료 후 60일 이내인 건만 허용 */
+        (
+            SELECT ri.`id`
+            FROM `cors`.`reservation_items` AS ri
+                     INNER JOIN `cors`.`reservations` AS res ON ri.`reservation_id` = res.`id`
+            WHERE res.`user_email` = #{email}
+              AND ri.`item_id` = #{itemId}
+              AND (TRIM(res.`status`) = '확정' OR TRIM(res.`status`) = '완료')
+                /* [보안 추가] 방문일로부터 60일 이내 데이터만 조회 */
+              AND res.`visit_date` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
+              AND ri.`id` NOT IN (SELECT IFNULL(`reservation_id`, 0) FROM `cors`.`item_reviews`)
+            ORDER BY ri.`id` DESC
+            LIMIT 1
+        )
+        UNION ALL
+        /* 2. 일반 구매 고객: 구매확정 후 60일 이내인 건만 허용 */
+        (
+            SELECT oi.`id`
+            FROM `cors`.`order_items` AS oi
+                     INNER JOIN `cors`.`orders` AS o ON oi.`order_id` = o.`id`
+            WHERE o.`user_email` = #{email}
+              AND oi.`item_id` = #{itemId}
+              AND oi.`status` = 4
+                /* [보안 추가] 주문(결제)일로부터 60일 이내 데이터만 조회 */
+              AND o.`created_at` >= DATE_SUB(NOW(), INTERVAL 60 DAY)
+              AND oi.`id` NOT IN (SELECT IFNULL(`reservation_id`, 0) FROM `cors`.`item_reviews`)
+            LIMIT 1
+        )
         LIMIT 1
     </select>
 

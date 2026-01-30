@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const contentRaw = document.getElementById('review-content')?.value || "";
             const content = contentRaw.trim().replace(/\s{2,}/g, ' ');
             const rating = document.getElementById('review-rating')?.value;
+            const imageUploadInput = document.getElementById('image-upload'); // 인풋 참조 확인
 
             if (content.length < 1 || content.length > 100) {
                 openModal("입력 오류", `<p>리뷰 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
@@ -137,6 +138,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const editId = writeForm.dataset.editId;
 
             const xhr = new XMLHttpRequest();
+
+            const formData = new FormData();
+            formData.append('content', content);
+            formData.append('rating', rating);
+            formData.append('itemId', new URLSearchParams(window.location.search).get('id'));
+
+            if (imageUploadInput && imageUploadInput.files.length > 0) {
+                Array.from(imageUploadInput.files).forEach(file => {
+                    formData.append('images', file); // 서버 파라미터명 MultipartFile[] images와 매칭
+                });
+            }
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -151,12 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             if (mode === 'edit') {
                 xhr.open('PATCH', `/item/review/${editId}`);
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.send(`content=${encodeURIComponent(content)}&rating=${encodeURIComponent(rating)}`);
+                xhr.send(formData);
             } else {
                 xhr.open('POST', '/item/review');
                 const formData = new FormData(writeForm);
-                formData.set('content', content);
                 xhr.send(formData);
             }
         });
@@ -881,7 +891,7 @@ function renderReviewList(reviews) {
         <div class="review-item-card" data-review-id="${review.id}">
             <div class="review-card-header">
                 <div class="user-meta">
-                    <img src="/assets/images/my/default_profile.png" class="user-avatar">
+                    <img src="/assets/images/ownermain/user.png" class="user-avatar">
                     <div class="user-text">
                         <strong class="user-name">${review.userName}</strong>
                         <span class="review-date">${review.createdAt.substring(0, 10)}</span>

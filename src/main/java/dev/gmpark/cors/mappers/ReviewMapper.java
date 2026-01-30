@@ -33,6 +33,9 @@ public interface ReviewMapper {
 
     int deleteReview(Long id);
 
+    // [추가] 리뷰 본체는 건드리지 않고, 연결된 이미지 레코드만 삭제
+    int deleteImagesByReviewId(@Param("reviewId") Long reviewId);
+
     int insertReviewLike(@Param("reviewId") Long reviewId, @Param("email") String email);
 
     int deleteReviewLike(@Param("reviewId") Long reviewId, @Param("email") String email);

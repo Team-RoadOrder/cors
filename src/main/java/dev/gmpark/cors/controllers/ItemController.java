@@ -137,9 +137,12 @@ public class ItemController {
     public Map<String, Object> patchReview(@PathVariable(value = "id") Long id,
                                            @RequestParam(value = "content") String content,
                                            @RequestParam(value = "rating") int rating,
+                                           @RequestParam(value = "images", required = false) MultipartFile[] images,
                                            @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
-        CommonResult result = this.reviewService.modifyReview(id, content, rating, sessionUser);
+
+        CommonResult result = this.reviewService.modifyReview(id, content, rating, images, sessionUser);
+
         response.put("result", result.name());
         return response;
     }
