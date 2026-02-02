@@ -51,37 +51,10 @@ public class RecommendedService {
         String[] styles = style.split(",");
         for (String s : styles) {
             String trimmedStyle = s.trim();
-            // 미니멀, 캐주얼, 스트릿, 댄디, 빈티지, 모던, 스포티, 페미닌 순서
-            switch (trimmedStyle) {
-                case "1":
-                    categories.add("미니멀");
-                    break;
-                case "2":
-                    categories.add("캐주얼");
-                    break;
-                case "3":
-                    categories.add("스트릿");
-                    break;
-                case "4":
-                    categories.add("댄디");
-                    break;
-                case "5":
-                    categories.add("빈티지");
-                    break;
-                case "6":
-                    categories.add("모던");
-                    break;
-                case "7":
-                    categories.add("스포티");
-                    break;
-                case "8":
-                    categories.add("페미닌");
-                    break;
-                default:
-                    if (!trimmedStyle.isEmpty()) {
-                        categories.add(trimmedStyle);
-                    }
-                    break;
+            // [수정] 숫자가 아닌 문자열 그대로 사용하도록 변경
+            // 기존 숫자 매핑 로직 제거하고 입력된 문자열 그대로 리스트에 추가
+            if (!trimmedStyle.isEmpty()) {
+                categories.add(trimmedStyle);
             }
         }
 

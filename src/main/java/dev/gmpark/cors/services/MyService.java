@@ -90,6 +90,11 @@ public class MyService {
         }
     }
     public CommonResult updateUserStyle(RegisterEntity sessionUser, String newStyle) {
+        // [추가] 스타일 유효성 검사 (최소 하나 이상 선택)
+        if (newStyle == null || newStyle.trim().isEmpty()) {
+            return CommonResult.FAILURE;
+        }
+
         RegisterEntity dbUser = this.registerMapper.selectByEmail(sessionUser.getEmail());
 
         if (dbUser == null) {

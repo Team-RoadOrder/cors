@@ -29,6 +29,13 @@ public class RecommendedShopController {
             return modelAndView;
         }
         
+        // [추가] 선호 스타일이 없는 경우 마이페이지로 리다이렉트하며 오류 메시지 전달
+        if (sessionUser.getStyle() == null || sessionUser.getStyle().trim().isEmpty()) {
+            modelAndView.addObject("errorMessage", "선호 스타일을 먼저 설정해주세요.");
+            modelAndView.setViewName("redirect:/my"); // 또는 스타일 설정 페이지로 이동
+            return modelAndView;
+        }
+        
         // 서비스에서 데이터 가져오기
         Map<String, Object> recommendedData = this.recommendedService.getRecommendedData(sessionUser);
         
