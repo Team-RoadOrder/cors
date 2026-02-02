@@ -44,27 +44,30 @@ public class ReviewService {
 
 
         String content = normalizeText(review.getContent(), 1, 100);
-        //비속어/유해정보차단
-        if (content.isEmpty()|| badWordValidator.isBad(content) || (images != null && images.length > 3)) return CommonResult.FAILURE;
-        review.setContent(content);
-
-        Integer validOrderItemId = this.reviewMapper.selectAvailableReservationId(user.getEmail(), review.getItemId());
+        if (content.isEmpty() || badWordValidator.isBad(content)) return CommonResult.FAILURE;
 
 
-        if (validOrderItemId == null || validOrderItemId <= 0) {
+        if (images != null && images.length > 3) return CommonResult.FAILURE;
+
+
+        Integer validReservationId = this.reviewMapper.selectAvailableReservationId(user.getEmail(), review.getItemId());
+
+        if (validReservationId == null || validReservationId <= 0) {
             return CommonResult.FAILURE;
         }
 
-        review.setReservationId(validOrderItemId.intValue());
-        review.setUserEmail(user.getEmail());
 
+        review.setContent(content);
+        review.setReservationId(validReservationId);
         review.setUserEmail(user.getEmail());
 
 
         if (this.reviewMapper.insertReview(review) <= 0) return CommonResult.FAILURE;
 
 
-        if (images != null && images.length > 0) return saveImages(review.getId(), images);
+        if (images != null && images.length > 0) {
+            return saveImages(review.getId(), images);
+        }
 
         return CommonResult.SUCCESS;
     }
