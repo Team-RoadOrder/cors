@@ -115,13 +115,13 @@ body {
 }
 .int-area input:disabled {
     border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* 하단 선을 흐리게 */
-    color: #333;
+    color: #3333;
     cursor: not-allowed;
 }
 
 
 .int-area input:disabled + label {
-    color: rgba(255, 255, 255, 0.3) !important;
+    color:  #8f8f8f !important
 }
 
 .int-area button:disabled,

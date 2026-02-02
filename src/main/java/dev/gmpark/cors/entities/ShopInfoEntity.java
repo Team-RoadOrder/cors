@@ -29,7 +29,6 @@ public class ShopInfoEntity {
         if (this.shopTime == null || this.shopTime.trim().isEmpty()) {
             return false;
         }
-
         try {
             String[] times = this.shopTime.split("[~-]");
 

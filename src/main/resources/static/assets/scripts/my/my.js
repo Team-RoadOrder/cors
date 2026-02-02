@@ -80,7 +80,7 @@ document.addEventListener('click', function(e) {
         const reservationId = e.target.getAttribute('data-id');
 
         if (!reservationId) {
-            alert("예약 정보를 찾을 수 없습니다.");
+            openModal("ERROR",`<p>예약 정보를 찾을 수 없습니다.</p>`,{confirmText: '확인', onConfirm: () => {}});
             return;
         }
 
@@ -116,7 +116,8 @@ document.addEventListener('click', function(e) {
             // 2. 입력값(.value)을 가져옵니다.
             changePhone(inputElement.value);
         } else {
-            alert("전화번호 입력창을 찾을 수 없습니다.");
+            openModal("ERROR",`<p>전화번호 입력창을 찾을 수 없습니다.</p>`,{confirmText: '확인', onConfirm: () => {}});
+            return;
         }
     }
     const addressBtn = e.target.closest('#addressActionBtn');

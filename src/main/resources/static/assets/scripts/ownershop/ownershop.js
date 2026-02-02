@@ -58,7 +58,10 @@ imageInput.addEventListener('change', (e) => {
 
     // 1. 개수 제한 체크 (기존 파일 + 새 파일)
     if (currentFiles.length + newFiles.length > 5) {
-        alert("최대 5장까지 가능합니다.");
+        openModal("FAILURE", `<p>최대 다섯장 까지 가능합니다.</p>`, {
+            confirmText: '확인',
+            onConfirm: () => { }
+        });
         // 파일을 선택했다가 취소한 효과를 주기 위해 input 초기화 필요시 로직 추가 가능
         // 여기서는 기존 파일 유지를 위해 별도 초기화는 안 함 (DataTransfer가 덮어씌움)
         return;
@@ -208,6 +211,15 @@ $form.addEventListener('submit', (e) => {
         const sizePattern = /^[^,\s]+(\s*,\s*[^,\s]+)*$/;
         if (!sizePattern.test(size)) {
             openModal("FAILURE", `<p>사이즈 형식이 올바르지 않습니다.<br>쉼표(,)로 구분하여 입력해주세요.<br>(예: S,M,L)</p>`, {
+                confirmText: '확인',
+                onConfirm: () => { $form['size'].focus(); }
+            });
+            return;
+        }
+        const sizeList = size.split(',').map(s => s.trim());
+        const sizeSet = new Set(sizeList);
+        if (sizeList.length > 15 || sizeList.length !== sizeSet.size) {
+            openModal("FAILURE", `<p>사이즈는 중복된 값 없이<br>15개 이하로만 등록 가능합니다.</p>`, {
                 confirmText: '확인',
                 onConfirm: () => { $form['size'].focus(); }
             });

@@ -73,7 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (xhr.status < 200 || xhr.status >= 400) {
-                alert('요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.');
+                openModal("FAILURE", `<p>사이즈는 중복된 값 없이<br>15개 이하로만 등록 가능합니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => { $form['size'].focus(); }
+                });
                 return;
             }
 

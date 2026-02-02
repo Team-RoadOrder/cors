@@ -61,7 +61,7 @@
         </span>
             </label>
             <div th:if="${homeOrders == null or #arrays.isEmpty(homeOrders)}"
-                 style="    text-align: center; padding: 20px; color: #999;">
+                 style="text-align: center; padding: 50px 0; color: #888;">
                 최근 구매 내역이 없습니다.
             </div>
         </div>
@@ -125,7 +125,7 @@
                 </span>
         </label>
         <div th:if="${orders == null or #arrays.isEmpty(orders)}"
-             style="text-align: center; padding: 20px; color: #999;">
+             style="text-align: center; padding: 62px 0; color: #888;">
             최근 구매 내역이 없습니다.
         </div>
 
@@ -228,7 +228,7 @@
 <div th:fragment="likes-item" class="tab_likeProduct_content">
     <h3 class="tab_title">관심 상품</h3>
 
-    <div th:if="${likeItems == null or #arrays.isEmpty(likeItems)}" style="text-align:center; padding: 50px;">
+    <div th:if="${likeItems == null or #arrays.isEmpty(likeItems)}" style="text-align:center;color: #888; padding: 4.5rem;">
         관심 등록한 상품이 없습니다.
     </div>
 

@@ -57,6 +57,9 @@
             </a>
         </li>
     </ul>
+    <div class="empty-store" th:if="${#lists.isEmpty(shops)}">
+        <p>등록된 매장이 없습니다.</p>
+    </div>
     <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
 
         <div class="group prev" th:if="${pageVo.requestPage > 1}">

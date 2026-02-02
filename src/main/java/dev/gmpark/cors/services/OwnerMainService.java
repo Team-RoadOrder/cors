@@ -8,6 +8,7 @@ import dev.gmpark.cors.mappers.OwnerShopMapper;
 import dev.gmpark.cors.mappers.ReservationMapper;
 import dev.gmpark.cors.mappers.ShopInfoMapper;
 import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.results.ReservationResult;
 import dev.gmpark.cors.validators.OwnerMemberValidator;
 import dev.gmpark.cors.validators.ShopItemValidator;
 import dev.gmpark.cors.vos.OrderHistoryVo;
@@ -181,21 +182,35 @@ public class OwnerMainService {
         return this.ownerShopMapper.deleteItemById(id) > 0  ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
     /*예약변경:예약 데이터 소유권 검증 */
-    public CommonResult updateReservationStatus(RegisterEntity user,int reservationId, String status) {
+    public ReservationResult updateReservationStatus(RegisterEntity user, int reservationId, String status) {
         // [보안] 현재 사장님의 매장 ID 확보
         ShopInfoEntity myShop = this.shopInfoMapper.selectShopByUserEmail(user.getEmail());
-        if (myShop == null) return CommonResult.FAILURE;
-        // [검증] 해당 예약이 현재 사장님의 매장에 속해있는지 리스트 기반 확인
-        List<ReservationItemVo> reservations = this.reservationMapper.selectReservationsByShopId(myShop.getShopId());
-        boolean isMine = reservations.stream().anyMatch(r -> r.getReservationId() == reservationId);
+        if (myShop == null) return ReservationResult.FAILURE;
 
-        // [IDOR 방어] 내 매장 예약이 아니면 실패 반환
-        if (!isMine) return CommonResult.FAILURE;
+        // [검증 & 데이터 확보] 해당 예약이 내 매장 것인지 확인하면서, 동시에 해당 예약 객체(targetReservation)를 가져옴
+        List<ReservationItemVo> reservations = this.reservationMapper.selectReservationsByShopId(myShop.getShopId());
+
+        // 스트림을 사용하여 ID가 일치하는 예약 건을 찾습니다.
+        ReservationItemVo targetReservation = reservations.stream()
+                .filter(r -> r.getReservationId() == reservationId)
+                .findFirst()
+                .orElse(null);
+
+        // [IDOR 방어] 내 매장 예약 리스트에 없는 ID라면 실패
+        if (targetReservation == null) return ReservationResult.FAILURE;
+
+        // [로직 수정] 상태가 '확정'일 때, '대상 예약'의 날짜만 체크
+        // 문자열 비교는 equals()를 사용해야 안전합니다.
+        if ("확정".equals(status)) {
+            if (targetReservation.getVisitDate().isBefore(LocalDateTime.now())) {
+                return ReservationResult.FAILURE_TIME_OVER; // 이미 지난 시간이라 확정 불가
+            }
+        }
 
         // 2. 업데이트 실행
-       return this.reservationMapper.updateReservationStatus(reservationId, status) > 0
-               ? CommonResult.SUCCESS
-               : CommonResult.FAILURE;
+        return this.reservationMapper.updateReservationStatus(reservationId, status) > 0
+                ? ReservationResult.SUCCESS
+                : ReservationResult.FAILURE;
     }
 
     public OrderHistoryVo[] getOrdersByShopId(int shopId) {

@@ -1241,7 +1241,7 @@ const reserveItem = () => {
             dateFormat: "Y-m-d H:i",  // 저장될 포맷
             minDate: "today",         // 오늘 이전 선택 불가
             locale: "ko",             // 한국어
-            minuteIncrement: 30,      // 30분 단위
+            minuteIncrement: 1,
             onChange: function(selectedDates, dateStr, instance) {
                 // 달력 선택 시 hidden input에 값 매핑
                 const input = document.getElementById('modalDateInput');
@@ -1274,16 +1274,28 @@ const sendReservationRequest = (shopId, itemId, size, dateStr) => {
         if (xhr.status >= 200 && xhr.status < 400) {
             const response = JSON.parse(xhr.responseText);
             if (response.result === 'SUCCESS') {
-                openModal("예약 성공", `<p>예약이 확정되었습니다.<br>마이페이지에서 내역을 확인하세요.</p>`, {
+                openModal("SUCCESS", `<p>예약이 확정되었습니다.<br>마이페이지에서 내역을 확인하세요.</p>`, {
                     confirmText: '확인',
                     onConfirm: () => { location.href = '/my?open=reservation'; }
                 });
             } else if (response.result === 'FAILURE_SESSION') {
-                openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
+                openModal("FAILURE_SESSION", `<p>로그인이 필요한 서비스입니다.</p>`, {
                     confirmText: '로그인',
                     onConfirm: () => { location.href = '/login'; }
                 });
-            } else {
+            } else if ( response.result === 'FAILURE_SHOP_CLOSED') {
+                openModal("FAILURE_SHOP_CLOSED", `<p>영업시간중에만 예약이 가능합니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
+            } else if ( response.result === 'FAILURE_TOO_CLOSE_TO_CLOSE') {
+                openModal("FAILURE_TOO_CLOSE_TO_CLOSE", `<p>마감시간 30분전에는 예약이 불가능합니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
+            }
+
+            else {
                 openModal("오류", `<p>예약 실패: ${response.message || '다시 시도해주세요.'}</p>`, { confirmText: '확인' });
             }
         } else {

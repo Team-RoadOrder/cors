@@ -8,6 +8,7 @@
     border-radius: 5px;
     position: relative;
     /*  border: 1px solid #eaeaea;*/
+    min-height: 80vh;
 }
 
 /*매장 이미지 및 옆에 들어가는 설명부분 2열로 정렬 */
@@ -216,4 +217,15 @@
     #item {
         padding-bottom: 6rem;
     }
+}
+/* 상품 없음 안내 문구 스타일 */
+.empty-item {
+    width: 100%;
+    padding: 100px 0;
+    text-align: center;
+    color: #a5a5a5;
+    font-size: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    margin-top: 20px;
 }

@@ -874,7 +874,7 @@ ownerForm.addEventListener('submit', (e) => {
             return;
         }
         if (xhr.status < 200 || xhr.status >= 400) {
-            alert('요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.');
+            openModal("ERROR",`<p>요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요</p>`,{confirmText: '확인', onConfirm: () => {}});
             return;
         }
         const response = JSON.parse(xhr.responseText);

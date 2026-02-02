@@ -169,7 +169,7 @@ const renderShops = () => {
 
             // 데이터가 없을 경우 처리
             if (shops.length === 0) {
-                $shopList.innerHTML = '<li class="item">등록된 매장이 없습니다.</li>';
+                $shopList.innerHTML = '<li class="item" style="grid-column: 1 / -1; text-align: center; padding: 50px 0; color: #888;">등록된 매장이 없습니다.</li>';
                 return;
             }
 

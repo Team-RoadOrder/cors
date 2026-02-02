@@ -4,6 +4,7 @@ package dev.gmpark.cors.controllers;
 import dev.gmpark.cors.dtos.ReservationDto;
 import dev.gmpark.cors.entities.*;
 import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.results.ReservationResult;
 import dev.gmpark.cors.services.ReservationService;
 import dev.gmpark.cors.services.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +64,7 @@ public class ReservationController {
             response.put("result", "FAILURE_SESSION");
             return response;
         }
-        CommonResult result = this.reservationService.registerReservation(reservationDto, sessionUser.getEmail());
+        ReservationResult result = this.reservationService.registerReservation(reservationDto, sessionUser.getEmail());
 
         response.put("result", result.name());
         return response;

@@ -624,6 +624,9 @@ const changeStatus = ( a, b ) => {
             case 'NO_AUTH':
                 openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
                 break;
+            case 'FAILURE_TIME_OVER':
+                openModal("FAILURE_TIME_OVER", `<p>예약 확정시간이 현재시간보다 이전일 수 없습니다.</p>`, {confirmText: '확인'});
+                break;
             case 'SUCCESS':
                 openModal("SUCCESS", `<p>예약 정보가 성공적으로 변경되었습니다.</p>`, {
                     confirmText: '확인',

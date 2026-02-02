@@ -65,6 +65,9 @@
             </a>
         </li>
     </ul>
+    <div class="empty-item" th:if="${#lists.isEmpty(items)}">
+        <p>등록된 상품이 없습니다.</p>
+    </div>
     <div class="page-container" th:if="${pageVo != null and pageVo.totalCount > 0}">
         <div class="group prev" th:if="${pageVo.requestPage > 1}">
             <a class="link" th:href="@{/itemList(page=${pageVo.requestPage - 1}, sort=${sort})}">&lt; 이전</a>

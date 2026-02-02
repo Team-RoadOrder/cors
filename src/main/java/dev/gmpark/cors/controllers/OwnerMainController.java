@@ -4,6 +4,7 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;
 import dev.gmpark.cors.entities.ShopItemEntity;
 import dev.gmpark.cors.results.CommonResult;
+import dev.gmpark.cors.results.ReservationResult;
 import dev.gmpark.cors.services.MyService;
 import dev.gmpark.cors.services.OrderService;
 import dev.gmpark.cors.services.OwnerMainService;
@@ -166,7 +167,7 @@ public class OwnerMainController {
             response.put("result", "NO_AUTH");
             return response;
         }
-        CommonResult result = this.ownerMainService.updateReservationStatus(sessionUser,reservationId, status);
+        ReservationResult result = this.ownerMainService.updateReservationStatus(sessionUser,reservationId, status);
 
         response.put("result", result.name());
         return response;
