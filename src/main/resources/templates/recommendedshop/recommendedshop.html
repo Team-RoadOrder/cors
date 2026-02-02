@@ -34,7 +34,13 @@
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
-                <li class="box" th:each="shop : ${recommendedShops}">
+                <!-- [수정] 매장이 없을 경우 메시지 표시 -->
+                <li class="box empty-message" th:if="${recommendedShops == null || #arrays.isEmpty(recommendedShops)}">
+                    <div class="info">
+                        <span class="nonTitle">추천할 매장이 없습니다.</span>
+                    </div>
+                </li>
+                <li class="box" th:each="shop : ${recommendedShops}" th:unless="${recommendedShops == null || #arrays.isEmpty(recommendedShops)}">
                     <a th:href="@{'/shop/?shopId=' + ${shop.shopId}}">
                         <!-- 매장 이미지 경로 수정 -->
                         <img th:src="${shop.profileImage != null && (shop.profileImage.startsWith('http') || shop.profileImage.startsWith('/')) ? shop.profileImage : '/images/' + shop.profileImage}" alt="매장 이미지" class="image">
@@ -59,7 +65,13 @@
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
-                <li class="box" th:each="item : ${popularItems}">
+                <!-- [수정] 상품이 없을 경우 메시지 표시 -->
+                <li class="box empty-message" th:if="${popularItems == null || #arrays.isEmpty(popularItems)}">
+                    <div class="info">
+                        <span class="nonTitle">추천할 상품이 없습니다.</span>
+                    </div>
+                </li>
+                <li class="box" th:each="item : ${popularItems}" th:unless="${popularItems == null || #arrays.isEmpty(popularItems)}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
                         <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="상품 이미지" class="image">
                     </a>
@@ -83,7 +95,13 @@
         <div class="slider-container">
             <button class="slider-nav prev" type="button">&lt;</button>
             <ul class="grid">
-                <li class="box" th:each="item : ${allItems}">
+                <!-- [수정] 상품이 없을 경우 메시지 표시 -->
+                <li class="box empty-message" th:if="${allItems == null || #arrays.isEmpty(allItems)}">
+                    <div class="info">
+                        <span class="nonTitle">등록된 상품이 없습니다.</span>
+                    </div>
+                </li>
+                <li class="box" th:each="item : ${allItems}" th:unless="${allItems == null || #arrays.isEmpty(allItems)}">
                     <a th:href="@{'/item/?id=' + ${item.id}}">
                         <img th:src="${item.imagePath != null && (item.imagePath.startsWith('http') || item.imagePath.startsWith('/')) ? item.imagePath : '/images/' + item.imagePath}" alt="상품 이미지" class="image">
                     </a>

@@ -14,7 +14,7 @@
     color: #a0a0a0;
     display: block; /* 줄바꿈을 위해 block 요소로 변경 */
     margin-top: 0.5rem; /* 타이틀과의 간격 추가 */
-    padding-left: 0.5rem; /* 왼쪽 패딩 추가 */
+    padding-left: 2rem; /* 왼쪽 패딩 추가 */
 }
 #inner >.item {
     padding: 4rem 0 1rem 0;
@@ -55,6 +55,16 @@
     font-size: 1.4rem;
     font-weight: 800;
     padding: 0.2rem 0;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#inner .grid >.box >.info > .nonTitle {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    padding: 2rem 3rem;
     display: block;
     white-space: nowrap;
     overflow: hidden;

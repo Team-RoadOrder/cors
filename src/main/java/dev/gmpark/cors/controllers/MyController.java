@@ -159,7 +159,7 @@ public class MyController {
     }
     @RequestMapping(value = "/my/style", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, Object> patchMyStyle(@RequestParam("style") String newStyle,
+    public Map<String, Object> patchMyStyle(@RequestParam(value = "style", required = false) String newStyle,
                                             @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
         CommonResult result = this.myService.updateUserStyle(sessionUser, newStyle);
