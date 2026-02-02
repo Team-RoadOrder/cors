@@ -71,8 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewContainer = document.getElementById('image-preview-container');
 
     writeToggle?.addEventListener('change', function() {
+        const emptyMsg = document.querySelector('.empty-review-msg');
+
         if (writeForm) {
             writeForm.style.display = this.checked ? 'block' : 'none';
+
+            if (emptyMsg) {
+                emptyMsg.style.display = this.checked ? 'none' : 'block';
+            }
+
             if (!this.checked) {
                 writeForm.reset();
                 delete writeForm.dataset.mode;
@@ -86,11 +93,22 @@ document.addEventListener("DOMContentLoaded", () => {
         openModal("작성 취소", `<p>작성 중인 내용이 사라집니다. 취소하시겠습니까?</p>`, {
             confirmText: '확인', cancelText: '계속 작성',
             onConfirm: () => {
+
                 if (writeToggle) writeToggle.checked = false;
-                if (writeForm) {
-                    writeForm.style.display = 'none';
-                    writeForm.reset();
+
+                if (writeForm) writeForm.style.display = 'none';
+
+                const emptyMsg = document.querySelector('.empty-review-msg');
+                const reviewItems = document.querySelectorAll('.review-item-card');
+
+                if (reviewItems.length === 0) {
+                    if (emptyMsg) {
+                        emptyMsg.style.display = 'block';
+                    } else {
+                        renderReviewList([]);
+                    }
                 }
+                if (writeForm) writeForm.reset();
                 if (previewContainer) previewContainer.innerHTML = '';
             }
         });
@@ -123,6 +141,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             if (submitBtn.disabled) return;
+            //로딩시작
+            if (typeof Loading !== 'undefined') Loading.show("리뷰를 등록 중입니다...");
+            submitBtn.disabled = true;
 
             const contentRaw = document.getElementById('review-content')?.value || "";
             const content = contentRaw.trim().replace(/\s{2,}/g, ' ');
@@ -154,7 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
                     return;
                 }
+                //로딩종료
+                if (typeof Loading !== 'undefined') Loading.hide();
                 submitBtn.disabled = false;
+
                 if (xhr.status < 200 || xhr.status >= 400) {
                     handleReviewError();
                     return;
@@ -217,12 +241,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmText: '로그인 이동', onConfirm: () => { location.href = '/login'; }
             });
         } else if (data.result === 'FAILURE') {
-            // [FBI 정규화] 1구매-1리뷰 원칙 및 60일 기한 만료 통합 안내
-            openModal("작성 불가",
-                `<p>리뷰 작성 권한이 없거나 구매 후 60일이 경과했습니다.</p>
-                 <p style="font-size: 0.85rem; color: #888; margin-top: 0.5rem;">
-                    * 삭제 후 재작성도 구매일로부터 60일 이내에만 가능합니다.
-                 </p>`,
+            // 주요 제한 사유 위주로 요약 정리
+            openModal("작성 제한 안내",
+                `<div style="text-align: left; line-height: 1.6;">
+            <p style="margin-bottom: 0.5rem;">아래 사유로 인해 작성이 제한되었습니다.</p>
+            <ul style="font-size: 0.85rem; color: #888; padding-left: 1.2rem;">
+                <li><b>정책 위반:</b> 비속어, 광고 등 부적절한 단어 포함</li>
+                <li><b>기한 만료:</b> 구매일로부터 60일 경과</li>
+                <li><b>권한 없음:</b> 미구매 상품 또는 이미 리뷰 작성 완료</li>
+            </ul>
+        </div>`,
                 { confirmText: '확인' }
             );
         } else {
@@ -313,6 +341,9 @@ confirmButtons.forEach(btn => {
 buyButtons.forEach(btn => {
     btn.addEventListener('click', () => {
         if (currentSelectedSize) {
+            //로딩시작
+            if (typeof Loading !== 'undefined') Loading.show("주문 페이지로 이동 중...");
+
             const itemId = new URLSearchParams(window.location.search).get('id');
             const formData = new FormData();
             formData.append('itemId', itemId);
@@ -323,6 +354,9 @@ buyButtons.forEach(btn => {
             xhr.open('POST', '/cart');
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
+                    //로딩종료
+                    if (typeof Loading !== 'undefined') Loading.hide();
+
                     if (xhr.status >= 200 && xhr.status < 300) {
                         const response = JSON.parse(xhr.responseText);
                         if (response.result === 'SUCCESS') {
@@ -342,6 +376,9 @@ cartButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         if (currentSelectedSize) {
+            //로딩시작
+            if (typeof Loading !== 'undefined') Loading.show("장바구니에 담는 중입니다...");
+
             const itemId = new URLSearchParams(window.location.search).get('id');
             const formData = new FormData();
             formData.append('itemId', itemId);
@@ -351,6 +388,9 @@ cartButtons.forEach(btn => {
             xhr.open('POST', '/cart');
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
+                    //로딩종료
+                    if (typeof Loading !== 'undefined') Loading.hide();
+
                     if (xhr.status >= 200 && xhr.status < 300) {
                         const response = JSON.parse(xhr.responseText);
                         if (response.result === 'SUCCESS') {
@@ -498,100 +538,207 @@ function deleteReview(reviewId) {
         confirmText: '확인',
         cancelText: '취소',
         onConfirm: () => {
+
+            if (typeof Loading !== 'undefined') Loading.show("후기를 삭제하고 있습니다...");
+
             const xhr = new XMLHttpRequest();
+
             xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    location.reload();
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+
+                if (typeof Loading !== 'undefined') Loading.hide();
+
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("오류", "<p>삭제 중 오류가 발생했습니다. 다시 시도해주세요.</p>", { confirmText: '확인' });
+                    return;
                 }
+
+
+                location.reload();
             };
+
             xhr.open('DELETE', `/item/review/${reviewId}`);
             xhr.send();
         }
     });
 }
+
+const initReviewLoad = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemId = urlParams.get('id');
+    if (!itemId) return;
+
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+        if (xhr.status >= 200 && xhr.status < 400) {
+            // 이 함수가 실행되면서 리뷰가 없으면 안내 문구를 출력함
+            renderReviewList(JSON.parse(xhr.responseText));
+        }
+    };
+    // 초기 로딩은 최신순(latest)으로 설정
+    xhr.open('GET', `/item/reviews?itemId=${itemId}&sort=latest`);
+    xhr.send();
+};
+
+// 함수 실행
+initReviewLoad();
 //수정
+//#region
+// function openEditReview(reviewId) {
+//     //로딩시작
+//     if (typeof Loading !== 'undefined') Loading.show("리뷰 정보를 불러오는 중...");
+//     const xhr = new XMLHttpRequest();
+//
+//     xhr.onreadystatechange = () => {
+//         if (xhr.readyState === XMLHttpRequest.DONE) {
+//             //로딩숨기기
+//             if (typeof Loading !== 'undefined') Loading.hide();
+//             if (xhr.status >= 200 && xhr.status < 400) {
+//
+//                 const review = JSON.parse(xhr.responseText);
+//                 const writeForm = document.getElementById('style-write-form');
+//                 const previewContainer = document.getElementById('image-preview-container');
+//
+//                 // 후기 작성 토글 활성화
+//                 if (document.getElementById('review-write-toggle')) {
+//                     document.getElementById('review-write-toggle').checked = true;
+//                 }
+//
+//                 if (writeForm) {
+//                     writeForm.style.display = 'block';
+//                     // 수정 모드임을 표시 (MODE: edit)
+//                     writeForm.dataset.mode = 'edit';
+//                     writeForm.dataset.editId = reviewId;
+//
+//                     // 기존 내용 및 별점 복구
+//                     const contentInput = document.getElementById('review-content');
+//                     const ratingInput = document.getElementById('review-rating');
+//                     if (contentInput) contentInput.value = review.content;
+//                     if (ratingInput) ratingInput.value = review.rating;
+//
+//                     //업로드된 이미지 미리보기 생성---
+//                     if (previewContainer) {
+//                         previewContainer.innerHTML = ''; // 초기화
+//                         if (review.images && review.images.length > 0) {
+//                             review.images.forEach(imgName => {
+//                                 const img = document.createElement('img');
+//                                 img.src = `/review-images/${imgName}`;
+//                                 img.style.width = "5rem";
+//                                 img.style.height = "5rem";
+//                                 img.style.objectFit = "cover";
+//                                 img.style.borderRadius = "0.25rem";
+//                                 img.style.marginRight = "0.5rem";
+//                                 previewContainer.appendChild(img);
+//                             });
+//                         }
+//                     }
+//
+//                     writeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+//                 }
+//             } else {
+//                 if (typeof openModal === 'function') {
+//                     openModal("오류", "<p>리뷰 정보를 불러오지 못했습니다.</p>", { confirmText: '확인' });
+//                 }
+//             }
+//         }
+//     };
+//     xhr.open('GET', `/item/review/${reviewId}`);
+//     xhr.send();
+// }
+//#endregion
 function openEditReview(reviewId) {
+
+    if (typeof Loading !== 'undefined') Loading.show("리뷰 정보를 불러오는 중...");
+
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status >= 200 && xhr.status < 400) {
 
-                const review = JSON.parse(xhr.responseText);
-                const writeForm = document.getElementById('style-write-form');
-                const previewContainer = document.getElementById('image-preview-container');
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
 
-                // 후기 작성 토글 활성화
-                if (document.getElementById('review-write-toggle')) {
-                    document.getElementById('review-write-toggle').checked = true;
-                }
 
-                if (writeForm) {
-                    writeForm.style.display = 'block';
-                    // 수정 모드임을 표시 (MODE: edit)
-                    writeForm.dataset.mode = 'edit';
-                    writeForm.dataset.editId = reviewId;
+        if (typeof Loading !== 'undefined') Loading.hide();
 
-                    // 기존 내용 및 별점 복구
-                    const contentInput = document.getElementById('review-content');
-                    const ratingInput = document.getElementById('review-rating');
-                    if (contentInput) contentInput.value = review.content;
-                    if (ratingInput) ratingInput.value = review.rating;
 
-                    //업로드된 이미지 미리보기 생성---
-                    if (previewContainer) {
-                        previewContainer.innerHTML = ''; // 초기화
-                        if (review.images && review.images.length > 0) {
-                            review.images.forEach(imgName => {
-                                const img = document.createElement('img');
-                                img.src = `/review-images/${imgName}`;
-                                img.style.width = "5rem";
-                                img.style.height = "5rem";
-                                img.style.objectFit = "cover";
-                                img.style.borderRadius = "0.25rem";
-                                img.style.marginRight = "0.5rem";
-                                previewContainer.appendChild(img);
-                            });
-                        }
-                    }
+        if (xhr.status < 200 || xhr.status >= 400) {
+            if (typeof openModal === 'function') {
+                openModal("오류", "<p>리뷰 정보를 불러오지 못했습니다.</p>", { confirmText: '확인' });
+            }
+            return;
+        }
 
-                    writeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            } else {
-                if (typeof openModal === 'function') {
-                    openModal("오류", "<p>리뷰 정보를 불러오지 못했습니다.</p>", { confirmText: '확인' });
+
+        const review = JSON.parse(xhr.responseText);
+        const writeForm = document.getElementById('style-write-form');
+        const previewContainer = document.getElementById('image-preview-container');
+
+
+        if (document.getElementById('review-write-toggle')) {
+            document.getElementById('review-write-toggle').checked = true;
+        }
+
+        if (writeForm) {
+            writeForm.style.display = 'block';
+            writeForm.dataset.mode = 'edit';
+            writeForm.dataset.editId = reviewId;
+
+
+            const contentInput = document.getElementById('review-content');
+            const ratingInput = document.getElementById('review-rating');
+            if (contentInput) contentInput.value = review.content;
+            if (ratingInput) ratingInput.value = review.rating;
+
+
+            if (previewContainer) {
+                previewContainer.innerHTML = '';
+                if (review.images && review.images.length > 0) {
+                    review.images.forEach(imgName => {
+                        const img = document.createElement('img');
+                        img.src = `/review-images/${imgName}`;
+                        img.style.width = "5rem";
+                        img.style.height = "5rem";
+                        img.style.objectFit = "cover";
+                        img.style.borderRadius = "0.25rem";
+                        img.style.marginRight = "0.5rem";
+                        previewContainer.appendChild(img);
+                    });
                 }
             }
+
+            writeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     };
+
     xhr.open('GET', `/item/review/${reviewId}`);
     xhr.send();
 }
 //도움돼요
 function toggleReviewLike(reviewId, btnElement) {
+    if (btnElement.disabled) return; // 이미 처리 중이면 클릭 차단
+    btnElement.disabled = true;
+
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
     formData.append('reviewId', reviewId);
 
     xhr.onreadystatechange = () => {
-        if (xhr.readyState !== XMLHttpRequest.DONE) {
-            return;
-        }
-        if (xhr.status < 200 || xhr.status >= 400) {
-            return;
-        }
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+        btnElement.disabled = false;
+
+        if (xhr.status < 200 || xhr.status >= 400) return;
+
         const data = JSON.parse(xhr.responseText);
-        // SUCCESS(도움돼요) 또는 FAILURE(좋아요 취소) 결과에 따라 UI 업데이트
         if (data.result === 'SUCCESS' || data.result === 'FAILURE') {
             const countElement = btnElement.querySelector('.like-count');
-            if (countElement) {
-                countElement.innerText = data.count;
-            }
+            if (countElement) countElement.innerText = data.count;
             btnElement.classList.toggle('active', data.result === 'SUCCESS');
         } else if (data.result === 'FAILURE_SESSION') {
             openModal("로그인 필요", `<p>로그인이 필요합니다.</p>`, {
-                confirmText: '확인',
-                onConfirm: () => location.href = '/login'
+                confirmText: '확인', onConfirm: () => location.href = '/login'
             });
         }
     };
@@ -659,8 +806,21 @@ window.showEditCommentForm = function(commentId, btnElement) {
 };
 
 window.loadCommentsAfterCancel = function(commentId, btnElement) {
-    const reviewCard = btnElement.closest('.review-item-card');
-    if (reviewCard) loadComments(reviewCard.dataset.reviewId, reviewCard.querySelector('.comment-section'));
+    const item = btnElement.closest('.comment-item');
+    if (!item) return;
+
+    // 1. 수정 입력창 제거
+    const editWrapper = item.querySelector('.edit-comment-wrapper');
+    if (editWrapper) editWrapper.remove();
+
+    // 2. 숨겨뒀던 원래 내용과 버튼들을 다시 표시
+    const contentP = item.querySelector('.content');
+    const actions = item.querySelector('.comment-actions');
+    const ownerBtns = item.querySelector('.owner-comment-btns');
+
+    if (contentP) contentP.style.display = 'block';
+    if (actions) actions.style.display = 'flex';
+    if (ownerBtns) ownerBtns.style.display = 'flex';
 };
 
 window.submitEditComment = function(commentId, btnElement) {
@@ -833,9 +993,12 @@ function showReplyForm(reviewId, parentId, btnElement) {
 function submitComment(reviewId, parentId, btnElement) {
     const container = btnElement.closest('.comment-form') || btnElement.closest('.reply-form-wrapper');
     const input = container?.querySelector('textarea');
-    if (!input) return;
+    if (!input || btnElement.disabled) return; //이미처리중이면 stop! 통신중 버튼 여러번 못누르기하기
 
+    // [유지] 공백 및 줄바꿈 정리 로직
     const content = input.value.trim().replace(/\s{2,}/g, ' ');
+
+    // [유지] 글자 수 유효성 검사
     if (content.length < 1 || content.length > 100) {
         openModal("입력 오류", `<p>댓글 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
         return;
@@ -846,19 +1009,53 @@ function submitComment(reviewId, parentId, btnElement) {
     formData.append('reviewId', reviewId);
     formData.append('content', content);
     if (parentId) formData.append('parentId', parentId);
+    //로딩시작
+    if (typeof Loading !== 'undefined') Loading.show("댓글을 등록 중입니다...");
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) return;
-        if (xhr.status >= 200 && xhr.status < 400) {
-            const data = JSON.parse(xhr.responseText);
-            if (data.result === 'SUCCESS') {
-                input.value = '';
-                if (parentId) container.remove(); // 답글 폼 제거
-                const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
+        //로딩 종료
+        if (typeof Loading !== 'undefined') Loading.hide();
+
+
+        // [수정] Early Return 패턴: 실패(200미만 또는 400이상) 시 즉시 종료
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("오류", `<p>서버 통신 중 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+            return;
+        }
+
+
+        // --- 이 아래는 무조건 통신 성공(200~399) 상태 ---
+        const data = JSON.parse(xhr.responseText);
+
+        if (data.result === 'SUCCESS') {
+            // [유지] 성공 시 초기화 및 리로드 로직
+            input.value = '';
+            if (parentId) container.remove(); // 답글 폼 제거 기능 유지
+            const reviewCard = document.querySelector(`.review-item-card[data-review-id="${reviewId}"]`);
+            if (reviewCard) {
                 loadComments(reviewId, reviewCard.querySelector('.comment-section'));
             }
+
+        } else if (data.result === 'FAILURE') {
+            // [신규] 비속어 및 방심위 가이드라인 안내
+            openModal("작성 제한 안내",
+                `<div style="text-align: left; line-height: 1.5;">
+                    <p>부적절한 표현이 감지되어 댓글 등록이 제한되었습니다.</p>
+                    <p style="font-size: 0.85rem; color: #888; margin-top: 0.5rem;">
+                        * 방송통신심의위원회 가이드라인 및 서비스 운영 정책에 따라 비속어, 음란, 비방 표현은 자동 차단됩니다.
+                    </p>
+                </div>`,
+                { confirmText: '확인' }
+            );
+        } else if (data.result === 'FAILURE_SESSION') {
+            // [유지] 세션 만료 대응
+            openModal("로그인 필요", `<p>로그인이 필요한 서비스입니다.</p>`, {
+                confirmText: '로그인', onConfirm: () => { location.href = '/login'; }
+            });
         }
     };
+
     xhr.open('POST', '/item/review/comment');
     xhr.send(formData);
 }
@@ -866,18 +1063,38 @@ function submitComment(reviewId, parentId, btnElement) {
 function renderReviewList(reviews) {
     const container = document.querySelector('.review-list-container');
     if (!container) return;
+
+    // [추가] 후기 작성 폼이 열려있는지 체크
+    const isWriteFormOpen = document.getElementById('review-write-toggle')?.checked;
     const sessionEmail = document.getElementById('sessionUserEmail')?.value;
+
+    if (!reviews || reviews.length === 0) {
+        if (isWriteFormOpen) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="empty-review-msg" style="text-align:center; padding:5rem 1rem; background:#fcfcfc; border-radius:0.5rem; border:1px dashed #eee; margin: 1rem 0;">
+                <p style="font-size:1.1rem; color:#333; font-weight:bold; margin-bottom:0.5rem;">아직 작성된 스타일 리뷰가 없습니다.</p>
+                <p style="font-size:0.9rem; color:#888; margin-bottom:1.5rem;">이 상품의 <b>1번째 리뷰어</b>가 되어 스타일을 공유해 주세요!</p>
+                <label for="review-write-toggle" style="cursor:pointer; background:#242424; color:#fff; padding:0.7rem 1.5rem; border-radius:2rem; font-size:0.85rem; transition: opacity 0.2s;">첫 후기 작성하기</label>
+            </div>`;
+        return;
+    }
 
     container.innerHTML = reviews.length === 0 ? '<p class="empty-msg" style="text-align:center; padding:3rem; color:#999;">검색 결과가 없습니다.</p>' : '';
 
     reviews.forEach(review => {
         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        const isAuthor = (sessionEmail === review.userEmail);
 
+        // 이미지 처리 로직은 그대로 유지
         let imagesHtml = (review.images || []).map((img, idx) => {
             const imgSrc = img.startsWith('data:image') ? img : `/review-images/${img}`;
             return `
-                <div class="review-img-box" onclick="viewReviewImages(${review.id}, ${idx})" style="cursor:pointer; width: 6.25rem; height: 6.25rem; overflow: hidden; border-radius: 0.25rem;">
-                    <img src="${imgSrc}" alt="리뷰이미지" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.style.display='none'">
+                <div class="review-img-box" onclick="viewReviewImages(${review.id}, this)" style="cursor:pointer; width: 6.25rem; height: 6.25rem; overflow: hidden; border-radius: 0.25rem;">
+                    <img src="${imgSrc}" alt="리뷰이미지" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>`;
         }).join('');
 
@@ -885,30 +1102,63 @@ function renderReviewList(reviews) {
             imagesHtml = `<div class="review-contents-images" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom: 1rem;">${imagesHtml}</div>`;
         }
 
-        const isAuthor = (sessionEmail === review.userEmail);
-
+        // [수정 포인트] 리뷰 카드 하단에 '도움 돼요' 개수와 '댓글' 버튼 영역을 명시적으로 추가
         const itemHtml = `
-        <div class="review-item-card" data-review-id="${review.id}">
-            <div class="review-card-header">
-                <div class="user-meta">
-                    <img src="/assets/images/ownermain/user.png" class="user-avatar">
-                    <div class="user-text">
-                        <strong class="user-name">${review.userName}</strong>
-                        <span class="review-date">${review.createdAt.substring(0, 10)}</span>
-                    </div>
+<div class="review-item-card" data-review-id="${review.id}">
+    <div class="review-card-header">
+        <div class="user-meta">
+            <img src="/assets/images/ownermain/user.png" class="user-avatar" alt="profile">
+            <div class="user-text">
+                <strong class="user-name">${review.userName}</strong>
+                <span class="review-date">${review.createdAt.substring(0, 10)}</span>
+                <div class="star-rating">
+                    ${stars}
                 </div>
-                ${isAuthor ? `
-                    <div class="owner-btns" style="display: flex; gap: 0.5rem;">
-                        <button onclick="openEditReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">수정</button>
-                        <button onclick="deleteReview(${review.id}, '${review.orderDate}')" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">삭제</button>
-                    </div>` : ''}
             </div>
-            <div class="review-contents" style="margin-top: 1rem;">
-                <div class="stars" style="color: #ffcc00; margin-bottom: 0.5rem;">${stars}</div>
-                <p class="text" style="line-height: 1.5; color: #333; margin-bottom: 1rem;">${review.content}</p>
-                ${imagesHtml}
+        </div>
+        ${isAuthor ? `
+            <div class="owner-btns" style="display: flex; gap: 0.5rem;">
+                <button type="button" class="btn-action-text" onclick="openEditReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">수정</button>
+                <button type="button" class="btn-action-text" onclick="deleteReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">삭제</button>
+            </div>` : ''}
+    </div>
+
+    <div class="review-contents" style="margin-top: 1rem;">
+        <p class="text" style="line-height: 1.5; color: #333; margin-bottom: 1rem;">${review.content}</p>
+        ${imagesHtml}
+    </div>
+    
+    <div class="review-card-footer">
+        <div class="utility-btns" style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <button type="button" class="btn-utility ${review.likedByMe ? 'active' : ''}" 
+                    onclick="toggleReviewLike(${review.id}, this)"
+                    style="padding: 0.4rem 0.8rem; border: 1px solid #eee; background: #fff; border-radius: 0.25rem; font-size: 0.85rem; cursor: pointer;">
+                도움 돼요 <span class="like-count">${review.usefulCount || 0}</span>
+            </button>
+            <button type="button" class="btn-utility" 
+                    onclick="toggleCommentSection(${review.id})"
+                    style="padding: 0.4rem 0.8rem; border: 1px solid #eee; background: #fff; border-radius: 0.25rem; font-size: 0.85rem; cursor: pointer;">
+                댓글
+            </button>
+        </div>
+    </div>
+    
+    <div class="comment-section" style="display: none; margin-top: 1rem;">
+        <div class="comment-form">
+            <textarea class="comment-input" minlength="1" maxlength="100" 
+                      placeholder="댓글을 1~100자 이내로 입력하세요.&#10;(정책상 답글이 달린 댓글은 삭제가 제한됩니다)"
+                      style="width: 100%; height: 3.5rem; padding: 0.5rem; resize: none; border: 1px solid #eee; border-radius: 0.25rem;"></textarea>
+            <div class="form-action-btns" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem;">
+                <button type="button" class="btn-form-cancel" onclick="toggleCommentSection(${review.id})"
+                        style="padding: 0.3rem 0.7rem; border: 1px solid #eee; background: #fff; border-radius: 0.25rem; cursor: pointer;">취소</button>
+                <button type="button" class="btn-form-submit" onclick="submitComment(${review.id}, null, this)"
+                        style="padding: 0.3rem 0.7rem; background: #333; color: #fff; border: none; border-radius: 0.25rem; cursor: pointer;">등록</button>
             </div>
-            </div>`;
+        </div>
+        <div class="comment-list"></div>
+    </div>
+</div>`;
+
         container.insertAdjacentHTML('beforeend', itemHtml);
     });
 }

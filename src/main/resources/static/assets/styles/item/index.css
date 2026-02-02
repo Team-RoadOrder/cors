@@ -12,11 +12,17 @@
     outline: none;
 }
 
+.star-rating, .stars {
+    color: #ffcc00 ;
+    font-style: normal ;
+    /*display: inline-block;*/
+}
 
-.star-rating .star,
-.stars,
-.review-contents .stars {
-    color: #ffcc00;
+
+.btn-utility {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .splash {
@@ -285,6 +291,19 @@
     list-style: none;
     box-sizing: border-box;
     color: rgba(34, 34, 34, .5);
+}
+.productName {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.detail-category {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.75rem;
 }
 .productHead .item {
     flex: 1;
@@ -713,8 +732,11 @@
         margin: 0; /* 외부 마진 제거로 패딩과 충돌 방지 */
         box-sizing: border-box;
     }
+    .product{
+        width: 90%;
+    }
     .productName {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
     }
     .shop-brand-info {
@@ -940,4 +962,5 @@
         border: none;
         border-radius: 0.4rem;
     }
+
 }

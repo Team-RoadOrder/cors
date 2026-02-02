@@ -4,7 +4,7 @@ let selectedMemberEmail = null;
 let selectedMemberName = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    /* --- 추가: [A. 모바일 가이드 오버레이 로직] --- (이 위치로 이동) */
+
     const overlay = document.getElementById('mobileGuideOverlay');
     const btnTodayClose = document.getElementById('btnTodayClose');
     const btnClose = document.getElementById('btnCloseOverlay');
@@ -104,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* --- [개선된 기능: 테이블 행 클릭 시 선택 로직] --- */
     const tableBody = document.querySelector('.admin-table tbody');
     if (tableBody) {
         tableBody.addEventListener('click', (e) => {
@@ -199,7 +198,7 @@ function filterTable() {
 }
 
 /**
- * 상단 '- 삭제' 버튼 클릭 시 호출되는 함수
+ * 삭제 버튼 클릭 시 호출되는 함수
  */
 function handleDeleteSelected() {
     if (!selectedMemberEmail) {
@@ -210,7 +209,7 @@ function handleDeleteSelected() {
     deleteMember(selectedMemberEmail, selectedMemberName);
 }
 
-/* --- [2. 사원 추가: 서버 응답 완벽 대응,권한 레벨 수정 완료] --- */
+/* --- 사원 추가: 서버 응답 완벽 대응,권한 레벨 수정--- */
 function showAddModal() {
     const addContent = `
         <form id="addMemberForm" class="modal-form">
@@ -247,10 +246,16 @@ function showAddModal() {
         cancelText: '취소',
         onConfirm: () => {
             const form = document.getElementById('addMemberForm');
-            if (!form.email.value || !form.name.value || !form.phone.value) {
-                openModal("입력 오류", "<p>필수 항목을 모두 입력해주세요.</p>", { confirmText: "확인" });
+            const confirmBtn = document.querySelector('.modal-confirm-btn'); // 실제 사용하는 버튼 클래스로 확인 필요
+            if (confirmBtn && confirmBtn.disabled) return; // 이미 실행 중이면 중단
+
+            if (!form.email.value || !form.name.value || !form.phone.value){
+                openModal("입력 오류", "<p>필수 항목을 모두 입력해주세요.</p>", {confirmText: "확인"});
                 return;
             }
+            if (confirmBtn) confirmBtn.disabled = true;
+            //로딩시작
+            if (typeof Loading !== 'undefined') Loading.show("임직원 정보를 등록 중입니다...");
 
             const formData = new FormData();
             formData.append('email', form.email.value);
@@ -265,17 +270,26 @@ function showAddModal() {
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) return;
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    const data = JSON.parse(xhr.responseText);
-                    const finalStatus = (data.result || data.status || "").toString().toUpperCase();
-                    if (finalStatus === 'SUCCESS') {
-                        openModal("등록 완료", "<p>신규 임직원이 성공적으로 등록되었습니다.</p>", {
-                            confirmText: "확인", onConfirm: () => location.reload()
-                        });
-                    } else {
-                        const errorMsg = (finalStatus === 'FAILURE_EMAIL_DUPLICATE') ? '이미 존재하는 이메일입니다.' : '등록 권한이 없거나 형식이 잘못되었습니다.';
-                        openModal("등록 실패", `<p>${errorMsg}</p>`, { confirmText: "확인" });
-                    }
+
+                if (typeof Loading !== 'undefined') Loading.hide();
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    openModal("등록 실패", "<p>서버 통신 중 오류가 발생했습니다.</p>", {confirmText: "확인"});
+                    return;
+                }
+
+                const data = JSON.parse(xhr.responseText);
+                const finalStatus = (data.result || data.status || "").toString().toUpperCase();
+
+                if (finalStatus === 'SUCCESS') {
+                    openModal("등록 완료", "<p>신규 임직원이 성공적으로 등록되었습니다.</p>", {
+                        confirmText: "확인", onConfirm: () => location.reload()
+                    });
+                } else {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    const errorMsg = (finalStatus === 'FAILURE_EMAIL_DUPLICATE') ? '이미 존재하는 이메일입니다.' : '등록 권한이 없거나 형식이 잘못되었습니다.';
+                    openModal("등록 실패", `<p>${errorMsg}</p>`, {confirmText: "확인"});
                 }
             };
             xhr.open('POST', '/owner/member');
@@ -283,9 +297,8 @@ function showAddModal() {
         }
     });
 }
-
 function showEditModal(element) {
-    const { email, name, level } = element.dataset;
+    const {email, name, level} = element.dataset;
     const editContent = `
        <form id="editMemberForm" class="modal-form">
             <input type="hidden" name="email" value="${email}">
@@ -296,7 +309,6 @@ function showEditModal(element) {
             <div class="modal-input-group" style="margin-bottom: 1rem;">
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600;">권한 변경</label>
                 <select name="level" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:4px;">
-                    <option value="3" ${level === '3' ? 'selected' : ''}>최고관리자(위임)</option>
                     <option value="2" ${level === '2' ? 'selected' : ''}>관리자</option>
                     <option value="1" ${level === '1' ? 'selected' : ''}>사원</option>
                 </select>
@@ -312,10 +324,18 @@ function showEditModal(element) {
         confirmText: '수정 완료',
         onConfirm: () => {
             const form = document.getElementById('editMemberForm');
-            if(!form.currentPassword.value) {
-                openModal("인증 필요", "<p >수정을 위해 사원의 비밀번호를 입력해주세요.</p>", { confirmText: "확인" });
+
+            const confirmBtn = document.querySelector('.modal-btn.confirm');
+            if (confirmBtn && confirmBtn.disabled) return;
+
+            if (!form.currentPassword.value) {
+                openModal("인증 필요", "<p>수정을 위해 사원의 비밀번호를 입력해주세요.</p>", {confirmText: "확인"});
                 return;
             }
+
+
+            if (confirmBtn) confirmBtn.disabled = true;
+            if (typeof Loading !== 'undefined') Loading.show("정보를 수정 중입니다...");
 
             const formData = new FormData();
             formData.append('email', form.email.value);
@@ -326,16 +346,26 @@ function showEditModal(element) {
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) return;
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    const data = JSON.parse(xhr.responseText);
-                    const finalStatus = (data.result || data.status || "").toString().toUpperCase();
-                    if (finalStatus === 'SUCCESS') {
-                        openModal("수정 완료", "<p>정보가 성공적으로 수정되었습니다.</p>", {
-                            confirmText: "확인", onConfirm: () => location.reload()
-                        });
-                    } else {
-                        openModal("수정 실패", "<p>비밀번호가 틀렸거나 수정 권한이 없습니다.</p>", { confirmText: "확인" });
-                    }
+
+                if (typeof Loading !== 'undefined') Loading.hide();
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    openModal("수정 실패", "<p>서버 통신 중 오류가 발생했습니다.</p>", {confirmText: "확인"});
+                    return; // 여기서 함수 종료
+                }
+
+
+                const data = JSON.parse(xhr.responseText);
+                const finalStatus = (data.result || data.status || "").toString().toUpperCase();
+
+                if (finalStatus === 'SUCCESS') {
+                    openModal("수정 완료", "<p>정보가 성공적으로 수정되었습니다.</p>", {
+                        confirmText: "확인", onConfirm: () => location.reload()
+                    });
+                } else {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    openModal("수정 실패", "<p>비밀번호가 틀렸거나 수정 권한이 없습니다.</p>", {confirmText: "확인"});
                 }
             };
             xhr.open('PATCH', '/owner/member');
@@ -344,7 +374,7 @@ function showEditModal(element) {
     });
 }
 
-/* --- [4. 사원 삭제: 선택 기반 및 본인 차단 강화 버전] --- */
+
 /**
  * 구성원 삭제 함수
  * @param {string} email
@@ -352,62 +382,65 @@ function showEditModal(element) {
  * @param {string} loginUserEmail
  */
 function deleteMember(email, name, loginUserEmail) {
-    // 1. 클라이언트 단 본인 삭제 방지
+
     if (email === loginUserEmail) {
         openModal("삭제 불가", `
             <div style="text-align: center; padding: 0.625rem;">
                 <p style="color: #e53e3e; font-weight: bold;">본인 계정은 삭제할 수 없습니다.</p>
                 <p style="font-size: 0.9rem; color: #666;">폐업 또는 계정 탈퇴 메뉴를 이용해 주세요.</p>
-            </div>`, { confirmText: "확인" });
+            </div>`, {confirmText: "확인"});
         return;
     }
 
-    // 2. 관리자 UI 스타일의 모달 컨텐츠 구성
-    const modalContent = `
-        <div style="margin-top: 0.625rem;">
-            <table style="width: 100%; border-collapse: collapse; border: 0.0625rem solid #eee; font-size: 0.95rem;">
-                <tr>
-                    <th style="width: 35%; background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이름</th>
-                    <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${name}</td>
-                </tr>
-                <tr>
-                    <th style="background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이메일</th>
-                    <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${email}</td>
-                </tr>
-            </table>
-               <p style="margin-top: 0.9375rem; font-size: 0.85rem; color: #666; text-align: center;">
-            ※  삭제된 임직원 정보는 복구할 수 없습니다. 삭제를 진행하시겠습니까?
-        </p>
-        </div>
-    `;
 
-    // 3. 모달 오픈 및 삭제 요청
+    const modalContent = `
+    <div style="margin-top: 0.625rem;">
+        <table style="width: 100%; border-collapse: collapse; border: 0.0625rem solid #eee; font-size: 0.95rem;">
+            <tr>
+                <th style="width: 35%; background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이름</th>
+                <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${name}</td>
+            </tr>
+            <tr>
+                <th style="background: #f8f9fa; padding: 0.75rem; text-align: left; border-bottom: 0.0625rem solid #eee;">이메일</th>
+                <td style="padding: 0.75rem; border-bottom: 0.0625rem solid #eee;">${email}</td>
+            </tr>
+        </table>
+        <p style="margin-top: 0.9375rem; font-size: 0.85rem; color: #666; text-align: center;">
+            ※ 삭제된 임직원 정보는 복구할 수 없습니다. 삭제를 진행하시겠습니까?
+        </p>
+    </div>
+`;
+
     openModal("구성원 영구 삭제", modalContent, {
         confirmText: '삭제 실행',
         cancelText: '취소',
         onConfirm: () => {
+            const confirmBtn = document.querySelector('.modal-btn.confirm');
+            if (confirmBtn && confirmBtn.disabled) return;
+
+            if (confirmBtn) confirmBtn.disabled = true;
+            if (typeof Loading !== 'undefined') Loading.show("정보를 영구 삭제 중입니다...");
+
             const xhr = new XMLHttpRequest();
-            // 컨트롤러의 DELETE /member 경로와 매칭
             xhr.open('DELETE', `/owner/member?email=${encodeURIComponent(email)}`);
 
             xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        const response = JSON.parse(xhr.responseText);
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+                if (typeof Loading !== 'undefined') Loading.hide();
 
-                        if (response.result === 'SUCCESS') {
-                            // 성공 시 즉시 리로드하여 목록 갱신
-                            location.reload();
-                        } else {
-                            // 서비스 단에서 실패 리턴 시 (예: 본인 삭제, 권한 없음 등)
-                            let errorMsg = "삭제 처리에 실패했습니다.";
-                            if (response.result === 'FAILURE') errorMsg = "권한이 없거나 삭제할 수 없는 대상입니다.";
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    openModal("서버 오류", "<p style='text-align:center;'>서버와 통신 중 오류가 발생했습니다.</p>", { confirmText: "확인" });
+                    return;
+                }
 
-                            openModal("오류 발생", `<p style="text-align:center;">${errorMsg}</p>`, { confirmText: "확인" });
-                        }
-                    } else {
-                        openModal("서버 오류", "<p style=\"text-align:center;\">서버와 통신 중 오류가 발생했습니다.</p>", { confirmText: "확인" });
-                    }
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    location.reload();
+                } else {
+                    if (confirmBtn) confirmBtn.disabled = false;
+                    let errorMsg = response.result === 'FAILURE' ? "권한이 없거나 삭제할 수 없는 대상입니다." : "삭제 처리에 실패했습니다.";
+                    openModal("오류 발생", `<p style='text-align:center;'>${errorMsg}</p>`, { confirmText: "확인" });
                 }
             };
             xhr.send();
@@ -417,8 +450,8 @@ function deleteMember(email, name, loginUserEmail) {
 
 
 /**
- * 연락처 하이픈 자동 생성 함수
- * 입력된 값에서 숫자가 아닌 모든 문자(하이픈 등)를 지우고 순수 숫자만 서버로 넘겨줍니다.
+ * 연락처 하이픈 자동 생성 함수,
+ * 입력된 값에서 숫자가 아닌 모든 문자를 지우고 순수 숫자만 서버로 넘김
  */
 function autoHyphen(target) {
     target.value = target.value.replace(/[^0-9]/g, '')

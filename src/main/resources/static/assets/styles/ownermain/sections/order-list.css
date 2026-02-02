@@ -181,10 +181,31 @@
 }
 
 @media screen and (min-width: 32.01rem) and (max-width: 80rem) {
-    /* 1. 메인 레이아웃: 가로 스크롤 차단 및 하단 안전 영역 확보 */
+
+    html, body {
+        overflow-x: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+
     body #main {
         margin: 0 auto;
-        padding: 1rem 0 10rem 0; /* 하단 패딩으로 스크롤 공간 확보 */
+        width: 100%;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    body #main {
+        margin: 0 auto;
+        padding: 1rem 0 10rem 0;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -195,9 +216,8 @@
 
     body #main .sections {
         width: 95%;
-        max-width: 68.75rem; /* 1100px */
+        max-width: 68.75rem;
         margin: 0 auto;
-        /* 최하단 콘텐츠가 탭바와 겹치지 않게 전체 패딩 유지 */
         padding: 0 0 10rem 0;
         display: flex;
         flex-direction: column;
@@ -206,18 +226,17 @@
         box-sizing: border-box;
     }
 
-    /* 구역 1: 매장 정보 영역 */
     #shop-info {
-        width: 92%; /* 하단 리스트 카드(.product)와 너비 퍼센트 일치 */
-        max-width: 60rem; /* 최대 확장 제한 */
+        width: 92%;
+        max-width: 60rem;
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         background-color: #fff;
         border-radius: 0.75rem;
-        margin-bottom: 2rem; /* 하단 리스트와의 간격 확보 */
-        overflow: hidden; /* 배경이미지 튀어나옴 방지 */
+        margin-bottom: 2rem;
+        overflow: hidden;
     }
 
     #shop-info .background-image-box {
@@ -273,7 +292,7 @@
         white-space: nowrap;
     }
 
-    /* 구역 2: 리스트 전체 컨테이너 및 섹션 간격 최적화 */
+    /* 구역 2: 리스트 전체 컨테이너 */
     #main .sections #items {
         width: 100%;
         max-width: 60rem;
@@ -285,19 +304,16 @@
         overflow: visible;
     }
 
-    /* [보강] 섹션 간 공통 간격을 줄여 콘텐츠 밀착 */
     #items > div {
         margin-bottom: 1rem;
     }
 
-    /* [조언반영] 예약 정보 섹션 하단 불필요한 빈 공간 제거 */
     .res-list {
         width: 100%;
         display: block;
-        margin-bottom: 0.5rem; /* 빈 여백 최소화 */
+        margin-bottom: 0.5rem;
         padding-bottom: 0;
     }
-
 
     #items > .order-list {
         width: 100%;
@@ -311,19 +327,16 @@
         min-height: 25rem;
     }
 
-    /* 리스트 카드 디자인 보존 */
     #main .sections #items .res-list .product {
         display: grid;
-        /* 모바일에서는 3컬럼이 너무 좁을 수 있으니 비율 조정 */
         grid-template-columns: 5.5rem 1fr auto;
-        width: 92%; /* 양옆에 아주 약간의 여백을 줘서 중앙 정렬 확인 */
+        width: 92%;
         margin-left: auto;
         margin-right: auto;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
     }
-
 
     .itemStatus {
         width: 100%;
@@ -343,7 +356,6 @@
         white-space: nowrap;
     }
 
-    /* 판매내역 테이블 디자인 보강 */
     .order-list .table {
         width: 100%;
         table-layout: fixed;
@@ -351,10 +363,7 @@
         margin-bottom: 1rem;
     }
 
-    .order-list th {
-        white-space: nowrap;
-    }
-
+    .order-list th { white-space: nowrap; }
     .order-list td {
         white-space: nowrap;
         overflow: hidden;
@@ -363,16 +372,8 @@
         font-size: 0.85rem;
     }
 
-    .order-list td.address {
-        white-space: normal;
-        word-break: break-all;
-    }
-
-    .order-list td:last-child {
-        width: 6rem;
-        text-align: right;
-    }
-
+    .order-list td.address { white-space: normal; word-break: break-all; }
+    .order-list td:last-child { width: 6rem; text-align: right; }
     .order-list td button {
         padding: 0.4rem 1rem;
         background-color: #79bdf3;
@@ -381,15 +382,75 @@
         border-radius: 0.3rem;
     }
 
-    /* 테이블 하단 라인 보정 */
     body #main .order-list .table {
         margin-bottom: 0;
         border-bottom: 1px solid #f0f0f0;
     }
+
+
+
+    body #main .sections #items div.item-list {
+
+        display: flex;
+        flex-direction: column;
+        visibility: visible;
+        opacity: 1;
+        width: 100%;
+        height: 30rem;
+        min-height: 30rem;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        order: -1;
+        margin-bottom: 4rem;
+        background-color: #fff;
+        border: 1px solid #eee;
+        border-radius: 1rem;
+        box-sizing: border-box;
+    }
+
+
+    body #main .sections #items .item-list .spring:first-child {
+        display: block;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #fff;
+        padding: 1.2rem 1.5rem;
+        margin: 0;
+        font-weight: bold;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+
+    body #main .sections #items .item-list .product {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr auto;
+        width: 95%;
+        margin: 0.8rem auto;
+        padding: 1rem;
+        background-color: #fcfcfc;
+        border: 1px solid #f0f0f0;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+
+    body #main .sections .tab-navigation {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    body #main .sections .tab-navigation .tab-nav-button {
+        display: none;
+    }
+    body #main .sections #items div.item-list {
+        margin-bottom: 2rem;
+    }
 }
 
 @media (max-width: 32rem) {
-    /* 1. 배경 및 전역 레이아웃 초기화 */
     html, body {
         overflow-x: hidden;
         width: 100%;
@@ -402,7 +463,6 @@
         padding: 0;
     }
 
-    /* 상단 네비 및 헤더/푸터 숨김 */
     #nav, #toggleNav, #header, #footer {
         display: none;
     }
@@ -416,7 +476,6 @@
         overflow-x: hidden;
     }
 
-    /* 컨테이너 중앙 정렬 강화 */
     #main .sections {
         width: 100%;
         max-width: 100%;
@@ -428,7 +487,6 @@
         box-sizing: border-box;
     }
 
-    /* 2. 매장 정보 섹션 보정 */
     #main .sections > #shop-info {
         width: 100%;
         height: auto;
@@ -457,18 +515,56 @@
         box-sizing: border-box;
     }
 
-    #form input:not([readonly]) {
-        position: static;
+    #shop-info #form .label {
+        position: relative;
+        display: flex;
+        align-items: center;
         width: 100%;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.4rem;
+    }
+
+    /* 상점 정보 불렛 수정: 동그라미 제거 후 ▶ 추가 */
+    #shop-info #form .label:has(input:not([readonly]))::before {
+        content: '▶'; /* 화살표로 변경 */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: auto;
+        background-color: transparent; /* 배경색 제거 */
+        border-radius: 0; /* 곡률 제거 */
+        margin-right: 0.375rem;
+        flex-shrink: 0;
+        font-size: 0.6rem; /* 기호 크기 조절 */
+        color: #242424; /* 기본 색상 */
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    /* 포커스 시 색상 변화 로직 유지 */
+    #form:has(input:focus) .label:has(input:not([readonly]))::before {
+        background-color: transparent;
+        color: #a5a5a5;
+    }
+
+    #shop-info #form .label:has(input:focus)::before {
+        background-color: transparent !important;
+        color: #ff4d4d !important; /* 포커스 시 빨간색 유지 */
+        text-shadow: 0 0 0.1875rem rgba(255, 77, 77, 0.4);
+    }
+
+    #form input:not([readonly]) {
+        width: 100%;
+        margin-bottom: 0;
         border: none;
         background: rgba(72, 143, 202, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        outline: none;
     }
 
     #shop-info > #form .label input {
         position: static;
         width: 100%;
-        margin-bottom: 0.8rem;
         border: none;
         background: transparent;
     }
@@ -477,7 +573,7 @@
         position: static;
         display: flex;
         justify-content: center;
-        gap: 0.6rem;
+        gap: 0.375rem;
         padding: 0 1.25rem 1.5rem;
         width: 100%;
         box-sizing: border-box;
@@ -491,7 +587,6 @@
         font-size: 0.9rem;
     }
 
-    /* 3. [탭 메뉴] 목업 디자인 반영 */
     #main div.sections nav.tab-navigation {
         display: block;
         width: 100%;
@@ -499,7 +594,7 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        border-bottom: 1px solid #eee;
+        border-bottom: 0.0625rem solid #eee;
         margin-top: 1rem;
         box-sizing: border-box;
     }
@@ -525,7 +620,7 @@
         color: #666;
         background: none;
         border: none;
-        border-bottom: 3px solid transparent;
+        border-bottom: 0.1875rem solid transparent;
         cursor: pointer;
     }
 
@@ -534,7 +629,6 @@
         border-bottom-color: #010852;
     }
 
-    /* 4. [공통] 리스트 레이아웃 최적화 */
     #main .sections #items {
         width: 100%;
         padding: 0;
@@ -544,11 +638,44 @@
         align-items: center;
     }
 
-    /* 1. 상품명(title) 말줄임 핵심 설정 */
+    #main .sections #items .item-list .itemTitle {
+        display: flex;
+        align-items: flex-start;
+        min-width: 0;
+        flex: 1;
+        position: relative;
+    }
+
+
+    #main .sections #items .item-list .itemTitle:has(input:not([readonly]))::before {
+        content: '▶';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+        border-radius: 0;
+        margin-right: 0.3125rem;
+        flex-shrink: 0;
+        font-size: 0.5rem;
+        color: #242424;
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    #items:has(input:focus) .itemTitle:has(input:not([readonly]))::before {
+        background-color: transparent;
+        color: #a5a5a5;
+    }
+
+    #main .sections #items .item-list .itemTitle:has(input:focus)::before {
+        background-color: transparent;
+        color: #ff4d4d;
+    }
+
     #main .sections #items .item-list .itemTitle .title {
         display: block;
         width: 100%;
-        padding-right: 0.75rem;
         max-width: 8.5rem;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -557,21 +684,10 @@
         font-size: 1rem;
         border: none;
         background: transparent;
-        padding-top: 0;
-        padding-bottom: 0;
+        padding: 0;
         margin-bottom: 0.25rem;
         box-sizing: border-box;
     }
-
-    /*  상품명 정보를 담는 컨테이너 보정 */
-    #main .sections #items .item-list .itemTitle {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-width: 0;
-        flex: 1;
-    }
-
 
     #items .item-list, #items .res-list, #items .order-list {
         display: none;
@@ -582,23 +698,22 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-bottom: 5rem;
     }
 
-    /* 상품 카드 기본 스타일 (선택자 우선순위 강화) */
     #main .sections #items .product {
         display: grid;
         grid-template-columns: 5rem 1fr auto;
         align-items: center;
         gap: 1rem;
         padding: 1.2rem 0;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 0.0625rem solid #f0f0f0;
         background: #fff;
         width: 90%;
         margin: 0 auto;
         box-sizing: border-box;
     }
 
-    /* 5. 예약 정보 확인 카드 레이아웃 */
     #main .sections #items .res-list .product {
         display: grid;
         grid-template-columns: 5.5rem 1fr auto;
@@ -609,7 +724,7 @@
         padding: 0;
         margin: 0.5rem auto 1.5rem auto;
         width: 94%;
-        border: 1px solid #f0f0f0;
+        border: 0.0625rem solid #f0f0f0;
         height: auto;
         min-height: 11rem;
         border-radius: 0.8rem;
@@ -641,12 +756,19 @@
         align-items: flex-end;
         gap: 0.4rem;
         flex-shrink: 0;
+        min-width: 0;
     }
 
     .res-list .user-info .user {
         font-weight: 600;
         font-size: 0.7rem;
         margin: 0;
+        width: 100%;
+        max-width: 5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: right;
     }
 
     .res-list .user-info .tel {
@@ -671,6 +793,15 @@
         flex-direction: column;
         justify-content: center;
         overflow: hidden;
+        min-width: 0;
+    }
+
+    .res-list .itemTitle .title {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .res-list .itemStatus {
@@ -694,7 +825,6 @@
         color: #fff;
     }
 
-    /* 6. 판매내역 리스트 (내부 스크롤 및 가상선택자 라벨링) */
     #main .sections #items .order-list {
         min-height: auto;
         border-radius: 0;
@@ -723,31 +853,27 @@
         box-sizing: border-box;
     }
 
-    /*1월26일수정*/
     #main .sections #items .order-list .tbody .list-colum {
         display: grid;
         width: 94%;
         margin: 0 auto 1.2rem auto;
         grid-template-columns: 5.5rem minmax(0, 1fr) 4.5rem;
         grid-template-areas:
-        "img title status"
-        "img price status"
-        "img phone status"
-        "addr addr addr";
+            "img title status"
+            "img price status"
+            "img phone status"
+            "addr addr addr";
         gap: 0.3rem 0.8rem;
         padding: 1.2rem 1rem;
-        border: 1px solid #f0f0f0;
+        border: 0.0625rem solid #f0f0f0;
         border-radius: 0.8rem;
         background: #fff;
         box-sizing: border-box;
         align-items: start;
     }
-    #main .sections #items .order-list .tbody .list-colum:last-child {
-        margin-bottom:5rem ;
-    }
 
     #main .order-list .tbody tr.list-colum td {
-        padding: 0;
+        padding: 0.625rem 0 0 0;
         text-align: left;
         border: none;
         white-space: nowrap;
@@ -757,20 +883,18 @@
         font-size: 0.85rem;
     }
 
-    /* 사이즈 라벨 추가 */
     #main .order-list .tbody tr.list-colum td:nth-child(4)::before {
         content: "사이즈: ";
         font-size: 0.75rem;
         color: #999;
-        margin-right: 4px;
+        margin-right: 0.25rem;
     }
 
-    /* 수량 라벨 추가 */
     #main .order-list .tbody tr.list-colum td:nth-child(5)::before {
         content: "수량: ";
         font-size: 0.75rem;
         color: #999;
-        margin-right: 4px;
+        margin-right: 0.25rem;
     }
 
     .order-list td.image-wrapper {
@@ -780,19 +904,15 @@
         flex-shrink: 0;
     }
 
-    /*1월26일수정*/
     #main .sections #items .order-list .tbody .list-colum td.itemName {
         grid-area: title;
         font-size: 1rem;
         font-weight: 700;
         color: #4e8bbc;
-
-        /* 핵심: block 설정과 함께 너비의 한계를 명확히 지정 */
         display: block;
         width: 100%;
-        min-width: 0; /* 그리드 내부에서 유연하게 줄어들게 함 */
-        max-width: 100%; /* 부모 영역을 절대 넘지 않음 */
-
+        min-width: 0;
+        max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -808,12 +928,11 @@
         color: #333;
     }
 
-    /* 연락처 라벨 */
     .order-list td.phone::before {
         content: "연락처: ";
         font-size: 0.75rem;
         color: #999;
-        margin-right: 4px;
+        margin-right: 0.25rem;
     }
 
     .order-list td.address {
@@ -826,23 +945,18 @@
         padding-top: 0.5rem;
     }
 
-    /* 2. 버튼이 포함된 td(status)의 위치 고정 */
     .order-list td:last-child {
         grid-area: status;
         display: flex;
-        /* 중요: 오른쪽 끝으로 정렬 */
         justify-content: flex-end;
         align-items: flex-start;
-        /* td 자체의 너비가 그리드 설정(5rem)을 따르도록 함 */
         width: 100%;
         min-width: 5rem;
         margin-left: 1rem;
     }
 
-    /* 완료 버튼 자체 */
     .order-list td:last-child button {
         padding: 0.6rem 0;
-        /* 버튼 너비를 고정값으로 주면 훨씬 안정적입니다 */
         width: 4rem;
         text-align: center;
         display: flex;
@@ -853,11 +967,10 @@
         color: #fff;
         border-radius: 0.5rem;
         border: none;
-        margin: 0; /* 마진 때문에 밀리지 않도록 0 설정 */
+        margin: 0;
         white-space: nowrap;
     }
 
-    /* 하단 정리 */
     #items .spring:first-child {
         display: none;
     }

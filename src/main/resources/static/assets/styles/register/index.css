@@ -635,21 +635,19 @@ body {
 @media (max-width: 48rem) {
 
 }
-/*스마트폰*/
 /*스마트폰 (32rem / 약 512px 이하)*/
 @media screen and (max-width: 32rem) {
 
     /* 1. Body & Container: 전체 여백 축소 */
     body {
-        /* 상하 패딩 40px -> 20px로 축소 */
-        padding: 20px 0;
+        padding: 1.25rem 0;
         background: url("/assets/images/login/white-back.jpg") no-repeat center/cover;
         box-sizing: border-box;
     }
 
     .register-form {
         padding: 1rem;
-        width: 90%;
+        width: 95%;
         background-color: transparent;
         border-radius: 0.8rem;
     }
@@ -659,7 +657,32 @@ body {
         font-size: 1.6rem; /* 2rem -> 1.6rem */
         margin-bottom: 20px; /* 30px -> 20px */
     }
+    .login {
+        position: absolute;
+        top: 1.5rem;
+        left: 1rem;
+        right: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        width: auto;
+        height: auto;
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        padding: 0.4rem 0.7rem;
+        border-radius: 0.4rem;
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        background-color: #242424;
+        color: #fff;
+    }
 
+
+    .login::before {
+        content: '<';
+        font-weight: bold;
+        font-family: sans-serif;
+    }
     /* 3. 입력창 (Input): 높이와 폰트 줄임 */
     .int-area {
         margin-top: 15px; /* 필드 간격 20px -> 15px */

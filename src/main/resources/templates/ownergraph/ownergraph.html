@@ -115,7 +115,11 @@
                     </div>
 
                     <div class="weekList">
-                        <h2 class="title">금주 결제 리스트</h2>
+                        <div class="list-header">
+                            <h2 class="title">금주 결제 리스트</h2>
+                            <span class="period-info">이번 주 (월~일) 기준</span>
+                        </div>
+
                         <div class="table-wrapper">
                             <table>
                                 <thead>
@@ -132,6 +136,13 @@
                                     <td th:text="${payment.productName}">상품명</td>
                                     <td><span class="badge complete">구매완료</span></td>
                                     <td th:text="${#temporals.format(payment.orderDate, 'yyyy-MM-dd')}">2026-01-15</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(payments)}" class="empty-row">
+                                    <td colspan="4">
+                                        <div class="empty-msg-container">
+                                            <p class="empty-text">이번 주 결제 내역이 없습니다.</p>
+                                        </div>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
+import dev.gmpark.cors.validators.BadWordValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class ReviewService {
     private final ReviewMapper reviewMapper;
     private final OrderMapper orderMapper;
+    private final BadWordValidator badWordValidator; //비속어/유해정보차단
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -42,7 +44,8 @@ public class ReviewService {
 
 
         String content = normalizeText(review.getContent(), 1, 100);
-        if (content.isEmpty() || (images != null && images.length > 3)) return CommonResult.FAILURE;
+        //비속어/유해정보차단
+        if (content.isEmpty()|| badWordValidator.isBad(content) || (images != null && images.length > 3)) return CommonResult.FAILURE;
         review.setContent(content);
 
         Integer validOrderItemId = this.reviewMapper.selectAvailableReservationId(user.getEmail(), review.getItemId());
@@ -135,7 +138,9 @@ public class ReviewService {
         if (review == null || !review.getUserEmail().equals(user.getEmail())) return CommonResult.FAILURE;
 
         String normalized = normalizeText(content, 1, 100);
-        if (normalized.isEmpty()) return CommonResult.FAILURE;
+        if (normalized.isEmpty() || badWordValidator.isBad(normalized)) {
+            return CommonResult.FAILURE;
+        }
 
 
         ItemReviewEntity entity = ItemReviewEntity.builder()
@@ -266,7 +271,9 @@ public class ReviewService {
         if (user == null) return CommonResult.FAILURE_SESSION;
 
         String content = normalizeText(comment.getContent(), 1, 100);
-        if (content.isEmpty()) return CommonResult.FAILURE;
+        if (content.isEmpty() || badWordValidator.isBad(content)) {
+            return CommonResult.FAILURE;
+        }
 
         comment.setContent(content);
         comment.setUserEmail(user.getEmail()); // [Identity Pinning] 강제 적용
@@ -289,7 +296,9 @@ public class ReviewService {
         if (comment == null || !comment.getUserEmail().equals(user.getEmail())) return CommonResult.FAILURE;
 
         String normalized = normalizeText(content, 1, 100);
-        if (normalized.isEmpty()) return CommonResult.FAILURE;
+        if (normalized.isEmpty() || badWordValidator.isBad(normalized)) {
+            return CommonResult.FAILURE;
+        }
 
         comment.setContent(normalized);
         return this.reviewMapper.updateComment(comment) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
