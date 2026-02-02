@@ -111,7 +111,7 @@ public class PayService {
             return Pair.of(CommonResult.FAILURE, "상세 주소를 입력해주세요.");
         }
         
-        // [추가] 요청사항 글자수 제한 (20자)
+        // [수정] 요청사항 글자수 제한 통일 (15자)
         if (dto.getRequest() != null && dto.getRequest().length() > 15) {
             return Pair.of(CommonResult.FAILURE, "요청사항은 15자까지 입력 가능합니다.");
         }
@@ -140,7 +140,7 @@ public class PayService {
     @Transactional
     public String prepareOrder(SingleOrderDto dto, String userEmail) {
         // 0. 기존 PENDING 상태의 주문 삭제 (중복 방지 및 정리)
-        orderMapper.deletePendingOrdersByUserEmail(userEmail);
+        // orderMapper.deletePendingOrdersByUserEmail(userEmail); // 중복 결제 방지를 위해 삭제 로직 제거
 
         // 1. 유저 정보 조회 및 포인트 검증
         RegisterEntity user = registerMapper.selectByEmail(userEmail);
@@ -154,9 +154,9 @@ public class PayService {
             throw new RuntimeException("잘못된 포인트 금액입니다.");
         }
         
-        // [추가] 요청사항 글자수 제한 (20자)
-        if (dto.getRequest() != null && dto.getRequest().length() > 20) {
-            throw new RuntimeException("요청사항은 20자까지 입력 가능합니다.");
+        // [수정] 요청사항 글자수 제한 통일 (15자)
+        if (dto.getRequest() != null && dto.getRequest().length() > 15) {
+            throw new RuntimeException("요청사항은 15자까지 입력 가능합니다.");
         }
 
         // 2. 가격 계산 및 주문 아이템 구성 (DB 정보 기반)
@@ -178,7 +178,9 @@ public class PayService {
                 if (cartQuantities != null && cartQuantities.containsKey(cart.getId())) {
                     quantity = cartQuantities.get(cart.getId());
                 }
+                // [수정] 수량 정규화 (1~99)
                 if (quantity < 1) quantity = 1;
+                if (quantity > 99) quantity = 99;
 
                 // DB에서 조회된 가격(cart.getItemPrice()) 사용
                 totalProductPrice += cart.getItemPrice() * quantity;
@@ -197,7 +199,9 @@ public class PayService {
              ShopItemVo item = this.itemService.getItemById(dto.getItemId());
              if (item != null) {
                  int quantity = dto.getQuantity();
+                 // [수정] 수량 정규화 (1~99)
                  if (quantity < 1) quantity = 1;
+                 if (quantity > 99) quantity = 99;
 
                  totalProductPrice = item.getPrice() * quantity;
                  
@@ -218,7 +222,9 @@ public class PayService {
                 String newSize = (String) newItem.get("size");
                 int newQuantity = ((Number) newItem.get("quantity")).intValue();
                 
+                // [수정] 수량 정규화 (1~99)
                 if (newQuantity < 1) newQuantity = 1;
+                if (newQuantity > 99) newQuantity = 99;
 
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
@@ -294,54 +300,64 @@ public class PayService {
         }
 
         // 2. 토스페이먼츠 승인 API 호출
-        tossApiService.confirmPayment(paymentKey, orderId, amount);
+        try {
+            tossApiService.confirmPayment(paymentKey, orderId, amount);
+        } catch (Exception e) {
+            throw new RuntimeException("결제 승인 실패: " + e.getMessage());
+        }
 
-        // 4. [성공 시] DB 상태 업데이트 (PENDING -> PAID)
-        order.setStatus("PAID"); 
-        order.setPaymentKey(paymentKey); 
-        order.setPaidAt(LocalDateTime.now());
-        
-        orderMapper.updateOrderStatus(order);
-
-        // 5. 장바구니 비우기 및 포인트 차감 계산을 위한 아이템 조회
-        List<OrderItemEntity> orderItems = orderMapper.selectOrderItemsByOrderId(order.getId());
-        
-        long totalProductPrice = 0;
-        for (OrderItemEntity item : orderItems) {
-            totalProductPrice += item.getPrice() * item.getQuantity();
+        try {
+            // 4. [성공 시] DB 상태 업데이트 (PENDING -> PAID)
+            order.setStatus("PAID"); 
+            order.setPaymentKey(paymentKey); 
+            order.setPaidAt(LocalDateTime.now());
             
-            // 장바구니 삭제
-            CartEntity cartItem = cartMapper.selectCartItem(order.getUserEmail(), item.getItemId(), item.getSize());
-            if (cartItem != null) {
-                cartMapper.deleteCartItem(cartItem.getId());
+            orderMapper.updateOrderStatus(order);
+
+            // 5. 장바구니 비우기 및 포인트 차감 계산을 위한 아이템 조회
+            List<OrderItemEntity> orderItems = orderMapper.selectOrderItemsByOrderId(order.getId());
+            
+            long totalProductPrice = 0;
+            for (OrderItemEntity item : orderItems) {
+                totalProductPrice += item.getPrice() * item.getQuantity();
+                
+                // 장바구니 삭제
+                CartEntity cartItem = cartMapper.selectCartItem(order.getUserEmail(), item.getItemId(), item.getSize());
+                if (cartItem != null) {
+                    cartMapper.deleteCartItem(cartItem.getId());
+                }
             }
-        }
 
-        // 6. 포인트 차감 (원래 금액 - 실 결제 금액 = 사용 포인트)
-        long deliveryFee = (totalProductPrice >= 70000 || totalProductPrice == 0) ? 0 : 3000;
-        long originalTotalPrice = totalProductPrice + deliveryFee;
-        long usedPoints = originalTotalPrice - order.getTotalPrice();
+            // 6. 포인트 차감 (원래 금액 - 실 결제 금액 = 사용 포인트)
+            long deliveryFee = (totalProductPrice >= 70000 || totalProductPrice == 0) ? 0 : 3000;
+            long originalTotalPrice = totalProductPrice + deliveryFee;
+            long usedPoints = originalTotalPrice - order.getTotalPrice();
 
-        if (usedPoints > 0) {
-            registerMapper.updatePoint(order.getUserEmail(), -(int)usedPoints);
-            registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                    .userEmail(order.getUserEmail())
-                    .amount(-(int)usedPoints)
-                    .type("USE")
-                    .orderId(String.valueOf(order.getId()))
-                    .build());
-        }
+            if (usedPoints > 0) {
+                registerMapper.updatePoint(order.getUserEmail(), -(int)usedPoints);
+                registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(order.getUserEmail())
+                        .amount(-(int)usedPoints)
+                        .type("USE")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
 
-        // 7. 포인트 적립 (1%)
-        int earnedPoints = (int) (order.getTotalPrice() * 0.01);
-        if (earnedPoints > 0) {
-            registerMapper.updatePoint(order.getUserEmail(), earnedPoints);
-            registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                    .userEmail(order.getUserEmail())
-                    .amount(earnedPoints)
-                    .type("EARN")
-                    .orderId(String.valueOf(order.getId()))
-                    .build());
+            // 7. 포인트 적립 (1%)
+            int earnedPoints = (int) (order.getTotalPrice() * 0.01);
+            if (earnedPoints > 0) {
+                registerMapper.updatePoint(order.getUserEmail(), earnedPoints);
+                registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                        .userEmail(order.getUserEmail())
+                        .amount(earnedPoints)
+                        .type("EARN")
+                        .orderId(String.valueOf(order.getId()))
+                        .build());
+            }
+        } catch (Exception e) {
+            // DB 처리 중 오류 발생 시 결제 취소 (보상 트랜잭션)
+            tossApiService.cancelPayment(paymentKey, "서버 내부 오류로 인한 결제 취소", amount);
+            throw new RuntimeException("결제 처리 중 오류가 발생하여 결제가 취소되었습니다.");
         }
     }
 

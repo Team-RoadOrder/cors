@@ -2,6 +2,7 @@ package dev.gmpark.cors.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.gmpark.cors.exceptions.TossPaymentException;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -80,7 +81,9 @@ public class TossApiService {
         JsonNode responseNode = mapper.readTree(responseStream);
 
         if (!isSuccess) {
-            throw new RuntimeException(responseNode.path("message").asText());
+            String errorCode = responseNode.path("code").asText();
+            String errorMessage = responseNode.path("message").asText();
+            throw new TossPaymentException(errorCode, errorMessage);
         }
         return responseNode;
     }

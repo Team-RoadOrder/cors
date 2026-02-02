@@ -34,7 +34,7 @@ public class OrderService {
 
     private static final long FREE_DELIVERY_THRESHOLD = 70000;
     private static final long DELIVERY_FEE = 3000;
-    // private static final double POINT_EARN_RATE = 0.02; // Removed: PayService handles point earning
+    private static final double POINT_EARN_RATE = 0.01; // 적립률 1%로 통일
 
     /**
      * 주문 데이터 정규화 (Normalization)
@@ -454,7 +454,8 @@ public class OrderService {
                 }
 
                 // ★ 적립된 포인트 회수 로직
-                int earnedPointsToRevoke = (int) (refundAmount * 0.01); 
+                // 적립률을 상수로 사용하여 계산 (1%)
+                int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
                 if (earnedPointsToRevoke > 0) {
                     this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
                     this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
