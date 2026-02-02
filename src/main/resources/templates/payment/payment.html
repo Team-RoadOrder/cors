@@ -196,7 +196,7 @@
 
                     <!-- 주문 정보 (상품 목록) -->
                     <section class="summary-box">
-                        <h3>주문 정보</h3>
+                        <h3>주문 정보 <span id="order-total-count" th:with="totalQty=${items != null ? #aggregates.sum(items.![quantity]) : 0}" th:text="'(' + ${totalQty} + ')'">(0)</span></h3>
                         <div class="order-items-list">
                             <div class="order-item" th:each="item : ${items}" th:data-cart-id="${item.cartId}" th:data-item-id="${item.itemId}">
                                 <div class="item-main">
