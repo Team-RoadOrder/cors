@@ -124,7 +124,7 @@
 #nav > .nav-list > .dashboard::before {
     content: '';
     display: block;
-    background-image: url("/assets/images/ownermain/dashboard.png");
+    background-image: url("/assets/images/ownermain/dash.png");
     position: absolute;
     width: 2rem;
     height: 2rem;
@@ -132,6 +132,7 @@
     background-repeat: no-repeat;
     top: 1.8rem;
     left: 2.5rem;
+
 }
 #nav > .nav-list > .register-form {
     padding: 2rem 5rem;
@@ -144,7 +145,7 @@
 #nav > .nav-list > .register-form::before {
     content: '';
     display: block;
-    background-image: url("/assets/images/ownermain/shopping.png");
+    background-image: url("/assets/images/ownermain/product.png");
     position: absolute;
     width: 2rem;
     height: 2rem;
