@@ -127,7 +127,7 @@
 #nav > .nav-list > .dashboard::before {
     content: '';
     display: block;
-    background-image: url("/assets/images/ownermain/dashboard-blue.png");
+    background-image: url("/assets/images/ownermain/dash-blue.png");
     position: absolute;
     width: 2rem;
     height: 2rem;
@@ -148,7 +148,7 @@
 #nav > .nav-list > .register-form::before {
     content: '';
     display: block;
-    background-image: url("/assets/images/ownermain/shopping.png");
+    background-image: url("/assets/images/ownermain/product.png");
     position: absolute;
     width: 2rem;
     height: 2rem;
