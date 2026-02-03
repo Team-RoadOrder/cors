@@ -141,9 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (submitBtn) {
         submitBtn.addEventListener('click', () => {
             if (submitBtn.disabled) return;
-            //로딩시작
-            if (typeof Loading !== 'undefined') Loading.show("리뷰를 등록 중입니다...");
-            submitBtn.disabled = true;
+
 
             const contentRaw = document.getElementById('review-content')?.value || "";
             const content = contentRaw.trim().replace(/\s{2,}/g, ' ');
@@ -154,7 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 openModal("입력 오류", `<p>리뷰 내용은 1자 이상 100자 이하로 작성해주세요.</p>`, { confirmText: '확인' });
                 return;
             }
+
+
+            if (typeof Loading !== 'undefined') Loading.show("리뷰를 등록 중입니다...");
             submitBtn.disabled = true;
+
             const mode = writeForm.dataset.mode;
             const editId = writeForm.dataset.editId;
 
@@ -167,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (imageUploadInput && imageUploadInput.files.length > 0) {
                 Array.from(imageUploadInput.files).forEach(file => {
-                    formData.append('images', file); // 서버 파라미터명 MultipartFile[] images와 매칭
+                    formData.append('images', file);
                 });
             }
 
@@ -175,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
                     return;
                 }
-                //로딩종료
+
                 if (typeof Loading !== 'undefined') Loading.hide();
                 submitBtn.disabled = false;
 
@@ -571,14 +573,20 @@ const initReviewLoad = () => {
     if (!itemId) return;
 
     const xhr = new XMLHttpRequest();
+
     xhr.onreadystatechange = () => {
-        if (xhr.readyState !== XMLHttpRequest.DONE) return;
-        if (xhr.status >= 200 && xhr.status < 400) {
-            // 이 함수가 실행되면서 리뷰가 없으면 안내 문구를 출력함
-            renderReviewList(JSON.parse(xhr.responseText));
+
+        if (xhr.readyState !== XMLHttpRequest.DONE) {
+            return;
         }
+
+        if (xhr.status < 200 || xhr.status >= 400) {
+            console.error('리뷰를 불러오는 데 실패했습니다.');
+            return;
+        }
+        const responseData = JSON.parse(xhr.responseText);
+        renderReviewList(responseData);
     };
-    // 초기 로딩은 최신순(latest)으로 설정
     xhr.open('GET', `/item/reviews?itemId=${itemId}&sort=latest`);
     xhr.send();
 };
