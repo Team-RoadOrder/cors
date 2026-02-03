@@ -270,7 +270,7 @@ const renderItems = () => {
                 const container = document.querySelector('#item .container');
                 container.innerHTML = '';
                 if (!response.items || response.items.length === 0) {
-                    container.innerHTML = '<div class="no-item">등록된 상품이 없습니다.</div>';
+                    container.innerHTML = '<div class="no-item" style="text-align:center; padding-top:4rem; color: #8c8c8c">등록된 상품이 없습니다.</div>';
                     break;
                 }
                 response.items.forEach(item => {
