@@ -12,11 +12,8 @@ public class OwnerMemberValidator {
     // 비밀번호: 6~50자 (팀원 기준)
     public static final String PASSWORD_REGEX = "^[\\da-zA-Z`~!@#$%^&*()\\-_=+\\[{\\]}\\\\|;:'\",<.>\\/?]{6,50}$";
 
-    /**
-     * 전화번호 정규식 (대한민국 휴대폰 표준)
-     * 010, 011, 016, 017, 018, 019로 시작하며 총 10~11자리 숫자
-     */
-    public static final String PHONE_REGEX = "^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$";
+    // 02(서울), 0xx(지역), 010(휴대폰), 070(인터넷), 050(안심번호)
+    public static final String PHONE_REGEX = "^(02|0[3-9]\\d|01\\d|070|050\\d)\\d{3,4}\\d{4}$";
 
     // 주소 정규식: 한글, 영문, 숫자, 공백, 특수문자(-,(),.[]) 허용, 2~100자
     public static final String ADDRESS_REGEX = "^[가-힣a-zA-Z0-9\\s\\-\\(\\)\\[\\]\\.,]{2,100}$";

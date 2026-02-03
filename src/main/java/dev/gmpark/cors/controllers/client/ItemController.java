@@ -1,4 +1,4 @@
-package dev.gmpark.cors.controllers;
+package dev.gmpark.cors.controllers.client;
 
 import dev.gmpark.cors.dtos.ReviewStatsDto;
 import dev.gmpark.cors.entities.*;

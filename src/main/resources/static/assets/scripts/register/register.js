@@ -627,50 +627,50 @@ customerForm.addEventListener('submit',(e) => {
         return;
     }
     if (!emailRegex.test(form['email'].value)) {
-        openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인',onConfirm: () => {} });
-        form['email'].focus();
+        openModal("ValidationError", "<p>유효한 이메일 주소를 입력해 주세요.</p>", { confirmText: '확인',onConfirm: () => { form['email'].focus();} });
+
         return;
     }
 
     if (!nameRegex.test(form['name'].value)) {
-        openModal("ValidationError", "<p>이름은 한글 또는 영문으로 2자 이상 10자 이하로 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {}});
-        form['name'].focus();
+        openModal("ValidationError", "<p>이름은 한글 또는 영문으로 2자 이상 10자 이하로 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {form['name'].focus();}});
+
         return;
     }
 
     if (!isSocialRegister) {
         const password = form['password'].value;
         if (!passwordRegex.test(password)) {
-            openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {} });
-            form['password'].focus();
+            openModal("ValidationError", "<p>비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함하여 6자 이상 20자 이하로 입력해야 합니다.</p>", { confirmText: '확인',onConfirm: () => {form['password'].focus();} });
+
             return;
         }
 
         if (password !== form['confirm'].value) {
-            openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {}});
-            form['confirm'].focus();
+            openModal("PasswordError", "<p>비밀번호가 일치하지 않습니다.</p>", { confirmText: '확인' ,onConfirm: () => {form['confirm'].focus();}});
+
             return;
         }
     }
     if (!phoneRegex.test(combinedPhone)) {
-        openModal("ValidationError", "<p>유효한 전화번호 11자리(숫자만)를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {}});
-        form['phone'].focus();
+        openModal("ValidationError", "<p>유효한 전화번호 11자리(숫자만)를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {form['phone1'].focus();}});
+
         return;
     }
     if (!form['style'].value.trim()) {
-        openModal("ValidationError", "<p>스타일을 입력해주세요. 선호하는 상품을 추천받지못할수도있습니다.</p>", { confirmText: '확인',onConfirm: () => {} });
-        form['address'].focus();
+        openModal("ValidationError", "<p>스타일을 입력해주세요. 선호하는 상품을 추천받지못할수도있습니다.</p>", { confirmText: '확인',onConfirm: () => {form['address'].focus();} });
+
         return;
     }
     if (!form['address'].value.trim()) {
-        openModal("ValidationError", "<p>주소를 입력해 주세요. '입력하기' 버튼을 눌러 검색할 수 있습니다.</p>", { confirmText: '확인',onConfirm: () => {} });
-        form['address'].focus();
+        openModal("ValidationError", "<p>주소를 입력해 주세요. '입력하기' 버튼을 눌러 검색할 수 있습니다.</p>", { confirmText: '확인',onConfirm: () => {form['address'].focus();} });
+
         return;
     }
 
     if (!form['addressDetail'].value.trim()) {
-        openModal("ValidationError", "<p>상세 주소를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {}});
-        form['addressDetail'].focus();
+        openModal("ValidationError", "<p>상세 주소를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {form['addressDetail'].focus();}});
+
         return;
     }
 
@@ -756,7 +756,7 @@ ownerForm.addEventListener('submit', (e) => {
     const p2 = ownerForm.querySelector('[name="phone2"]').value;
     const p3 = ownerForm.querySelector('[name="phone3"]').value;
     const combinedPhone = p1 + p2 + p3;
-    const phoneRegex = /^\d{11}$/;
+    const phoneRegex = /^\d{9,11}$/;
     const passwordRegex = /^[\da-zA-Z`~!@#$%^&*()\-_=+\[{\]}\\|;:'",<.>\/?]{6,50}$/g;
     const storeNameRegex = /^[가-힣A-Za-z0-9]{2,20}$/;
     const businessNumRegex = /^\d{3}-\d{2}-\d{5}$/;
@@ -797,7 +797,7 @@ ownerForm.addEventListener('submit', (e) => {
 
     if (!phoneRegex.test(combinedPhone)) {
         openModal("ValidationError", "<p>유효한 전화번호 11자리(숫자만)를 입력해 주세요.</p>", { confirmText: '확인' ,onConfirm: () => {
-                form['phone'].focus();
+                form['phone1'].focus();
             }});
         return;
     }

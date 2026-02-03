@@ -1,4 +1,4 @@
-package dev.gmpark.cors.controllers;
+package dev.gmpark.cors.controllers.owner;
 
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.entities.ShopInfoEntity;

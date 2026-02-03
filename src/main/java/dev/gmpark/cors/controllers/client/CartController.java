@@ -1,4 +1,4 @@
-package dev.gmpark.cors.controllers;
+package dev.gmpark.cors.controllers.client;
 
 import dev.gmpark.cors.dtos.CartOrderDto;
 import dev.gmpark.cors.dtos.SingleOrderDto;

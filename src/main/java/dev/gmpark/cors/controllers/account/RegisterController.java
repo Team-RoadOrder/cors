@@ -1,5 +1,6 @@
-package dev.gmpark.cors.controllers;
+package dev.gmpark.cors.controllers.account;
 
+import dev.gmpark.cors.controllers.AbstractGeneralController;
 import dev.gmpark.cors.entities.EmailTokenEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.exceptions.TransactionalException;
@@ -9,7 +10,6 @@ import dev.gmpark.cors.services.RegisterService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

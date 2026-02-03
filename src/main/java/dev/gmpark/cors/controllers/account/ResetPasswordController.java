@@ -1,4 +1,4 @@
-package dev.gmpark.cors.controllers;
+package dev.gmpark.cors.controllers.account;
 
 
 import dev.gmpark.cors.results.register.ResetPasswordResult;
