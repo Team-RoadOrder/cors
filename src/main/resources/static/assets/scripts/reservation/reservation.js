@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", function() {
             if (isMobile) {
                 const confirmContainer = document.createElement("div");
                 confirmContainer.className = "flatpickr-confirm-container";
-                
+
                 const confirmBtn = document.createElement("button");
                 confirmBtn.type = "button";
                 confirmBtn.className = "flatpickr-confirm-btn";
                 confirmBtn.innerText = "확인";
-                
+
                 confirmBtn.addEventListener("click", function() {
                     instance.close(); // 캘린더 닫기
                 });

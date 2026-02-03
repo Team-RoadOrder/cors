@@ -516,7 +516,7 @@ const changeStyle = () => {
                         }
                     });
                 } else {
-                    openModal("WARN", "<p>변경에 실패했습니다.</p>");
+                    openModal("WARN", "<p>최소 1개 이상의 스타일을 선택해 주세요.</p>");
                 }
             } catch (e) {
                 console.error("JSON 파싱 에러:", e);

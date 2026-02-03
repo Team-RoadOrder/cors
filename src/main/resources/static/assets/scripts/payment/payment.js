@@ -257,12 +257,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateTotalPrice() {
         let totalProductPrice = 0;
+        let totalQuantity = 0;
         const itemDetails = document.querySelectorAll('.item-detail');
         
         itemDetails.forEach(detail => {
             const qty = parseInt(detail.querySelector('.item-qty-input').value);
             const unitPrice = parseInt(detail.querySelector('.price').dataset.unitPrice);
             totalProductPrice += (unitPrice * qty);
+            totalQuantity += qty;
         });
 
         const deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
@@ -287,6 +289,12 @@ document.addEventListener("DOMContentLoaded", function() {
         
         document.getElementById('summary-total-price').textContent = totalPrice.toLocaleString() + '원';
         document.getElementById('btn-payment-text').textContent = totalPrice.toLocaleString() + '원 결제하기';
+        
+        // 주문 정보 옆 수량 업데이트
+        const orderTotalCount = document.getElementById('order-total-count');
+        if (orderTotalCount) {
+            orderTotalCount.textContent = '(' + totalQuantity + ')';
+        }
     }
 
 
