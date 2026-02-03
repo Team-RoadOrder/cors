@@ -16,7 +16,7 @@
         <p>주문번호: <span th:text="${orderId}"></span></p>
         <p>결제금액: <span th:text="${#numbers.formatInteger(amount, 0, 'COMMA')} + '원'"></span></p>
     </div>
-    <a href="/" class="btn-action">홈으로 돌아가기</a>
+    <a href="/my?open=orders" class="btn-action">주문내역 확인하기</a>
 </div>
 </body>
 </html>

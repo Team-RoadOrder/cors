@@ -38,12 +38,8 @@ public class OrderService {
 
     /**
      * 주문 데이터 정규화 (Normalization)
-     * - 입력값이 없으면 유저 정보로 채움
-     * - 수량이 범위를 벗어나면 조정 (Clamping)
-     * - 문자열 앞뒤 공백 제거 (Trimming)
      */
     private void normalizeOrderData(RegisterEntity user, SingleOrderDto dto) {
-        // 1. 수신자 정보가 비어있으면 주문자(User) 정보로 대체 및 공백 제거
         if (dto.getReceiverName() == null || dto.getReceiverName().isBlank()) {
             dto.setReceiverName(user.getName());
         } else {
@@ -51,7 +47,6 @@ public class OrderService {
         }
 
         if (dto.getReceiverPhone() == null || dto.getReceiverPhone().isBlank()) {
-            // 전화번호에서 숫자만 남기고 저장 (Format Normalization)
             String cleanPhone = user.getPhone().replaceAll("[^0-9]", "");
             dto.setReceiverPhone(cleanPhone);
         } else {
@@ -66,18 +61,13 @@ public class OrderService {
             dto.setAddressDetail(dto.getAddressDetail() != null ? dto.getAddressDetail().trim() : "");
         }
 
-        // 2. 요청사항 공백 제거
         if (dto.getRequest() != null) {
             dto.setRequest(dto.getRequest().trim());
         }
 
-        // 3. 수량 정규화 (1 ~ 99)
         dto.setQuantity(this.normalizeQuantity(dto.getQuantity()));
     }
 
-    /**
-     * 수량 범위 보정 (1 ~ 99)
-     */
     private int normalizeQuantity(int quantity) {
         if (quantity < 1) return 1;
         if (quantity > 99) return 99;
@@ -86,12 +76,10 @@ public class OrderService {
 
     @Transactional
     public CommonResult processSingleOrder(RegisterEntity user, SingleOrderDto dto) {
-        // 1. 기본 유효성 검사 (Validation)
         if (user == null || dto == null || dto.getItemId() == null || dto.getSize() == null) {
             return CommonResult.FAILURE;
         }
 
-        // 2. 데이터 정규화 (Normalization) - 로직 수행 전 데이터 정제
         this.normalizeOrderData(user, dto);
 
         ShopItemVo item = this.itemService.getItemById(dto.getItemId());
@@ -100,23 +88,22 @@ public class OrderService {
         }
 
         long totalProductPrice = item.getPrice() * dto.getQuantity();
-        
+
         List<OrderItemEntity> items = new ArrayList<>();
         items.add(OrderItemEntity.builder()
                 .itemId(dto.getItemId())
                 .shopId(item.getShopId())
                 .size(dto.getSize())
-                .quantity(dto.getQuantity()) // 정규화된 수량 사용
+                .quantity(dto.getQuantity())
                 .price(item.getPrice())
                 .build());
 
-        // 추가 아이템 처리 (Option Items)
         if (dto.getNewItems() != null) {
             for (Map<String, Object> newItem : dto.getNewItems()) {
                 Long newItemId = ((Number) newItem.get("itemId")).longValue();
                 String newSize = (String) newItem.get("size");
                 int newQuantity = this.normalizeQuantity(((Number) newItem.get("quantity")).intValue());
-                
+
                 ShopItemVo newItemVo = this.itemService.getItemById(newItemId);
                 if (newItemVo != null) {
                     totalProductPrice += newItemVo.getPrice() * newQuantity;
@@ -136,12 +123,10 @@ public class OrderService {
 
     @Transactional
     public CommonResult processCartOrder(RegisterEntity user, SingleOrderDto dto) {
-        // 1. 기본 유효성 검사
         if (user == null || dto == null || dto.getCartIds() == null || dto.getCartIds().isEmpty()) {
             return CommonResult.FAILURE;
         }
 
-        // 2. 데이터 정규화
         this.normalizeOrderData(user, dto);
 
         List<CartVo> cartItems = this.cartService.getCartItemsByIds(dto.getCartIds());
@@ -154,11 +139,16 @@ public class OrderService {
         Map<Long, Integer> cartQuantities = dto.getCartQuantities();
 
         for (CartVo cart : cartItems) {
+            // [추가] 결제 처리 시에도 본인 장바구니인지 재검증 (보안 강화)
+            if (!cart.getUserEmail().equals(user.getEmail())) {
+                return CommonResult.FAILURE;
+            }
+
             int quantity = cart.getQuantity();
             if (cartQuantities != null && cartQuantities.containsKey(cart.getId())) {
                 quantity = cartQuantities.get(cart.getId());
             }
-            quantity = this.normalizeQuantity(quantity); // 수량 정규화
+            quantity = this.normalizeQuantity(quantity);
 
             totalProductPrice += cart.getItemPrice() * quantity;
             orderItems.add(OrderItemEntity.builder()
@@ -170,7 +160,6 @@ public class OrderService {
                     .build());
         }
 
-        // 추가 아이템 처리 (위와 동일 로직)
         if (dto.getNewItems() != null) {
             for (Map<String, Object> newItem : dto.getNewItems()) {
                 Long newItemId = ((Number) newItem.get("itemId")).longValue();
@@ -196,21 +185,19 @@ public class OrderService {
         if (result == CommonResult.SUCCESS) {
             this.cartService.deleteCartItems(user, dto.getCartIds());
         }
-        
+
         return result;
     }
 
-    // 공통 주문 처리 로직 (결제, 포인트, DB저장)
     private CommonResult finalizeOrder(RegisterEntity user, SingleOrderDto dto, long totalProductPrice, List<OrderItemEntity> items) {
         long deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD || totalProductPrice == 0) ? 0 : DELIVERY_FEE;
         long totalPrice = totalProductPrice + deliveryFee;
 
-        // 포인트 사용 검증
         int usedPoints = dto.getUsedPoints();
         if (usedPoints > 0) {
             if (user.getPoint() < usedPoints) return CommonResult.FAILURE;
             if (usedPoints > totalPrice) return CommonResult.FAILURE;
-            
+
             totalPrice -= usedPoints;
             this.registerMapper.updatePoint(user.getEmail(), -usedPoints);
         }
@@ -235,7 +222,6 @@ public class OrderService {
         }
 
         if (this.orderMapper.insertOrderItems(items) > 0) {
-            // 포인트 이력 저장 (사용)
             if (usedPoints > 0) {
                 this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
                         .userEmail(user.getEmail())
@@ -244,20 +230,6 @@ public class OrderService {
                         .orderId(String.valueOf(order.getId()))
                         .build());
             }
-
-            // 포인트 적립 로직 제거 (PayService에서 처리)
-            /*
-            int earnedPoints = (int) (totalPrice * POINT_EARN_RATE);
-            if (earnedPoints > 0) {
-                this.registerMapper.updatePoint(user.getEmail(), earnedPoints);
-                this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                        .userEmail(user.getEmail())
-                        .amount(earnedPoints)
-                        .type("EARN")
-                        .orderId(String.valueOf(order.getId()))
-                        .build());
-            }
-            */
             return CommonResult.SUCCESS;
         }
 
@@ -289,10 +261,17 @@ public class OrderService {
         return items;
     }
 
-    public List<PaymentItemDto> getPaymentItemsForCartOrder(List<Long> cartIds) {
+    // [수정] userEmail 파라미터 추가 및 본인 확인 로직 적용
+    public List<PaymentItemDto> getPaymentItemsForCartOrder(String userEmail, List<Long> cartIds) {
         List<PaymentItemDto> items = new ArrayList<>();
         List<CartVo> cartItems = this.cartService.getCartItemsByIds(cartIds);
+
         for (CartVo cart : cartItems) {
+            // [중요] 내 장바구니가 아니면 예외 발생 -> Controller에서 리다이렉트 처리
+            if (!cart.getUserEmail().equals(userEmail)) {
+                throw new IllegalArgumentException("잘못된 접근입니다.");
+            }
+
             List<String> sizes = new ArrayList<>();
             ShopItemVo originalItem = this.itemService.getItemById(cart.getItemId());
             if (originalItem != null && originalItem.getSize() != null) {
@@ -316,13 +295,15 @@ public class OrderService {
         return items;
     }
 
-    public Map<String, Object> getPaymentInfo(Long itemId, String size, List<Long> cartIds) {
+    // [수정] userEmail 파라미터 추가
+    public Map<String, Object> getPaymentInfo(String userEmail, Long itemId, String size, List<Long> cartIds) {
         List<PaymentItemDto> items = new ArrayList<>();
 
         if (itemId != null && size != null) {
             items = this.getPaymentItemsForSingleOrder(itemId, size);
         } else if (cartIds != null && !cartIds.isEmpty()) {
-            items = this.getPaymentItemsForCartOrder(cartIds);
+            // [수정] userEmail 전달하여 검증 수행
+            items = this.getPaymentItemsForCartOrder(userEmail, cartIds);
         }
 
         long totalProductPrice = 0;
@@ -344,30 +325,31 @@ public class OrderService {
         result.put("totalProductPrice", totalProductPrice);
         result.put("deliveryFee", deliveryFee);
         result.put("totalPrice", totalPrice);
-        
+
         return result;
     }
 
     public Map<String, Object> getPaymentPageData(RegisterEntity sessionUser, Long itemId, String size, List<Long> cartIds) {
         Map<String, Object> result = new HashMap<>();
-        
+
         RegisterEntity user = this.registerMapper.selectByEmail(sessionUser.getEmail());
         if (user == null) {
             user = sessionUser;
         }
-        
-        Map<String, Object> paymentInfo = this.getPaymentInfo(itemId, size, cartIds);
+
+        // [수정] user.getEmail()을 전달
+        Map<String, Object> paymentInfo = this.getPaymentInfo(user.getEmail(), itemId, size, cartIds);
         result.putAll(paymentInfo);
         result.put("user", user);
         result.put("isCartOrder", (cartIds != null && !cartIds.isEmpty()));
         result.put("cartIds", cartIds);
-        
+
         return result;
     }
 
     public Map<String, Object> processOrder(String userEmail, SingleOrderDto dto) {
         Map<String, Object> response = new HashMap<>();
-        
+
         if (userEmail == null || dto == null) {
             response.put("result", CommonResult.FAILURE.name());
             response.put("message", "잘못된 요청입니다.");
@@ -402,7 +384,6 @@ public class OrderService {
         return response;
     }
 
-    // 환불 로직 분리
     private boolean processRefund(long orderItemId, String manualReason) {
         try {
             OrderItemEntity orderItem = this.orderMapper.selectOrderItemById(orderItemId);
@@ -411,57 +392,46 @@ public class OrderService {
             OrderEntity order = this.orderMapper.selectOrderById(orderItem.getOrderId());
             if (order == null) return false;
 
-            // paymentKey가 있는 경우에만 환불 API 호출 (테스트 데이터 등 예외 처리)
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
-                
-                // ★ 환불 가능 금액 조회 (토스 API 호출)
-                JsonNode paymentInfo = this.tossApiService.getPayment(order.getPaymentKey());
-                long balanceAmount = paymentInfo.path("balanceAmount").asLong(); // 남은 환불 가능 금액
 
-                // ★ [수정] 잔액이 0이어도 포인트 환불은 진행해야 함
-                // 기존: if (balanceAmount <= 0) return true; -> 포인트 환불 로직 실행 안됨
-                // 수정: 잔액이 0이면 토스 환불은 건너뛰고 포인트 환불 로직으로 바로 이동
+                JsonNode paymentInfo = this.tossApiService.getPayment(order.getPaymentKey());
+                long balanceAmount = paymentInfo.path("balanceAmount").asLong();
 
                 long refundAmount = 0;
-                
+
                 if (balanceAmount > 0) {
                     refundAmount = cancelAmount;
                     if (cancelAmount > balanceAmount) {
                         refundAmount = balanceAmount;
                     }
 
-                    String cancelReason = manualReason != null ? manualReason : 
-                                         (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
-                    
-                    // ★ [수정] 토스 API 호출 시 refundAmount가 0보다 클 때만 호출
+                    String cancelReason = manualReason != null ? manualReason :
+                            (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
+
                     if (refundAmount > 0) {
                         this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, refundAmount);
                     }
                 }
-                
-                // ★ 포인트 환불 로직 (사용한 포인트 돌려주기)
-                // 토스에서 환불받지 못한 금액(cancelAmount - refundAmount)은 전액 포인트로 환불
+
                 long pointRefundAmount = cancelAmount - refundAmount;
                 if (pointRefundAmount > 0) {
                     this.registerMapper.updatePoint(order.getUserEmail(), (int) pointRefundAmount);
                     this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
                             .userEmail(order.getUserEmail())
                             .amount((int) pointRefundAmount)
-                            .type("REFUND") // 환불 타입
+                            .type("REFUND")
                             .orderId(String.valueOf(order.getId()))
                             .build());
                 }
 
-                // ★ 적립된 포인트 회수 로직
-                // 적립률을 상수로 사용하여 계산 (1%)
                 int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
                 if (earnedPointsToRevoke > 0) {
                     this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
                     this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
                             .userEmail(order.getUserEmail())
                             .amount(-earnedPointsToRevoke)
-                            .type("REVOKE") // 회수 타입
+                            .type("REVOKE")
                             .orderId(String.valueOf(order.getId()))
                             .build());
                 }
@@ -479,7 +449,6 @@ public class OrderService {
         }
 
         if (status == 3) {
-            // 환불 로직 수행
             if (!this.processRefund(id, null)) {
                 return CommonResult.FAILURE;
             }
@@ -489,16 +458,14 @@ public class OrderService {
     }
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
-        // status가 2(환불요청) 또는 3(환불완료)일 때만 허용
         if( id < 1 || (status != 2 && status != 3) ||
                 refundReason == null ||
                 refundReason.isEmpty() ||
                 refundReason.length() > 200) {
             return CommonResult.FAILURE;
         }
-        
+
         if (status == 3) {
-            // 환불 로직 수행
             if (!this.processRefund(id, refundReason)) {
                 return CommonResult.FAILURE;
             }
@@ -506,5 +473,4 @@ public class OrderService {
 
         return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
-
 }

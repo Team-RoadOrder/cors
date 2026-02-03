@@ -6,7 +6,7 @@ import dev.gmpark.cors.mappers.OwnerShopMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,9 +35,9 @@ public class AiRecommendationService {
     /**
      * 데이터 로드 및 모델(유사도 매트릭스) 학습
      * 주기적으로 호출하거나 관리자 기능으로 호출하여 모델을 갱신할 수 있습니다.
-     * 1시간마다 자동으로 실행됩니다.
+     * 5분마다 자동으로 실행됩니다.
      */
-    @Scheduled(fixedRate = 300000) // 1시간 = 3600000ms
+
     public void loadDataAndTrainModel() {
         log.info("🔄 [AI] Hybrid 모델 학습 시작 (Java)...");
         try {

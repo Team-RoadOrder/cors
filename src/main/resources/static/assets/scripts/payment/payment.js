@@ -65,9 +65,9 @@ document.addEventListener("DOMContentLoaded", function() {
         // [추가] 요청사항 글자수 제한 (20자)
         inputRequest.addEventListener("input", function() {
             if (this.value.length > 15) {
-                this.value = this.value.slice(0, 15);
+                this.value = this.value.slice(0, 30);
                 // 선택 사항: 사용자에게 알림을 주고 싶다면 아래 주석 해제
-                openModal('알림', '요청사항은 15자까지 입력 가능합니다.', { confirmText: '확인' });
+                openModal('알림', '요청사항은 30자까지 입력 가능합니다.', { confirmText: '확인' });
             }
         });
     }
@@ -478,24 +478,41 @@ document.addEventListener("DOMContentLoaded", function() {
                 return response.text();
             }) 
             .then(orderId => {
-                // 4. 주문번호를 받으면 토스 결제창 띄우기 (로딩은 유지)
-                
                 const totalAmountStr = document.getElementById('summary-total-price').textContent;
                 const totalAmount = parseInt(totalAmountStr.replace(/[^0-9]/g, ''));
 
-                return payment.requestPayment({
-                    method: "CARD",
-                    amount: {
-                        currency: "KRW",
-                        value: totalAmount,
-                    },
-                    orderId: orderId,
-                    orderName: "로드오더 상품 결제",
-                    successUrl: window.location.origin + "/payment/success",
-                    failUrl: window.location.origin + "/payment/fail",
-                    customerEmail: document.getElementById('orderer_email') ? document.getElementById('orderer_email').value : "",
-                    customerName: receiverName,
-                });
+                if (totalAmount === 0) {
+                    // 전액 포인트 결제 처리
+                    return fetch('/pay/complete-point', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId: orderId })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text || "포인트 결제 처리 오류"); });
+                        }
+                        return response.text();
+                    })
+                    .then(() => {
+                        window.location.href = `/payment/success?paymentKey=POINT_PAYMENT&orderId=${orderId}&amount=0`;
+                    });
+                } else {
+                    // 4. 주문번호를 받으면 토스 결제창 띄우기 (로딩은 유지)
+                    return payment.requestPayment({
+                        method: "CARD",
+                        amount: {
+                            currency: "KRW",
+                            value: totalAmount,
+                        },
+                        orderId: orderId,
+                        orderName: "로드오더 상품 결제",
+                        successUrl: window.location.origin + "/payment/success",
+                        failUrl: window.location.origin + "/payment/fail",
+                        customerEmail: document.getElementById('orderer_email') ? document.getElementById('orderer_email').value : "",
+                        customerName: receiverName,
+                    });
+                }
             })
             .catch(error => {
                 // 5. 에러 발생 시에만 로딩 끄고 버튼 활성화

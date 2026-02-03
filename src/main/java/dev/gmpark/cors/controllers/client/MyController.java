@@ -5,6 +5,7 @@ import dev.gmpark.cors.entities.RegisterEntity;
 import dev.gmpark.cors.mappers.RegisterMapper;
 import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.MyService;
+import dev.gmpark.cors.services.PayService;
 import dev.gmpark.cors.vos.OrderHistoryVo;
 import dev.gmpark.cors.vos.ReservationItemVo;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class MyController {
     private final MyService myService;
     private final RegisterMapper registerMapper;
+    private final PayService payService;
 
     @RequestMapping(value = "/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getMy(ModelAndView modelAndView,@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
@@ -173,5 +175,17 @@ public class MyController {
         CommonResult result = this.myService.deleteUser(sessionUser);
         response.put("result", result.name());
         return response;
+    }
+
+    @PostMapping("/my/confirm-purchase")
+    @ResponseBody
+    public String confirmPurchase(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+                                  @RequestBody Map<String, Long> payload) {
+        if (sessionUser == null) {
+            throw new RuntimeException("로그인이 필요합니다.");
+        }
+        Long orderId = payload.get("orderId");
+        payService.confirmPurchase(orderId, sessionUser.getEmail());
+        return "SUCCESS";
     }
 }

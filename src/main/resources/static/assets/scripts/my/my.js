@@ -782,40 +782,36 @@ const deleteMember = (email) => {
         }
     });
 }
-const buyOk = (id, status) => {
-    const xhr = new XMLHttpRequest();
-    const formData = new FormData();
-    formData.append('id', id);
-    formData.append('status', status);
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState !== XMLHttpRequest.DONE) {
-            return;
-        }
-        if (xhr.status < 200 || xhr.status >= 400) {
-            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, {
-                confirmText: '확인'
-            });
-            return;
-        }
-        const response = JSON.parse(xhr.responseText);
-        switch (response.result) {
-            case 'FAILURE':
-                openModal("FAILURE", `<p>구매확정에 실패하였습니다.</p>`, {confirmText: '확인'});
-                break;
-            case 'SUCCESS':
-                openModal("SUCCESS", `<p>구매확정이 완료되었습니다.</p>`, {
+const confirmPurchase = (orderId) => {
+    openModal("answer", "<p>구매를 확정하시겠습니까?<br>구매 확정 시 포인트가 적립됩니다.</p>", {
+        confirmText: '확인',
+        cancelText: '취소',
+        onConfirm: () => {
+            fetch('/my/confirm-purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: orderId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || "서버 응답 오류"); });
+                }
+                return response.text();
+            })
+            .then(() => {
+                openModal("SUCCESS", "<p>구매가 확정되었습니다.</p>", {
                     confirmText: '확인',
                     onConfirm: () => {
                         location.reload();
                     }
                 });
-                break;
-            default:
-                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+            })
+            .catch(error => {
+                console.error(error);
+                openModal("ERROR", `<p>구매 확정 중 오류가 발생했습니다: ${error.message}</p>`, {confirmText: '확인'});
+            });
         }
-    };
-    xhr.open('PATCH', '/owner/patch-order-status')
-    xhr.send(formData);
+    });
 }
 
 

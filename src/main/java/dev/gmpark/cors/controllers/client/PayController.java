@@ -38,9 +38,29 @@ public class PayController {
             return modelAndView;
         }
 
-        Map<String, Object> pageData = this.orderService.getPaymentPageData(sessionUser, itemId, size, cartIds);
-        modelAndView.addAllObjects(pageData);
-        modelAndView.setViewName("payment/payment");
+        try {
+            // [수정] 서비스 호출: 장바구니 소유권 검증 로직이 포함된 메서드 실행
+            Map<String, Object> pageData = this.orderService.getPaymentPageData(sessionUser, itemId, size, cartIds);
+
+            // [안전장치] 장바구니 결제인데 상품이 하나도 없다면(유효하지 않은 접근 등) 리다이렉트
+            if (cartIds != null && !cartIds.isEmpty()) {
+                List<?> items = (List<?>) pageData.get("items");
+                if (items == null || items.isEmpty()) {
+                    modelAndView.setViewName("redirect:/cart");
+                    return modelAndView;
+                }
+            }
+
+            modelAndView.addAllObjects(pageData);
+            modelAndView.setViewName("payment/payment");
+        } catch (IllegalArgumentException e) {
+            // [핵심] 남의 장바구니 접근 시 예외를 잡아 장바구니로 튕겨내기
+            modelAndView.setViewName("redirect:/cart");
+        } catch (Exception e) {
+            e.printStackTrace();
+            modelAndView.setViewName("redirect:/cart");
+        }
+
         return modelAndView;
     }
 
@@ -69,6 +89,18 @@ public class PayController {
         return payService.prepareOrder(dto, sessionUser.getEmail());
     }
 
+    @PostMapping("/pay/complete-point")
+    @ResponseBody
+    public String completePointPayment(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser,
+                                       @RequestBody Map<String, String> payload) {
+        if (sessionUser == null) {
+            throw new RuntimeException("로그인이 필요합니다.");
+        }
+        String orderId = payload.get("orderId");
+        payService.completePointPayment(orderId, sessionUser.getEmail());
+        return "SUCCESS";
+    }
+
     @GetMapping("/payment/success")
     public String paymentSuccess(
             @RequestParam String paymentKey,
@@ -77,21 +109,24 @@ public class PayController {
             Model model
     ) {
         try {
-            // 서비스 로직 호출 (토스 승인 요청 -> DB 업데이트)
-            payService.verifyAndCompletePayment(paymentKey, orderId, amount);
-            
+            // 전액 포인트 결제인 경우 검증 로직 스킵 (이미 처리됨)
+            if (!"POINT_PAYMENT".equals(paymentKey)) {
+                // 서비스 로직 호출 (토스 승인 요청 -> DB 업데이트)
+                payService.verifyAndCompletePayment(paymentKey, orderId, amount);
+            }
+
             // 성공 페이지로 데이터 전달
             model.addAttribute("orderId", orderId);
             model.addAttribute("amount", amount);
-            return "payment/success"; // resources/templates/payment/success.html
+            return "payment/success";
 
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("message", "결제 승인 중 오류가 발생했습니다: " + e.getMessage());
-            return "payment/fail"; // resources/templates/payment/fail.html
+            return "payment/fail";
         }
     }
-    
+
     @GetMapping("/payment/fail")
     public String paymentFail(
             @RequestParam String message,
