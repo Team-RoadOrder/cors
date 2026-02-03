@@ -114,10 +114,17 @@ header, nav, .header-container {
     z-index: 999 !important;
 }
 
+.flatpickr-wrapper {
+    width: 80%;
+}
+
 /* =========================================
    4. 모바일 반응형 (max-width: 48rem)
    ========================================= */
 @media (max-width: 48rem) {
+    .flatpickr-wrapper {
+        width: 90%;
+    }
     /* 이미지 높이 줄이기 */
     #shop-header .image-container {
         height: 15rem;

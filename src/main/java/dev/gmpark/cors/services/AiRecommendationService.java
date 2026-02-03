@@ -6,6 +6,7 @@ import dev.gmpark.cors.mappers.OwnerShopMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,9 +20,9 @@ public class AiRecommendationService {
     private final OwnerShopMapper ownerShopMapper;
 
     // Caches
-    private List<ShopItemEntity> allItems;
-    private Map<Long, Integer> itemIndexMap; // ItemID -> Index
-    private double[][] finalSimMatrix;
+    private volatile List<ShopItemEntity> allItems;
+    private volatile Map<Long, Integer> itemIndexMap; // ItemID -> Index
+    private volatile double[][] finalSimMatrix;
 
     private static final double WEIGHT_CONTENT = 0.7;
     private static final double WEIGHT_COLLAB = 0.3;
@@ -34,7 +35,9 @@ public class AiRecommendationService {
     /**
      * 데이터 로드 및 모델(유사도 매트릭스) 학습
      * 주기적으로 호출하거나 관리자 기능으로 호출하여 모델을 갱신할 수 있습니다.
+     * 1시간마다 자동으로 실행됩니다.
      */
+    @Scheduled(fixedRate = 300000) // 1시간 = 3600000ms
     public void loadDataAndTrainModel() {
         log.info("🔄 [AI] Hybrid 모델 학습 시작 (Java)...");
         try {
@@ -44,31 +47,37 @@ public class AiRecommendationService {
                 log.warn("⚠ 상품 데이터가 없습니다.");
                 return;
             }
-            this.allItems = Arrays.asList(itemsArray);
+            List<ShopItemEntity> localAllItems = Arrays.asList(itemsArray);
 
             // Map ID to Index
-            this.itemIndexMap = new HashMap<>();
-            for (int i = 0; i < allItems.size(); i++) {
-                itemIndexMap.put(allItems.get(i).getId(), i);
+            Map<Long, Integer> localItemIndexMap = new HashMap<>();
+            for (int i = 0; i < localAllItems.size(); i++) {
+                localItemIndexMap.put(localAllItems.get(i).getId(), i);
             }
 
-            int nItems = allItems.size();
+            int nItems = localAllItems.size();
 
             // 2. Content-Based Filtering (TF-IDF)
-            double[][] contentSim = calculateContentSimilarity(nItems);
+            double[][] contentSim = calculateContentSimilarity(localAllItems, nItems);
             log.info("✅ [1/2] 콘텐츠 기반 유사도 계산 완료");
 
             // 3. Collaborative Filtering (User Likes)
-            double[][] collabSim = calculateCollaborativeSimilarity(nItems);
+            double[][] collabSim = calculateCollaborativeSimilarity(localItemIndexMap, nItems);
             log.info("✅ [2/2] 협업 필터링 반영 완료");
 
             // 4. Hybrid Combination
-            this.finalSimMatrix = new double[nItems][nItems];
+            double[][] localFinalSimMatrix = new double[nItems][nItems];
             for (int i = 0; i < nItems; i++) {
                 for (int j = 0; j < nItems; j++) {
-                    finalSimMatrix[i][j] = (WEIGHT_CONTENT * contentSim[i][j]) + (WEIGHT_COLLAB * collabSim[i][j]);
+                    localFinalSimMatrix[i][j] = (WEIGHT_CONTENT * contentSim[i][j]) + (WEIGHT_COLLAB * collabSim[i][j]);
                 }
             }
+
+            // Atomic-like update (volatile writes)
+            this.allItems = localAllItems;
+            this.itemIndexMap = localItemIndexMap;
+            this.finalSimMatrix = localFinalSimMatrix;
+
             log.info("🎉 [AI] 하이브리드 모델 로딩 완료!");
 
         } catch (Exception e) {
@@ -76,12 +85,12 @@ public class AiRecommendationService {
         }
     }
 
-    private double[][] calculateContentSimilarity(int nItems) {
+    private double[][] calculateContentSimilarity(List<ShopItemEntity> items, int nItems) {
         // Prepare documents
         List<List<String>> documents = new ArrayList<>();
         Set<String> vocabulary = new HashSet<>();
 
-        for (ShopItemEntity item : allItems) {
+        for (ShopItemEntity item : items) {
             String text = (nvl(item.getItemName()) + " " +
                     nvl(item.getMainCategory()) + " " +
                     nvl(item.getSubCategory()) + " " +
@@ -146,7 +155,7 @@ public class AiRecommendationService {
         return computeCosineSimilarity(tfidf);
     }
 
-    private double[][] calculateCollaborativeSimilarity(int nItems) {
+    private double[][] calculateCollaborativeSimilarity(Map<Long, Integer> itemIndexMap, int nItems) {
         LikeItemEntity[] likesArray = ownerShopMapper.selectAllLikeItems();
         if (likesArray == null || likesArray.length == 0) {
             return new double[nItems][nItems]; // Return zero matrix
@@ -218,12 +227,26 @@ public class AiRecommendationService {
     }
 
     public List<ShopItemEntity> getRecommendations(Long itemId) {
-        if (finalSimMatrix == null || itemIndexMap == null || !itemIndexMap.containsKey(itemId)) {
+        if (itemId == null) {
             return Collections.emptyList();
         }
 
-        int idx = itemIndexMap.get(itemId);
-        double[] scores = finalSimMatrix[idx];
+        // Capture state locally to avoid race conditions during execution
+        double[][] currentSimMatrix = this.finalSimMatrix;
+        Map<Long, Integer> currentIndexMap = this.itemIndexMap;
+        List<ShopItemEntity> currentItems = this.allItems;
+
+        if (currentSimMatrix == null || currentIndexMap == null || currentItems == null || !currentIndexMap.containsKey(itemId)) {
+            return Collections.emptyList();
+        }
+
+        int idx = currentIndexMap.get(itemId);
+        // Safety check for index bounds
+        if (idx < 0 || idx >= currentSimMatrix.length) {
+            return Collections.emptyList();
+        }
+
+        double[] scores = currentSimMatrix[idx];
 
         // Pair of (Index, Score)
         List<Map.Entry<Integer, Double>> scoreList = new ArrayList<>();
@@ -239,7 +262,7 @@ public class AiRecommendationService {
         // Top 3
         return scoreList.stream()
                 .limit(3)
-                .map(e -> allItems.get(e.getKey()))
+                .map(e -> currentItems.get(e.getKey()))
                 .collect(Collectors.toList());
     }
 
