@@ -53,8 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return true;
     }
-
-    // 3. 로그인 제출 및 AJAX 통신 (기존 처리 로직 100% 동일)
     $loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -73,9 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (xhr.status < 200 || xhr.status >= 400) {
-                openModal("FAILURE", `<p>사이즈는 중복된 값 없이<br>15개 이하로만 등록 가능합니다.</p>`, {
+                openModal("FAILURE", `<p>서버 통신 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.</p>`, {
                     confirmText: '확인',
-                    onConfirm: () => { $form['size'].focus(); }
+                    onConfirm: () => {
+                        $loginForm['password'].value = '';
+                        $loginForm['password'].focus();
+                    }
                 });
                 return;
             }
@@ -95,6 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     confirmText: '확인',
                     onConfirm: () => {
                         window.location.href = '/owner';
+                    }
+                });
+            }else if (response.status === 'SUCCESS' && response.usertype === 'admin') {
+                openModal("SUCCESS", "<p>로그인에 성공하였습니다.</p>", {
+                    confirmText: '확인',
+                    onConfirm: () => {
+                        window.location.href = '/admin';
                     }
                 });
             } else {

@@ -20,6 +20,7 @@ import java.util.UUID;
 public class OwnerShopService {
 
     private final OwnerShopMapper ownerShopMapper;
+    private final AiRecommendationService aiRecommendationService;
 
     // [수정] final String UPLOAD_PATH 제거하고 아래처럼 변경
     @Value("${file.upload-dir}")
@@ -78,6 +79,7 @@ public class OwnerShopService {
                 }
             }
         }
+        this.aiRecommendationService.loadDataAndTrainModel();;
         return CommonResult.SUCCESS;
     }
 }

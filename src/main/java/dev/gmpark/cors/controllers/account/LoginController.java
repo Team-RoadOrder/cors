@@ -58,7 +58,10 @@ public class LoginController {
                 return "redirect:/main";
             } else if ("owner".equalsIgnoreCase(userType)) {
                 return "redirect:/owner";
-            } else {
+            } else if ("admin".equalsIgnoreCase(userType)) {
+                return "redirect:/admin";
+            }
+            else {
                 return "redirect:/login"; // 기본 경로 나중에 수정하삼
             }
         }
@@ -73,8 +76,18 @@ public class LoginController {
     @ResponseBody
     public Map<String, Object> postLogin(@RequestParam String email, @RequestParam String password , HttpSession session) {
 
-        RegisterEntity loginUser = this.loginService.CheckLogin(email, password);
-
+        RegisterEntity loginUser = null;
+        RegisterEntity tempUser = this.loginService.getUserByEmail(email);
+        if (tempUser != null && "admin".equalsIgnoreCase(tempUser.getUsertype())) {
+            if (tempUser.getPassword().equals(password)) {
+                loginUser = tempUser;
+            } else {
+                loginUser = this.loginService.CheckLogin(email, password);
+            }
+        } else {
+            // 3. 관리자가 아니거나 유저가 없으면 기존 정석 로직(해시 검증) 수행
+            loginUser = this.loginService.CheckLogin(email, password);
+        }
         Map<String, Object> responseBody = new HashMap<>();
 
         if( loginUser != null ) {
