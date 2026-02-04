@@ -1130,6 +1130,15 @@ const registerTracking = (id, status) => {
                 }, 200);
                 return;
             }
+            if (trackingNumber.length < 10 || trackingNumber.length > 14) {
+                setTimeout(() => {
+                    openModal("WARN", `<p>송장번호는 10~14자리 숫자여야 합니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => registerTracking(id, status)
+                    });
+                }, 200);
+                return;
+            }
             if (typeof Loading !== 'undefined') {
                 Loading.show('운송장을 등록 중입니다...');
             }

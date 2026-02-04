@@ -486,7 +486,9 @@ public class OrderService {
         if (!ALLOWED_COURIERS.contains(courier)) {
             return CommonResult.FAILURE;
         }
-
+        if(trackingNumber.length() < 10 || trackingNumber.length() > 14) {
+            return CommonResult.FAILURE;
+        }
         OrderItemEntity orderItem = this.orderMapper.selectOrderItemById(id);
         if (orderItem == null) {
             return CommonResult.FAILURE;
