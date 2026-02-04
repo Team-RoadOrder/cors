@@ -1,10 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>사이트관리자|REVIEW</title>
+    <link rel="stylesheet" href="/assets/styles/common.css">
+    <link rel="stylesheet" href="/assets/styles/admin/admin.css">
+    <link rel="stylesheet" href="/assets/styles/admin/header.css">
+    <link rel="stylesheet" href="/assets/styles/admin/common.css">
+    <script defer src="/assets/scripts/admin/admin.js"></script>
+    <script defer src="/assets/scripts/common.js"></script>
 </head>
 <body>
-관리자페이지임 ( 신고된 댓글 여기서 확인가능해야함 )
+<th:block th:replace="~{/fragments/common.html :: owner-header}">
+</th:block>
+<!--신고된 스타일리뷰, 댓글, 대댓글 삭제여부처리 -->
+<!--<a href="/logout">로그아웃</a>-->
+<div class="container">
+    <div class="header">
+        <h1>신고된 댓글 관리</h1>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalReports" th:text="${reports != null ? reports.size() : 0}">0</div>
+                <div class="stat-label">전체 신고</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="table-wrapper">
+            <table id="commentsTable">
+                <thead>
+                <tr>
+                    <th>작성자</th>
+                    <th>댓글 내용</th>
+                    <th>신고일</th>
+                    <th>신고 건수</th>
+                    <th>신고 사유</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody id="tableBody">
+                <tr th:each="report : ${reports}">
+                    <td th:text="${report.authorEmail}">작성자</td>
+                    <td class="content-cell" th:text="${report.originalContent}">원문 내용</td>
+                    <td th:text="${#temporals.format(report.lastReportedAt, 'yyyy-MM-dd HH:mm')}">신고일</td>
+                    <td>
+            <span class="badge" th:classappend="${report.reportCount >= 5} ? 'badge-danger' : 'badge-warning'"
+                  th:text="${report.reportCount} + '건'">신고수</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-view"
+                                th:onclick="openDetail([[${report.targetType}]], [[${report.targetId}]], [[${report.originalContent}]])">상세보기</button>
+                        <button class="btn btn-delete"
+                                th:onclick="processAdminReport([[${report.targetType}]], [[${report.targetId}]])"
+                                th:text="${report.targetType == 'REVIEW' ? '리뷰 삭제' : '댓글 블라인드'}">처리</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <h3>신고된 댓글이 없습니다</h3>
+                <p>모든 신고가 처리되었습니다.</p>
+            </div>
+        </div>
+        <div id="paginationContainer" class="pagination-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; padding-bottom: 2rem;">
+    </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+<!-- 상세보기 모달 -->
+<div class="modal" id="detailModal">
+    <div class="modal-content">
+        <div class="modal-header">댓글 상세 정보</div>
+        <div class="modal-body">
+            <div class="modal-info">
+                <div class="modal-label">작성자</div>
+                <div class="modal-value" id="modalUserName"></div>
+            </div>
+            <div class="modal-info">
+                <div class="modal-label">댓글 내용</div>
+                <div class="modal-value" id="modalContent"></div>
+            </div>
+            <div class="modal-info">
+                <div class="modal-label">작성일</div>
+                <div class="modal-value" id="modalCreatedDate"></div>
+            </div>
+            <div class="modal-info">
+                <div class="modal-label">신고일</div>
+                <div class="modal-value" id="modalReportedDate"></div>
+            </div>
+            <div class="modal-info">
+                <div class="modal-label">신고 사유</div>
+                <div class="modal-value" id="modalReason"></div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button id="modalActionBtn" class="btn btn-delete" onclick="executeProcessFromModal()">처리</button>
+            <button class="btn btn-keep" onclick="keepFromModal()">유지</button>
+            <button class="btn btn-view" onclick="closeModal()">닫기</button>
+        </div>
+    </div>
+</div>
 </body>
+
+
 </html>

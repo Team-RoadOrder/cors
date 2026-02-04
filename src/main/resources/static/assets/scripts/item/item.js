@@ -745,6 +745,16 @@ window.showEditCommentForm = function(commentId, btnElement) {
     const item = btnElement.closest('.comment-item');
     const contentP = item.querySelector('.content');
     const originalText = contentP.innerText;
+    if (originalText.includes("운영 정책 위반으로 인해 블라인드")) {
+        openModal("수정 불가",
+            `<div style="text-align: center; padding: 1rem;">
+                <p style="margin-bottom: 0.5rem; font-weight: bold;">해당 댓글은 수정할 수 없습니다.</p>
+                <p style="font-size: 0.85rem; color: #888;">운영 정책 위반으로 인해 관리자에 의해 <br>조치된 게시물은 수정 및 복구가 불가능합니다.</p>
+            </div>`,
+            { confirmText: '확인' }
+        );
+        return; // 수정 폼을 열지 않고 종료
+    }
     if (item.querySelector('.edit-comment-wrapper')) return;
 
     const editHtml = `
@@ -814,7 +824,72 @@ window.submitEditComment = function(commentId, btnElement) {
     xhr.send(`content=${encodeURIComponent(content)}`);
 };
 
+//스타일리뷰,댓글 신고
+const ReviewManager = {
+    /**
+     * @param {string} type - 'REVIEW' 또는 'COMMENT'
+     * @param {number} id - 대상의 PK 값
+     */
+    reportReview: function(type, id) {
+        const sessionEmail = document.getElementById('sessionUserEmail')?.value;
 
+        if (!sessionEmail) {
+            openModal("로그인 필요", "<p>신고는 로그인 후 이용 가능합니다.</p>", {
+                confirmText: '로그인',
+                onConfirm: () => { location.href = '/login'; }
+            });
+            return;
+        }
+
+        const targetName = (type === 'REVIEW') ? '스타일 리뷰' : '댓글';
+
+        openModal(`${targetName} 신고`, `
+            <div style="text-align: left;">
+                <p style="margin-bottom: 0.8rem;">이 ${targetName}를 신고하시겠습니까?</p>
+                <select id="report-reason-select" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 0.25rem;">
+                    <option value="ABUSE">욕설/비하 발언</option>
+                    <option value="INAPPROPRIATE">부적절한 콘텐츠</option>
+                    <option value="SPAM">스팸/광고</option>
+                </select>
+            </div>
+        `, {
+            confirmText: '신고하기',
+            cancelText: '취소',
+            onConfirm: () => {
+                const reason = document.getElementById('report-reason-select').value;
+
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+
+                // [방향성 수정] 백엔드 @RequestParam 명칭과 일치시킴
+                formData.append('type', type);   // 'REVIEW' 또는 'COMMENT'
+                formData.append('id', id);       // PK 값
+                formData.append('reason', reason);
+
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                    if (xhr.status < 200 || xhr.status >= 400) {
+                        openModal("오류", "<p>서버 통신 중 오류가 발생했습니다.</p>", { confirmText: '확인' });
+                        return;
+                    }
+
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.result === 'SUCCESS') {
+                        openModal("접수 완료", "<p>신고가 정상적으로 접수되었습니다.<br>관리자 검토 후 조치될 예정입니다.</p>", { confirmText: '확인' });
+                    } else {
+                        // 중복 신고(Unique 제약) 시 'FAILURE'가 반환됨
+                        openModal("알림", `<p>이미 신고 접수가 완료된 대상입니다.</p>`, { confirmText: '확인' });
+                    }
+                };
+
+                // 백엔드 ItemController의 매핑 경로와 일치
+                xhr.open('POST', '/item/review/report');
+                xhr.send(formData);
+            }
+        });
+    }
+};
 
 //갤러리 상태 전역 관리
 window.galleryImages = [];
@@ -861,7 +936,6 @@ window.openImageGallery = function(imagesUrl, startIndex) {
     openModal("STYLE REVIEW", modalContent, { confirmText: '닫기' });
 };
 
-
 window.moveGallery = function(step, event) {
     if (event) event.stopPropagation();
     window.galleryCurrentIndex = (window.galleryCurrentIndex + step + window.galleryImages.length) % window.galleryImages.length;
@@ -885,6 +959,7 @@ function toggleCommentSection(reviewId) {
     }
 }
 
+/** [댓글 목록 로드 - 블라인드 처리 시 답글/신고/수정 차단, 본인 삭제는 허용] */
 function loadComments(reviewId, container) {
     const sessionUserEmail = document.getElementById('sessionUserEmail')?.value;
     const xhr = new XMLHttpRequest();
@@ -903,11 +978,10 @@ function loadComments(reviewId, container) {
 
         comments.forEach(comment => {
             const commentItem = document.createElement('div');
-            // parentId가 있으면 대댓글(reply) 클래스 부여
             commentItem.className = `comment-item ${comment.parentId ? 'reply' : ''}`;
             commentItem.dataset.commentId = comment.id;
 
-            // [보안 포인트] 세션 이메일과 댓글 이메일의 엄격한 비교
+            const isBlinded = comment.content.includes("운영 정책 위반으로 인해 블라인드");
             const isMyComment = (sessionUserEmail && sessionUserEmail === comment.userEmail);
 
             commentItem.innerHTML = `
@@ -915,15 +989,23 @@ function loadComments(reviewId, container) {
                     <strong class="author">${comment.userName || '알 수 없는 사용자'}</strong>
                     <span class="date">${comment.createdAt.replace('T', ' ').substring(0, 16)}</span>
                 </div>
-                <p class="content">${comment.content}</p>
+                <p class="content ${isBlinded ? 'blinded-text' : ''}">${comment.content}</p>
                 
-                <div class="comment-actions">
-                    ${(!comment.parentId) ? `<button class="btn-reply" onclick="showReplyForm(${reviewId}, ${comment.id}, this)">답글 달기</button>` : ''}
+                <div class="comment-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                    ${(!comment.parentId && !isBlinded) ? `
+                        <button class="btn-reply" onclick="showReplyForm(${reviewId}, ${comment.id}, this)">답글 달기</button>
+                    ` : ''}
+                    
+                    ${(!isMyComment && !isBlinded) ? `
+                        <button type="button" class="btn-report-comment btn-action-text" 
+                                onclick="ReviewManager.reportReview('COMMENT', ${comment.id})"
+                                style="color: #e74c3c; font-size: 0.75rem; cursor: pointer;">신고</button>
+                    ` : ''}
                 </div>
 
                 ${isMyComment ? `
                     <div class="owner-comment-btns">
-                        <button onclick="showEditCommentForm(${comment.id}, this)">수정</button>
+                        ${!isBlinded ? `<button onclick="showEditCommentForm(${comment.id}, this)">수정</button>` : ''}
                         <button onclick="deleteComment(${comment.id})">삭제</button>
                     </div>` : ''}
             `;
@@ -946,7 +1028,6 @@ function showReplyForm(reviewId, parentId, btnElement) {
         </div>`;
     btnElement.parentElement.insertAdjacentHTML('afterend', formHtml);
 }
-
 
 // 댓글/답글 등록 로직]
 function submitComment(reviewId, parentId, btnElement) {
@@ -1019,6 +1100,7 @@ function submitComment(reviewId, parentId, btnElement) {
     xhr.send(formData);
 }
 
+
 function renderReviewList(reviews) {
     const container = document.querySelector('.review-list-container');
     if (!container) return;
@@ -1070,16 +1152,20 @@ function renderReviewList(reviews) {
             <div class="user-text">
                 <strong class="user-name">${review.userName}</strong>
                 <span class="review-date">${review.createdAt.substring(0, 10)}</span>
-                <div class="star-rating">
-                    ${stars}
-                </div>
+                <div class="star-rating">${stars}</div>
             </div>
         </div>
-        ${isAuthor ? `
-            <div class="owner-btns" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn-action-text" onclick="openEditReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">수정</button>
-                <button type="button" class="btn-action-text" onclick="deleteReview(${review.id})" style="cursor:pointer; background:none; border:none; color:#666; font-size:0.8rem;">삭제</button>
-            </div>` : ''}
+        
+        <div class="owner-btns" style="display: flex; gap: 0.5rem; align-items: center;">
+            ${!isAuthor ? `
+                <button type="button" class="btn-action-text" 
+                        onclick="ReviewManager.reportReview('REVIEW', ${review.id})" 
+                        style="color: #e74c3c;">신고</button>
+            ` : `
+                <button type="button" class="btn-action-text" onclick="openEditReview(${review.id})">수정</button>
+                <button type="button" class="btn-action-text" onclick="deleteReview(${review.id})">삭제</button>
+            `}
+        </div>
     </div>
 
     <div class="review-contents" style="margin-top: 1rem;">

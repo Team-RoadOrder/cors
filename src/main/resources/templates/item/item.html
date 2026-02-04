@@ -392,14 +392,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="owner-btns"
-                                     th:if="${sessionUser != null and sessionUser.email == review.userEmail}">
-                                    <button type="button" class="btn-action-text"
-                                            th:onclick="|openEditReview(${review.id})|">수정
-                                    </button>
-                                    <button type="button" class="btn-action-text"
-                                            th:onclick="|deleteReview(${review.id})|">삭제
-                                    </button>
+                                <!--0203수정-->
+                                <div class="owner-btns">
+                                    <button type="button" class="btn-action-text btn-report"
+                                            th:if="${sessionUser != null and sessionUser.email != review.userEmail}"
+                                            th:onclick="|reportReview(${review.id})|"
+                                            style="color: #e74c3c;">신고</button>
+
+                                    <th:block th:if="${sessionUser != null and sessionUser.email == review.userEmail}">
+                                        <button type="button" class="btn-action-text"
+                                                th:onclick="|openEditReview(${review.id})|">수정
+                                        </button>
+                                        <button type="button" class="btn-action-text"
+                                                th:onclick="|deleteReview(${review.id})|">삭제
+                                        </button>
+                                    </th:block>
                                 </div>
                             </div>
 

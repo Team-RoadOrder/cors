@@ -70,6 +70,16 @@
         DELETE FROM `cors`.`item_review_images`
         WHERE `review_id` = #{reviewId}
     </delete>
+    <delete id="deleteCommentsByReviewId">
+        DELETE FROM `cors`.`item_review_comments`
+        WHERE `review_id` = #{reviewId}
+    </delete>
+
+    <delete id="deleteLikesByReviewId">
+        DELETE FROM `cors`.`item_review_likes`
+        WHERE `review_id` = #{reviewId}
+    </delete>
+
 
     <select id="selectReviewsByItemId" resultType="dev.gmpark.cors.vos.ReviewVo">
         SELECT

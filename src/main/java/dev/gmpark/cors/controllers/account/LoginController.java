@@ -36,7 +36,6 @@ public class LoginController {
     @Value("${custom.property.naver-redirect-uri}")
     private String naverRedirectUri;
 
-
     @RequestMapping(value = "/")
     public String getRoot(@SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         if (sessionUser != null) {
@@ -45,6 +44,8 @@ public class LoginController {
                 return "redirect:/main";
             } else if ("owner".equalsIgnoreCase(userType)) {
                 return "redirect:/owner";
+            } else if ("admin".equalsIgnoreCase(userType)) { // 추가: 관리자 리다이렉트
+                return "redirect:/admin"; // 유저님이 정한 관리자 메인 경로로 수정
             }
         }
         return "redirect:/login";

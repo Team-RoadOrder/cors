@@ -1,0 +1,206 @@
+/* 레이아웃 최적화 - 헤더와의 간격 확보 */
+.container {
+    width: 96%;
+    max-width: 80rem;
+    margin: 5.5rem auto 2rem;
+    background-color: #fff;
+    border-radius: 0.6rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.header {
+    background-color: #010852;
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 { font-size: 1.1rem; }
+
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ff4d4d;
+    line-height: 1;
+}
+
+.stat-label { font-size: 0.65rem; opacity: 0.8; }
+
+/* [핵심 수정] 표 정렬 및 레이아웃 정규화 */
+.table-wrapper { padding: 0 0.5rem 1rem; position: relative; min-height: 10rem; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* 고정 레이아웃으로 열 너비 강제 일치 */
+}
+
+th {
+    padding: 0.8rem 0.6rem;
+    text-align: center; /* 전체 헤더 중앙 정렬 */
+    background-color: #f8f9fc;
+    color: #010852;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-bottom: 0.0625rem solid #edf2f7;
+}
+
+td {
+    padding: 0.7rem 0.6rem;
+    border-bottom: 0.0625rem solid #edf2f7;
+    font-size: 0.85rem;
+    color: #2d3748;
+    text-align: center; /* 데이터 기본 중앙 정렬 */
+    vertical-align: middle;
+}
+
+/* 열별 너비 및 정렬 세부 조정 */
+th:nth-child(1), td:nth-child(1) { width: 15%; } /* 작성자 */
+th:nth-child(2), td:nth-child(2) { width: 30%; text-align: left; } /* 내용 - 좌측 정렬 */
+th:nth-child(3), td:nth-child(3) { width: 15%; } /* 신고일 */
+th:nth-child(4), td:nth-child(4) { width: 10%; } /* 신고 건수 */
+th:nth-child(5), td:nth-child(5) { width: 15%; } /* 신고 사유 */
+th:nth-child(6), td:nth-child(6) { width: 15%; } /* 관리 */
+
+/* [신규] 신고 데이터가 없는 경우 스타일 */
+.empty-state {
+    display: none; /* 기본 숨김 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 0;
+    color: #a0aec0;
+}
+
+
+.empty-state-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-sub { font-size: 0.85rem; }
+
+/* 신고 사유별 귀여운 뱃지 스타일 */
+.reason-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.reason-inappropriate { background-color: #fff5f5; color: #e53e3e; }
+.reason-spam { background-color: #f0fff4; color: #2f855a; }
+.reason-abuse { background-color: #fffaf0; color: #c05621; }
+.reason-etc { background-color: #ebf8ff; color: #2b6cb0; }
+.reason-default { background-color: #f7fafc; color: #4a5568; }
+
+/* 콤팩트 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(1, 8, 82, 0.5);
+    backdrop-filter: blur(0.25rem);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+.modal.active { display: flex; animation: fadeIn 0.2s ease; }
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 23.75rem;
+    border-radius: 0.8rem;
+    padding: 1.2rem;
+    box-shadow: 0 1rem 2.5rem rgba(0,0,0,0.15);
+}
+
+.modal-header {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #010852;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.09375rem solid #f1f4ff;
+}
+
+.modal-info {
+    margin-bottom: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    background: #f8f9fc;
+    border-radius: 0.4rem;
+}
+
+.modal-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #718096;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+}
+
+.modal-value { font-size: 0.85rem; color: #1a202c; line-height: 1.4; font-weight: 500; }
+
+.modal-actions {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+}
+
+/* 버튼 및 애니메이션 */
+.btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-size: 0.75rem;
+    transition: 0.2s;
+}
+.btn-delete { background: #e53e3e; color: white; }
+.btn-view { background: #3182ce; color: white; }
+.btn-keep { background: #718096; color: white; }
+
+/* 신고 카운트 뱃지 */
+.badge { padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.75rem; font-weight: 700; }
+.badge-danger { background: #fff5f5; color: #e53e3e; }
+.badge-warning { background: #fffaf0; color: #dd6b20; }
+.pagination-wrapper .page-btn {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border: 1px solid #edf2f7;
+    background: #fff;
+    color: #4a5568;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-wrapper .page-btn.active {
+    background: #010852;
+    color: #fff;
+    border-color: #010852;
+}
+
+.pagination-wrapper .nav-btn {
+    color: #010852;
+    font-size: 0.875rem;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(0.3125rem); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 64rem) {
+    .container { width: 98%; margin-top: 4.5rem; }
+    td, th { padding: 0.6rem 0.4rem; font-size: 0.8rem; }
+}

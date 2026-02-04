@@ -59,4 +59,11 @@ public interface ReviewMapper {
     ItemReviewCommentEntity selectCommentById(Long id);
 
     List<ItemReviewCommentEntity> selectCommentsByReviewId(Long reviewId);
+
+
+    // [신규 추가] 리뷰 삭제 시 외래키 오류 방지를 위한 일괄 삭제 메서드
+    int deleteCommentsByReviewId(@Param("reviewId") Long reviewId); // 리뷰 하위 댓글 전체 삭제
+    int deleteLikesByReviewId(@Param("reviewId") Long reviewId);    // 리뷰 좋아요 전체 삭제
+
+
 }
