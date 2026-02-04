@@ -53,6 +53,7 @@
     padding-top: 1rem;
     padding-left: 0.2rem;
     width: 100%;
+    text-align: center;
 }
 
 .tab_likeShop_content .grid > .box .text-container .price {
