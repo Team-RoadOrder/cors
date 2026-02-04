@@ -25,7 +25,7 @@
         <div class="profile">
             <img th:src="${shop.profileImage != null ? shop.profileImage : '/assets/images/ownermain/profile.png'}"
                  alt="" class="profile-img" id="profileImg" style="cursor: pointer;">
-            <div class="message">클릭시 변경 가능합니다.</div>
+            <div class="message">대시보드에서 변경 가능</div>
 
             <div class="title">
                 <input type="text" id="shopTitle" th:value="${shop.shopName}" readonly>
