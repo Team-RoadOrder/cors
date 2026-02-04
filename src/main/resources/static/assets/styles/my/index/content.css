@@ -442,3 +442,11 @@
     font-weight: 600;
     color: #1d6ec3;
 }
+.tab-content  .recent_item .list .product .itemStatus .list-column .delivery {
+    color: #505050;
+    font-weight: 600;
+}
+.tab-content  .recent_item .list .product .itemStatus .list-column .delivery:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

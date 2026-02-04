@@ -4,6 +4,7 @@ import dev.gmpark.cors.dtos.ReviewStatsDto;
 import dev.gmpark.cors.entities.*;
 import dev.gmpark.cors.results.CommonResult;
 import dev.gmpark.cors.services.*;
+import dev.gmpark.cors.vos.LikeItemVo;
 import dev.gmpark.cors.vos.ReviewVo;
 import dev.gmpark.cors.vos.ShopItemVo;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,13 @@ public class ItemController {
             modelAndView.setViewName("redirect:/main");
             return modelAndView;
         }
+        LikeItemVo[] likeItems = this.myService.getLikeItems(sessionUser);
+        boolean isLikeItem = false;
 
+        if (likeItems != null && likeItems.length > 0) {
+            isLikeItem = Arrays.stream(likeItems)
+                    .anyMatch(vo -> vo.getId() == id); // .getId()로 변경
+        }
         ShopItemVo item = this.itemService.getItemById(id);
         if (shopId == 0 && item != null) {
             shopId = item.getShopId();
@@ -77,7 +84,7 @@ public class ItemController {
          * 사유: '1구매-1리뷰' 정책에 따라 현재 유저가 리뷰를 쓸 수 있는 빈 구매 슬롯(Reservation ID)이 있는지 확인하여 버튼 활성화 여부 결정.
          */
         Integer availableReservationId = this.reviewService.getAvailableReservationId(sessionUser.getEmail(), id);
-
+        modelAndView.addObject("isLikeItem", isLikeItem);
         modelAndView.addObject("sessionUser", sessionUser);
         modelAndView.addObject("shopInfo", shopInfo);
         modelAndView.addObject("item", item);

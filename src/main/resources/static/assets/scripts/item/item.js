@@ -404,7 +404,7 @@ cartButtons.forEach(btn => {
                                     location.href = '/cart';
                                 },
                                 onCancel: () => {
-                                    // 계속 쇼핑하기 클릭 시 모달만 닫힘 (로직 추가 필요 없음)
+
                                 }
                             });
                         }
@@ -417,7 +417,7 @@ cartButtons.forEach(btn => {
 });
 
 // --- 관심상품,관심매장
-const toggleLikeItem = (shopId, itemId) => {
+const toggleLikeItem = (shopId, itemId , element) => {
     const formData = new FormData();
     formData.append('shopId', shopId);
     formData.append('itemId', itemId);
@@ -438,13 +438,23 @@ const toggleLikeItem = (shopId, itemId) => {
                 onConfirm: () => location.href = '/login'
             });
         } else if (data.result === 'SUCCESS') {
-            openModal("SUCCESS", `<p>관심상품으로 저장했습니다.</p>`, {
-                confirmText: '확인',
-                onConfirm: () => location.href = "/my?open=likes-item"
-            });
+            openModal("SUCCESS", `<p>관심상품으로 저장했습니다. 마이페이지에서 확인하시겠습니까?</p>`, {
+                confirmText: '확인', cancelText:'취소',
+                onConfirm: () => { location.href = "/my?open=likes-item" } ,
+                onCancel : () => { if(element) {
+                    element.style.backgroundColor = '#b5b5b5';
+                    element.style.color = '#ffffff';
+                    element.innerText = '저장 취소';
+                } }
+            } );
         } else {
             openModal("FAILURE", `<p>관심상품 등록을 취소하였습니다.</p>`, {
-                confirmText: '확인'
+                confirmText: '확인' , onConfirm: () => {if(element) {
+                    // 인라인 스타일을 비우면 CSS 클래스(.add)의 기본 스타일(흰색)로 돌아갑니다.
+                    element.style.backgroundColor = '';
+                    element.style.color = '';
+                    element.innerText = '관심상품저장';
+                }}
             });
         }
     };
@@ -506,10 +516,13 @@ const toggleLikeShop = (shopId) => {
                 onConfirm: () => location.href = '/login'
             });
         } else if (data.result === 'SUCCESS') {
-            openModal("SUCCESS", `<p>관심매장에 등록되었습니다.</p>`, {
-                confirmText: '확인',
+            openModal("SUCCESS", `<p>관심매장에 등록되었습니다. 마이페이지로 이동하시겠습니까?</p>`, {
+                confirmText: '확인', cancelText: '취소',
                 onConfirm: () => location.href = "/my?open=likes-shop"
-            });
+            ,onCancel: () => {
+
+            } });
+
         } else {
             openModal("FAILURE", `<p>관심매장 등록을 취소하였습니다.</p>`, {
                 confirmText: '확인'
@@ -594,69 +607,7 @@ const initReviewLoad = () => {
 // 함수 실행
 initReviewLoad();
 //수정
-//#region
-// function openEditReview(reviewId) {
-//     //로딩시작
-//     if (typeof Loading !== 'undefined') Loading.show("리뷰 정보를 불러오는 중...");
-//     const xhr = new XMLHttpRequest();
-//
-//     xhr.onreadystatechange = () => {
-//         if (xhr.readyState === XMLHttpRequest.DONE) {
-//             //로딩숨기기
-//             if (typeof Loading !== 'undefined') Loading.hide();
-//             if (xhr.status >= 200 && xhr.status < 400) {
-//
-//                 const review = JSON.parse(xhr.responseText);
-//                 const writeForm = document.getElementById('style-write-form');
-//                 const previewContainer = document.getElementById('image-preview-container');
-//
-//                 // 후기 작성 토글 활성화
-//                 if (document.getElementById('review-write-toggle')) {
-//                     document.getElementById('review-write-toggle').checked = true;
-//                 }
-//
-//                 if (writeForm) {
-//                     writeForm.style.display = 'block';
-//                     // 수정 모드임을 표시 (MODE: edit)
-//                     writeForm.dataset.mode = 'edit';
-//                     writeForm.dataset.editId = reviewId;
-//
-//                     // 기존 내용 및 별점 복구
-//                     const contentInput = document.getElementById('review-content');
-//                     const ratingInput = document.getElementById('review-rating');
-//                     if (contentInput) contentInput.value = review.content;
-//                     if (ratingInput) ratingInput.value = review.rating;
-//
-//                     //업로드된 이미지 미리보기 생성---
-//                     if (previewContainer) {
-//                         previewContainer.innerHTML = ''; // 초기화
-//                         if (review.images && review.images.length > 0) {
-//                             review.images.forEach(imgName => {
-//                                 const img = document.createElement('img');
-//                                 img.src = `/review-images/${imgName}`;
-//                                 img.style.width = "5rem";
-//                                 img.style.height = "5rem";
-//                                 img.style.objectFit = "cover";
-//                                 img.style.borderRadius = "0.25rem";
-//                                 img.style.marginRight = "0.5rem";
-//                                 previewContainer.appendChild(img);
-//                             });
-//                         }
-//                     }
-//
-//                     writeForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-//                 }
-//             } else {
-//                 if (typeof openModal === 'function') {
-//                     openModal("오류", "<p>리뷰 정보를 불러오지 못했습니다.</p>", { confirmText: '확인' });
-//                 }
-//             }
-//         }
-//     };
-//     xhr.open('GET', `/item/review/${reviewId}`);
-//     xhr.send();
-// }
-//#endregion
+
 function openEditReview(reviewId) {
 
     if (typeof Loading !== 'undefined') Loading.show("리뷰 정보를 불러오는 중...");

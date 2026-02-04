@@ -30,7 +30,7 @@ public class NearbyShopController {
             return modelAndView;
         }
 
-        ShopInfoEntity[] shops = this.mainService.getAllShop(sessionUser.getAddress());
+        ShopInfoEntity[] shops = this.mainService.getSixShop(sessionUser.getAddress());
         modelAndView.addObject("sessionUser", sessionUser);
         modelAndView.addObject("shops", shops);
         modelAndView.setViewName("nearbyshop/nearbyshop");

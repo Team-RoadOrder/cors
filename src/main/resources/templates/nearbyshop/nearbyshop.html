@@ -33,8 +33,7 @@
     <div id="map-background"></div>
     <ul class="shop-list">
         <li class="shop-detail"
-            th:each="shop, stat : ${shops}"
-            th:if="${stat.index < 7}"
+            th:each="shop: ${shops}"
             th:data-shop-id="${shop.shopId}">
             <div class="store-info-wrapper">
                 <div class="store-info">

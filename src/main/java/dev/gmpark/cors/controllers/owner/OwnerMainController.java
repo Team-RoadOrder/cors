@@ -73,7 +73,7 @@ public class OwnerMainController {
         List<OrderHistoryVo> pendingOrders = new ArrayList<>();
         if (allOrders != null) {
             for (OrderHistoryVo order : allOrders) {
-                if (order.getStatus() == 0 || order.getStatus() == 2 ) {
+                if (order.getStatus() == 0 || order.getStatus() == 2 || order.getStatus() == 6 ) {
                     pendingOrders.add(order);
                 }
             }
@@ -212,5 +212,23 @@ public class OwnerMainController {
         response.put("result", result.name());
         return response;
     }
+    @RequestMapping(value = "/delivery", method = RequestMethod.PATCH , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,Object> updateDelivery(@RequestParam(value = "id") Long id,
+                                          @RequestParam(value = "courier") String courier,
+                                          @RequestParam(value = "trackingNumber") String trackingNumber,
+                                          @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
+        Map<String, Object> response = new HashMap<>();
+        ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
+        if (shopInfo == null) {
+            response.put("result", "FAILURE");
+            return response;
+        }
+        CommonResult result = this.orderService.updateDelivery(id, courier, trackingNumber,shopInfo.getShopId());
+        response.put("result", result.name());
+        return response;
+
+    }
+
 
 }

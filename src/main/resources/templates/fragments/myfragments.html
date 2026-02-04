@@ -56,6 +56,10 @@
                        <span th:if="${order.status == 3}" class="refundOk">환불완료</span>
                        <span th:if="${order.status == 4}" class="done">구매완료</span>
                        <span th:if="${order.status == 5}" class="refundNot">환불거절됨</span>
+                       <span th:if="${order.status == 6}" class="delivery" th:data-id="${order.id}" th:data-courier="${order.courier}" th:data-tracking="${order.trackingNumber}"
+                             onclick="confirmDelivery(this.getAttribute('data-id'), 1, this.getAttribute('data-courier'), this.getAttribute('data-tracking'))">
+                        배송조회
+                       </span>
                        <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a></span>
                     </span>
         </span>
@@ -120,6 +124,10 @@
                        <span th:if="${order.status == 3}" class="refundOk">환불완료</span>
                        <span th:if="${order.status == 4}" class="done">구매완료</span>
                        <span th:if="${order.status == 5}" class="refundNot">환불거절됨</span>
+                       <span th:if="${order.status == 6}" class="delivery" th:data-id="${order.id}" th:data-courier="${order.courier}" th:data-tracking="${order.trackingNumber}"
+                        onclick="confirmDelivery(this.getAttribute('data-id'), 1, this.getAttribute('data-courier'), this.getAttribute('data-tracking'))">
+                        배송조회
+                       </span>
                        <a th:href="@{/item/(shopId=${order.shopId}, id=${order.itemId})}">스타일올리기</a></span>
                     </span>
                 </span>

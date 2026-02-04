@@ -16,11 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -472,5 +468,34 @@ public class OrderService {
         }
 
         return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+    }
+    private static final Set<String> ALLOWED_COURIERS = Set.of(
+            "CJ대한통운",
+            "우체국택배",
+            "한진택배",
+            "롯데택배",
+            "로젠택배",
+            "CU편의점택배",
+            "GSPostbox택배"
+    );
+    public CommonResult updateDelivery(long id, String courier, String trackingNumber, int ownerShopId ) {
+
+        if (id < 1 || courier == null || courier.isEmpty() || trackingNumber == null || trackingNumber.isEmpty()) {
+            return CommonResult.FAILURE;
+        }
+        if (!ALLOWED_COURIERS.contains(courier)) {
+            return CommonResult.FAILURE;
+        }
+
+        OrderItemEntity orderItem = this.orderMapper.selectOrderItemById(id);
+        if (orderItem == null) {
+            return CommonResult.FAILURE;
+        }
+        if (orderItem.getShopId() != ownerShopId) {
+            // 내 가게 물건이 아니면 접근 거부
+            return CommonResult.NO_AUTH;
+        }
+        int update = this.orderMapper.updateDelivery(id, courier, trackingNumber, 6);
+        return update > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
 }

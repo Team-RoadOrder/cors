@@ -19,9 +19,9 @@
 </th:block>
 
 <main id="main">
-    <button id="toggleNav" class="toggle-btn nav-open">
+    <!--<button id="toggleNav" class="toggle-btn nav-open">
         <img src="/assets/images/ownermain/arrow-left.png" alt="닫기" class="toggle-icon"/>
-    </button>
+    </button>-->
     <nav id="nav" class="open">
         <div class="info">매장관리 페이지</div>
         <div class="profile">
@@ -69,24 +69,12 @@
                 <label class="label">
                     <input readonly required class="input" id="time" maxlength="20" minlength="3" name="shopTime" type="text" th:value="${shop.shopTime}">
                 </label>
-                <!--
-                //수정 : 사용자가 카테고리에 대한 입력을 할때 카테고리 선택~부분까지 지워야하는 번거로움이 있음
-                /*
-                 * 지금처럼 value에 가이드 문구를 직접 넣으면, 사용자가 실수로 그 문구를 다 지우지 않고
-                 * "빈티지 카테고리 선택 ex: 미니멀" 처럼 수정해서 저장할 경우,
-                 *  그 불필요한 가이드 텍스트가 그대로 DB에 저장되어 버립니다.
-                 OwnerMainController 71~72
-                 * */
-                -->
                 <label class="label">
                     <input readonly required class="input" id="category"
                            maxlength="20" minlength="3" name="shopType" type="text"
                            th:value="${shop.shopCategory}"
                            placeholder="카테고리 선택 ex: 미니멀 빈티지">
                 </label>
-<!--                <label class="label">-->
-<!--                    <input readonly required class="input" id="category" maxlength="20" minlength="3" name="shopType" type="text" th:value="${shop.shopCategory}">-->
-<!--                </label>-->
                 <label class="label">
                     <input readonly required class="input" id="address" maxlength="50" minlength="3" name="shopAddress" type="text" th:value="${shop.shopAddress}">
                 </label>
@@ -279,7 +267,13 @@
 
                         <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail} (${order.request})| ">대구시 달성군 화암로 120</td>
 
-                        <td th:if="${order.getStatus() == 0}"><button type="button" th:onclick="|updateStatus(${order.getId()}, 1)|">배송완료</button></td>
+                        <td th:if="${order.getStatus() == 0}"><button type="button" th:onclick="|registerTracking(${order.getId()}, 6)|">운송장 등록</button></td>
+                        <td th:if="${order.getStatus() == 6}">
+                            <div class="delivery-road">
+                                <img src="/assets/images/ownermain/delivery.png" alt="배송중" class="truck">
+                            </div>
+                            <div class="caption">배송중</div>
+                        </td>
                         <td th:if="${order.getStatus() == 2}">
                             <button type="button" style="background-color: #f33535"
                                     th:data-id="${order.id}"
@@ -302,3 +296,7 @@
 <th:block th:replace="~{/fragments/owner.html :: owner-bottom-nav}"></th:block>
 </body>
 </html>
+
+
+
+

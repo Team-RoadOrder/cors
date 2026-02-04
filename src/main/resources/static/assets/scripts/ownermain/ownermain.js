@@ -982,6 +982,7 @@ const updateStatus = (id, status) => {
      xhr.send(formData);
 
 }
+
 const confirmRefund = (element) => {
     // 1. data- 속성에서 값 가져오기
     const id = element.dataset.id;
@@ -1059,6 +1060,120 @@ const confirmRefund = (element) => {
         cancelText: '거절',
         onCancel: () => {
             updateRefundStatus(5);
+        }
+    });
+}
+
+
+const registerTracking = (id, status) => {
+    // 모달 내부 HTML 정의
+    const modalContent = `
+        <form id="trackingForm" style="text-align: left;">
+            <div style="margin-bottom: 15px;">
+                <span style="display:block; font-size:13px; color:#888; margin-bottom:5px;">택배사</span>
+                <label style="width: 100%;">
+                    <select id="courierSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="" selected disabled>택배사 선택</option>
+                        <option value="CJ대한통운">CJ대한통운</option>
+                        <option value="우체국택배">우체국택배</option>
+                        <option value="한진택배">한진택배</option>
+                        <option value="롯데택배">롯데택배</option>
+                        <option value="로젠택배">로젠택배</option>
+                        <option value="CU편의점택배">CU편의점택배</option>
+                        <option value="GSPostbox택배">GSPostbox택배</option>
+                    </select>
+                </label>
+            </div>
+            <div>
+                <span style="display:block; font-size:13px; color:#888; margin-bottom:5px;">송장번호</span>
+                <label style="width: 100%;">
+                    <input type="number" id="trackingNumberInput" placeholder="하이픈(-) 없이 숫자만 입력 (10~14자리숫자)" 
+                           style="width: 95%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" minlength="10" maxlength="14">
+                </label>
+            </div>
+        </form>
+    `;
+
+    openModal("운송장 등록", modalContent, {
+        confirmText: '등록',
+        cancelText: '취소',
+        onConfirm: () => {
+            const courier = document.getElementById('courierSelect').value;
+            let trackingNumber = document.getElementById('trackingNumberInput').value.trim();
+            trackingNumber = trackingNumber.replace(/-/g, '');
+            if (!courier) {
+                setTimeout(() => { // 기존 모달이 닫히는 시간 고려하여 경고창 띄움 (필요시 제거 가능)
+                    openModal("WARN", `<p>택배사를 선택해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => registerTracking(id, status) // 다시 입력창 열기
+                    });
+                }, 200);
+                return;
+            }
+            const numberRegex = /^[0-9]+$/;
+            if (!trackingNumber || !numberRegex.test(trackingNumber)) {
+                setTimeout(() => {
+                    // 에러 메시지 구체화
+                    openModal("WARN", `<p>송장번호는 <strong>숫자만</strong> 입력해주세요.<br>(하이픈, 공백 불가)</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => registerTracking(id, status)
+                    });
+                }, 200);
+                return;
+            }
+            if (!trackingNumber) {
+                setTimeout(() => {
+                    openModal("WARN", `<p>송장번호를 제대로 입력해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => registerTracking(id, status) // 다시 입력창 열기
+                    });
+                }, 200);
+                return;
+            }
+            if (typeof Loading !== 'undefined') {
+                Loading.show('운송장을 등록 중입니다...');
+            }
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('id', id);         // 주문 ID
+            formData.append('courier', courier);    // 택배사
+            formData.append('trackingNumber', trackingNumber); // 송장번호
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                if (typeof Loading !== 'undefined') Loading.hide();
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                    return;
+                }
+
+                const response = JSON.parse(xhr.responseText);
+                switch (response.result) {
+                    case 'FAILURE':
+                        openModal("FAILURE", `<p>운송장 등록에 실패하였습니다.</p>`, {confirmText: '확인'});
+                        break;
+                    case 'NO_AUTH':
+                        openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                        break;
+                    case 'SUCCESS':
+                        openModal("SUCCESS", `<p>운송장이 성공적으로 등록되었습니다.</p>`, {
+                            confirmText: '확인',
+                            onConfirm: () => {
+                                location.reload();
+                            }
+                        });
+                        break;
+                    default:
+                        openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+                }
+            };
+
+            xhr.open('PATCH', '/delivery');
+            xhr.send(formData);
+        },
+        onCancel: () => {
         }
     });
 }

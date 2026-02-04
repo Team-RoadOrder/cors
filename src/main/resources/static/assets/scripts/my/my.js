@@ -905,3 +905,56 @@ const refundRequest = (id, status) => {
         }
     } );
 }
+
+const confirmDelivery = (id, status, courier, trackingNumber) => {
+    // 값이 없을 경우를 대비한 방어 코드
+    const safeCourier = courier ? courier : '택배사 정보 없음';
+    const safeTracking = trackingNumber ? trackingNumber : '송장번호 없음';
+
+    const content = `
+        <div style="text-align:center;">
+            <p style="margin-bottom: 10px; font-weight: bold; color: #333;">배송 정보 확인</p>
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; text-align: left;">
+                <p><strong>택배사:</strong> ${safeCourier}</p>
+                <p><strong>송장번호:</strong> ${safeTracking}</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 13px; color: #666;">
+                물건을 수령하셨다면 [수령] 버튼을 눌러주세요.
+            </p>
+        </div>
+    `;
+
+    openModal("배송 조회", content, {
+        confirmText: '수령 확인', // 버튼 이름 명확하게
+        cancelText: '닫기',
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('id', id);
+            formData.append('status', status); // 1 (구매확정 대기/수령완료 상태)
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                    return;
+                }
+
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    openModal("SUCCESS", `<p>수령 확인되었습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => location.reload()
+                    });
+                } else {
+                    openModal("FAILURE", `<p>처리 실패하였습니다.</p>`, { confirmText: '확인' });
+                }
+            };
+            xhr.open('PATCH', '/owner/patch-order-status');
+            xhr.send(formData);
+        }, cancelText:'취소', onCancel: () => {
+
+        }
+    });
+}

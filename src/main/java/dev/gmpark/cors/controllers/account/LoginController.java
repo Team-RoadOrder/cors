@@ -9,6 +9,8 @@ import dev.gmpark.cors.services.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -79,13 +81,14 @@ public class LoginController {
         RegisterEntity loginUser = null;
         RegisterEntity tempUser = this.loginService.getUserByEmail(email);
         if (tempUser != null && "admin".equalsIgnoreCase(tempUser.getUsertype())) {
-            if (tempUser.getPassword().equals(password)) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(password);
+            if (!BCrypt.checkpw(hashedPassword, tempUser.getPassword())) {
                 loginUser = tempUser;
             } else {
                 loginUser = this.loginService.CheckLogin(email, password);
             }
         } else {
-            // 3. 관리자가 아니거나 유저가 없으면 기존 정석 로직(해시 검증) 수행
             loginUser = this.loginService.CheckLogin(email, password);
         }
         Map<String, Object> responseBody = new HashMap<>();

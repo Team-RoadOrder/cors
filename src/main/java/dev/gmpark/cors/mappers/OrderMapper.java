@@ -25,9 +25,12 @@ public interface OrderMapper {
     int updateOrderItemStatusAndRefundReason(@Param("id") Long id,
                                              @Param("status") int status,
                                              @Param("refundReason") String refundReason);
+    int updateDelivery(@Param("id") Long id,
+                      @Param("courier") String courier,
+                      @Param("trackingNumber") String trackingNumber,
+                       @Param("status") int status);
     // 추가: 주문 ID로 주문 아이템 조회
     List<OrderItemEntity> selectOrderItemsByOrderId(@Param("orderId") Long orderId);
-    
     // 추가: ID로 주문 아이템 단건 조회
     OrderItemEntity selectOrderItemById(@Param("id") Long id);
 

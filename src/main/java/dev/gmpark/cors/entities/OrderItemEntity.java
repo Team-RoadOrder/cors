@@ -21,5 +21,7 @@ public class OrderItemEntity {
     private Long price;
     private int status;
     private String refundReason;
+    private String courier;
+    private String trackingNumber;
     private LocalDateTime updatedAt;
 }

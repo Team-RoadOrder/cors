@@ -62,9 +62,6 @@
                     <span class="buyNumber"
                           th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')+ ' 원'}"><b>0원</b></span>
                 </div>
-<!--                <p class="star">★</p>-->
-<!--                <a href="#"><p class="score" th:text="${#numbers.formatDecimal(item.rating, 1, 1)}"><b>4.9</b></p></a>-->
-<!--                <a class="reviewButton" href="#"><span class="review">리뷰 <th:block th:text="${reviews.size()}">0</th:block></span></a>-->
             </div>
             <a class="optionLink" href="#">
                 <div class="option">
@@ -487,7 +484,17 @@
         <a class="reservation" th:onclick="|reserveItem()|">예약하기</a>
         <div class="cart_Add">
             <span class="cart">장바구니담기</span>
-            <button type="button" class="add" th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id})|">관심상품저장
+            <button type="button" class="add"
+                    th:unless="${isLikeItem}"
+                    th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id}, this)|">
+                관심상품저장
+            </button>
+
+            <button type="button" class="add"
+                    th:if="${isLikeItem}"
+                    style="background-color: #b5b5b5; color: #FFFFFF"
+                    th:onclick="|toggleLikeItem(${shopInfo.shopId}, ${item.id}, this)|">
+                저장 취소
             </button>
         </div>
         <div class="delivery">

@@ -20,7 +20,13 @@
             (#{item.orderId}, #{item.itemId}, #{item.shopId}, #{item.size}, #{item.quantity}, #{item.price})
         </foreach>
     </insert>
-
+    <update id="updateDelivery">
+        UPDATE `cors`.`order_items`
+        SET `courier` = #{courier},
+            `tracking_number` = #{trackingNumber},
+            `status` = #{status}
+        WHERE `id` = #{id}
+    </update>
     <select id="selectOrderById" resultType="dev.gmpark.cors.entities.OrderEntity">
         SELECT
             `id`,
@@ -71,6 +77,8 @@
             `t1`.`price`    AS `price`,
             `t2`.`created_at` AS `createdAt`,
             `t1`.`status`   AS `status`,
+            `t1`.`courier` AS `courier`,
+            `t1`.`tracking_number` AS `trackingNumber`,
             (SELECT `img`.`image_path`
                  FROM `cors`.`shop_item_images` AS `img`
                  WHERE `img`.`product_id` = `t3`.`id` LIMIT 1) AS `imagePath`
