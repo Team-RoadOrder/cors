@@ -266,7 +266,8 @@
 
                         <td class="address" colspan="2" th:text="|${order.address} ${order.addressDetail} (${order.request})| ">대구시 달성군 화암로 120</td>
 
-                        <td th:if="${order.getStatus() == 0}"><button type="button" th:onclick="|registerTracking(${order.getId()}, 6)|">운송장 등록</button></td>
+                        <td th:if="${order.getStatus() == 0}"><button type="button" th:onclick="|registerTracking(${order.getId()}, 6)|">운송장 등록</button>
+                            <button th:onclick="|sibal()|">주문취소</button></td>
                         <td th:if="${order.getStatus() == 6}">
                             <div class="delivery-road">
                                 <img src="/assets/images/ownermain/delivery.png" alt="배송중" class="truck">

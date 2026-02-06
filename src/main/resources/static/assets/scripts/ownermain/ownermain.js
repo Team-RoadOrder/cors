@@ -1048,6 +1048,8 @@ const confirmRefund = (element) => {
         ">
             ${reasonText}
         </div>
+        <span style="display: block; font-size: 13px; color: #888; margin-bottom: 8px;">환불거절시에만 입력바랍니다</span>
+        <input type="text" placeholder="구매자에게 전달되는내용입니다.">
     </div>
 `, {
         confirmText: '승인',

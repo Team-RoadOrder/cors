@@ -117,6 +117,7 @@
                         <span class="date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm:ss')}">25/07/02</span>
                         <span class="list-column">
                        <span th:if="${order.status == 0}" class="cardOk">결제완료</span>
+                            <span th:if="${order.status == 0}" class="cardOk">주문취소</span>
                        <span class="status-container">
                        <span th:if="${order.status == 1}" class="buyOk" th:onclick="|confirmPurchase(${order.id})|" >구매확정</span>
                        <span th:if="${order.status == 1}" class="request" th:onclick="|refundRequest(${order.id},2)|">환불요청</span>
