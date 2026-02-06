@@ -958,3 +958,55 @@ const confirmDelivery = (id, status, courier, trackingNumber) => {
         }
     });
 }
+
+
+const refundRefuse = (id, shopTel, shopName ) => {
+    const safeTel = shopTel ? shopTel : '매장번호 정보없음';
+    const safeName = shopName ? shopName : '매장이름 없음';
+    const inner = `
+        <div style="text-align:center;">
+            <p style="margin-bottom: 10px; font-weight: bold; color: #333;">환불 거절 안내</p>
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; text-align: left;">
+                <p><strong>매장이름:</strong> ${safeName}</p>
+                <p><strong>매장번호:</strong> ${safeTel}</p>
+            </div>
+            <p style="margin-top: 15px; font-size: 13px; color: #666; line-height: 1.5;">
+                해당 주문 건은 환불 처리가 불가능합니다.<br>
+                상세한 <strong>환불 거절 사유</strong>는<br>
+                위 매장 번호로 직접 문의해주시기 바랍니다.
+            </p>
+        </div>
+    `;
+    openModal("환불 거절", inner, {
+        confirmText: '구매확정',
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('id', id);
+            formData.append('status', '4');
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                    return;
+                }
+
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    openModal("SUCCESS", `<p>처리되었습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => location.reload()
+                    });
+                } else {
+                    openModal("FAILURE", `<p>처리 실패하였습니다.</p>`, { confirmText: '확인' });
+                }
+            };
+            xhr.open('PATCH', '/owner/patch-order-status');
+            xhr.send(formData);
+        }, cancelText:'취소', onCancel: () => {
+
+        }
+    });
+}

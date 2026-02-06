@@ -217,6 +217,10 @@
     color: #e35656;
     font-weight: 600;
 }
+.tab_purchase_content .item .list .product .itemStatus .list-column .refundNot:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
 .tab_purchase_content .item .list .product .itemStatus .list-column .done {
     font-weight: 600;
     color: #1d6ec3;
