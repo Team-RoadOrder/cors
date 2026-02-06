@@ -926,7 +926,6 @@ const confirmDelivery = (id, status, courier, trackingNumber) => {
 
     openModal("배송 조회", content, {
         confirmText: '수령 확인', // 버튼 이름 명확하게
-        cancelText: '닫기',
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
             const formData = new FormData();
@@ -980,33 +979,32 @@ const refundRefuse = (id, shopTel, shopName ) => {
     openModal("환불 거절", inner, {
         confirmText: '구매확정',
         onConfirm: () => {
-            const xhr = new XMLHttpRequest();
-            const formData = new FormData();
-            formData.append('id', id);
-            formData.append('status', '4');
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState !== XMLHttpRequest.DONE) return;
-
-                if (xhr.status < 200 || xhr.status >= 400) {
-                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
-                    return;
-                }
-
-                const response = JSON.parse(xhr.responseText);
-                if (response.result === 'SUCCESS') {
-                    openModal("SUCCESS", `<p>처리되었습니다.</p>`, {
+            fetch('/my/confirm-purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: id })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text || "서버 응답 오류"); });
+                    }
+                    return response.text();
+                })
+                .then(() => {
+                    openModal("SUCCESS", "<p>구매가 확정되었습니다.<br>포인트가 적립되었습니다.</p>", {
                         confirmText: '확인',
-                        onConfirm: () => location.reload()
+                        onConfirm: () => {
+                            location.reload();
+                        }
                     });
-                } else {
-                    openModal("FAILURE", `<p>처리 실패하였습니다.</p>`, { confirmText: '확인' });
-                }
-            };
-            xhr.open('PATCH', '/owner/patch-order-status');
-            xhr.send(formData);
-        }, cancelText:'취소', onCancel: () => {
+                })
+                .catch(error => {
+                    console.error(error);
+                    openModal("ERROR", `<p>구매 확정 중 오류가 발생했습니다: ${error.message}</p>`, {confirmText: '확인'});
+                });
+        },
 
-        }
+        cancelText:'취소',
+        onCancel: () => { }
     });
 }
