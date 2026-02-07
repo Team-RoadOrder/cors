@@ -782,6 +782,7 @@ const deleteMember = (email) => {
         }
     });
 }
+
 const confirmPurchase = (orderId) => {
     openModal("answer", "<p>구매를 확정하시겠습니까?<br>구매 확정 시 포인트가 적립됩니다.</p>", {
         confirmText: '확인',
@@ -814,19 +815,42 @@ const confirmPurchase = (orderId) => {
     });
 }
 
-
 const refundRequest = (id, status) => {
     const modalContent = `
         <div style="text-align: left;">
+            <label for="refundCategory" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px;">
+                환불 사유를 선택해주세요
+            </label>
+            
+            <select id="refundCategory" style="
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 14px;
+                margin-bottom: 12px;
+                outline: none;
+                background-color: #fff;
+                color: #333;
+            ">
+                <option value="" disabled selected>사유를 선택해주세요</option>
+                <option value="단순변심">단순 변심 (상품이 필요 없어짐)</option>
+                <option value="사이즈/핏">사이즈/핏이 맞지 않음</option>
+                <option value="화면과다름">실물 색상/디자인이 화면과 다름</option>
+                <option value="상품불량">상품에 하자가 있음 (오염/파손/봉제불량)</option>
+                <option value="오배송/누락">주문한 상품과 다름 또는 구성품 누락</option>
+                <option value="기타">기타 사유</option>
+            </select>
+
             <label for="refundReasonInput" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px;">
-                환불 사유를 입력해주세요
+                상세 사유 입력
             </label>
             <textarea id="refundReasonInput" 
                       maxlength=200 
-                      placeholder="예: 사이즈가 맞지 않아요, 화면과 색상이 달라요. (상세히 적어주세요)" 
+                      placeholder="예: 평소 M을 입는데 너무 작아요, 옷깃에 얼룩이 있어요. (구체적으로 적어주세요)" 
                       style="
                         width: 100%; 
-                        height: 120px; 
+                        height: 100px; 
                         padding: 12px; 
                         border: 1px solid #ddd; 
                         border-radius: 6px; 
@@ -842,32 +866,44 @@ const refundRequest = (id, status) => {
                       onblur="this.style.borderColor='#ddd'"
             ></textarea>
             <p style="margin-top: 8px; font-size: 12px; color: #888;">
-                * 입력하신 내용은 판매자에게 전달되니 유의해주세요.
+                * 불량/오배송의 경우 상세 내용을 적어주시면 처리가 빨라집니다.
             </p>
         </div>
     `;
+
     openModal("Request", modalContent, {
         confirmText: '확인',
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
             const formData = new FormData();
+
+            const categorySelect = document.getElementById('refundCategory');
             const reasonInput = document.getElementById('refundReasonInput');
-            const reasonValue = reasonInput ? reasonInput.value : '';
-            if (!reasonValue) {
-                openModal("ERROR", `<p>환불사유를 입력해주세요</p>`, {
+
+            const categoryValue = categorySelect ? categorySelect.value : '';
+            const detailValue = reasonInput ? reasonInput.value.trim() : '';
+
+            if (!categoryValue) {
+                openModal("WARN", `<p>환불 사유를 선택해주세요.</p>`, {
                     confirmText: '확인'
                 });
                 return;
             }
-            if(reasonValue.length > 200) {
-                openModal("ERROR", `<p>환불사유는 200자 이상 작성이 제한됩니다.</p>`, {
+            let finalReason = `[${categoryValue}]`;
+            if (detailValue) {
+                finalReason += ` ${detailValue}`;
+            }
+
+            if(finalReason.length > 200) {
+                openModal("ERROR", `<p>환불사유는 200자 이내로 작성해주세요.</p>`, {
                     confirmText: '확인'
                 });
                 return;
             }
+
             formData.append('id', id);
             formData.append('status', status);
-            formData.append('refundReason', reasonValue); // 수정된 값 입력
+            formData.append('refundReason', finalReason); // 조합된 값 전송
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -882,7 +918,7 @@ const refundRequest = (id, status) => {
                 const response = JSON.parse(xhr.responseText);
                 switch (response.result) {
                     case 'FAILURE':
-                        openModal("FAILURE", `<p>환불양식이 맞지않아 실패하였습니다.</p>`, {confirmText: '확인'});
+                        openModal("FAILURE", `<p>환불 요청 처리에 실패하였습니다.</p>`, {confirmText: '확인'});
                         break;
                     case 'SUCCESS':
                         openModal("SUCCESS", `<p>환불신청이 완료되었습니다.</p>`, {
@@ -958,26 +994,39 @@ const confirmDelivery = (id, status, courier, trackingNumber) => {
     });
 }
 
-
-const refundRefuse = (id, shopTel, shopName ) => {
+const refundRefuse = (id, shopTel, shopName, reason) => {
     const safeTel = shopTel ? shopTel : '매장번호 정보없음';
     const safeName = shopName ? shopName : '매장이름 없음';
+    const safeReason = reason ? reason : '상세 사유가 입력되지 않았습니다.'; // 사유가 없을 때 대비
+
     const inner = `
-        <div style="text-align:center;">
-            <p style="margin-bottom: 10px; font-weight: bold; color: #333;">환불 거절 안내</p>
-            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; text-align: left;">
-                <p><strong>매장이름:</strong> ${safeName}</p>
+        <div style="text-align: center;">
+            <p style="margin-bottom: 15px; font-weight: bold; color: #d9534f; font-size: 16px;">
+                환불이 거절되었습니다
+            </p>
+            
+            <div style="background: #fff0f0; padding: 15px; border-radius: 5px; text-align: left; margin-bottom: 15px; border: 1px solid #f5c6cb;">
+                <p style="font-size: 13px; color: #721c24; font-weight: bold; margin-bottom: 5px;">거절 사유</p>
+                <p style="font-size: 14px; color: #333; line-height: 1.4; word-break: break-all;">
+                    ${safeReason}
+                </p>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; text-align: left; border: 1px solid #ddd;">
+                <p style="margin-bottom: 5px;"><strong>매장이름:</strong> ${safeName}</p>
                 <p><strong>매장번호:</strong> ${safeTel}</p>
             </div>
+
             <p style="margin-top: 15px; font-size: 13px; color: #666; line-height: 1.5;">
-                해당 주문 건은 환불 처리가 불가능합니다.<br>
-                상세한 <strong>환불 거절 사유</strong>는<br>
-                위 매장 번호로 직접 문의해주시기 바랍니다.
+                위 사유로 환불 처리가 불가능합니다.<br>
+                이의가 있으시다면 <strong>위 매장 번호로 직접 문의</strong>해주시기 바랍니다.
             </p>
         </div>
     `;
-    openModal("환불 거절", inner, {
+
+    openModal("환불 거절 안내", inner, {
         confirmText: '구매확정',
+        // (선택사항) 거절된 상태에서 구매확정을 유도하는 것이 맞다면 유지, 아니라면 '닫기'로 변경 고려
         onConfirm: () => {
             fetch('/my/confirm-purchase', {
                 method: 'POST',
@@ -1003,8 +1052,162 @@ const refundRefuse = (id, shopTel, shopName ) => {
                     openModal("ERROR", `<p>구매 확정 중 오류가 발생했습니다: ${error.message}</p>`, {confirmText: '확인'});
                 });
         },
-
-        cancelText:'취소',
+        cancelText: '닫기',
         onCancel: () => { }
+    });
+}
+
+const orderCancel = (id, status) => {
+    // 1. 경고 문구 HTML 구성
+    const content = `
+        <div style="text-align: center;">
+            <p style="font-weight: bold; font-size: 16px; color: #d9534f; margin-bottom: 12px;">
+                정말 주문을 취소하시겠습니까?
+            </p>
+            <p style="font-size: 14px; color: #555; line-height: 1.5;">
+                확인 버튼을 눌러주시면 <strong>바로 환불</strong> 처리됩니다.<br>
+                이 작업은 되돌릴 수 없습니다.
+            </p>
+        </div>
+    `;
+
+    // 2. 모달 호출
+    openModal("주문 취소", content, {
+        confirmText: '취소 확정', // 버튼 이름을 명확하게 (단순 '확인'보다 나음)
+        confirmColor: '#d9534f', // (선택사항) 위험한 작업임을 알리기 위해 버튼 색상을 붉은 계열로 지정 가능 (모달 구현에 따라 다름)
+
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+
+            // 데이터 세팅 (ID와 상태값 3)
+            formData.append('id', id);
+            formData.append('status', status);
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE)  {
+                    Loading.hide();
+                    return;
+                }
+
+                // HTTP 상태 코드 에러 처리
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                    return;
+                }
+
+                // 결과 처리
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    openModal("SUCCESS", `<p>주문이 취소되었습니다.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => {
+                            location.reload(); // 페이지 새로고침하여 상태 반영
+                        }
+                    });
+                } else {
+                    // 실패 시 메시지 (서버에서 실패 사유를 보낸다면 response.message 등으로 대체 가능)
+                    openModal("FAILURE", `<p>주문 취소 처리에 실패하였습니다.</p>`, { confirmText: '확인' });
+                }
+            };
+
+            xhr.open('PATCH', '/owner/patch-order-status');
+            xhr.send(formData);
+            Loading.show('주문 취소 처리 중...');
+        },
+        cancelText: '닫기',
+        onCancel: () => {
+
+        }
+    });
+}
+
+const checkRefusalAndRefund = (id, reason) => {
+    // 사유가 없을 경우를 대비한 방어 코드
+    const safeReason = reason ? reason : '상세 사유가 입력되지 않았습니다.';
+
+    // 모달 내부 HTML 구성
+    const content = `
+        <div style="text-align: center;">
+            <p style="margin-bottom: 10px; font-weight: bold; color: #d9534f;">주문 거절 사유 확인</p>
+            
+            <div style="
+                background: #f8f9fa; 
+                padding: 15px; 
+                border-radius: 5px; 
+                text-align: left; 
+                margin-bottom: 15px; 
+                border: 1px solid #ddd;
+                color: #333;
+                font-size: 14px;
+                line-height: 1.5;
+                word-break: break-all;
+            ">
+                ${safeReason}
+            </div>
+
+            <p style="font-size: 13px; color: #666; line-height: 1.4;">
+                판매자가 위와 같은 사유로 주문을 거절하였습니다.<br>
+                <strong>[환불받기]</strong> 버튼을 누르시면 환불 처리가 완료됩니다.
+            </p>
+        </div>
+    `;
+
+    // 모달 호출
+    openModal("주문 거절 안내", content, {
+        confirmText: '환불받기',
+        confirmColor: '#333', // 혹은 강조색
+
+        onConfirm: () => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+
+            // id와 변경할 상태값(3: 환불완료) 전송
+            formData.append('id', id);
+            formData.append('status', 3);
+
+            xhr.onreadystatechange = () => {
+                // 완료되지 않았으면 리턴 (단, Loading.hide는 완료 시점에 처리)
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                // 로딩 숨기기
+                Loading.hide();
+
+                // HTTP 상태 코드 에러 처리
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+                    return;
+                }
+
+                // 결과 처리
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.result === 'SUCCESS') {
+                        openModal("SUCCESS", `<p>환불 처리가 완료되었습니다.</p>`, {
+                            confirmText: '확인',
+                            onConfirm: () => {
+                                location.reload(); // 새로고침하여 '환불완료' 상태 반영
+                            }
+                        });
+                    } else {
+                        openModal("FAILURE", `<p>처리 실패하였습니다.</p>`, { confirmText: '확인' });
+                    }
+                } catch (e) {
+                    console.error(e);
+                    openModal("ERROR", `<p>응답 데이터 오류가 발생했습니다.</p>`, { confirmText: '확인' });
+                }
+            };
+
+            // 요청 전송
+            xhr.open('PATCH', '/owner/patch-order-status');
+            xhr.send(formData);
+
+            // 로딩 표시
+            Loading.show('환불 처리 중...');
+        },
+        cancelText: '닫기',
+        onCancel: () => {
+            // 닫기만 함
+        }
     });
 }

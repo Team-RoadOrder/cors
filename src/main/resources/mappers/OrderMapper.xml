@@ -78,6 +78,7 @@
             `t2`.`created_at` AS `createdAt`,
             `t1`.`status`   AS `status`,
             `t1`.`courier` AS `courier`,
+            `t1`.`refund_reason` AS `refundReason`,
             `t1`.`tracking_number` AS `trackingNumber`,
             `t4`.`shop_tel` AS `shopTel`,
             `t4`.`shop_name` AS `shopName`,

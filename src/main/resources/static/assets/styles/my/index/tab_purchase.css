@@ -181,10 +181,22 @@
     flex-direction:row;
     gap: 0.5rem;
 }
-
-.tab_purchase_content .item .list .product .itemStatus .list-column > .cardOk {
+.tab_purchase_content .item .list .product .itemStatus .list-column > .card {
+    display: flex;
+    flex-direction:row;
+    gap: 0.5rem;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column > .card > .cardOk {
     font-weight: 600;
     color: #648a64 !important;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column > .card .cardCancel {
+    font-weight: 600;
+    color: #717070;
+}
+.tab_purchase_content .item .list .product .itemStatus .list-column > .card .cardCancel:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 .tab_purchase_content .item .list .product .itemStatus .list-column .buyOk {
     font-weight: 600;

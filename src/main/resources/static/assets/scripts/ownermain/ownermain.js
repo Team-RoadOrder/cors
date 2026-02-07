@@ -983,90 +983,6 @@ const updateStatus = (id, status) => {
 
 }
 
-const confirmRefund = (element) => {
-    // 1. data- 속성에서 값 가져오기
-    const id = element.dataset.id;
-    const refundReason = element.dataset.reason;
-    const reasonText = refundReason ? refundReason : "입력된 환불 사유가 없습니다.";
-    const updateRefundStatus = (status) => {
-        const xhr = new XMLHttpRequest();
-        const formData = new FormData();
-        formData.append('id', id);
-        formData.append('status', status);
-
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState !== XMLHttpRequest.DONE) return;
-
-            if (xhr.status < 200 || xhr.status >= 400) {
-                if (typeof Loading !== 'undefined') Loading.hide(); // 에러 시 로딩 숨김
-                openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
-                return;
-            }
-
-            const response = JSON.parse(xhr.responseText);
-            let successMsg = (status === 3) ? "환불이 승인되었습니다." : "환불이 거절되었습니다.";
-
-            if (typeof Loading !== 'undefined') Loading.hide(); // 응답 완료 시 로딩 숨김
-
-            switch (response.result) {
-                case 'FAILURE':
-                    openModal("FAILURE", `<p>요청 처리에 실패하였습니다.</p>`, {confirmText: '확인'});
-                    break;
-                case 'NO_AUTH':
-                    openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
-                    break;
-                case 'SUCCESS':
-                    openModal("SUCCESS", `<p>${successMsg}</p>`, {
-                        confirmText: '확인',
-                        onConfirm: () => {
-                            location.reload();
-                        }
-                    });
-                    break;
-                default:
-                    openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
-            }
-        };
-        xhr.open('PATCH', '/owner/patch-order-status');
-        xhr.send(formData);
-    };
-    openModal("Request", `
-    <div style="text-align: left;">
-        <span style="display: block; font-size: 13px; color: #888; margin-bottom: 8px;">환불 사유</span>
-        <div style="
-            border-left: 4px solid #6c757d;
-            background-color: #f8f9fa;      /* 배경색 조금 더 연하게 */
-            padding: 15px;                  /* [핵심] 상하좌우 여백을 넉넉히 줌 */
-            color: #333;
-            font-size: 15px;
-            line-height: 1.6;               /* 줄 간격을 조금 더 넓힘 */
-            /*
-            white-space: pre-wrap;          !* 줄바꿈 유지 *!
-            */
-            word-break: break-all;          /* 긴 단어 강제 줄바꿈 (이미지같은 상황 방지) */
-            border-radius: 0 4px 4px 0;     /* 오른쪽 모서리만 살짝 둥글게 */
-        ">
-            ${reasonText}
-        </div>
-        <span style="display: block; font-size: 13px; color: #888; margin-bottom: 8px;">환불거절시에만 입력바랍니다</span>
-        <input type="text" placeholder="구매자에게 전달되는내용입니다.">
-    </div>
-`, {
-        confirmText: '승인',
-        onConfirm: () => {
-            if (typeof Loading !== 'undefined') {
-                Loading.show('환불 처리중 입니다. 잠시만 기다려 주세요.');
-            }
-            updateRefundStatus(3);
-        },
-        cancelText: '거절',
-        onCancel: () => {
-            updateRefundStatus(5);
-        }
-    });
-}
-
-
 const registerTracking = (id, status) => {
     // 모달 내부 HTML 정의
     const modalContent = `
@@ -1185,6 +1101,186 @@ const registerTracking = (id, status) => {
             xhr.send(formData);
         },
         onCancel: () => {
+        }
+    });
+}
+
+
+const updateStatusAndReason = (id, status, reason) => {
+    if (typeof Loading !== 'undefined') Loading.show();
+
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('status', status);
+    formData.append('refundReason', reason); // 사유 추가
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+        if (typeof Loading !== 'undefined') Loading.hide();
+
+        if (xhr.status < 200 || xhr.status >= 400) {
+            openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
+            return;
+        }
+
+        const response = JSON.parse(xhr.responseText);
+
+        let successMsg = "처리가 완료되었습니다.";
+        if (status === 7) successMsg = "주문이 거절되었습니다."; // 주문 거절 (접수 전)
+        if (status === 5) successMsg = "환불이 거절되었습니다."; // 반품/환불 거절
+
+        switch (response.result) {
+            case 'FAILURE':
+                openModal("FAILURE", `<p>요청 처리에 실패하였습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'NO_AUTH':
+                openModal("FAILURE", `<p>권한이 없습니다.</p>`, {confirmText: '확인'});
+                break;
+            case 'SUCCESS':
+                openModal("SUCCESS", `<p>${successMsg}</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => location.reload()
+                });
+                break;
+            default:
+                openModal("WARN", `<p>서버 응답 오류가 발생했습니다.</p>`, {confirmText: '확인'});
+        }
+    };
+
+    xhr.open('PATCH', '/owner/refund');
+    xhr.send(formData);
+}
+
+/* [주문 거절] orderRefuse
+ - 상태 7 (주문거절) + 거절 사유 입력
+ - updateStatusAndReason 함수를 호출하여 /owner/refund 로 전송
+*/
+const orderRefuse = (id) => {
+    const modalContent = `
+        <div style="text-align: left;">
+            <p style="margin-bottom: 15px; color: #666; font-size: 14px; ">
+                주문을 거절하시겠습니까?<br>
+                거절 시 구매자에게 사유가 전달됩니다.
+            </p>
+            <label for="orderRefuseReason" style="display: block; font-size: 13px; color: #333; margin-bottom: 8px; font-weight:bold;">
+                거절 사유 입력
+            </label>
+            <textarea id="orderRefuseReason" placeholder="예: 재고소진, 가격변동, 폐점예점 등 (상세히 적어주세요)"
+                      style="width: 95%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; resize: none;"></textarea>
+        </div>
+    `;
+
+    openModal("주문 거절", modalContent, {
+        confirmText: '거절 확정',
+        confirmColor: '#d9534f', // 빨간색 버튼 (위험/거절 강조)
+        cancelText: '취소',
+
+        onConfirm: () => {
+            const reasonInput = document.getElementById('orderRefuseReason');
+            const reasonValue = reasonInput ? reasonInput.value.trim() : '';
+
+            if (!reasonValue) {
+                // 사유 미입력 시 경고 후 다시 모달 열기
+                setTimeout(() => {
+                    openModal("WARN", `<p>거절 사유를 입력해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => orderRefuse(id)
+                    });
+                }, 200);
+                return;
+            }
+
+            updateStatusAndReason(id, 7, reasonValue);
+        },
+        onCancel: () => {}
+    });
+}
+
+/* [환불 처리] confirmRefund
+ - 승인(3): 기존 방식 (/owner/patch-order-status)
+ - 거절(5): 사유 포함 방식 (/owner/refund)
+*/
+const confirmRefund = (element) => {
+    const id = element.dataset.id;
+    const refundReason = element.dataset.reason;
+    const reasonText = refundReason ? refundReason : "입력된 환불 사유가 없습니다.";
+
+    const modalContent = `
+        <div style="text-align: left;">
+            <span style="display: block; font-size: 13px; color: #888; margin-bottom: 8px;">구매자 환불 사유</span>
+            <div style="
+                border-left: 4px solid #6c757d;
+                background-color: #f8f9fa;
+                padding: 15px;
+                color: #333;
+                font-size: 14px;
+                line-height: 1.5;
+                word-break: break-all;
+                border-radius: 0 4px 4px 0;
+                margin-bottom: 15px;
+            ">
+                ${reasonText}
+            </div>
+            
+            <label for="refuseReasonInput" style="display: block; font-size: 13px; color: #d9534f; margin-bottom: 8px; font-weight:bold;">
+                환불 거절 시 사유 입력 (필수)
+            </label>
+            <input type="text" id="refuseReasonInput" placeholder="구매자에게 전달될 거절 사유를 입력하세요." 
+                   style="width: 95%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+    `;
+
+    openModal("환불 요청 처리", modalContent, {
+        confirmText: '승인',
+        cancelText: '거절',
+
+        // [승인] 클릭 시 -> 상태 3 (단순 상태 변경)
+        onConfirm: () => {
+            if (typeof Loading !== 'undefined') Loading.show('환불 승인 처리중...');
+
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('id', id);
+            formData.append('status', 3); // 3: 환불 완료
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+                if (typeof Loading !== 'undefined') Loading.hide();
+
+                if (xhr.status < 200 || xhr.status >= 400) {
+                    openModal("ERROR", `<p>서버 통신 오류</p>`, { confirmText: '확인' });
+                    return;
+                }
+                const response = JSON.parse(xhr.responseText);
+                if (response.result === 'SUCCESS') {
+                    openModal("SUCCESS", `<p>환불이 승인되었습니다.</p>`, { onConfirm: () => location.reload() });
+                } else {
+                    openModal("FAILURE", `<p>처리 실패</p>`, { confirmText: '확인' });
+                }
+            };
+            xhr.open('PATCH', '/owner/patch-order-status'); // 승인은 기존 경로 유지 (사유 필요 없음)
+            xhr.send(formData);
+        },
+
+        // [거절] 클릭 시 -> 상태 5 + 사유 전송 (/owner/refund)
+        onCancel: () => {
+            const reasonInput = document.getElementById('refuseReasonInput');
+            const reasonValue = reasonInput ? reasonInput.value.trim() : '';
+
+            if (!reasonValue) {
+                setTimeout(() => {
+                    openModal("WARN", `<p>거절 사유를 입력해주세요.</p>`, {
+                        confirmText: '확인',
+                        onConfirm: () => confirmRefund(element)
+                    });
+                }, 200);
+                return;
+            }
+
+            // 공통 함수 사용 (/owner/refund)
+            updateStatusAndReason(id, 5, reasonValue);
         }
     });
 }

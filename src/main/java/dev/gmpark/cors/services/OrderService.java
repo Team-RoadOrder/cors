@@ -454,20 +454,25 @@ public class OrderService {
     }
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
-        if( id < 1 || (status != 2 && status != 3) ||
+        // [수정됨] status 검사에 5와 7을 추가했습니다.
+        if( id < 1 ||
+                (status != 2 && status != 3 && status != 0 && status != 5 && status != 7) ||
                 refundReason == null ||
                 refundReason.isEmpty() ||
                 refundReason.length() > 200) {
+
             return CommonResult.FAILURE;
         }
 
+        // (기존 로직 유지) 환불 승인(3)일 때만 환불 처리 로직 실행
         if (status == 3) {
             if (!this.processRefund(id, refundReason)) {
                 return CommonResult.FAILURE;
             }
         }
 
-        return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0 ? CommonResult.SUCCESS : CommonResult.FAILURE;
+        return this.orderMapper.updateOrderItemStatusAndRefundReason(id, status, refundReason) > 0
+                ? CommonResult.SUCCESS : CommonResult.FAILURE;
     }
     private static final Set<String> ALLOWED_COURIERS = Set.of(
             "CJ대한통운",

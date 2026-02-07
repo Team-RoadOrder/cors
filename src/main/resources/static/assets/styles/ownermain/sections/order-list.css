@@ -154,7 +154,20 @@
 .order-list .tbody > .list-colum > td:last-child > button:hover {
     opacity: 0.8;
 }
-
+.order-list .tbody > .list-colum > td.two-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+}
+.order-list .tbody > .list-colum > td.two-button button {
+    font-size: 0.8rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.625rem;
+    color: #fefefe;
+    background-color: #79bdf3;
+}
 .order-list .tbody > .list-colum > td.address {
     text-align: left;
     padding: 0.8rem 1rem;

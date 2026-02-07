@@ -28,4 +28,5 @@ public class OrderHistoryVo extends OrderItemEntity {
     private String request;
     private String shopTel;
     private String shopName;
+    private String refundReason;
 }
