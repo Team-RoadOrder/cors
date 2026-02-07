@@ -738,7 +738,6 @@ const toggleLikeItems = (shopId, itemId) => {
 
 
 const deleteMember = (email) => {
-    // 1. 탈퇴 확인 모달 띄우기
     openModal("answer", "<p>정말 탈퇴하시겠습니까?<br>삭제된 계정은 복구할 수 없습니다.</p>", {
         confirmText: '탈퇴',
         cancelText: '취소',
@@ -1026,7 +1025,6 @@ const refundRefuse = (id, shopTel, shopName, reason) => {
 
     openModal("환불 거절 안내", inner, {
         confirmText: '구매확정',
-        // (선택사항) 거절된 상태에서 구매확정을 유도하는 것이 맞다면 유지, 아니라면 '닫기'로 변경 고려
         onConfirm: () => {
             fetch('/my/confirm-purchase', {
                 method: 'POST',
@@ -1058,7 +1056,6 @@ const refundRefuse = (id, shopTel, shopName, reason) => {
 }
 
 const orderCancel = (id, status) => {
-    // 1. 경고 문구 HTML 구성
     const content = `
         <div style="text-align: center;">
             <p style="font-weight: bold; font-size: 16px; color: #d9534f; margin-bottom: 12px;">
@@ -1073,8 +1070,8 @@ const orderCancel = (id, status) => {
 
     // 2. 모달 호출
     openModal("주문 취소", content, {
-        confirmText: '취소 확정', // 버튼 이름을 명확하게 (단순 '확인'보다 나음)
-        confirmColor: '#d9534f', // (선택사항) 위험한 작업임을 알리기 위해 버튼 색상을 붉은 계열로 지정 가능 (모달 구현에 따라 다름)
+        confirmText: '취소 확정',
+        confirmColor: '#d9534f',
 
         onConfirm: () => {
             const xhr = new XMLHttpRequest();
@@ -1096,17 +1093,16 @@ const orderCancel = (id, status) => {
                     return;
                 }
 
-                // 결과 처리
                 const response = JSON.parse(xhr.responseText);
                 if (response.result === 'SUCCESS') {
                     openModal("SUCCESS", `<p>주문이 취소되었습니다.</p>`, {
                         confirmText: '확인',
                         onConfirm: () => {
-                            location.reload(); // 페이지 새로고침하여 상태 반영
+                            location.reload();
                         }
                     });
                 } else {
-                    // 실패 시 메시지 (서버에서 실패 사유를 보낸다면 response.message 등으로 대체 가능)
+
                     openModal("FAILURE", `<p>주문 취소 처리에 실패하였습니다.</p>`, { confirmText: '확인' });
                 }
             };
@@ -1123,10 +1119,9 @@ const orderCancel = (id, status) => {
 }
 
 const checkRefusalAndRefund = (id, reason) => {
-    // 사유가 없을 경우를 대비한 방어 코드
     const safeReason = reason ? reason : '상세 사유가 입력되지 않았습니다.';
 
-    // 모달 내부 HTML 구성
+
     const content = `
         <div style="text-align: center;">
             <p style="margin-bottom: 10px; font-weight: bold; color: #d9534f;">주문 거절 사유 확인</p>
@@ -1162,24 +1157,19 @@ const checkRefusalAndRefund = (id, reason) => {
             const xhr = new XMLHttpRequest();
             const formData = new FormData();
 
-            // id와 변경할 상태값(3: 환불완료) 전송
             formData.append('id', id);
             formData.append('status', 3);
 
             xhr.onreadystatechange = () => {
-                // 완료되지 않았으면 리턴 (단, Loading.hide는 완료 시점에 처리)
                 if (xhr.readyState !== XMLHttpRequest.DONE) return;
 
-                // 로딩 숨기기
                 Loading.hide();
 
-                // HTTP 상태 코드 에러 처리
                 if (xhr.status < 200 || xhr.status >= 400) {
                     openModal("ERROR", `<p>서버 통신 중 에러가 발생했습니다.</p>`, { confirmText: '확인' });
                     return;
                 }
 
-                // 결과 처리
                 try {
                     const response = JSON.parse(xhr.responseText);
                     if (response.result === 'SUCCESS') {
@@ -1198,16 +1188,13 @@ const checkRefusalAndRefund = (id, reason) => {
                 }
             };
 
-            // 요청 전송
             xhr.open('PATCH', '/owner/patch-order-status');
             xhr.send(formData);
 
-            // 로딩 표시
             Loading.show('환불 처리 중...');
         },
         cancelText: '닫기',
         onCancel: () => {
-            // 닫기만 함
         }
     });
 }

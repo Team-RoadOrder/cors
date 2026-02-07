@@ -1247,24 +1247,37 @@ const confirmRefund = (element) => {
 
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                // 로딩 숨기기
                 if (typeof Loading !== 'undefined') Loading.hide();
 
                 if (xhr.status < 200 || xhr.status >= 400) {
                     openModal("ERROR", `<p>서버 통신 오류</p>`, { confirmText: '확인' });
                     return;
                 }
+
                 const response = JSON.parse(xhr.responseText);
-                if (response.result === 'SUCCESS') {
-                    openModal("SUCCESS", `<p>환불이 승인되었습니다.</p>`, { onConfirm: () => location.reload() });
-                } else {
-                    openModal("FAILURE", `<p>처리 실패</p>`, { confirmText: '확인' });
+
+                switch (response.result) {
+                    case 'SUCCESS':
+                        openModal("SUCCESS", `<p>환불이 승인되었습니다.</p>`, {
+                            onConfirm: () => location.reload()
+                        });
+                        break;
+                    case 'FAILURE':
+                        openModal("FAILURE", `<p>처리 실패하였습니다.</p>`, { confirmText: '확인' });
+                        break;
+                    case 'NO_AUTH':
+                        openModal("FAILURE", `<p>권한이 없습니다.</p>`, { confirmText: '확인' });
+                        break;
+                    default:
+                        openModal("WARN", `<p>알 수 없는 응답입니다.</p>`, { confirmText: '확인' });
                 }
             };
-            xhr.open('PATCH', '/owner/patch-order-status'); // 승인은 기존 경로 유지 (사유 필요 없음)
+            xhr.open('PATCH', '/owner/patch-order-status');
             xhr.send(formData);
         },
 
-        // [거절] 클릭 시 -> 상태 5 + 사유 전송 (/owner/refund)
         onCancel: () => {
             const reasonInput = document.getElementById('refuseReasonInput');
             const reasonValue = reasonInput ? reasonInput.value.trim() : '';

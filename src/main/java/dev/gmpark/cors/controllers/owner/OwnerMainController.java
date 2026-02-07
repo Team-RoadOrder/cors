@@ -208,8 +208,13 @@ public class OwnerMainController {
     @ResponseBody
     public Map<String,Object> refundItem(@RequestParam(value = "id") Long id,
                                          @RequestParam(value = "status") Integer status,
-                                         @RequestParam(value = "refundReason") String refundReason) {
+                                         @RequestParam(value = "refundReason") String refundReason,
+                                         @SessionAttribute(value = "sessionUser", required = false) RegisterEntity sessionUser) {
         Map<String, Object> response = new HashMap<>();
+        if( sessionUser.getLevel() == 2 || sessionUser.getLevel() == 1) {
+            response.put("result", "NO_AUTH");
+            return response;
+        }
         CommonResult result = this.orderService.updateOrderItemAndRefundReason(id, status, refundReason);
         response.put("result", result.name());
         return response;
