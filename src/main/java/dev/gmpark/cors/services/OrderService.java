@@ -421,23 +421,28 @@ public class OrderService {
                             .build());
                 }
 
-                // [수정] 포인트 회수 로직 (최대 1% 제한 적용)
-                int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
+                // [수정] 포인트 회수 로직 (최대 1% 제한 적용 및 구매확정 여부 확인)
+                // 구매 확정 시에만 포인트가 적립되므로, 적립된 내역이 있는지 확인 후 회수해야 함
+                int earnedHistoryCount = this.registerMapper.countEarnedPointHistory(order.getUserEmail(), String.valueOf(order.getId()));
                 
-                // 유효성 검사: 회수할 포인트가 환불 금액의 1%를 초과하지 않도록 제한
-                int maxRevokePoints = (int) (refundAmount * 0.01);
-                if (earnedPointsToRevoke > maxRevokePoints) {
-                    earnedPointsToRevoke = maxRevokePoints;
-                }
+                if (earnedHistoryCount > 0) {
+                    int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
+                    
+                    // 유효성 검사: 회수할 포인트가 환불 금액의 1%를 초과하지 않도록 제한
+                    int maxRevokePoints = (int) (refundAmount * 0.01);
+                    if (earnedPointsToRevoke > maxRevokePoints) {
+                        earnedPointsToRevoke = maxRevokePoints;
+                    }
 
-                if (earnedPointsToRevoke > 0) {
-                    this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
-                    this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                            .userEmail(order.getUserEmail())
-                            .amount(-earnedPointsToRevoke)
-                            .type("REVOKE")
-                            .orderId(String.valueOf(order.getId()))
-                            .build());
+                    if (earnedPointsToRevoke > 0) {
+                        this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
+                        this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                                .userEmail(order.getUserEmail())
+                                .amount(-earnedPointsToRevoke)
+                                .type("REVOKE")
+                                .orderId(String.valueOf(order.getId()))
+                                .build());
+                    }
                 }
             }
             return true;
