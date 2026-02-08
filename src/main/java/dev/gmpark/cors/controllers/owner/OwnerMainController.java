@@ -40,9 +40,13 @@ public class OwnerMainController {
         if (sessionUser == null) {
             return "redirect:/login";
         }
+        if( "admin".equalsIgnoreCase(sessionUser.getUsertype())) {
+            return "redirect:/admin";
+        }
         if (!"owner".equalsIgnoreCase(sessionUser.getUsertype())) {
             return "redirect:/main";
         }
+
         ShopInfoEntity shopInfo = ownerMainService.getShopByEmail(sessionUser.getEmail());
 
         if (shopInfo == null) {
