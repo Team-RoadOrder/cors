@@ -421,7 +421,15 @@ public class OrderService {
                             .build());
                 }
 
+                // [수정] 포인트 회수 로직 (최대 1% 제한 적용)
                 int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
+                
+                // 유효성 검사: 회수할 포인트가 환불 금액의 1%를 초과하지 않도록 제한
+                int maxRevokePoints = (int) (refundAmount * 0.01);
+                if (earnedPointsToRevoke > maxRevokePoints) {
+                    earnedPointsToRevoke = maxRevokePoints;
+                }
+
                 if (earnedPointsToRevoke > 0) {
                     this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
                     this.registerMapper.insertPointHistory(PointHistoryEntity.builder()

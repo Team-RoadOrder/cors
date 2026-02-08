@@ -10,6 +10,7 @@ import dev.gmpark.cors.entities.OrderEntity;
 import dev.gmpark.cors.entities.OrderItemEntity;
 import dev.gmpark.cors.entities.PointHistoryEntity;
 import dev.gmpark.cors.entities.RegisterEntity;
+import dev.gmpark.cors.exceptions.TossPaymentException;
 import dev.gmpark.cors.mappers.CartMapper;
 import dev.gmpark.cors.mappers.OrderMapper;
 import dev.gmpark.cors.mappers.RegisterMapper;
@@ -278,7 +279,8 @@ public class PayService {
             orderMapper.insertOrderItems(orderItems);
         }
 
-        return "ORD-" + String.format("%010d", order.getId()); 
+        // [수정] 주문번호 중복 방지를 위해 UUID 추가
+        return "ORD-" + order.getId() + "-" + UUID.randomUUID().toString().substring(0, 8);
     }
 
     /**
@@ -287,11 +289,17 @@ public class PayService {
     @Transactional
     public void verifyAndCompletePayment(String paymentKey, String orderId, Long amount) throws Exception {
         
-        // orderId 파싱 (ORD-0000000123 -> 123)
+        // orderId 파싱 (ORD-123-uuid -> 123)
         long dbId;
         try {
-            dbId = Long.parseLong(orderId.replace("ORD-", ""));
-        } catch (NumberFormatException e) {
+            String[] parts = orderId.split("-");
+            if (parts.length >= 2) {
+                dbId = Long.parseLong(parts[1]);
+            } else {
+                // 기존 형식 호환성 유지 (혹시 모를 경우)
+                dbId = Long.parseLong(orderId.replace("ORD-", ""));
+            }
+        } catch (Exception e) {
             throw new RuntimeException("잘못된 주문 번호입니다.");
         }
 
@@ -310,6 +318,17 @@ public class PayService {
         try {
             tossApiService.confirmPayment(paymentKey, orderId, amount);
         } catch (Exception e) {
+            // DUPLICATED_ORDER_ID 에러 처리
+            if (e instanceof TossPaymentException) {
+                TossPaymentException tossException = (TossPaymentException) e;
+                if ("DUPLICATED_ORDER_ID".equals(tossException.getCode())) {
+                    // 이미 승인된 주문인지 확인
+                    if ("PAID".equals(order.getStatus())) {
+                        // 이미 처리된 주문이면 성공으로 간주하고 리턴
+                        return;
+                    }
+                }
+            }
             throw new RuntimeException("결제 승인 실패: " + e.getMessage());
         }
 
@@ -329,8 +348,13 @@ public class PayService {
     public void completePointPayment(String orderId, String userEmail) {
         long dbId;
         try {
-            dbId = Long.parseLong(orderId.replace("ORD-", ""));
-        } catch (NumberFormatException e) {
+            String[] parts = orderId.split("-");
+            if (parts.length >= 2) {
+                dbId = Long.parseLong(parts[1]);
+            } else {
+                dbId = Long.parseLong(orderId.replace("ORD-", ""));
+            }
+        } catch (Exception e) {
             throw new RuntimeException("잘못된 주문 번호입니다.");
         }
 
