@@ -316,15 +316,21 @@ public class OrderService {
         }
 
         long totalProductPrice = 0;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+
         for (PaymentItemDto item : items) {
-            totalProductPrice += item.getPrice() * item.getQuantity();
+            long itemTotal = item.getPrice() * item.getQuantity();
+            totalProductPrice += itemTotal;
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + itemTotal);
         }
 
         long deliveryFee = 0;
         if (totalProductPrice > 0) {
-            deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD)
-                    ? 0
-                    : DELIVERY_FEE;
+            for (Long shopTotal : shopTotalMap.values()) {
+                if (shopTotal < FREE_DELIVERY_THRESHOLD) {
+                    deliveryFee += DELIVERY_FEE;
+                }
+            }
         }
 
         long totalPrice = totalProductPrice + deliveryFee;
@@ -459,7 +465,16 @@ public class OrderService {
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
 
-
+                // [수정] 배송비 환불 로직 수정
+                // 1. 주문 취소(status 3)인 경우: 배송 전이므로 배송비 환불 가능성 체크
+                // 2. 환불 완료(status 3)인데 이전 상태가 환불 요청(2)인 경우: 배송 후 환불이므로 배송비 환불 X
+                // 하지만 현재 메서드에서는 이전 상태를 알 수 없음.
+                // 따라서, 현재 아이템의 상태가 이미 '배송중(1)' 또는 '배송완료(6)' 등을 거쳤는지 확인하거나,
+                // 단순히 '환불 요청(2)' 상태에서 넘어온 것인지를 판단해야 함.
+                // updateOrderItemAndRefundReason 메서드에서 status 3으로 변경 시 호출되므로,
+                // DB상의 현재 상태(변경 전 상태)를 확인하면 됨.
+                
+                // orderItem은 DB에서 조회한 상태이므로 변경 전 상태임.
                 boolean isReturnRequest = (orderItem.getStatus() == 2 || orderItem.getStatus() == 7); // 환불 요청 or 환불 거절 상태
                 
                 // 주문 취소(배송 전)일 때만 배송비 환불 로직 수행
@@ -493,51 +508,76 @@ public class OrderService {
                 long refundAmount = 0;
 
                 if (balanceAmount > 0) {
-                    // [수정] 포인트 우선 환불 로직 적용
+                    // [수정] 환불 로직 개선: 기본적으로 현금 우선 환불, 마지막 상품일 때 포인트 우선 환불
                     
-                    // 주문 당시 총 금액 계산
+                    // 1. 남은 아이템 확인 (마지막 상품인지 체크)
                     List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
-                    long originalTotalOrderPrice = 0;
-                    Map<Integer, Long> shopTotalMap = new HashMap<>();
+                    boolean isLastItem = true;
                     for (OrderItemEntity item : allItems) {
-                        long p = item.getPrice() * item.getQuantity();
-                        originalTotalOrderPrice += p;
-                        shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + p);
+                        // 현재 환불하려는 아이템이 아니고, 아직 환불되지 않은(status != 3) 아이템이 있다면 마지막이 아님
+                        if (item.getId() != null && !item.getId().equals(orderItemId) && item.getStatus() != 3) {
+                            isLastItem = false;
+                            break;
+                        }
                     }
-                    long originalDeliveryFee = 0;
-                    for (Long shopTotal : shopTotalMap.values()) {
-                        if (shopTotal < FREE_DELIVERY_THRESHOLD) originalDeliveryFee += DELIVERY_FEE;
-                    }
-                    originalTotalOrderPrice += originalDeliveryFee;
-                    
-                    long totalUsedPoints = originalTotalOrderPrice - order.getTotalPrice();
                     
                     long refundPoint = 0;
                     long refundCash = 0;
                     
-                    // 잔여 사용 포인트 계산
-                    int refundedPoints = this.registerMapper.selectTotalRefundedPointsByOrderId(String.valueOf(order.getId()));
-                    long remainingUsedPoints = totalUsedPoints - refundedPoints;
-                    
-                    if (remainingUsedPoints < 0) remainingUsedPoints = 0;
-                    
-                    if (remainingUsedPoints > 0) {
-                        if (cancelAmount >= remainingUsedPoints) {
-                            refundPoint = remainingUsedPoints;
-                            refundCash = cancelAmount - remainingUsedPoints;
-                        } else {
-                            refundPoint = cancelAmount;
-                            refundCash = 0;
-                        }
-                    } else {
-                        refundPoint = 0;
-                        refundCash = cancelAmount;
-                    }
-                    
-                    // 취소 사유 정의 (변수 복구)
+                    // 취소 사유 정의
                     String cancelReason = manualReason != null ? manualReason :
                             (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
 
+                    if (isLastItem) {
+                        // [마지막 상품] 포인트 우선 환불 (남은 포인트 전액 환불)
+                        
+                        // 주문 당시 총 금액 및 사용 포인트 계산
+                        long originalTotalOrderPrice = 0;
+                        Map<Integer, Long> shopTotalMap = new HashMap<>();
+                        for (OrderItemEntity item : allItems) {
+                            long p = item.getPrice() * item.getQuantity();
+                            originalTotalOrderPrice += p;
+                            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + p);
+                        }
+                        long originalDeliveryFee = 0;
+                        for (Long shopTotal : shopTotalMap.values()) {
+                            if (shopTotal < FREE_DELIVERY_THRESHOLD) originalDeliveryFee += DELIVERY_FEE;
+                        }
+                        originalTotalOrderPrice += originalDeliveryFee;
+                        
+                        long totalUsedPoints = originalTotalOrderPrice - order.getTotalPrice();
+                        
+                        // 잔여 사용 포인트 계산
+                        int refundedPoints = this.registerMapper.selectTotalRefundedPointsByOrderId(String.valueOf(order.getId()));
+                        long remainingUsedPoints = totalUsedPoints - refundedPoints;
+                        
+                        if (remainingUsedPoints < 0) remainingUsedPoints = 0;
+                        
+                        // 포인트 우선 환불
+                        if (remainingUsedPoints > 0) {
+                            if (cancelAmount >= remainingUsedPoints) {
+                                refundPoint = remainingUsedPoints;
+                                refundCash = cancelAmount - remainingUsedPoints;
+                            } else {
+                                refundPoint = cancelAmount;
+                                refundCash = 0;
+                            }
+                        } else {
+                            refundPoint = 0;
+                            refundCash = cancelAmount;
+                        }
+                        
+                    } else {
+                        // [부분 환불] 현금 우선 환불
+                        if (cancelAmount <= balanceAmount) {
+                            refundCash = cancelAmount;
+                            refundPoint = 0;
+                        } else {
+                            refundCash = balanceAmount;
+                            refundPoint = cancelAmount - balanceAmount;
+                        }
+                    }
+                    
                     // 토스 환불 (현금 부분)
                     if (refundCash > 0) {
                         if (refundCash > balanceAmount) {
@@ -561,7 +601,8 @@ public class OrderService {
                 // 포인트 회수 로직 (구매 확정 시 적립된 포인트가 있다면 회수)
                 int earnedHistoryCount = this.registerMapper.countEarnedPointHistory(order.getUserEmail(), String.valueOf(order.getId()));
                 
-                if (earnedHistoryCount > 0) {
+                // [수정] 해당 아이템이 구매 확정 상태(4)였을 때만 포인트 회수
+                if (earnedHistoryCount > 0 && orderItem.getStatus() == 4) {
                     int earnedPointsToRevoke = (int) (cancelAmount * POINT_EARN_RATE); // 상품 가격 기준
                     
                     int maxRevokePoints = (int) (cancelAmount * 0.01);
@@ -602,7 +643,6 @@ public class OrderService {
     }
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
-        // [수정됨] status 검사에 5와 7을 추가했습니다.
         if( id < 1 ||
                 (status != 2 && status != 3 && status != 0 && status != 5 && status != 7) ||
                 refundReason == null ||
@@ -612,7 +652,6 @@ public class OrderService {
             return CommonResult.FAILURE;
         }
 
-        // (기존 로직 유지) 환불 승인(3)일 때만 환불 처리 로직 실행
         if (status == 3) {
             if (!this.processRefund(id, refundReason)) {
                 return CommonResult.FAILURE;
