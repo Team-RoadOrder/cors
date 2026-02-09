@@ -43,4 +43,7 @@ public interface RegisterMapper {
 
     // 추가: 특정 주문에 대해 적립된 포인트 내역이 있는지 확인
     int countEarnedPointHistory(@Param("userEmail") String userEmail, @Param("orderId") String orderId);
+
+    // 추가: 특정 주문에 대해 환불된 포인트 총합 조회
+    int selectTotalRefundedPointsByOrderId(@Param("orderId") String orderId);
 }

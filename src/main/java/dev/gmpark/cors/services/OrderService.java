@@ -316,21 +316,15 @@ public class OrderService {
         }
 
         long totalProductPrice = 0;
-        Map<Integer, Long> shopTotalMap = new HashMap<>();
-
         for (PaymentItemDto item : items) {
-            long itemTotal = item.getPrice() * item.getQuantity();
-            totalProductPrice += itemTotal;
-            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + itemTotal);
+            totalProductPrice += item.getPrice() * item.getQuantity();
         }
 
         long deliveryFee = 0;
         if (totalProductPrice > 0) {
-            for (Long shopTotal : shopTotalMap.values()) {
-                if (shopTotal < FREE_DELIVERY_THRESHOLD) {
-                    deliveryFee += DELIVERY_FEE;
-                }
-            }
+            deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD)
+                    ? 0
+                    : DELIVERY_FEE;
         }
 
         long totalPrice = totalProductPrice + deliveryFee;
@@ -465,24 +459,32 @@ public class OrderService {
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
 
-                List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
 
-                long shopTotalPrice = 0;
-                int activeShopItemCount = 0;
-                int targetShopId = orderItem.getShopId();
+                boolean isReturnRequest = (orderItem.getStatus() == 2 || orderItem.getStatus() == 7); // 환불 요청 or 환불 거절 상태
+                
+                // 주문 취소(배송 전)일 때만 배송비 환불 로직 수행
+                if (!isReturnRequest) {
+                    List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
 
-                for (OrderItemEntity item : allItems) {
-                    if (item.getShopId() == targetShopId) {
-                        shopTotalPrice += item.getPrice() * item.getQuantity();
-                        if (item.getId() != null && item.getId().longValue() != orderItemId && item.getStatus() != 3) {
-                            activeShopItemCount++;
+                    long shopTotalPrice = 0;
+                    int activeShopItemCount = 0;
+                    int targetShopId = orderItem.getShopId();
+
+                    for (OrderItemEntity item : allItems) {
+                        if (item.getShopId() == targetShopId) {
+                            shopTotalPrice += item.getPrice() * item.getQuantity();
+                            // 현재 취소하려는 아이템을 제외하고, 취소되지 않은(status != 3) 아이템이 있는지 확인
+                            if (item.getId() != null && !item.getId().equals(orderItemId) && item.getStatus() != 3) {
+                                activeShopItemCount++;
+                            }
                         }
                     }
-                }
 
-                if (activeShopItemCount == 0) {
-                    long deliveryFee = (shopTotalPrice >= FREE_DELIVERY_THRESHOLD || shopTotalPrice == 0) ? 0 : DELIVERY_FEE;
-                    cancelAmount += deliveryFee;
+                    // 해당 샵의 모든 아이템이 취소되는 경우에만 배송비 환불
+                    if (activeShopItemCount == 0) {
+                        long deliveryFee = (shopTotalPrice >= FREE_DELIVERY_THRESHOLD || shopTotalPrice == 0) ? 0 : DELIVERY_FEE;
+                        cancelAmount += deliveryFee;
+                    }
                 }
 
                 JsonNode paymentInfo = this.tossApiService.getPayment(order.getPaymentKey());
@@ -491,28 +493,91 @@ public class OrderService {
                 long refundAmount = 0;
 
                 if (balanceAmount > 0) {
-                    refundAmount = cancelAmount;
-                    if (cancelAmount > balanceAmount) {
-                        refundAmount = balanceAmount;
+                    // [수정] 포인트 우선 환불 로직 적용
+                    
+                    // 주문 당시 총 금액 계산
+                    List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
+                    long originalTotalOrderPrice = 0;
+                    Map<Integer, Long> shopTotalMap = new HashMap<>();
+                    for (OrderItemEntity item : allItems) {
+                        long p = item.getPrice() * item.getQuantity();
+                        originalTotalOrderPrice += p;
+                        shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + p);
                     }
-
+                    long originalDeliveryFee = 0;
+                    for (Long shopTotal : shopTotalMap.values()) {
+                        if (shopTotal < FREE_DELIVERY_THRESHOLD) originalDeliveryFee += DELIVERY_FEE;
+                    }
+                    originalTotalOrderPrice += originalDeliveryFee;
+                    
+                    long totalUsedPoints = originalTotalOrderPrice - order.getTotalPrice();
+                    
+                    long refundPoint = 0;
+                    long refundCash = 0;
+                    
+                    // 잔여 사용 포인트 계산
+                    int refundedPoints = this.registerMapper.selectTotalRefundedPointsByOrderId(String.valueOf(order.getId()));
+                    long remainingUsedPoints = totalUsedPoints - refundedPoints;
+                    
+                    if (remainingUsedPoints < 0) remainingUsedPoints = 0;
+                    
+                    if (remainingUsedPoints > 0) {
+                        if (cancelAmount >= remainingUsedPoints) {
+                            refundPoint = remainingUsedPoints;
+                            refundCash = cancelAmount - remainingUsedPoints;
+                        } else {
+                            refundPoint = cancelAmount;
+                            refundCash = 0;
+                        }
+                    } else {
+                        refundPoint = 0;
+                        refundCash = cancelAmount;
+                    }
+                    
+                    // 취소 사유 정의 (변수 복구)
                     String cancelReason = manualReason != null ? manualReason :
                             (orderItem.getRefundReason() != null ? orderItem.getRefundReason() : "관리자 취소");
 
-                    if (refundAmount > 0) {
-                        this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, refundAmount);
+                    // 토스 환불 (현금 부분)
+                    if (refundCash > 0) {
+                        if (refundCash > balanceAmount) {
+                            refundCash = balanceAmount; // 예외 상황 방지
+                        }
+                        this.tossApiService.cancelPayment(order.getPaymentKey(), cancelReason, refundCash);
+                    }
+                    
+                    // 포인트 환불 (포인트 부분)
+                    if (refundPoint > 0) {
+                        this.registerMapper.updatePoint(order.getUserEmail(), (int) refundPoint);
+                        this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                                .userEmail(order.getUserEmail())
+                                .amount((int) refundPoint)
+                                .type("REFUND")
+                                .orderId(String.valueOf(order.getId()))
+                                .build());
                     }
                 }
 
-                long pointRefundAmount = cancelAmount - refundAmount;
-                if (pointRefundAmount > 0) {
-                    this.registerMapper.updatePoint(order.getUserEmail(), (int) pointRefundAmount);
-                    this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                            .userEmail(order.getUserEmail())
-                            .amount((int) pointRefundAmount)
-                            .type("REFUND")
-                            .orderId(String.valueOf(order.getId()))
-                            .build());
+                // 포인트 회수 로직 (구매 확정 시 적립된 포인트가 있다면 회수)
+                int earnedHistoryCount = this.registerMapper.countEarnedPointHistory(order.getUserEmail(), String.valueOf(order.getId()));
+                
+                if (earnedHistoryCount > 0) {
+                    int earnedPointsToRevoke = (int) (cancelAmount * POINT_EARN_RATE); // 상품 가격 기준
+                    
+                    int maxRevokePoints = (int) (cancelAmount * 0.01);
+                    if (earnedPointsToRevoke > maxRevokePoints) {
+                        earnedPointsToRevoke = maxRevokePoints;
+                    }
+
+                    if (earnedPointsToRevoke > 0) {
+                        this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
+                        this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
+                                .userEmail(order.getUserEmail())
+                                .amount(-earnedPointsToRevoke)
+                                .type("REVOKE")
+                                .orderId(String.valueOf(order.getId()))
+                                .build());
+                    }
                 }
             }
             return true;
@@ -537,6 +602,7 @@ public class OrderService {
     }
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
+        // [수정됨] status 검사에 5와 7을 추가했습니다.
         if( id < 1 ||
                 (status != 2 && status != 3 && status != 0 && status != 5 && status != 7) ||
                 refundReason == null ||
@@ -546,6 +612,7 @@ public class OrderService {
             return CommonResult.FAILURE;
         }
 
+        // (기존 로직 유지) 환불 승인(3)일 때만 환불 처리 로직 실행
         if (status == 3) {
             if (!this.processRefund(id, refundReason)) {
                 return CommonResult.FAILURE;

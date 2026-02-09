@@ -168,4 +168,12 @@
           AND `type` = 'EARN'
     </select>
 
+    <!-- 추가: 특정 주문에 대해 환불된 포인트 총합 조회 -->
+    <select id="selectTotalRefundedPointsByOrderId" resultType="int">
+        SELECT IFNULL(SUM(`amount`), 0)
+        FROM `cors`.`point_histories`
+        WHERE `order_id` = #{orderId}
+          AND `type` = 'REFUND'
+    </select>
+
 </mapper>
