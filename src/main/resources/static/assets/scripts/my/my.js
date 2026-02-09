@@ -150,7 +150,7 @@ document.addEventListener('click', function(e) {
         const dialog = document.getElementById("dialog");
         const modal = dialog.querySelector(".modal");
         
-        new daum.Postcode({
+        new kakao.Postcode({
             oncomplete: function(data) {
                 let addr = '';
                 if (data.userSelectedType === 'R') {

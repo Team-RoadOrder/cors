@@ -4,7 +4,7 @@ $close = $dialog.querySelector(":scope >.close");
 $buttonCustomer = document.getElementById("customer-button");
 $buttonOwner = document.getElementById("owner-button");
 function loadAddress() {
-    new daum.Postcode({
+    new kakao.Postcode({
         oncomplete: function(data) {
             let addr = '';
             if (data.userSelectedType === 'R') {
@@ -22,7 +22,7 @@ function loadAddress() {
     $dialog.style.display='block';
 }
 function loadAddress2() {
-    new daum.Postcode({
+    new kakao.Postcode({
         oncomplete: function(data) {
             let addr = '';
             if (data.userSelectedType === 'R') {

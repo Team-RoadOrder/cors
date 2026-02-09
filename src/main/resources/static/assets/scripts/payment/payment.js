@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const addressDetailInput = document.getElementById("address_detail_input");
 
     function loadAddress() {
-        new daum.Postcode({
+        new kakao.Postcode({
             oncomplete: function(data) {
                 let addr = '';
                 if (data.userSelectedType === 'R') {
