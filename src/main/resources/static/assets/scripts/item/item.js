@@ -1338,8 +1338,12 @@ const sendReservationRequest = (shopId, itemId, size, dateStr) => {
                     confirmText: '확인',
                     onConfirm: () => {  }
                 });
+            }else if (response.result === 'FAILURE_TIME_OVER') {
+                openModal("예약 불가", `<p>현재 시간보다 이전 시간으로는<br>예약할 수 없습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
             }
-
             else {
                 openModal("오류", `<p>예약 실패: ${response.message || '다시 시도해주세요.'}</p>`, { confirmText: '확인' });
             }

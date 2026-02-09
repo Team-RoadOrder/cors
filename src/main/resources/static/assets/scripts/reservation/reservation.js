@@ -134,6 +134,24 @@ const sendItems = () => {
                     onConfirm: () => { location.href = '/login'; }
                 });
                 break;
+            case "FAILURE_TIME_OVER":
+                openModal("예약 불가", `<p>현재 시간보다 이전 시간으로는<br>예약할 수 없습니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
+                break;
+            case "FAILURE_SHOP_CLOSED":
+                openModal("FAILURE_SHOP_CLOSED", `<p>영업시간중에만 예약이 가능합니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
+                break;
+            case "FAILURE_TOO_CLOSE_TO_CLOSE":
+                openModal("FAILURE_TOO_CLOSE_TO_CLOSE", `<p>마감시간 30분전에는 예약이 불가능합니다.</p>`, {
+                    confirmText: '확인',
+                    onConfirm: () => {  }
+                });
+                break;
             case "FAILURE":
                 openModal("FAILURE", `<p>예약 처리에 실패하였습니다.</p>`, {
                     confirmText: '확인',
