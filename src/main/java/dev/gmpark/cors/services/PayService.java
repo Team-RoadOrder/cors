@@ -471,10 +471,8 @@ public class PayService {
         // 4. 주문 아이템 상태 업데이트 (4: 구매확정)
         orderMapper.updateOrderItemStatus(orderItemId, 4);
 
-        // 5. 포인트 적립 (해당 아이템 가격의 1%)
-        // 아이템 가격 * 수량
-        long itemTotalPrice = orderItem.getPrice() * orderItem.getQuantity();
-        int earnedPoints = (int) (itemTotalPrice * 0.01);
+        // 5. 포인트 적립 (실 결제 금액 비율에 따른 적립)
+        int earnedPoints = this.orderService.calculateEarnedPoints(orderItemId);
 
         if (earnedPoints > 0) {
             registerMapper.updatePoint(order.getUserEmail(), earnedPoints);

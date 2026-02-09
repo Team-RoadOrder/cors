@@ -399,6 +399,62 @@ public class OrderService {
         return response;
     }
 
+    public int calculateEarnedPoints(long orderItemId) {
+        OrderItemEntity targetItem = this.orderMapper.selectOrderItemById(orderItemId);
+        if (targetItem == null) return 0;
+
+        OrderEntity order = this.orderMapper.selectOrderById(targetItem.getOrderId());
+        if (order == null) return 0;
+
+        List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
+
+        long totalProductPrice = 0;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+        for (OrderItemEntity item : allItems) {
+            long p = item.getPrice() * item.getQuantity();
+            totalProductPrice += p;
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + p);
+        }
+
+        long deliveryFee = 0;
+        for (Long shopTotal : shopTotalMap.values()) {
+            if (shopTotal < FREE_DELIVERY_THRESHOLD) {
+                deliveryFee += DELIVERY_FEE;
+            }
+        }
+
+        long originalTotalPrice = totalProductPrice + deliveryFee;
+        long usedPoints = originalTotalPrice - order.getTotalPrice();
+
+        long pointsForItems = usedPoints - deliveryFee;
+        if (pointsForItems < 0) pointsForItems = 0;
+
+        allItems.sort(Comparator.comparing(OrderItemEntity::getId));
+
+        long remainingPoints = pointsForItems;
+        long allocatedPoints = 0;
+
+        for (OrderItemEntity item : allItems) {
+            long itemPrice = item.getPrice() * item.getQuantity();
+            long apply = 0;
+            if (remainingPoints > 0) {
+                apply = Math.min(remainingPoints, itemPrice);
+            }
+
+            if (item.getId().equals(orderItemId)) {
+                allocatedPoints = apply;
+                break;
+            }
+
+            remainingPoints -= apply;
+        }
+
+        long effectivePrice = (targetItem.getPrice() * targetItem.getQuantity()) - allocatedPoints;
+        if (effectivePrice < 0) effectivePrice = 0;
+
+        return (int) (effectivePrice * POINT_EARN_RATE);
+    }
+
     private boolean processRefund(long orderItemId, String manualReason) {
         try {
             OrderItemEntity orderItem = this.orderMapper.selectOrderItemById(orderItemId);
@@ -463,29 +519,8 @@ public class OrderService {
                             .build());
                 }
 
-                // [수정] 포인트 회수 로직 (최대 1% 제한 적용 및 구매확정 여부 확인)
-                // 구매 확정 시에만 포인트가 적립되므로, 적립된 내역이 있는지 확인 후 회수해야 함
-                int earnedHistoryCount = this.registerMapper.countEarnedPointHistory(order.getUserEmail(), String.valueOf(order.getId()));
-
-                if (earnedHistoryCount > 0) {
-                    int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
-                    
-                    // 유효성 검사: 회수할 포인트가 환불 금액의 1%를 초과하지 않도록 제한
-                    int maxRevokePoints = (int) (refundAmount * 0.01);
-                    if (earnedPointsToRevoke > maxRevokePoints) {
-                        earnedPointsToRevoke = maxRevokePoints;
-                    }
-
-                    if (earnedPointsToRevoke > 0) {
-                        this.registerMapper.updatePoint(order.getUserEmail(), -earnedPointsToRevoke);
-                        this.registerMapper.insertPointHistory(PointHistoryEntity.builder()
-                                .userEmail(order.getUserEmail())
-                                .amount(-earnedPointsToRevoke)
-                                .type("REVOKE")
-                                .orderId(String.valueOf(order.getId()))
-                                .build());
-                    }
-                }
+                // [삭제] 포인트 회수 로직 제거 (사용자 요청)
+                // 구매 확정 후 환불 시에도 적립된 포인트를 유지합니다.
             }
             return true;
         } catch (Exception e) {
