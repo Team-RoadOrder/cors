@@ -186,7 +186,18 @@ public class OrderService {
     }
 
     private CommonResult finalizeOrder(RegisterEntity user, SingleOrderDto dto, long totalProductPrice, List<OrderItemEntity> items) {
-        long deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD || totalProductPrice == 0) ? 0 : DELIVERY_FEE;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+        for (OrderItemEntity item : items) {
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + (item.getPrice() * item.getQuantity()));
+        }
+
+        long deliveryFee = 0;
+        for (Long shopTotal : shopTotalMap.values()) {
+            if (shopTotal < FREE_DELIVERY_THRESHOLD) {
+                deliveryFee += DELIVERY_FEE;
+            }
+        }
+
         long totalPrice = totalProductPrice + deliveryFee;
 
         int usedPoints = dto.getUsedPoints();
@@ -252,6 +263,7 @@ public class OrderService {
                     .price(item.getPrice())
                     .imagePath(item.getImages().isEmpty() ? null : item.getImages().get(0).getImagePath())
                     .availableSizes(sizes)
+                    .shopId(item.getShopId())
                     .build());
         }
         return items;
@@ -286,6 +298,7 @@ public class OrderService {
                     .imagePath(cart.getItemImage())
                     .cartId(cart.getId())
                     .availableSizes(sizes)
+                    .shopId(cart.getShopId())
                     .build());
         }
         return items;
@@ -303,15 +316,21 @@ public class OrderService {
         }
 
         long totalProductPrice = 0;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+
         for (PaymentItemDto item : items) {
-            totalProductPrice += item.getPrice() * item.getQuantity();
+            long itemTotal = item.getPrice() * item.getQuantity();
+            totalProductPrice += itemTotal;
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + itemTotal);
         }
 
         long deliveryFee = 0;
         if (totalProductPrice > 0) {
-            deliveryFee = (totalProductPrice >= FREE_DELIVERY_THRESHOLD)
-                    ? 0
-                    : DELIVERY_FEE;
+            for (Long shopTotal : shopTotalMap.values()) {
+                if (shopTotal < FREE_DELIVERY_THRESHOLD) {
+                    deliveryFee += DELIVERY_FEE;
+                }
+            }
         }
 
         long totalPrice = totalProductPrice + deliveryFee;
@@ -391,6 +410,29 @@ public class OrderService {
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
 
+                // [추가] 배송비 환불 로직 (매장별 배송비 적용)
+                List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
+
+                long shopTotalPrice = 0;
+                int activeShopItemCount = 0;
+                int targetShopId = orderItem.getShopId();
+
+                for (OrderItemEntity item : allItems) {
+                    if (item.getShopId() == targetShopId) {
+                        shopTotalPrice += item.getPrice() * item.getQuantity();
+                        // 현재 취소하려는 상품이 아니고, 환불된 상태(3)가 아니라면 아직 활성 상품이 남아있는 것임
+                        if (item.getId() != null && item.getId().longValue() != orderItemId && item.getStatus() != 3) {
+                            activeShopItemCount++;
+                        }
+                    }
+                }
+
+                // 해당 매장의 마지막 상품 취소 시, 배송비가 부과되었던 주문이라면 배송비도 같이 환불
+                if (activeShopItemCount == 0) {
+                    long deliveryFee = (shopTotalPrice >= FREE_DELIVERY_THRESHOLD || shopTotalPrice == 0) ? 0 : DELIVERY_FEE;
+                    cancelAmount += deliveryFee;
+                }
+
                 JsonNode paymentInfo = this.tossApiService.getPayment(order.getPaymentKey());
                 long balanceAmount = paymentInfo.path("balanceAmount").asLong();
 
@@ -424,7 +466,7 @@ public class OrderService {
                 // [수정] 포인트 회수 로직 (최대 1% 제한 적용 및 구매확정 여부 확인)
                 // 구매 확정 시에만 포인트가 적립되므로, 적립된 내역이 있는지 확인 후 회수해야 함
                 int earnedHistoryCount = this.registerMapper.countEarnedPointHistory(order.getUserEmail(), String.valueOf(order.getId()));
-                
+
                 if (earnedHistoryCount > 0) {
                     int earnedPointsToRevoke = (int) (refundAmount * POINT_EARN_RATE);
                     

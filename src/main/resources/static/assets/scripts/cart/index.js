@@ -13,6 +13,9 @@ const calculateTotal = () => {
     let totalProductPrice = 0;
     let deliveryFee = 0;
     let totalCount = 0; // 선택된 상품 개수
+    
+    // 매장별 주문 금액 합계 저장용 맵
+    const shopTotalPrices = {};
 
     const $checkboxes = document.querySelectorAll('.item-checkbox');
     $checkboxes.forEach($cb => {
@@ -27,11 +30,23 @@ const calculateTotal = () => {
             const qty = parseInt($qtyInput.value) || 1;
             
             totalCount += qty; // 변경: 총 수량
+            
+            // 매장 ID 가져오기 (HTML에 data-shop-id 속성이 있다고 가정)
+            const shopId = $cartItem.dataset.shopId;
+            if (shopId) {
+                if (!shopTotalPrices[shopId]) {
+                    shopTotalPrices[shopId] = 0;
+                }
+                shopTotalPrices[shopId] += price;
+            }
         }
     });
 
-    if (totalProductPrice > 0) {
-        deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
+    // 매장별 배송비 계산 (7만원 미만 시 3000원)
+    for (const shopId in shopTotalPrices) {
+        if (shopTotalPrices[shopId] < 70000) {
+            deliveryFee += 3000;
+        }
     }
 
     $totalProductPrice.textContent = totalProductPrice.toLocaleString() + '원';

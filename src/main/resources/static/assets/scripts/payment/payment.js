@@ -260,14 +260,36 @@ document.addEventListener("DOMContentLoaded", function() {
         let totalQuantity = 0;
         const itemDetails = document.querySelectorAll('.item-detail');
         
+        // 매장별 주문 금액 합계 저장용 맵
+        const shopTotalPrices = {};
+
         itemDetails.forEach(detail => {
             const qty = parseInt(detail.querySelector('.item-qty-input').value);
             const unitPrice = parseInt(detail.querySelector('.price').dataset.unitPrice);
-            totalProductPrice += (unitPrice * qty);
+            const price = unitPrice * qty;
+            totalProductPrice += price;
             totalQuantity += qty;
+
+            // 매장 ID 가져오기 (HTML에 data-shop-id 속성이 있다고 가정)
+            // .item-detail의 상위 요소인 .order-item에서 shopId를 가져와야 함
+            const orderItem = detail.closest('.order-item');
+            const shopId = orderItem.dataset.shopId;
+            
+            if (shopId) {
+                if (!shopTotalPrices[shopId]) {
+                    shopTotalPrices[shopId] = 0;
+                }
+                shopTotalPrices[shopId] += price;
+            }
         });
 
-        const deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
+        // 매장별 배송비 계산 (7만원 미만 시 3000원)
+        let deliveryFee = 0;
+        for (const shopId in shopTotalPrices) {
+            if (shopTotalPrices[shopId] < 70000) {
+                deliveryFee += 3000;
+            }
+        }
         
         // 포인트 적용 전 총액
         let totalPrice = totalProductPrice + deliveryFee;

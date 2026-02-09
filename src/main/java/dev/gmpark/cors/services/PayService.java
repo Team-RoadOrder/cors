@@ -75,14 +75,22 @@ public class PayService {
         result.put("items", items);
 
         long totalProductPrice = 0;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+
         for (PaymentItemDto item : items) {
-            totalProductPrice += item.getPrice() * item.getQuantity();
+            long itemTotal = item.getPrice() * item.getQuantity();
+            totalProductPrice += itemTotal;
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + itemTotal);
         }
         result.put("totalProductPrice", totalProductPrice);
 
         long deliveryFee = 0;
         if (totalProductPrice > 0) {
-            deliveryFee = (totalProductPrice >= 70000) ? 0 : 3000;
+            for (Long shopTotal : shopTotalMap.values()) {
+                if (shopTotal < 70000) {
+                    deliveryFee += 3000;
+                }
+            }
         }
         result.put("deliveryFee", deliveryFee);
         result.put("totalPrice", totalProductPrice + deliveryFee);
@@ -249,7 +257,18 @@ public class PayService {
         }
 
         // 3. 배송비 및 최종 결제 금액 계산
-        long deliveryFee = (totalProductPrice >= 70000 || totalProductPrice == 0) ? 0 : 3000;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+        for (OrderItemEntity item : orderItems) {
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + (item.getPrice() * item.getQuantity()));
+        }
+
+        long deliveryFee = 0;
+        for (Long shopTotal : shopTotalMap.values()) {
+            if (shopTotal < 70000) {
+                deliveryFee += 3000;
+            }
+        }
+
         long totalPrice = totalProductPrice + deliveryFee - dto.getUsedPoints();
         
         if (totalPrice < 0) {
@@ -386,8 +405,12 @@ public class PayService {
         List<OrderItemEntity> orderItems = orderMapper.selectOrderItemsByOrderId(order.getId());
 
         long totalProductPrice = 0;
+        Map<Integer, Long> shopTotalMap = new HashMap<>();
+
         for (OrderItemEntity item : orderItems) {
-            totalProductPrice += item.getPrice() * item.getQuantity();
+            long itemTotal = item.getPrice() * item.getQuantity();
+            totalProductPrice += itemTotal;
+            shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + itemTotal);
 
             // 장바구니 삭제
             CartEntity cartItem = cartMapper.selectCartItem(order.getUserEmail(), item.getItemId(), item.getSize());
@@ -397,7 +420,13 @@ public class PayService {
         }
 
         // 6. 포인트 차감 (원래 금액 - 실 결제 금액 = 사용 포인트)
-        long deliveryFee = (totalProductPrice >= 70000 || totalProductPrice == 0) ? 0 : 3000;
+        long deliveryFee = 0;
+        for (Long shopTotal : shopTotalMap.values()) {
+            if (shopTotal < 70000) {
+                deliveryFee += 3000;
+            }
+        }
+
         long originalTotalPrice = totalProductPrice + deliveryFee;
         long usedPoints = originalTotalPrice - order.getTotalPrice();
 
@@ -446,7 +475,7 @@ public class PayService {
         // 아이템 가격 * 수량
         long itemTotalPrice = orderItem.getPrice() * orderItem.getQuantity();
         int earnedPoints = (int) (itemTotalPrice * 0.01);
-        
+
         if (earnedPoints > 0) {
             registerMapper.updatePoint(order.getUserEmail(), earnedPoints);
             registerMapper.insertPointHistory(PointHistoryEntity.builder()

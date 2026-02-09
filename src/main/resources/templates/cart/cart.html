@@ -49,7 +49,7 @@
 
                     <th:block th:unless="${#lists.isEmpty(cartList)}">
                         <div class="cart-items-list">
-                            <div class="cart-item" th:each="cart : ${cartList}" th:data-item-id="${cart.itemId}">
+                            <div class="cart-item" th:each="cart : ${cartList}" th:data-item-id="${cart.itemId}" th:data-shop-id="${cart.shopId}">
                                 <div class="item-check">
                                     <input type="checkbox" class="item-checkbox" th:value="${cart.id}" th:id="'cart-item-' + ${cart.id}">
                                     <label th:for="'cart-item-' + ${cart.id}" class="hidden-label">선택</label>
