@@ -408,51 +408,50 @@ public class OrderService {
 
         List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
 
-        long totalProductPrice = 0;
+        long originalTotalOrderPrice = 0;
         Map<Integer, Long> shopTotalMap = new HashMap<>();
+
         for (OrderItemEntity item : allItems) {
             long p = item.getPrice() * item.getQuantity();
-            totalProductPrice += p;
+            originalTotalOrderPrice += p;
             shopTotalMap.put(item.getShopId(), shopTotalMap.getOrDefault(item.getShopId(), 0L) + p);
         }
 
-        long deliveryFee = 0;
+        long originalDeliveryFee = 0;
         for (Long shopTotal : shopTotalMap.values()) {
-            if (shopTotal < FREE_DELIVERY_THRESHOLD) {
-                deliveryFee += DELIVERY_FEE;
-            }
+            if (shopTotal < 70000) originalDeliveryFee += 3000;
         }
+        originalTotalOrderPrice += originalDeliveryFee;
 
-        long originalTotalPrice = totalProductPrice + deliveryFee;
-        long usedPoints = originalTotalPrice - order.getTotalPrice();
+        long totalPointsToDeduct = originalTotalOrderPrice - order.getTotalPrice();
 
-        long pointsForItems = usedPoints - deliveryFee;
-        if (pointsForItems < 0) pointsForItems = 0;
 
-        allItems.sort(Comparator.comparing(OrderItemEntity::getId));
+        List<OrderItemEntity> validItems = allItems.stream()
+                .filter(item -> item.getStatus() != 3 && item.getStatus() != 5 && item.getStatus() != 7)
+                .sorted(Comparator.comparing(OrderItemEntity::getId))
+                .collect(Collectors.toList());
 
-        long remainingPoints = pointsForItems;
-        long allocatedPoints = 0;
+        long remainingPoints = totalPointsToDeduct;
+        long effectivePrice = 0;
 
-        for (OrderItemEntity item : allItems) {
-            long itemPrice = item.getPrice() * item.getQuantity();
-            long apply = 0;
+        for (OrderItemEntity item : validItems) {
+            long itemOriginalPrice = item.getPrice() * item.getQuantity();
+            long deductAmount = 0;
+
             if (remainingPoints > 0) {
-                apply = Math.min(remainingPoints, itemPrice);
+                deductAmount = Math.min(itemOriginalPrice, remainingPoints);
+                remainingPoints -= deductAmount;
             }
 
             if (item.getId().equals(orderItemId)) {
-                allocatedPoints = apply;
+                effectivePrice = itemOriginalPrice - deductAmount;
                 break;
             }
-
-            remainingPoints -= apply;
         }
 
-        long effectivePrice = (targetItem.getPrice() * targetItem.getQuantity()) - allocatedPoints;
         if (effectivePrice < 0) effectivePrice = 0;
 
-        return (int) (effectivePrice * POINT_EARN_RATE);
+        return (int) (effectivePrice * 0.01);
     }
 
     private boolean processRefund(long orderItemId, String manualReason) {
@@ -466,7 +465,6 @@ public class OrderService {
             if (order.getPaymentKey() != null && !order.getPaymentKey().isBlank()) {
                 long cancelAmount = orderItem.getPrice() * orderItem.getQuantity();
 
-                // [추가] 배송비 환불 로직 (매장별 배송비 적용)
                 List<OrderItemEntity> allItems = this.orderMapper.selectOrderItemsByOrderId(order.getId());
 
                 long shopTotalPrice = 0;
@@ -476,14 +474,12 @@ public class OrderService {
                 for (OrderItemEntity item : allItems) {
                     if (item.getShopId() == targetShopId) {
                         shopTotalPrice += item.getPrice() * item.getQuantity();
-                        // 현재 취소하려는 상품이 아니고, 환불된 상태(3)가 아니라면 아직 활성 상품이 남아있는 것임
                         if (item.getId() != null && item.getId().longValue() != orderItemId && item.getStatus() != 3) {
                             activeShopItemCount++;
                         }
                     }
                 }
 
-                // 해당 매장의 마지막 상품 취소 시, 배송비가 부과되었던 주문이라면 배송비도 같이 환불
                 if (activeShopItemCount == 0) {
                     long deliveryFee = (shopTotalPrice >= FREE_DELIVERY_THRESHOLD || shopTotalPrice == 0) ? 0 : DELIVERY_FEE;
                     cancelAmount += deliveryFee;
@@ -518,9 +514,6 @@ public class OrderService {
                             .orderId(String.valueOf(order.getId()))
                             .build());
                 }
-
-                // [삭제] 포인트 회수 로직 제거 (사용자 요청)
-                // 구매 확정 후 환불 시에도 적립된 포인트를 유지합니다.
             }
             return true;
         } catch (Exception e) {
@@ -544,7 +537,6 @@ public class OrderService {
     }
 
     public CommonResult updateOrderItemAndRefundReason(long id, int status, String refundReason) {
-        // [수정됨] status 검사에 5와 7을 추가했습니다.
         if( id < 1 ||
                 (status != 2 && status != 3 && status != 0 && status != 5 && status != 7) ||
                 refundReason == null ||
@@ -554,7 +546,6 @@ public class OrderService {
             return CommonResult.FAILURE;
         }
 
-        // (기존 로직 유지) 환불 승인(3)일 때만 환불 처리 로직 실행
         if (status == 3) {
             if (!this.processRefund(id, refundReason)) {
                 return CommonResult.FAILURE;
