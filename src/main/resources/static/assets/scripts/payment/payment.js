@@ -246,6 +246,31 @@ document.addEventListener("DOMContentLoaded", function() {
                 orderItemsList.appendChild(newItem);
                 updateTotalPrice();
             }
+            // 아이템 삭제 (x) 버튼
+            else if (e.target.classList.contains('btn-remove-item')) {
+                const currentItem = e.target.closest('.order-item');
+                const cartId = currentItem.dataset.cartId;
+                
+                const allItems = document.querySelectorAll('.order-item');
+                if (allItems.length <= 1) {
+                    openModal('알림', '최소 1개의 상품은 주문해야 합니다.', { confirmText: '확인' });
+                    return;
+                }
+
+                // DOM에서 제거
+                currentItem.remove();
+                
+                // 해당 cartId를 가진 hidden input도 제거 (장바구니 주문의 경우)
+                if (cartId) {
+                    const hiddenInput = document.querySelector(`.cart-id-hidden[value="${cartId}"]`);
+                    if (hiddenInput) {
+                        hiddenInput.remove();
+                    }
+                }
+                
+                // 가격 업데이트
+                updateTotalPrice();
+            }
         });
     }
 
@@ -444,6 +469,14 @@ document.addEventListener("DOMContentLoaded", function() {
             let newItems = [];
             const orderItems = document.querySelectorAll('.order-item');
             
+            // 주문 아이템이 하나도 없으면 결제 불가
+            if (orderItems.length === 0) {
+                Loading.hide();
+                paymentButton.disabled = false;
+                openModal('알림', '주문할 상품이 없습니다.', { confirmText: '확인' });
+                return;
+            }
+
             orderItems.forEach(item => {
                 const cartId = item.dataset.cartId;
                 const isNew = item.dataset.isNew === 'true';
