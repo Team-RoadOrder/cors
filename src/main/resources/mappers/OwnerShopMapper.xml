@@ -372,10 +372,13 @@
                (SELECT IFNULL(AVG(ir.`rating`), 0) FROM `cors`.`item_reviews` ir WHERE ir.`item_id` = si.`id`) AS `rating`,
                (SELECT COUNT(0) FROM `cors`.`item_reviews` ir WHERE ir.`item_id` = si.`id`) AS `reviewCount`
         FROM `cors`.`shop_items` si
-        WHERE si.`style` IN
-        <foreach collection="categories" item="category" open="(" separator="," close=")">
-            #{category}
-        </foreach>
+        <where>
+            <if test="categories != null and categories.length > 0">
+                <foreach collection="categories" item="category" open="(" separator=" OR " close=")">
+                    FIND_IN_SET(#{category}, REPLACE(si.style, ' ', ''))
+                </foreach>
+            </if>
+        </where>
         ORDER BY `rating` DESC, `reviewCount` DESC, si.`updated_at` DESC
         LIMIT 4
     </select>
@@ -400,10 +403,13 @@
                (SELECT IFNULL(AVG(ir.`rating`), 0) FROM `cors`.`item_reviews` ir WHERE ir.`item_id` = si.`id`) AS `rating`,
                (SELECT COUNT(0) FROM `cors`.`item_reviews` ir WHERE ir.`item_id` = si.`id`) AS `reviewCount`
         FROM `cors`.`shop_items` si
-        WHERE si.`style` IN
-        <foreach collection="categories" item="category" open="(" separator="," close=")">
-            #{category}
-        </foreach>
+        <where>
+            <if test="categories != null and categories.length > 0">
+                <foreach collection="categories" item="category" open="(" separator=" OR " close=")">
+                    FIND_IN_SET(#{category}, REPLACE(si.style, ' ', ''))
+                </foreach>
+            </if>
+        </where>
         ORDER BY si.`updated_at` DESC
     </select>
     <select id="selectCountAllItems" resultType="_int">
