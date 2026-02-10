@@ -17,10 +17,10 @@
     <script defer src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 </head>
 <body>
-<th:block th:replace="~{/fragments/common.html :: customer-header}"></th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-header-scroll-active}">
+<th:block th:replace="~{fragments/common.html :: customer-header}"></th:block>
+<th:block th:replace="~{fragments/common.html :: customer-mobile-header-scroll-active}">
 </th:block>
-<th:block th:replace="~{/fragments/common.html :: customer-mobile-footer}">
+<th:block th:replace="~{fragments/common.html :: customer-mobile-footer}">
 </th:block>
 
 <input type="hidden" id="sessionUserEmail" th:if="${sessionUser != null}" th:value="${sessionUser.email}">
