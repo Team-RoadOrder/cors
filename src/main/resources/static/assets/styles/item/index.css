@@ -42,7 +42,7 @@
 .splash::-webkit-scrollbar {
     display: none;
 }
-
+/*이미지슬라이드-css수정*/
 .image-wrapper {
     display: flex;
     flex-direction: row;
@@ -53,26 +53,28 @@
     flex-shrink: 0;
     background-color: #fff;
     border-radius: 0.25rem;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
+    scroll-behavior: auto;
+
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
+/*이미지슬라이드-css수정*/
+.image-wrapper .image {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding-top: 1rem;
+}
+
 
 .image-wrapper::-webkit-scrollbar {
     display: none;
 }
 
-.image-wrapper .image {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    scroll-snap-align: start;
-    object-fit: contain;
-    padding-top: 1rem;
-}
+
 
 .dot-container {
     display: flex;

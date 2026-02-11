@@ -8,13 +8,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const images = document.querySelectorAll('.image-wrapper .image');
     let currentIndex = 0;
     let slideInterval;
+    let isTransitioning = false; //중복클릭방지
 
-    const scrollToImage = (index) => {
-        if (!images[index] || !imageWrapper) return;
-        imageWrapper.scrollTo({ left: images[index].offsetLeft, behavior: 'smooth' });
-        dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); });
+    if(imageWrapper && images.length > 0){
+        const firstClone = images[0].cloneNode(true);
+        imageWrapper.appendChild(firstClone);
+    }
+
+
+    const scrollToImage = (index, isInstant=false) => {
+        if(!imageWrapper || isTransitioning||images.length === 0) return;
+
+        imageWrapper.style.scrollBehavior = isInstant ? 'auto' : 'smooth';
+
+        const imageWidth = images[0].clientWidth;
+        imageWrapper.scrollTo({ left: imageWidth * index });
+
+
+        const dotIndex = index >= images.length ? 0 : index;
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === dotIndex);
+        });
+
         currentIndex = index;
     };
+
+    if (imageWrapper) {
+        imageWrapper.addEventListener('scroll', () => {
+            const imageWidth = images[0].clientWidth;
+            if (Math.ceil(imageWrapper.scrollLeft) >= imageWidth * images.length) {
+                imageWrapper.style.scrollBehavior = 'auto';
+                imageWrapper.scrollTo({ left: 0 });
+                currentIndex = 0;
+            }
+        });
+    }
+
+    const startAutoSlide = () => {
+        stopAutoSlide();
+        slideInterval = setInterval(() => {
+            scrollToImage(currentIndex + 1);
+        }, 3500);
+    };
+
+    const stopAutoSlide = () => { clearInterval(slideInterval); };
 
     dots.forEach((dot, index) => {
         dot.addEventListener('click', (e) => {
@@ -24,15 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
             startAutoSlide();
         });
     });
-
-    const startAutoSlide = () => {
-        slideInterval = setInterval(() => {
-            let nextIndex = (currentIndex + 1) % images.length;
-            scrollToImage(nextIndex);
-        }, 2000);
-    };
-
-    const stopAutoSlide = () => { clearInterval(slideInterval); };
     if (imageWrapper) {
         imageWrapper.addEventListener('mouseenter', stopAutoSlide);
         imageWrapper.addEventListener('mouseleave', startAutoSlide);
