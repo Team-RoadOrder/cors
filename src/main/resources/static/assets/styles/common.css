@@ -277,7 +277,7 @@
 
 
 /*스마트폰*/
-@media screen and (max-width: 40rem) {
+@media screen and (max-width:48rem) {
     #header {
         display: none;
     }
@@ -300,7 +300,7 @@
     display: flex; /* 레이아웃에 따라 block 또는 flex */
 }
 
-@media screen and (max-width: 40rem) {
+@media screen and (max-width: 48rem) {
     /* =========================================
        1. 헤더 스타일
        ========================================= */
@@ -452,7 +452,7 @@
 }
 
 
-@media screen and (max-width: 40rem) {
+@media screen and (max-width: 48rem) {
     #mobile-header-no-scroll-active {
         display: flex;
         flex-direction: row;
@@ -542,7 +542,7 @@
 #mobile-footer {
     display: none;
 }
-@media screen and (max-width: 40rem) {
+@media screen and (max-width: 48rem) {
     #mobile-footer {
         display: block;
         position: fixed;
