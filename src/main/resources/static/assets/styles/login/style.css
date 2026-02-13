@@ -39,17 +39,9 @@ html, body {
     width: 30rem;
 }
 
-/*.welcome-section video {*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 110%;*/
-/*    height: 110%;*/
-/*    object-fit: cover;*/
-/*    object-position: center 30%;*/
-/*    z-index: -1;*/
-/*    transition: all 0.5s ease;*/
-/*}*/
+.welcome-section video {
+display: none;
+}
 
 .welcome-section .login_back{
     position: absolute;
@@ -383,7 +375,7 @@ html, body {
 
 }
 
-@media (min-width: 50rem) {
+@media (min-width: 31.8795rem) {
     .welcome-section video {
         filter: grayscale(10%);
     }
@@ -392,7 +384,6 @@ html, body {
         transform: translateY(0); /* 여기서 다시 0으로 원상복구! */
         filter: invert(100%) brightness(200%);
         opacity: 0.8;
-
     }
     .welcome-section .welcome-img img {
         width: 24rem;
@@ -401,6 +392,7 @@ html, body {
         transform: translateY(2rem);
         font-size: 1rem;
     }
+
 }
 @media (min-width: 75rem) {
     .welcome-section video {
@@ -441,6 +433,7 @@ html, body {
 @media (max-width: 64rem) {
     .site-logo-welcome {
         width: 20rem; /* 30rem -> 25rem 축소 */
+
     }
 }
 /* 태블릿 세로 (768px 이상) */
@@ -449,6 +442,20 @@ html, body {
 }
 /*스마트폰*/
 @media screen and (max-width: 32rem) {
+
+    .welcome-section video {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 110%;
+        height: 110%;
+        object-fit: cover;
+        object-position: center 30%;
+        z-index: -1;
+        transition: all 0.5s ease;
+    }
+
     .login-layout-container {
         position: fixed;
         top: 0;
