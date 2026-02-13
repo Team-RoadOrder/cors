@@ -223,10 +223,13 @@
             si.background_image AS backgroundImage,
             (SELECT COUNT(*) FROM `cors`.`like_shops` ls WHERE ls.shop_id = si.shop_id) AS likeCount
         FROM `cors`.`shop_info` si
-        WHERE si.shop_category IN
-        <foreach collection="categories" item="category" open="(" separator="," close=")">
-            #{category}
-        </foreach>
+        <where>
+            <if test="categories != null and categories.length > 0">
+                <foreach collection="categories" item="category" open="(" separator=" OR " close=")">
+                    FIND_IN_SET(#{category}, REPLACE(si.shop_category, ' ', ''))
+                </foreach>
+            </if>
+        </where>
         ORDER BY likeCount DESC, si.shop_id DESC
     </select>
 </mapper>
