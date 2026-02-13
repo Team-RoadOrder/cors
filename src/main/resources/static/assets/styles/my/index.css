@@ -124,6 +124,7 @@ body >.background{
         padding: 1rem 0 1rem 0.5rem;
         text-align: left;
         cursor: pointer;
+        color: #0a0a0a;
     }
     #my-nav .quick {
         width: 100%;

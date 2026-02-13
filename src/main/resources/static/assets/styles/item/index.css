@@ -212,19 +212,19 @@
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
     left: 0; top: 0;
     width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     align-items: center;
     justify-content: center;
+    z-index: 100000;
 }
 
 .modal-content {
     display: flex;
     flex-direction: column;
     position: relative;
-    width: 90%;
+    width: 100%;
     max-width: 25rem;
     padding: 2rem;
     background-color: #fff;
@@ -232,6 +232,7 @@
     text-align: center;
     box-shadow: 0 0.3125rem 1.25rem rgba(0,0,0,0.3);
     animation: fadeIn 0.3s ease;
+
 }
 
 .close {
@@ -847,11 +848,12 @@
     }
 
     .modal-content {
-        width: 90%; /* 모달창 너비 축소 */
+        width: 100%;
         max-width: 20rem;
         padding: 2rem 1.5rem;
         border-radius: 1rem;
         position: relative;
+
     }
 
     .modal-content h2 {
